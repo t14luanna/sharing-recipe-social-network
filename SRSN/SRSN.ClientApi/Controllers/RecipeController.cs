@@ -4,33 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SRSN.ClientApi.Models;
+using SRSN.DatabaseManager.Services;
+using SRSN.DatabaseManager.ViewModels;
 
 namespace SRSN.ClientApi.Controllers
 {
     #region Controllers
-    public interface IRecipeController
-    {
-        ActionResult Read();
-        ActionResult Create([FromBody]Recipe request);
-        ActionResult Update();
-        ActionResult Delete();
-    }
-
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipeController : ControllerBase, IRecipeController
+    public class RecipeController : ControllerBase
     {
-        private CookyDemoContext dbContext;
+        private IRecipeService recipeService;
 
         /// <summary>
         /// Constructor cua controller Recipe
         /// Nhan vao 1 dbContext duoc new san o Startup.cs
         /// </summary>
         /// <param name="dbContext"></param>
-        public RecipeController(CookyDemoContext dbContext)
+        public RecipeController(IRecipeService recipeService)
         {
-            this.dbContext = dbContext;
+            this.recipeService = recipeService;
         }
 
         /// <summary>
@@ -39,17 +32,11 @@ namespace SRSN.ClientApi.Controllers
         /// <param name="request">Tham so dau vao la 1 class co kieu Recipe Entity</param>
         /// <returns></returns>
         [HttpPost("create")]
-        public ActionResult Create([FromBody]Recipe request)
+        public async Task<ActionResult> Create([FromBody]RecipeViewModel request)
         {
             // goi db context ra
-            dbContext
-                // tro toi Recipe Table
-                .Set<Recipe>()
-                // them vao bang Recipe 1 entity Recipe co ten la request
-                .Add(request);
-
             // Save lai context du lieu cap nhat duoi Database
-            dbContext.SaveChanges();
+            await recipeService.CreateAsync(request);
             return Ok(new
             {
                 message = $"Ban da tao thanh cong Recipe co ten la: {request.RecipeName}"
@@ -61,9 +48,10 @@ namespace SRSN.ClientApi.Controllers
             throw new NotImplementedException();
         }
 
+        [HttpGet("read")]
         public ActionResult Read()
         {
-            return Ok(dbContext.Set<Recipe>().ToList());
+            return Ok(recipeService.Get());
         }
 
         public ActionResult Update()
@@ -73,20 +61,4 @@ namespace SRSN.ClientApi.Controllers
     }
 
     #endregion
-    #region View Models
-    public class RecipeViewModel
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public ICollection<IngredientViewModel> ListIngredients { get; set; }
-    }
-
-    public class IngredientViewModel
-    {
-        public string Name { get; set; }
-
-    }
-
-    #endregion
-   
 }

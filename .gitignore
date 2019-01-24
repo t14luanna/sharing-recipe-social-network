@@ -5,3 +5,6 @@ SRSN/SRSN.ClientView/bin/
 SRSN/SRSN.ClientView/obj/
 SRSN/SRSN.Service/obj/
 SRSN/WebApplication1/obj/
+SRSN/SRSN.DatabaseManager/bin/
+SRSN/SRSN.DatabaseManager/obj/
+SRSN/SRSN.Service/bin/

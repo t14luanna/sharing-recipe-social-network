@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SRSN.ClientApi.Models;
+using SRSN.DatabaseManager;
 
 namespace SRSN.ClientApi
 {
@@ -27,11 +27,7 @@ namespace SRSN.ClientApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CookyDemoContext>(options => 
-            {
-                options.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
-            });
-
+            RootConfig.Entry(services, Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
