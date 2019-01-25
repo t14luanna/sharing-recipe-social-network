@@ -16,6 +16,13 @@ namespace SRSN.DatabaseManager.Entities
         }
 
         public virtual DbSet<Accounts> Accounts { get; set; }
+        public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
+        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
+        public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
+        public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
+        public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
+        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<CategoryItem> CategoryItem { get; set; }
         public virtual DbSet<CategoryMain> CategoryMain { get; set; }
         public virtual DbSet<Collection> Collection { get; set; }
@@ -53,20 +60,112 @@ namespace SRSN.DatabaseManager.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
 
             modelBuilder.Entity<Accounts>(entity =>
             {
                 entity.HasKey(e => e.Username);
 
-                entity.Property(e => e.Username)
-                    .HasMaxLength(50)
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Username).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.RoleId)
                     .HasConstraintName("FK_Accounts_Role");
+            });
+
+            modelBuilder.Entity<AspNetRoleClaims>(entity =>
+            {
+                entity.HasIndex(e => e.RoleId);
+
+                entity.Property(e => e.RoleId).IsRequired();
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetRoleClaims)
+                    .HasForeignKey(d => d.RoleId);
+            });
+
+            modelBuilder.Entity<AspNetRoles>(entity =>
+            {
+                entity.HasIndex(e => e.NormalizedName)
+                    .HasName("RoleNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedName] IS NOT NULL)");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Name).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<AspNetUserClaims>(entity =>
+            {
+                entity.HasIndex(e => e.UserId);
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserClaims)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserLogins>(entity =>
+            {
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+                entity.HasIndex(e => e.UserId);
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserLogins)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserRoles>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+
+                entity.HasIndex(e => e.RoleId);
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.RoleId);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserTokens>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserTokens)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUsers>(entity =>
+            {
+                entity.HasIndex(e => e.NormalizedEmail)
+                    .HasName("EmailIndex");
+
+                entity.HasIndex(e => e.NormalizedUserName)
+                    .HasName("UserNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
             modelBuilder.Entity<CategoryItem>(entity =>
@@ -90,15 +189,15 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Username)
+                entity.Property(e => e.UserId)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(450);
 
-                entity.HasOne(d => d.UsernameNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Collection)
-                    .HasForeignKey(d => d.Username)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Collection_User");
+                    .HasConstraintName("FK_Collection_AspNetUsers");
             });
 
             modelBuilder.Entity<CollectionPost>(entity =>
@@ -121,26 +220,26 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.SharePost)
                     .WithMany(p => p.Comment)
                     .HasForeignKey(d => d.SharePostId)
                     .HasConstraintName("FK_Comment_SharedPost");
 
-                entity.HasOne(d => d.UsernameNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Comment)
-                    .HasForeignKey(d => d.Username)
-                    .HasConstraintName("FK_Comment_User");
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_Comment_AspNetUsers");
             });
 
             modelBuilder.Entity<CommentLike>(entity =>
             {
-                entity.HasKey(e => new { e.CommentId, e.Username });
-
                 entity.ToTable("Comment_Like");
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
 
                 entity.HasOne(d => d.Comment)
                     .WithMany(p => p.CommentLike)
@@ -148,11 +247,11 @@ namespace SRSN.DatabaseManager.Entities
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Comment_Like_Comment");
 
-                entity.HasOne(d => d.UsernameNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.CommentLike)
-                    .HasForeignKey(d => d.Username)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Comment_Like_User");
+                    .HasConstraintName("FK_Comment_Like_AspNetUsers");
             });
 
             modelBuilder.Entity<IngredientBrand>(entity =>
@@ -187,17 +286,12 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.Property(e => e.CreatorId).HasMaxLength(50);
 
-                entity.Property(e => e.RecipientId).HasMaxLength(50);
-
-                entity.HasOne(d => d.Creator)
-                    .WithMany(p => p.MessageCreator)
-                    .HasForeignKey(d => d.CreatorId)
-                    .HasConstraintName("FK_Message_User");
+                entity.Property(e => e.RecipientId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Recipient)
-                    .WithMany(p => p.MessageRecipient)
+                    .WithMany(p => p.Message)
                     .HasForeignKey(d => d.RecipientId)
-                    .HasConstraintName("FK_Message_User1");
+                    .HasConstraintName("FK_Message_AspNetUsers");
             });
 
             modelBuilder.Entity<Notification>(entity =>
@@ -206,29 +300,29 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.UserId).HasMaxLength(450);
 
-                entity.HasOne(d => d.UsernameNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Notification)
-                    .HasForeignKey(d => d.Username)
-                    .HasConstraintName("FK_Notification_User");
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_Notification_AspNetUsers");
             });
 
             modelBuilder.Entity<RatingRecipe>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RatingRecipe)
                     .HasForeignKey(d => d.RecipeId)
                     .HasConstraintName("FK_RatingRecipe_Recipe");
 
-                entity.HasOne(d => d.UsernameNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.RatingRecipe)
-                    .HasForeignKey(d => d.Username)
-                    .HasConstraintName("FK_RatingRecipe_User");
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_RatingRecipe_AspNetUsers");
             });
 
             modelBuilder.Entity<Recipe>(entity =>
@@ -237,14 +331,14 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.Property(e => e.RecipeName).HasMaxLength(50);
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.Property(e => e.VideoLink).HasMaxLength(50);
 
-                entity.HasOne(d => d.UsernameNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Recipe)
-                    .HasForeignKey(d => d.Username)
-                    .HasConstraintName("FK_Recipe_User");
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_Recipe_AspNetUsers");
             });
 
             modelBuilder.Entity<RecipeCategory>(entity =>
@@ -294,34 +388,34 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.SharedPost)
                     .HasForeignKey(d => d.RecipeId)
                     .HasConstraintName("FK_SharedPost_RecipePost");
 
-                entity.HasOne(d => d.UsernameNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.SharedPost)
-                    .HasForeignKey(d => d.Username)
-                    .HasConstraintName("FK_SharedPost_User");
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_SharedPost_AspNetUsers");
             });
 
             modelBuilder.Entity<ShoppingList>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.ShoppingList)
                     .HasForeignKey(d => d.RecipeId)
                     .HasConstraintName("FK_ShoppingList_RecipePost");
 
-                entity.HasOne(d => d.UsernameNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.ShoppingList)
-                    .HasForeignKey(d => d.Username)
-                    .HasConstraintName("FK_ShoppingList_User");
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_ShoppingList_AspNetUsers");
             });
 
             modelBuilder.Entity<StepsOfRecipe>(entity =>
@@ -375,9 +469,7 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.HasKey(e => e.Username);
 
-                entity.Property(e => e.Username)
-                    .HasMaxLength(50)
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Username).ValueGeneratedNever();
 
                 entity.Property(e => e.Address).HasMaxLength(50);
 
@@ -404,90 +496,86 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<UserBlock>(entity =>
             {
-                entity.HasKey(e => new { e.Username, e.BlockedUsername })
-                    .HasName("PK_User_Block_1");
-
                 entity.ToTable("User_Block");
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.BlockedUsername)
+                    .IsRequired()
+                    .HasMaxLength(450);
 
-                entity.Property(e => e.BlockedUsername).HasMaxLength(50);
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
 
-                entity.HasOne(d => d.BlockedUsernameNavigation)
-                    .WithMany(p => p.UserBlockBlockedUsernameNavigation)
-                    .HasForeignKey(d => d.BlockedUsername)
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserBlock)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_Block_User1");
-
-                entity.HasOne(d => d.UsernameNavigation)
-                    .WithMany(p => p.UserBlockUsernameNavigation)
-                    .HasForeignKey(d => d.Username)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_Block_User");
+                    .HasConstraintName("FK_User_Block_AspNetUsers");
             });
 
             modelBuilder.Entity<UserFollowing>(entity =>
             {
-                entity.HasKey(e => new { e.Username, e.FollowingUser })
-                    .HasName("PK_User_Following_1");
-
                 entity.ToTable("User_Following");
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.FollowingUserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
 
-                entity.Property(e => e.FollowingUser).HasMaxLength(50);
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
 
-                entity.HasOne(d => d.FollowingUserNavigation)
-                    .WithMany(p => p.UserFollowingFollowingUserNavigation)
-                    .HasForeignKey(d => d.FollowingUser)
+                entity.HasOne(d => d.FollowingUser)
+                    .WithMany(p => p.UserFollowingFollowingUser)
+                    .HasForeignKey(d => d.FollowingUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_Following_User1");
+                    .HasConstraintName("FK_User_Following_AspNetUsers1");
 
-                entity.HasOne(d => d.UsernameNavigation)
-                    .WithMany(p => p.UserFollowingUsernameNavigation)
-                    .HasForeignKey(d => d.Username)
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserFollowingUser)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_Following_User");
+                    .HasConstraintName("FK_User_Following_AspNetUsers");
             });
 
             modelBuilder.Entity<UserReportRecipe>(entity =>
             {
-                entity.HasKey(e => new { e.Username, e.RecipeReportedId })
-                    .HasName("PK_User_Report_Recipe_1");
-
                 entity.ToTable("User_Report_Recipe");
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
 
-                entity.HasOne(d => d.UsernameNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.UserReportRecipe)
-                    .HasForeignKey(d => d.Username)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_Report_Recipe_User");
+                    .HasConstraintName("FK_User_Report_Recipe_AspNetUsers");
             });
 
             modelBuilder.Entity<UserReportUser>(entity =>
             {
-                entity.HasKey(e => new { e.Username, e.ReportedUsername })
-                    .HasName("PK_User_Report_User_1");
-
                 entity.ToTable("User_Report_User");
 
-                entity.Property(e => e.Username).HasMaxLength(50);
+                entity.Property(e => e.ReportedUserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
 
-                entity.Property(e => e.ReportedUsername).HasMaxLength(50);
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
 
-                entity.HasOne(d => d.ReportedUsernameNavigation)
-                    .WithMany(p => p.UserReportUserReportedUsernameNavigation)
-                    .HasForeignKey(d => d.ReportedUsername)
+                entity.HasOne(d => d.ReportedUser)
+                    .WithMany(p => p.UserReportUserReportedUser)
+                    .HasForeignKey(d => d.ReportedUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_Report_User_User1");
+                    .HasConstraintName("FK_User_Report_User_AspNetUsers1");
 
-                entity.HasOne(d => d.UsernameNavigation)
-                    .WithMany(p => p.UserReportUserUsernameNavigation)
-                    .HasForeignKey(d => d.Username)
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserReportUserUser)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_Report_User_User");
+                    .HasConstraintName("FK_User_Report_User_AspNetUsers");
             });
         }
     }

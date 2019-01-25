@@ -15,7 +15,7 @@ namespace SRSN.Service.Services
     /// <summary>
     /// Class nay giong nhu abstract class 
     /// ho tro cho viec tao Service 1 cach nhanh nhat
-    /// Nhan request vao View Model va tra ve Entity
+    /// Nhan request vao View Model va xu ly Entity
     /// </summary>
     public class BaseService<TEntity, TViewModel> : IBaseService<TEntity, TViewModel>
         where TEntity : class, new()

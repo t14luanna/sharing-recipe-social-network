@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace SRSN.DatabaseManager.Entities
 {
-    public partial class Notification
+    public partial class AspNetUserClaims
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public string NotiContent { get; set; }
-        public DateTime? CreateTime { get; set; }
+        public string ClaimType { get; set; }
+        public string ClaimValue { get; set; }
 
         public virtual AspNetUsers User { get; set; }
     }

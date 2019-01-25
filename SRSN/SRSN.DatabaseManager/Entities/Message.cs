@@ -12,7 +12,6 @@ namespace SRSN.DatabaseManager.Entities
         public string RecipientId { get; set; }
         public string CreatorId { get; set; }
 
-        public virtual User Creator { get; set; }
-        public virtual User Recipient { get; set; }
+        public virtual AspNetUsers Recipient { get; set; }
     }
 }

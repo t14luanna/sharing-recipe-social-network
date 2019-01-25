@@ -12,9 +12,9 @@ namespace SRSN.DatabaseManager.Entities
 
         public int Id { get; set; }
         public string CollectionName { get; set; }
-        public string Username { get; set; }
+        public string UserId { get; set; }
 
-        public virtual User UsernameNavigation { get; set; }
+        public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }
     }
 }
