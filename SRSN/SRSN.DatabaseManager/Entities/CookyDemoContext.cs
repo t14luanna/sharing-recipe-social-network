@@ -15,7 +15,6 @@ namespace SRSN.DatabaseManager.Entities
         {
         }
 
-        public virtual DbSet<Accounts> Accounts { get; set; }
         public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
@@ -30,20 +29,18 @@ namespace SRSN.DatabaseManager.Entities
         public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<CommentLike> CommentLike { get; set; }
         public virtual DbSet<IngredientBrand> IngredientBrand { get; set; }
+        public virtual DbSet<IngredientList> IngredientList { get; set; }
         public virtual DbSet<Ingredients> Ingredients { get; set; }
         public virtual DbSet<Message> Message { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
+        public virtual DbSet<Post> Post { get; set; }
         public virtual DbSet<RatingRecipe> RatingRecipe { get; set; }
         public virtual DbSet<Recipe> Recipe { get; set; }
         public virtual DbSet<RecipeCategory> RecipeCategory { get; set; }
         public virtual DbSet<RecipeIngredient> RecipeIngredient { get; set; }
-        public virtual DbSet<Role> Role { get; set; }
-        public virtual DbSet<SharedPost> SharedPost { get; set; }
-        public virtual DbSet<ShoppingList> ShoppingList { get; set; }
         public virtual DbSet<StepsOfRecipe> StepsOfRecipe { get; set; }
         public virtual DbSet<Store> Store { get; set; }
         public virtual DbSet<StoreBrand> StoreBrand { get; set; }
-        public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserBlock> UserBlock { get; set; }
         public virtual DbSet<UserFollowing> UserFollowing { get; set; }
         public virtual DbSet<UserReportRecipe> UserReportRecipe { get; set; }
@@ -51,28 +48,12 @@ namespace SRSN.DatabaseManager.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
-            }
+   
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
-
-            modelBuilder.Entity<Accounts>(entity =>
-            {
-                entity.HasKey(e => e.Username);
-
-                entity.Property(e => e.Username).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.Accounts)
-                    .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK_Accounts_Role");
-            });
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
 
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
@@ -170,8 +151,6 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<CategoryItem>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CategoryMainId).HasColumnName("CategoryMainID");
 
                 entity.HasOne(d => d.CategoryMain)
@@ -180,15 +159,8 @@ namespace SRSN.DatabaseManager.Entities
                     .HasConstraintName("FK_CategoryItem_CategoryMain");
             });
 
-            modelBuilder.Entity<CategoryMain>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<Collection>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450);
@@ -207,17 +179,23 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.ToTable("Collection_Post");
 
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
                 entity.HasOne(d => d.Collection)
                     .WithMany(p => p.CollectionPost)
                     .HasForeignKey(d => d.CollectionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Collection_Post_Collection");
+
+                entity.HasOne(d => d.RecipePost)
+                    .WithMany(p => p.CollectionPost)
+                    .HasForeignKey(d => d.RecipePostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Collection_Post_Recipe");
             });
 
             modelBuilder.Entity<Comment>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UserId).HasMaxLength(450);
@@ -256,8 +234,6 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<IngredientBrand>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.ImageUrl).HasMaxLength(50);
 
                 entity.HasOne(d => d.Ingredient)
@@ -271,17 +247,34 @@ namespace SRSN.DatabaseManager.Entities
                     .HasConstraintName("FK_IngredientBrand_Store");
             });
 
+            modelBuilder.Entity<IngredientList>(entity =>
+            {
+                entity.Property(e => e.UserId).HasMaxLength(450);
+
+                entity.HasOne(d => d.Ingredient)
+                    .WithMany(p => p.IngredientList)
+                    .HasForeignKey(d => d.IngredientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_IngredientList_Ingredients");
+
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.IngredientList)
+                    .HasForeignKey(d => d.RecipeId)
+                    .HasConstraintName("FK_ShoppingList_RecipePost");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.IngredientList)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_ShoppingList_AspNetUsers");
+            });
+
             modelBuilder.Entity<Ingredients>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.IngredientName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.CreatorId).HasMaxLength(50);
@@ -296,9 +289,9 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.IsRead).HasColumnName("isRead");
 
                 entity.Property(e => e.UserId).HasMaxLength(450);
 
@@ -308,10 +301,23 @@ namespace SRSN.DatabaseManager.Entities
                     .HasConstraintName("FK_Notification_AspNetUsers");
             });
 
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.Property(e => e.UserId).HasMaxLength(450);
+
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.Post)
+                    .HasForeignKey(d => d.RecipeId)
+                    .HasConstraintName("FK_SharedPost_RecipePost");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Post)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_SharedPost_AspNetUsers");
+            });
+
             modelBuilder.Entity<RatingRecipe>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Recipe)
@@ -345,8 +351,6 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.ToTable("Recipe_Category");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.HasOne(d => d.CategoryItem)
                     .WithMany(p => p.RecipeCategory)
                     .HasForeignKey(d => d.CategoryItemId)
@@ -362,8 +366,6 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.ToTable("Recipe_Ingredient");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Quantitative).HasMaxLength(50);
 
                 entity.HasOne(d => d.Ingredient)
@@ -377,51 +379,8 @@ namespace SRSN.DatabaseManager.Entities
                     .HasConstraintName("FK_Recipe_Ingredient_Recipe");
             });
 
-            modelBuilder.Entity<Role>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.RoleName).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<SharedPost>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.UserId).HasMaxLength(450);
-
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.SharedPost)
-                    .HasForeignKey(d => d.RecipeId)
-                    .HasConstraintName("FK_SharedPost_RecipePost");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.SharedPost)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_SharedPost_AspNetUsers");
-            });
-
-            modelBuilder.Entity<ShoppingList>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.UserId).HasMaxLength(450);
-
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.ShoppingList)
-                    .HasForeignKey(d => d.RecipeId)
-                    .HasConstraintName("FK_ShoppingList_RecipePost");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.ShoppingList)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_ShoppingList_AspNetUsers");
-            });
-
             modelBuilder.Entity<StepsOfRecipe>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.StepsOfRecipe)
                     .HasForeignKey(d => d.RecipeId)
@@ -430,8 +389,6 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Store>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Address).HasMaxLength(50);
 
                 entity.Property(e => e.Lat).HasMaxLength(10);
@@ -450,9 +407,7 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<StoreBrand>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
@@ -465,46 +420,17 @@ namespace SRSN.DatabaseManager.Entities
                 entity.Property(e => e.Website).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasKey(e => e.Username);
-
-                entity.Property(e => e.Username).ValueGeneratedNever();
-
-                entity.Property(e => e.Address).HasMaxLength(50);
-
-                entity.Property(e => e.Birthdate).HasMaxLength(50);
-
-                entity.Property(e => e.Description).HasMaxLength(50);
-
-                entity.Property(e => e.Email).HasMaxLength(50);
-
-                entity.Property(e => e.FirstName).HasMaxLength(50);
-
-                entity.Property(e => e.Gender).HasMaxLength(50);
-
-                entity.Property(e => e.LastName).HasMaxLength(50);
-
-                entity.Property(e => e.Phone).HasMaxLength(50);
-
-                entity.HasOne(d => d.UsernameNavigation)
-                    .WithOne(p => p.User)
-                    .HasForeignKey<User>(d => d.Username)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_Accounts");
-            });
-
             modelBuilder.Entity<UserBlock>(entity =>
             {
                 entity.ToTable("User_Block");
 
-                entity.Property(e => e.BlockedUsername)
-                    .IsRequired()
-                    .HasMaxLength(450);
+                entity.HasIndex(e => new { e.UserId, e.BlockedUserId })
+                    .HasName("UC_UserBlock")
+                    .IsUnique();
 
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
+                entity.Property(e => e.BlockedUserId).IsRequired();
+
+                entity.Property(e => e.UserId).IsRequired();
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserBlock)
@@ -517,9 +443,13 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.ToTable("User_Following");
 
+                entity.Property(e => e.CreateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.FollowingUserId)
                     .IsRequired()
                     .HasMaxLength(450);
+
+                entity.Property(e => e.IsActive).HasColumnName("isActive");
 
                 entity.Property(e => e.UserId)
                     .IsRequired()
@@ -542,6 +472,10 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.ToTable("User_Report_Recipe");
 
+                entity.Property(e => e.CreateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasColumnName("isActive");
+
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450);
@@ -556,6 +490,8 @@ namespace SRSN.DatabaseManager.Entities
             modelBuilder.Entity<UserReportUser>(entity =>
             {
                 entity.ToTable("User_Report_User");
+
+                entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.ReportedUserId)
                     .IsRequired()

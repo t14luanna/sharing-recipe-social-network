@@ -7,7 +7,7 @@ namespace SRSN.DatabaseManager.Entities
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public string BlockedUsername { get; set; }
+        public string BlockedUserId { get; set; }
 
         public virtual AspNetUsers User { get; set; }
     }

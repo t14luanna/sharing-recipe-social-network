@@ -10,5 +10,6 @@ namespace SRSN.DatabaseManager.Entities
         public int RecipePostId { get; set; }
 
         public virtual Collection Collection { get; set; }
+        public virtual Recipe RecipePost { get; set; }
     }
 }

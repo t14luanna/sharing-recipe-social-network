@@ -155,8 +155,6 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<CategoryItem>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CategoryMainId).HasColumnName("CategoryMainID");
 
                 entity.HasOne(d => d.CategoryMain)
@@ -165,15 +163,8 @@ namespace SRSN.ClientApi.Entities
                     .HasConstraintName("FK_CategoryItem_CategoryMain");
             });
 
-            modelBuilder.Entity<CategoryMain>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-            });
-
             modelBuilder.Entity<Collection>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450);
@@ -192,6 +183,8 @@ namespace SRSN.ClientApi.Entities
 
                 entity.ToTable("Collection_Post");
 
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
                 entity.HasOne(d => d.Collection)
                     .WithMany(p => p.CollectionPost)
                     .HasForeignKey(d => d.CollectionId)
@@ -207,8 +200,6 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<Comment>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UserId).HasMaxLength(450);
@@ -247,8 +238,6 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<IngredientBrand>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.ImageUrl).HasMaxLength(50);
 
                 entity.HasOne(d => d.Ingredient)
@@ -264,8 +253,6 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<IngredientList>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Ingredient)
@@ -287,15 +274,11 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<Ingredients>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.IngredientName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.CreatorId).HasMaxLength(50);
@@ -310,8 +293,6 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.IsRead).HasColumnName("isRead");
@@ -326,8 +307,6 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<Post>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Recipe)
@@ -343,8 +322,6 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<RatingRecipe>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Recipe)
@@ -378,8 +355,6 @@ namespace SRSN.ClientApi.Entities
             {
                 entity.ToTable("Recipe_Category");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.HasOne(d => d.CategoryItem)
                     .WithMany(p => p.RecipeCategory)
                     .HasForeignKey(d => d.CategoryItemId)
@@ -394,8 +369,6 @@ namespace SRSN.ClientApi.Entities
             modelBuilder.Entity<RecipeIngredient>(entity =>
             {
                 entity.ToTable("Recipe_Ingredient");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Quantitative).HasMaxLength(50);
 
@@ -412,8 +385,6 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<StepsOfRecipe>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.StepsOfRecipe)
                     .HasForeignKey(d => d.RecipeId)
@@ -422,8 +393,6 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<Store>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Address).HasMaxLength(50);
 
                 entity.Property(e => e.Lat).HasMaxLength(10);
@@ -442,9 +411,7 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<StoreBrand>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 

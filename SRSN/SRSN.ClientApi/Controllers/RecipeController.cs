@@ -16,7 +16,7 @@ namespace SRSN.ClientApi.Controllers
     {
         private IRecipeService recipeService;
 
-        /// <summary>
+        /// <summary> 
         /// Constructor cua controller Recipe
         /// Nhan vao 1 dbContext duoc new san o Startup.cs
         /// </summary>

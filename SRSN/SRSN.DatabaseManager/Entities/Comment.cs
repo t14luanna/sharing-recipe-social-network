@@ -17,7 +17,7 @@ namespace SRSN.DatabaseManager.Entities
         public string CommentContent { get; set; }
         public string ImageUrl { get; set; }
 
-        public virtual SharedPost SharePost { get; set; }
+        public virtual Post SharePost { get; set; }
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CommentLike> CommentLike { get; set; }
     }
