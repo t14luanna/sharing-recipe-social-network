@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "542e54a3-a570-49e1-ac83-7e999405c657",
+		"name": "SRSN - Api - Document",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Recipe",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"recipeName\": \"Ngoc\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44361/api/recipe/create",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44361",
+					"path": [
+						"api",
+						"recipe",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44361/api/account/register",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44361",
+					"path": [
+						"api",
+						"account",
+						"register"
+					]
+				},
+				"description": "\t\n\t"
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:44361/api/recipe/read",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44361/api/recipe/read",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44361",
+					"path": [
+						"api",
+						"recipe",
+						"read"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44361/api/account/login?username=ngocdb@gmail.com&password=zaQ@1234",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44361",
+					"path": [
+						"api",
+						"account",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "ngocdb@gmail.com"
+						},
+						{
+							"key": "password",
+							"value": "zaQ@1234"
+						}
+					]
+				},
+				"description": "\t\n\t"
+			},
+			"response": []
+		}
+	]
+}

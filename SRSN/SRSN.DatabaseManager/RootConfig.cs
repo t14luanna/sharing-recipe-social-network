@@ -59,6 +59,7 @@ namespace SRSN.DatabaseManager
             // cau hinh Services
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRecipeService), typeof(RecipeService));
+            services.AddScoped(typeof(ICollectionService), typeof(CollectionService));
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc => {
                 mc.CreateMissingTypeMaps = true;
@@ -70,6 +71,9 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<StepsOfRecipeViewModel, StepsOfRecipe>()
                     .ForMember(x => x.Recipe, y => y.Ignore());
 
+
+                mc.CreateMap<CollectionViewModel, Collection>();
+                mc.CreateMap<Collection, CollectionViewModel>();
             });
             var mapper = mapperConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);
