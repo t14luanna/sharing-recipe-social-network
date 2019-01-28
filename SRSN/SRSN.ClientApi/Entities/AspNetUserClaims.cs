@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SRSN.DatabaseManager.Entities
+namespace SRSN.ClientApi.Entities
 {
-    public partial class UserBlock
+    public partial class AspNetUserClaims
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public string BlockedUserId { get; set; }
+        public string ClaimType { get; set; }
+        public string ClaimValue { get; set; }
 
         public virtual AspNetUsers User { get; set; }
     }

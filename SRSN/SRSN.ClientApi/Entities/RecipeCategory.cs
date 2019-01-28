@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SRSN.DatabaseManager.Entities
+namespace SRSN.ClientApi.Entities
 {
-    public partial class StepsOfRecipe
+    public partial class RecipeCategory
     {
         public int Id { get; set; }
         public int? RecipeId { get; set; }
-        public string ImageUrl { get; set; }
-        public string Description { get; set; }
+        public int? CategoryItemId { get; set; }
+
+        public virtual CategoryItem CategoryItem { get; set; }
         public virtual Recipe Recipe { get; set; }
     }
 }

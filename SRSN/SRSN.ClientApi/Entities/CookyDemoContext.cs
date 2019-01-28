@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace SRSN.DatabaseManager.Entities
+namespace SRSN.ClientApi.Entities
 {
     public partial class CookyDemoContext : DbContext
     {
