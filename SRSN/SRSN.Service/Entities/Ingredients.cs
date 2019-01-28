@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SRSN.DatabaseManager.Entities
+namespace SRSN.Service.Entities
 {
     public partial class Ingredients
     {

@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\SRSN",
+    "\\SRSN\\SRSN.ClientApi",
+    "\\SRSN\\SRSN.Service",
+    "\\SRSN\\SRSN.Service\\BaseModels",
+    "\\SRSN\\SRSN.Service\\Repositories",
+    "\\SRSN\\SRSN.Service\\Services"
+  ],
+  "SelectedNode": "\\SRSN\\SRSN.ClientApi\\appsettings.json",
+  "PreviewInSolutionExplorer": false
+}

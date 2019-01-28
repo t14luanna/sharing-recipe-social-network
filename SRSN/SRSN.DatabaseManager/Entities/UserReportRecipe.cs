@@ -9,6 +9,8 @@ namespace SRSN.DatabaseManager.Entities
         public string UserId { get; set; }
         public int RecipeReportedId { get; set; }
         public int? Description { get; set; }
+        public DateTime? CreateTime { get; set; }
+        public bool? IsActive { get; set; }
 
         public virtual AspNetUsers User { get; set; }
     }

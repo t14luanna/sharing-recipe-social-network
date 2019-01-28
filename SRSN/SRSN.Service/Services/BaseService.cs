@@ -21,9 +21,9 @@ namespace SRSN.Service.Services
         where TEntity : class, new()
         where TViewModel : class, new()
     {
-        private IUnitOfWork unitOfWork;
-        private IMapper mapper;
-        private DbSet<TEntity> selfDbSet;
+        protected IUnitOfWork unitOfWork;
+        protected IMapper mapper;
+        protected DbSet<TEntity> selfDbSet;
 
         public BaseService(IUnitOfWork unitOfWork, IMapper mapper)
         {
