@@ -165,6 +165,10 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Collection>(entity =>
             {
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450);

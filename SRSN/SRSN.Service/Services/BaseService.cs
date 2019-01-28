@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 
 namespace SRSN.Service.Services
 {
+    public interface IActivable
+    {
+        bool? Active { get; set; }
+    }
 
     /// <summary>
     /// Class nay giong nhu abstract class 
@@ -105,6 +109,7 @@ namespace SRSN.Service.Services
 
         }
 
+      
         public async Task<TViewModel> FirstOrDefaultAsync()
         {
             var entity = await selfDbSet.AsNoTracking().FirstOrDefaultAsync();
