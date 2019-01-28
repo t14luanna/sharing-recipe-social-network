@@ -59,14 +59,18 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRecipeService), typeof(RecipeService));
             services.AddScoped(typeof(ICommentService), typeof(CommentService));
+            services.AddScoped(typeof(IRatingRecipeService), typeof(RatingRecipeService));
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc => {
                 mc.CreateMissingTypeMaps = true;
-                mc.CreateMap<RecipeViewModel, Recipe>();
-                mc.CreateMap<Recipe, RecipeViewModel>();
+                mc.CreateMap<RatingRecipeViewModel, Recipe>();
+                mc.CreateMap<Recipe, RatingRecipeViewModel>();
 
                 mc.CreateMap<CommentViewModel, Comment>();
                 mc.CreateMap<Comment, CommentViewModel>();
+
+                mc.CreateMap<RatingRecipeViewModel, RatingRecipe>();
+                mc.CreateMap<RatingRecipe, RatingRecipeViewModel>();
 
             });
             var mapper = mapperConfig.CreateMapper();
