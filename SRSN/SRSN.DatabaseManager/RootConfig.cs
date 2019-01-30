@@ -60,6 +60,8 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(ICollectionService), typeof(CollectionService));
             services.AddScoped(typeof(IUserBlockService), typeof(UserBlockService));
             services.AddScoped(typeof(ILikePostService), typeof(LikePostService));
+            services.AddScoped(typeof(ICommentService), typeof(CommentService));
+            services.AddScoped(typeof(IRatingRecipeService), typeof(RatingRecipeService));
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc => {
                 mc.CreateMissingTypeMaps = true;
@@ -100,6 +102,15 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<LikePostViewModel, LikePost>()
                   .ForMember(x => x.User, y => y.Ignore())
                   .ForMember(x => x.Post, y => y.Ignore());
+
+                mc.CreateMap<RatingRecipeViewModel, Recipe>();
+                mc.CreateMap<Recipe, RatingRecipeViewModel>();
+
+                mc.CreateMap<CommentViewModel, Comment>();
+                mc.CreateMap<Comment, CommentViewModel>();
+
+                mc.CreateMap<RatingRecipeViewModel, RatingRecipe>();
+                mc.CreateMap<RatingRecipe, RatingRecipeViewModel>();
 
             });
             var mapper = mapperConfig.CreateMapper();
