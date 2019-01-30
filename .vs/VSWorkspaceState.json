@@ -3,11 +3,13 @@
     "",
     "\\SRSN",
     "\\SRSN\\SRSN.ClientApi",
+    "\\SRSN\\SRSN.DatabaseManager",
+    "\\SRSN\\SRSN.DatabaseManager\\Services",
     "\\SRSN\\SRSN.Service",
     "\\SRSN\\SRSN.Service\\BaseModels",
     "\\SRSN\\SRSN.Service\\Repositories",
     "\\SRSN\\SRSN.Service\\Services"
   ],
-  "SelectedNode": "\\SRSN\\SRSN.ClientApi\\appsettings.json",
+  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\Services\\CommentService.cs",
   "PreviewInSolutionExplorer": false
 }
