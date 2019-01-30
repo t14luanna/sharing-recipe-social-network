@@ -1,0 +1,194 @@
+{
+  "brands":[
+    {
+            "id":"0",
+            "title":"Bach Hoa Xanh",
+            "products":{
+              "urls":[
+                "https://www.bachhoaxanh.com/gao-gao-nep",
+                "https://www.bachhoaxanh.com/mi-nui-bun-kho",
+                "https://www.bachhoaxanh.com/bot-che-bien-san",
+                "https://www.bachhoaxanh.com/do-dong-lanh-do-mat",
+                "https://www.bachhoaxanh.com/do-dong-hop"
+              ],
+              "elements":[
+                {
+                  "title":"product",
+                  "type":"link",
+                  "selector":"//ul[@class='cate']/li/a",
+                  "value":"href",
+                  "elements":[
+                      {
+                        "title":"Name",
+                        "type":"data",
+                        "selector":"//h1[@class='nameproduct']",
+                        "value":""
+                      },
+                      {
+                        "title":"Price",
+                        "type":"data",
+                        "selector":"//div[@class='boxprice']/strong",
+                        "value":""
+                      },
+                      {
+                        "title":"Image",
+                        "type":"data",
+                        "selector":"//div[@class='listthums']/ul/li[@data-type=1]//img",
+                        "value":"src"
+                      }
+                  ],
+                  "beforeLoad":[
+                    {
+                      "selector":"//li[@class='nextPaging product']/a[@class='viewmore']",
+                      "hasMore":true
+                    }
+                  ]
+                }
+              ]
+            },
+            "stores":{
+                  "urls": ["https://www.bachhoaxanh.com/he-thong-sieu-thi"],
+                  "elements": [
+                      {
+                          "title": "category",
+                          "type": "link",
+                          "selector": "//div[@class='listprovince']//aside/a",
+                          "value": "href",
+                          "elements": [
+                              {
+                                  "title": "store",
+                                  "type": "link",
+                                  "selector": "//ul[@class='listshop']/li//a[1]",
+                                  "value": "href",
+                                  "elements": [
+                                      {
+                                          "title": "Name",
+                                          "type": "data",
+                                          "selector": "//h1[@class='storename']",
+                                          "value": ""
+                                      },
+                                      {
+                                          "title": "Address",
+                                          "type": "data",
+                                          "selector": "//div[@class='detailinfo']//h2",
+                                          "value": ""
+                                      }
+                                  ],
+                                  "beforeLoad": [
+                                      {
+                                          "selector": "//a[@class='viewmoreshop']",
+                                          "hasMore": true
+                                      }
+                                  ]
+                              }
+                          ],
+                          "beforeLoad": [
+                              {
+                                  "selector": "//div[@id='cur-province']",
+                                  "hasMore": false
+                              }
+                          ]
+                      }
+                  ]
+            }
+    },
+    {
+            "id":"1",
+            "title":"Coopmart",
+            "products":{
+                "urls":[
+                    "https://coopmart.vn/danh-muc/thuc-pham-tuoi-song_8IiFnmF",
+                    "https://coopmart.vn/danh-muc/dong-lanh-and-bao-quan-mat_xqLn09V",
+                    "https://coopmart.vn/danh-muc/thuc-pham-dong-goi_h69DVFF"
+                ],
+                "elements":[
+                    {
+                        "title":"category",
+                        "type":"link",
+                        "selector":"//li[@class='hassub active']/div[@class='sub']/ul/li/a",
+                        "value":"href",
+                        "elements":[
+                            {
+                                "title":"product",
+                                "type":"link",
+                                "selector":"//div[@class='col-xs-6 col-sm-4 col-md-3 col-lg-3 col-xl-3 nopadding' and position() > 2]/div/figure/a[@class='product-img']",
+                                "value":"href",
+                                "elements": [
+                                    {
+                                        "title":"Name",
+                                        "type":"data",
+                                        "selector":"//h1[@class='product-page-name']",
+                                        "value":""
+                                    },
+                                    {
+                                        "title":"Price",
+                                        "type":"data",
+                                        "selector":"//div[@class='product-price clearfix']/div[@class='new']",
+                                        "value":""
+                                    },
+                                    {
+                                        "title":"Image",
+                                        "type":"data",
+                                        "selector":"//a[@class='fancybox container-main-image']/img",
+                                        "value":"src"
+                                    }
+                                ],
+                                "nextPage":{
+                                    "title":"product",
+                                    "type":"link",
+                                    "selector":"//ul[@class='pagination']/li[@class='selected']/following-sibling::li/a",
+                                    "value":"href"
+                                }
+                            }
+                        ]
+                      }
+                ]  
+            },
+            "stores":{
+                  "urls": ["https://www.bachhoaxanh.com/he-thong-sieu-thi"],
+                  "elements": [
+                      {
+                          "title": "category",
+                          "type": "link",
+                          "selector": "//div[@class='listprovince']//aside/a",
+                          "value": "href",
+                          "elements": [
+                              {
+                                  "title": "store",
+                                  "type": "link",
+                                  "selector": "//ul[@class='listshop']/li//a[1]",
+                                  "value": "href",
+                                  "elements": [
+                                      {
+                                          "title": "Name",
+                                          "type": "data",
+                                          "selector": "//h1[@class='storename']",
+                                          "value": ""
+                                      },
+                                      {
+                                          "title": "Address",
+                                          "type": "data",
+                                          "selector": "//div[@class='detailinfo']//h2",
+                                          "value": ""
+                                      }
+                                  ],
+                                  "beforeLoad": [
+                                      {
+                                          "selector": "//a[@class='viewmoreshop']",
+                                          "hasMore": true
+                                      }
+                                  ]
+                              }
+                          ],
+                          "beforeLoad": [
+                              {
+                                  "selector": "//div[@id='cur-province']",
+                                  "hasMore": false
+                              }
+                          ]
+                      }
+                  ]
+            }
+    }
+  ]
+}
