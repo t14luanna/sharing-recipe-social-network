@@ -54,6 +54,7 @@ namespace SRSN.DatabaseManager
 
             services.AddScoped(typeof(IdentityDbContext<SRSNUser, IdentityRole<int>,int>), typeof(SRSNUserManager));
             services.AddScoped(typeof(DbContext), typeof(CookyDemoContext));
+            
             // cau hinh Services
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRecipeService), typeof(RecipeService));
@@ -62,6 +63,9 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(ILikePostService), typeof(LikePostService));
             services.AddScoped(typeof(ICommentService), typeof(CommentService));
             services.AddScoped(typeof(IRatingRecipeService), typeof(RatingRecipeService));
+            services.AddScoped(typeof(INotificationService), typeof(NotificationService));
+            services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
+
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc => {
                 mc.CreateMissingTypeMaps = true;
@@ -112,6 +116,12 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<RatingRecipeViewModel, RatingRecipe>();
                 mc.CreateMap<RatingRecipe, RatingRecipeViewModel>();
 
+
+                mc.CreateMap<NotificationViewModel, Notification>();
+                mc.CreateMap<Notification, NotificationViewModel>();
+
+                mc.CreateMap<CategoryViewModel, CategoryMain>();
+                mc.CreateMap<CategoryMain , CategoryViewModel>();
             });
             var mapper = mapperConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);

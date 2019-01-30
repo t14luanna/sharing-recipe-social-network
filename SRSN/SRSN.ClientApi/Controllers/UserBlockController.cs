@@ -54,7 +54,6 @@ namespace SRSN.ClientApi.Controllers
                 mapper.Map(blockedUser, blockedUserVM);
                 userBlockVM.BlockedUserVM = blockedUserVM;
             }
-
             return Ok(listUserBlockVM); 
         }
 
