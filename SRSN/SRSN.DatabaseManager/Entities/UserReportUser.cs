@@ -6,8 +6,8 @@ namespace SRSN.DatabaseManager.Entities
     public partial class UserReportUser
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
-        public string ReportedUserId { get; set; }
+        public int UserId { get; set; }
+        public int ReportedUserId { get; set; }
         public int? Description { get; set; }
         public DateTime? CreateTime { get; set; }
 

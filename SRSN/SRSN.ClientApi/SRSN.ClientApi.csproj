@@ -29,6 +29,7 @@
     <Compile Include="Entities\IngredientBrand.cs" />
     <Compile Include="Entities\IngredientList.cs" />
     <Compile Include="Entities\Ingredients.cs" />
+    <Compile Include="Entities\LikePost.cs" />
     <Compile Include="Entities\Message.cs" />
     <Compile Include="Entities\Notification.cs" />
     <Compile Include="Entities\Post.cs" />

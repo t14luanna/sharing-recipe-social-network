@@ -18,7 +18,7 @@ namespace SRSN.DatabaseManager.Services
         Task CreateRecipeWithSteps(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM);
         Task DeActiveRecipe(int id);
         Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM);
-        Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(string userId);
+        Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId);
     }
 
     public class RecipeService : BaseService<Recipe, RecipeViewModel>, IRecipeService
@@ -72,7 +72,7 @@ namespace SRSN.DatabaseManager.Services
             await this.unitOfWork.Commit();
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(string userId)
+        public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId)
         {
             // lay ra step of recipe repository
             var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();

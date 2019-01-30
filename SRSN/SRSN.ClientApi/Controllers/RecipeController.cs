@@ -49,7 +49,7 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpGet("read")]
-        public async Task<ActionResult> Read(string userId)
+        public async Task<ActionResult> Read(int userId)
         {
             return Ok(recipeService.GetAllRecipeByUserId(userId));
         }

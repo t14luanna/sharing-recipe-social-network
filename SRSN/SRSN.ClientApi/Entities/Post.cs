@@ -8,10 +8,11 @@ namespace SRSN.ClientApi.Entities
         public Post()
         {
             Comment = new HashSet<Comment>();
+            LikePost = new HashSet<LikePost>();
         }
 
         public int Id { get; set; }
-        public string UserId { get; set; }
+        public int? UserId { get; set; }
         public double? Price { get; set; }
         public string ImageUrl { get; set; }
         public int? LevelRecipe { get; set; }
@@ -23,5 +24,6 @@ namespace SRSN.ClientApi.Entities
         public virtual Recipe Recipe { get; set; }
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }
+        public virtual ICollection<LikePost> LikePost { get; set; }
     }
 }

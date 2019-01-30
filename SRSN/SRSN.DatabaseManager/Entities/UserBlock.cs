@@ -6,9 +6,10 @@ namespace SRSN.DatabaseManager.Entities
     public partial class UserBlock
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
-        public string BlockedUserId { get; set; }
+        public int UserId { get; set; }
+        public int BlockedUserId { get; set; }
 
+        public virtual AspNetUsers BlockedUser { get; set; }
         public virtual AspNetUsers User { get; set; }
     }
 }
