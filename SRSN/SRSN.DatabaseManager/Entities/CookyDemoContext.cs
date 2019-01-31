@@ -264,6 +264,11 @@ namespace SRSN.DatabaseManager.Entities
             modelBuilder.Entity<Ingredients>(entity =>
             {
                 entity.Property(e => e.IngredientName).HasMaxLength(50);
+
+                entity.HasOne(d => d.Store)
+                    .WithMany(p => p.Ingredients)
+                    .HasForeignKey(d => d.StoreId)
+                    .HasConstraintName("FK_Ingredients_Store");
             });
 
             modelBuilder.Entity<LikePost>(entity =>
@@ -381,7 +386,9 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.ToTable("Recipe_Ingredient");
 
-                entity.Property(e => e.Quantitative).HasMaxLength(50);
+                entity.Property(e => e.IngredientName).HasMaxLength(100);
+
+                entity.Property(e => e.Quantitative).HasMaxLength(100);
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.RecipeIngredient)
