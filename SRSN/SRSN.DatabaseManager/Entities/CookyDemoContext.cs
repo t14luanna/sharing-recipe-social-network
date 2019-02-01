@@ -31,6 +31,7 @@ namespace SRSN.DatabaseManager.Entities
         public virtual DbSet<IngredientBrand> IngredientBrand { get; set; }
         public virtual DbSet<IngredientList> IngredientList { get; set; }
         public virtual DbSet<Ingredients> Ingredients { get; set; }
+        public virtual DbSet<LikePost> LikePost { get; set; }
         public virtual DbSet<Message> Message { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Post> Post { get; set; }
@@ -63,8 +64,6 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.HasIndex(e => e.RoleId);
 
-                entity.Property(e => e.RoleId).IsRequired();
-
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.AspNetRoleClaims)
                     .HasForeignKey(d => d.RoleId);
@@ -77,8 +76,6 @@ namespace SRSN.DatabaseManager.Entities
                     .IsUnique()
                     .HasFilter("([NormalizedName] IS NOT NULL)");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Name).HasMaxLength(256);
 
                 entity.Property(e => e.NormalizedName).HasMaxLength(256);
@@ -87,8 +84,6 @@ namespace SRSN.DatabaseManager.Entities
             modelBuilder.Entity<AspNetUserClaims>(entity =>
             {
                 entity.HasIndex(e => e.UserId);
-
-                entity.Property(e => e.UserId).IsRequired();
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.AspNetUserClaims)
@@ -100,8 +95,6 @@ namespace SRSN.DatabaseManager.Entities
                 entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
                 entity.HasIndex(e => e.UserId);
-
-                entity.Property(e => e.UserId).IsRequired();
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.AspNetUserLogins)
@@ -142,8 +135,6 @@ namespace SRSN.DatabaseManager.Entities
                     .IsUnique()
                     .HasFilter("([NormalizedUserName] IS NOT NULL)");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Email).HasMaxLength(256);
 
                 entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
@@ -165,9 +156,7 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Collection>(entity =>
             {
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Collection)
@@ -200,16 +189,20 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Comment>(entity =>
             {
-                entity.Property(e => e.CreateTime).HasColumnType("datetime");
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.CommentParentId).HasColumnName("CommentParentID");
+
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Comment)
                     .HasForeignKey(d => d.PostId)
-                    .HasConstraintName("FK_Comment_Post");
+                    .HasConstraintName("FK_Comment_SharedPost");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Comment)
@@ -220,10 +213,6 @@ namespace SRSN.DatabaseManager.Entities
             modelBuilder.Entity<CommentLike>(entity =>
             {
                 entity.ToTable("Comment_Like");
-
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
 
                 entity.HasOne(d => d.Comment)
                     .WithMany(p => p.CommentLike)
@@ -255,8 +244,6 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<IngredientList>(entity =>
             {
-                entity.Property(e => e.UserId).HasMaxLength(450);
-
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.IngredientList)
                     .HasForeignKey(d => d.IngredientId)
@@ -271,7 +258,7 @@ namespace SRSN.DatabaseManager.Entities
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.IngredientList)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_ShoppingList_AspNetUsers");
+                    .HasConstraintName("FK_IngredientList_AspNetUsers");
             });
 
             modelBuilder.Entity<Ingredients>(entity =>
@@ -279,18 +266,38 @@ namespace SRSN.DatabaseManager.Entities
                 entity.Property(e => e.IngredientName).HasMaxLength(50);
             });
 
+            modelBuilder.Entity<LikePost>(entity =>
+            {
+                entity.ToTable("Like_Post");
+
+                entity.HasIndex(e => new { e.PostId, e.UserId })
+                    .HasName("UniqueKey_Like_Post")
+                    .IsUnique();
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.LikePost)
+                    .HasForeignKey(d => d.PostId)
+                    .HasConstraintName("FK_Like_Post_Post");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.LikePost)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_Like_Post_AspNetUsers");
+            });
+
             modelBuilder.Entity<Message>(entity =>
             {
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
-                entity.Property(e => e.CreatorId).HasMaxLength(50);
-
-                entity.Property(e => e.RecipientId).HasMaxLength(450);
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.MessageCreator)
+                    .HasForeignKey(d => d.CreatorId)
+                    .HasConstraintName("FK_Message_AspNetUsers");
 
                 entity.HasOne(d => d.Recipient)
-                    .WithMany(p => p.Message)
+                    .WithMany(p => p.MessageRecipient)
                     .HasForeignKey(d => d.RecipientId)
-                    .HasConstraintName("FK_Message_AspNetUsers");
+                    .HasConstraintName("FK_Message_AspNetUsers1");
             });
 
             modelBuilder.Entity<Notification>(entity =>
@@ -298,8 +305,6 @@ namespace SRSN.DatabaseManager.Entities
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.IsRead).HasColumnName("isRead");
-
-                entity.Property(e => e.UserId).HasMaxLength(450);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Notification)
@@ -309,7 +314,9 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Post>(entity =>
             {
-                entity.Property(e => e.UserId).HasMaxLength(450);
+                entity.Property(e => e.CreateTime).HasColumnType("date");
+
+                entity.Property(e => e.UpdateTime).HasColumnType("date");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.Post)
@@ -319,12 +326,14 @@ namespace SRSN.DatabaseManager.Entities
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Post)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_SharedPost_AspNetUsers");
+                    .HasConstraintName("FK_Post_AspNetUsers");
             });
 
             modelBuilder.Entity<RatingRecipe>(entity =>
             {
-                entity.Property(e => e.UserId).HasMaxLength(450);
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RatingRecipe)
@@ -339,11 +348,15 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Recipe>(entity =>
             {
-                entity.Property(e => e.CreateTime).HasColumnType("datetime");
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.RecipeName).HasMaxLength(50);
 
-                entity.Property(e => e.UserId).HasMaxLength(450);
+                entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.VideoLink).HasMaxLength(50);
 
@@ -431,15 +444,17 @@ namespace SRSN.DatabaseManager.Entities
                 entity.ToTable("User_Block");
 
                 entity.HasIndex(e => new { e.UserId, e.BlockedUserId })
-                    .HasName("UC_UserBlock")
+                    .HasName("Unique_User_Block")
                     .IsUnique();
 
-                entity.Property(e => e.BlockedUserId).IsRequired();
-
-                entity.Property(e => e.UserId).IsRequired();
+                entity.HasOne(d => d.BlockedUser)
+                    .WithMany(p => p.UserBlockBlockedUser)
+                    .HasForeignKey(d => d.BlockedUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Block_AspNetUsers1");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserBlock)
+                    .WithMany(p => p.UserBlockUser)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_Block_AspNetUsers");
@@ -450,16 +465,6 @@ namespace SRSN.DatabaseManager.Entities
                 entity.ToTable("User_Following");
 
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.FollowingUserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
-
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
-
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
 
                 entity.HasOne(d => d.FollowingUser)
                     .WithMany(p => p.UserFollowingFollowingUser)
@@ -482,10 +487,6 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("isActive");
 
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserReportRecipe)
                     .HasForeignKey(d => d.UserId)
@@ -498,14 +499,6 @@ namespace SRSN.DatabaseManager.Entities
                 entity.ToTable("User_Report_User");
 
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.ReportedUserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
-
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
 
                 entity.HasOne(d => d.ReportedUser)
                     .WithMany(p => p.UserReportUserReportedUser)

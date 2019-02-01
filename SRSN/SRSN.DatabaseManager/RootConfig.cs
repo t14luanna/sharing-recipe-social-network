@@ -28,13 +28,12 @@ namespace SRSN.DatabaseManager
             {
                 builder.UseSqlServer(configuration.GetConnectionString("IdentityDbConnectionString"));
             });
-            services.AddIdentity<SRSNUser, IdentityRole>()
+            services.AddIdentity<SRSNUser, IdentityRole<int>>()
                 .AddEntityFrameworkStores<SRSNIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
+
             var key = Encoding.Default.GetBytes("@everyone:SRSNSecret!");
-            var issuer = "http://srsn.com";
-            var audience = "http://srsn.com";
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,16 +52,62 @@ namespace SRSN.DatabaseManager
                 };
             });
 
-            services.AddScoped(typeof(IdentityDbContext<SRSNUser>), typeof(SRSNUserManager));
+            services.AddScoped(typeof(IdentityDbContext<SRSNUser, IdentityRole<int>,int>), typeof(SRSNUserManager));
             services.AddScoped(typeof(DbContext), typeof(CookyDemoContext));
+            
             // cau hinh Services
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRecipeService), typeof(RecipeService));
+            services.AddScoped(typeof(ICollectionService), typeof(CollectionService));
+            services.AddScoped(typeof(IUserBlockService), typeof(UserBlockService));
+            services.AddScoped(typeof(ILikePostService), typeof(LikePostService));
             services.AddScoped(typeof(ICommentService), typeof(CommentService));
             services.AddScoped(typeof(IRatingRecipeService), typeof(RatingRecipeService));
+            services.AddScoped(typeof(INotificationService), typeof(NotificationService));
+            services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
+            services.AddScoped(typeof(IPostService), typeof(PostService));
+
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc => {
                 mc.CreateMissingTypeMaps = true;
+
+                // chung ta se cau hinh ignore tai day
+                mc.CreateMap<RecipeViewModel, Recipe>();
+                mc.CreateMap<Recipe, RecipeViewModel>();
+
+                mc.CreateMap<StepsOfRecipeViewModel, StepsOfRecipe>()
+                    .ForMember(x => x.Recipe, y => y.Ignore());
+
+
+                mc.CreateMap<CollectionViewModel, Collection>();
+                mc.CreateMap<Collection, CollectionViewModel>();
+
+                mc.CreateMap<AccountEditViewModel, SRSNUser>()
+                    .ForMember(x => x.AccessFailedCount, y=> y.Ignore())
+                    .ForMember(x => x.ConcurrencyStamp, y=> y.Ignore())
+                    .ForMember(x => x.EmailConfirmed, y => y.Ignore())
+                    .ForMember(x => x.LockoutEnabled, y => y.Ignore())
+                    .ForMember(x => x.LockoutEnd, y => y.Ignore())
+                    .ForMember(x => x.NormalizedEmail, y => y.Ignore())
+                    .ForMember(x => x.NormalizedUserName, y => y.Ignore())
+                    .ForMember(x => x.PasswordHash, y => y.Ignore())
+                    .ForMember(x => x.PhoneNumber, y => y.Ignore())
+                    .ForMember(x => x.PhoneNumberConfirmed, y => y.Ignore())
+                    .ForMember(x => x.SecurityStamp, y => y.Ignore())
+                    .ForMember(x => x.TwoFactorEnabled, y => y.Ignore());
+                mc.CreateMap<SRSNUser, AccountEditViewModel>()
+                    .ForMember(x => x.UsernameVM, y => y.Ignore())
+                    .ForMember(x => x.Password, y => y.Ignore())
+                    .ForMember(x => x.ConfirmPassword, y => y.Ignore());
+
+
+                mc.CreateMap<UserBlockViewModel, UserBlock>()
+                   .ForMember(x => x.BlockedUser, y => y.Ignore())
+                   .ForMember(x => x.User, y => y.Ignore());
+                mc.CreateMap<LikePostViewModel, LikePost>()
+                  .ForMember(x => x.User, y => y.Ignore())
+                  .ForMember(x => x.Post, y => y.Ignore());
+
                 mc.CreateMap<RatingRecipeViewModel, Recipe>();
                 mc.CreateMap<Recipe, RatingRecipeViewModel>();
 
@@ -72,6 +117,15 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<RatingRecipeViewModel, RatingRecipe>();
                 mc.CreateMap<RatingRecipe, RatingRecipeViewModel>();
 
+
+                mc.CreateMap<NotificationViewModel, Notification>();
+                mc.CreateMap<Notification, NotificationViewModel>();
+
+                mc.CreateMap<CategoryViewModel, CategoryMain>();
+                mc.CreateMap<CategoryMain , CategoryViewModel>();
+
+                mc.CreateMap<PostViewModel, Post>();
+                mc.CreateMap<Post, PostViewModel>();
             });
             var mapper = mapperConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);

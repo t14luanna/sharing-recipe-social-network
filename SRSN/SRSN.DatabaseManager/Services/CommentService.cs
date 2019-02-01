@@ -11,8 +11,7 @@ namespace SRSN.DatabaseManager.Services
 {
     public interface ICommentService : IBaseService<Comment, CommentViewModel>
     {
-        Task DeActiveComment(int Id);
-        IQueryable GetAllCommentByPostId(int postId);
+        Task DeActiveComment(int id);
     }
 
     public class CommentService : BaseService<Comment, CommentViewModel>, ICommentService
@@ -21,9 +20,9 @@ namespace SRSN.DatabaseManager.Services
         {
         }
 
-        public async Task DeActiveComment(int Id)
+        public async Task DeActiveComment(int id)
         {
-            var comment = await this.selfDbSet.FindAsync(Id);
+            var comment = await this.selfDbSet.FindAsync(id);
             comment.Active = false;
             this.selfDbSet.Update(comment);
             await this.unitOfWork.Commit();
@@ -33,11 +32,6 @@ namespace SRSN.DatabaseManager.Services
         {
             var post = this.unitOfWork.GetDbContext().Set<Comment>().Where(x => x.PostId == postId);
             return post;
-        }
-
-        IQueryable ICommentService.GetAllCommentByPostId(int postId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

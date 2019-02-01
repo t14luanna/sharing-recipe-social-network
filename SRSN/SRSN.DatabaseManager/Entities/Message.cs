@@ -9,9 +9,10 @@ namespace SRSN.DatabaseManager.Entities
         public string MessageContent { get; set; }
         public DateTime? CreateTime { get; set; }
         public bool? IsRead { get; set; }
-        public string RecipientId { get; set; }
-        public string CreatorId { get; set; }
+        public int? RecipientId { get; set; }
+        public int? CreatorId { get; set; }
 
+        public virtual AspNetUsers Creator { get; set; }
         public virtual AspNetUsers Recipient { get; set; }
     }
 }

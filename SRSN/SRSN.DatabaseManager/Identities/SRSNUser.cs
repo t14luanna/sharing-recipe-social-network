@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SRSN.DatabaseManager.Identities
 {
-    public class SRSNUser : IdentityUser
+    public class SRSNUser : IdentityUser<int>
     {
 
         public string Description { get; set; }
@@ -23,20 +23,21 @@ namespace SRSN.DatabaseManager.Identities
         public string Phone { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int? Point { get; set; }
 
         /// <summary>
         /// Cai ham nay co the tao ra cho controller 1 cai accesstoken de ho tra ve cho nguopi dung
         /// </summary>
         /// <param name="userManager"></param>
         /// <param name="user"></param>
-        /// <returns></returns>
+        /// <returns></returns> 
         public async Task<dynamic> AuthorizeAsync(UserManager<SRSNUser> userManager, SRSNUser user)
         {
             // This step: de danh cau hinh claim (payload) cho token
             var userRoles = await userManager.GetRolesAsync(user);
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName)
             };
 

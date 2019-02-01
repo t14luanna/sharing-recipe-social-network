@@ -29,7 +29,7 @@ namespace SRSN.ClientApi.Controllers
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.UserId = userId;
             request.CreateTime = DateTime.Now;
-            await commentService.CreateAsync(request);
+            await commentService.CreateAsync(request);  
             return Ok(new
             {
                 message = "Create comment successful"
@@ -40,10 +40,21 @@ namespace SRSN.ClientApi.Controllers
         [Authorize]
         public async Task<ActionResult> Update([FromBody]CommentViewModel request)
         {
+            var existedComment = await commentService.FirstOrDefaultAsync(p => p.Id == request.Id);
+            if(existedComment == null)
+            {
+                return Ok(new
+                {
+                    message = "Could not find the matched item.",
+                    status = 404
+                });
+            }
+
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.UserId = userId;
-            request.UpdateTime = DateTime.Now;
+            // choose the vietnam datetime exactly
+            request.UpdateTime = DateTime.UtcNow.AddHours(7);
             await commentService.UpdateAsync(request);
             return Ok(new
             {
@@ -64,13 +75,10 @@ namespace SRSN.ClientApi.Controllers
             });
         }
 
-        [HttpGet("{postId}")]
+        [HttpGet("getCommentByPost")]
         public ActionResult GetAllCommentByPostId(int postId)
         {
-            return Ok(new
-            {
-                request = commentService.GetAllCommentByPostId(postId)
-            });
+            return Ok(commentService.Get(p => p.PostId == postId));
          }
         
 

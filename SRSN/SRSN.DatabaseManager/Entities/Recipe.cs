@@ -19,12 +19,14 @@ namespace SRSN.DatabaseManager.Entities
         public int Id { get; set; }
         public string ImageCover { get; set; }
         public DateTime? CreateTime { get; set; }
-        public string UserId { get; set; }
+        public DateTime? UpdateTime { get; set; }
+        public int? UserId { get; set; }
         public string RecipeName { get; set; }
         public string VideoLink { get; set; }
         public int? LevelRecipe { get; set; }
         public int? CookTime { get; set; }
         public int? Serving { get; set; }
+        public bool? Active { get; set; }
 
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }

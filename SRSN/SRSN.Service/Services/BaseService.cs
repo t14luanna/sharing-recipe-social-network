@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 
 namespace SRSN.Service.Services
 {
+    public interface IActivable
+    {
+        bool? Active { get; set; }
+    }
 
     /// <summary>
     /// Class nay giong nhu abstract class 
@@ -21,6 +25,8 @@ namespace SRSN.Service.Services
         where TEntity : class, new()
         where TViewModel : class, new()
     {
+        // O day minh phai implement 1 ham khac noai service co san, nen minh can phai dung unit of work va mapper va dbset
+        // doi toan bo private thanh protected
         protected IUnitOfWork unitOfWork;
         protected IMapper mapper;
         protected DbSet<TEntity> selfDbSet;
@@ -44,6 +50,21 @@ namespace SRSN.Service.Services
             var vm = new TViewModel();
             var entity = mapper.Map<TEntity, TViewModel>(data, vm);
             return vm;
+        }
+
+        protected GEntity VMToEntity<GEntity, GViewModel>(GViewModel data)
+            where GEntity : class, new()
+        {
+            var entity = new GEntity();
+            var vm = mapper.Map<GViewModel, GEntity>(data, entity);
+            return entity;
+        }
+        protected GViewModel EntityToVM<GEntity, GViewModel>(GEntity data)
+          where GViewModel : class, new()
+        {
+            var viewModel = new GViewModel();
+            var vm = mapper.Map<GEntity, GViewModel>(data, viewModel);
+            return viewModel;
         }
         #endregion
 
@@ -88,6 +109,7 @@ namespace SRSN.Service.Services
 
         }
 
+      
         public async Task<TViewModel> FirstOrDefaultAsync()
         {
             var entity = await selfDbSet.AsNoTracking().FirstOrDefaultAsync();

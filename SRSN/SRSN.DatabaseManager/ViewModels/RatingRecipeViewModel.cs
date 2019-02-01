@@ -8,8 +8,10 @@ namespace SRSN.DatabaseManager.ViewModels
     {
         public int Id { get; set; }
         public int? Star { get; set; }
-        public string UserId { get; set; }
+        public int? UserId { get; set; }
         public int? RecipeId { get; set; }
-        public string ImageUr { get; set; }
+        public string ImageUrl { get; set; }
+        public DateTime? CreateTime { get; set; }
+        public string ContentRating { get; set; }
     }
 }

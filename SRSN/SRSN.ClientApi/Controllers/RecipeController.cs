@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SRSN.DatabaseManager.Services;
@@ -16,49 +18,55 @@ namespace SRSN.ClientApi.Controllers
     {
         private IRecipeService recipeService;
 
-        /// <summary>
-        /// Constructor cua controller Recipe
-        /// Nhan vao 1 dbContext duoc new san o Startup.cs
-        /// </summary>
-        /// <param name="dbContext"></param>
         public RecipeController(IRecipeService recipeService)
         {
             this.recipeService = recipeService;
-        }
-
-        /// <summary>
-        /// Api Create
-        /// </summary>
-        /// <param name="request">Tham so dau vao la 1 class co kieu Recipe Entity</param>
-        /// <returns></returns>
+        }       
         [HttpPost("create")]
-        public async Task<ActionResult> Create([FromBody]RecipeViewModel request)
+        [Authorize]
+        public async Task<ActionResult> Create([FromBody]RequestCreateRecipeWithConstraintViewMode request)
         {
-            // goi db context ra
-            // Save lai context du lieu cap nhat duoi Database
-            await recipeService.CreateAsync(request);
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            request.RecipeVM.UserId = userId;
+            await recipeService.CreateRecipeWithSteps(request.RecipeVM, request.ListSORVM);
             return Ok(new
             {
-                message = $"Ban da tao thanh cong Recipe co ten la: {request.RecipeName}"
+                message = $"Ban da tao thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
+            });
+        }
+        [HttpDelete("delete")]
+        [Authorize]
+        public async Task<ActionResult> Delete(int recipeId)
+        {
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            await recipeService.DeActiveRecipe(recipeId);
+            return Ok(new
+            {
+                message = $"Ban da xoa thanh cong Recipe co ten la: {recipeId}"
             });
         }
 
-        public ActionResult Delete()
-        {
-            throw new NotImplementedException();
-        }
-
         [HttpGet("read")]
-        public ActionResult Read()
+        public async Task<ActionResult> Read(int userId)
         {
-            return Ok(recipeService.Get());
+            return Ok(recipeService.GetAllRecipeByUserId(userId));
         }
 
-        public ActionResult Update()
+        [HttpPut("update")]
+        [Authorize]
+        public async Task<ActionResult> Update([FromBody]RequestCreateRecipeWithConstraintViewMode request)
         {
-            throw new NotImplementedException();
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            request.RecipeVM.UserId = userId;
+            await recipeService.UpdateRecipe(request.RecipeVM, request.ListSORVM);
+            return Ok(new
+            {
+                message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
+            });
         }
     }
-
     #endregion
 }
