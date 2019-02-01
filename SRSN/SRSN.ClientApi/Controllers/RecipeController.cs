@@ -51,7 +51,14 @@ namespace SRSN.ClientApi.Controllers
         [HttpGet("read")]
         public async Task<ActionResult> Read(int userId)
         {
-            return Ok(recipeService.GetAllRecipeByUserId(userId));
+            try
+            {
+                return Ok(await recipeService.GetAllRecipeByUserId(userId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut("update")]

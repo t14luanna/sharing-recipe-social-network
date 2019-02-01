@@ -11,6 +11,6 @@ namespace SRSN.DatabaseManager.Entities
         public DateTime? CreateTime { get; set; }
         public bool? IsRead { get; set; }
 
-        public virtual AspNetUsers User { get; set; }
+        public virtual AspNetUsersService User { get; set; }
     }
 }

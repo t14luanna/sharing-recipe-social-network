@@ -11,7 +11,7 @@ namespace SRSN.DatabaseManager.Entities
         public DateTime? CreateTime { get; set; }
         public bool? Active { get; set; }
 
-        public virtual AspNetUsers FollowingUser { get; set; }
-        public virtual AspNetUsers User { get; set; }
+        public virtual AspNetUsersService FollowingUser { get; set; }
+        public virtual AspNetUsersService User { get; set; }
     }
 }

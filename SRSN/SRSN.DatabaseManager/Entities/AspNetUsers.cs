@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace SRSN.DatabaseManager.Entities
 {
-    public partial class AspNetUsers
+    public partial class AspNetUsersService
     {
-        public AspNetUsers()
+        public AspNetUsersService()
         {
             AspNetUserClaims = new HashSet<AspNetUserClaims>();
             AspNetUserLogins = new HashSet<AspNetUserLogins>();

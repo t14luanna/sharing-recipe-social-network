@@ -122,6 +122,8 @@ namespace SRSN.DatabaseManager
 
                 mc.CreateMap<CategoryViewModel, CategoryMain>();
                 mc.CreateMap<CategoryMain , CategoryViewModel>();
+
+
             });
             var mapper = mapperConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);

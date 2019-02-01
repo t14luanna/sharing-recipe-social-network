@@ -28,7 +28,7 @@ namespace SRSN.DatabaseManager.Entities
         public int? Serving { get; set; }
         public bool? Active { get; set; }
 
-        public virtual AspNetUsers User { get; set; }
+        public virtual AspNetUsersService User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }
         public virtual ICollection<IngredientList> IngredientList { get; set; }
         public virtual ICollection<Post> Post { get; set; }

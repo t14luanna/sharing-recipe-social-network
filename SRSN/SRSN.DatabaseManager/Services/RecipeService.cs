@@ -75,18 +75,19 @@ namespace SRSN.DatabaseManager.Services
         public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId)
         {
             // lay ra step of recipe repository
-            var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
-
-            var recipes = await this.Get(p => p.UserId == userId).ToListAsync();
-            foreach(var recipe in recipes)
-            {
-                var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
-                if(stepOfRecipeRepo.Count() > 0)
+         
+                var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
+                var recipes = await this.Get(p => p.UserId == userId).ToListAsync();
+                foreach (var recipe in recipes)
                 {
-                    recipe.ListSORVM = await stepOfRecipes.ProjectTo<StepsOfRecipeViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                    var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
+                    if (stepOfRecipeRepo.Count() > 0)
+                    {
+                        recipe.ListSORVM = await stepOfRecipes.ProjectTo<StepsOfRecipeViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                    }
                 }
-            }
-            return recipes;
+                return recipes;
+          
         }
   
         public async Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM)
