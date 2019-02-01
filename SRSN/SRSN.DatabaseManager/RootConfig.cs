@@ -65,6 +65,7 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(IRatingRecipeService), typeof(RatingRecipeService));
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));
             services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
+            services.AddScoped(typeof(IIngredientsService), typeof(IngredientsService));
 
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc => {
@@ -106,7 +107,12 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<LikePostViewModel, LikePost>()
                   .ForMember(x => x.User, y => y.Ignore())
                   .ForMember(x => x.Post, y => y.Ignore());
-
+                mc.CreateMap<RecipeIngredientViewModel, RecipeIngredient>()
+                 .ForMember(x => x.Recipe, y => y.Ignore())
+                 .ForMember(x => x.Ingredient, y => y.Ignore());
+                mc.CreateMap<RecipeCategoryViewModel, RecipeCategory>()
+                .ForMember(x => x.Recipe, y => y.Ignore())
+                .ForMember(x => x.CategoryItem, y => y.Ignore());
                 mc.CreateMap<RatingRecipeViewModel, Recipe>();
                 mc.CreateMap<Recipe, RatingRecipeViewModel>();
 

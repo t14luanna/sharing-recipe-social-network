@@ -189,13 +189,19 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<Comment>(entity =>
             {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.CommentParentId).HasColumnName("CommentParentID");
 
-                entity.Property(e => e.CreateTime).HasColumnType("datetime");
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
-                entity.HasOne(d => d.SharePost)
+                entity.Property(e => e.UpdateTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Post)
                     .WithMany(p => p.Comment)
-                    .HasForeignKey(d => d.SharePostId)
+                    .HasForeignKey(d => d.PostId)
                     .HasConstraintName("FK_Comment_SharedPost");
 
                 entity.HasOne(d => d.User)
@@ -258,6 +264,11 @@ namespace SRSN.ClientApi.Entities
             modelBuilder.Entity<Ingredients>(entity =>
             {
                 entity.Property(e => e.IngredientName).HasMaxLength(50);
+
+                entity.HasOne(d => d.Store)
+                    .WithMany(p => p.Ingredients)
+                    .HasForeignKey(d => d.StoreId)
+                    .HasConstraintName("FK_Ingredients_Store");
             });
 
             modelBuilder.Entity<LikePost>(entity =>
@@ -321,7 +332,9 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<RatingRecipe>(entity =>
             {
-                entity.Property(e => e.CreateTime).HasColumnType("datetime");
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RatingRecipe)
@@ -336,7 +349,11 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<Recipe>(entity =>
             {
-                entity.Property(e => e.CreateTime).HasColumnType("datetime");
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.RecipeName).HasMaxLength(50);
 
@@ -354,6 +371,10 @@ namespace SRSN.ClientApi.Entities
             {
                 entity.ToTable("Recipe_Category");
 
+                entity.HasIndex(e => new { e.CategoryItemId, e.RecipeId })
+                    .HasName("Uniquekey_Recipe_Category")
+                    .IsUnique();
+
                 entity.HasOne(d => d.CategoryItem)
                     .WithMany(p => p.RecipeCategory)
                     .HasForeignKey(d => d.CategoryItemId)
@@ -369,7 +390,9 @@ namespace SRSN.ClientApi.Entities
             {
                 entity.ToTable("Recipe_Ingredient");
 
-                entity.Property(e => e.Quantitative).HasMaxLength(50);
+                entity.Property(e => e.IngredientName).HasMaxLength(100);
+
+                entity.Property(e => e.Quantitative).HasMaxLength(100);
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.RecipeIngredient)

@@ -16,7 +16,10 @@ namespace SRSN.ClientApi.Entities
         public string IngredientName { get; set; }
         public double? MinPrice { get; set; }
         public double? MaxPrice { get; set; }
+        public string ImageUrl { get; set; }
+        public int? StoreId { get; set; }
 
+        public virtual Store Store { get; set; }
         public virtual ICollection<IngredientBrand> IngredientBrand { get; set; }
         public virtual ICollection<IngredientList> IngredientList { get; set; }
         public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }

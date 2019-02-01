@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace SRSN.DatabaseManager.Entities
+namespace SRSN.DatabaseManager.ViewModels
 {
-    public partial class RecipeIngredient
+    public class RecipeIngredientViewModel
     {
         public int Id { get; set; }
         public int? RecipeId { get; set; }
         public int? IngredientId { get; set; }
         public string IngredientName { get; set; }
         public string Quantitative { get; set; }
-        public virtual Ingredients Ingredient { get; set; }
-        public virtual Recipe Recipe { get; set; }
     }
 }
