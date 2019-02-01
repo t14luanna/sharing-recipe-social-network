@@ -9,6 +9,6 @@ namespace SRSN.DatabaseManager.Entities
         public int RoleId { get; set; }
 
         public virtual AspNetRoles Role { get; set; }
-        public virtual AspNetUsers User { get; set; }
+        public virtual AspNetUsersService User { get; set; }
     }
 }

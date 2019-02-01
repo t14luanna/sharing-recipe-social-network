@@ -21,7 +21,7 @@ namespace SRSN.DatabaseManager.Entities
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<AspNetUsersService> AspNetUsers { get; set; }
         public virtual DbSet<CategoryItem> CategoryItem { get; set; }
         public virtual DbSet<CategoryMain> CategoryMain { get; set; }
         public virtual DbSet<Collection> Collection { get; set; }
@@ -125,7 +125,7 @@ namespace SRSN.DatabaseManager.Entities
                     .HasForeignKey(d => d.UserId);
             });
 
-            modelBuilder.Entity<AspNetUsers>(entity =>
+            modelBuilder.Entity<AspNetUsersService>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedEmail)
                     .HasName("EmailIndex");

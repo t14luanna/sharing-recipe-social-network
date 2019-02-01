@@ -10,6 +10,6 @@ namespace SRSN.DatabaseManager.Entities
         public string Name { get; set; }
         public string Value { get; set; }
 
-        public virtual AspNetUsers User { get; set; }
+        public virtual AspNetUsersService User { get; set; }
     }
 }

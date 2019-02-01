@@ -21,7 +21,7 @@ namespace SRSN.DatabaseManager.Entities
         public bool? Active { get; set; }
 
         public virtual Post Post { get; set; }
-        public virtual AspNetUsers User { get; set; }
+        public virtual AspNetUsersService User { get; set; }
         public virtual ICollection<CommentLike> CommentLike { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace SRSN.DatabaseManager.Entities
         public int UserId { get; set; }
 
         public virtual Comment Comment { get; set; }
-        public virtual AspNetUsers User { get; set; }
+        public virtual AspNetUsersService User { get; set; }
     }
 }
