@@ -12,6 +12,5 @@ namespace SRSN.DatabaseManager.Entities
         public string UserId { get; set; }
 
         public virtual Recipe Recipe { get; set; }
-        public virtual AspNetUsersService User { get; set; }
     }
 }

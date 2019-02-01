@@ -15,7 +15,7 @@ namespace SRSN.DatabaseManager.Entities
         public int UserId { get; set; }
         public bool? Active { get; set; }
 
-        public virtual AspNetUsersService User { get; set; }
+        public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }
     }
 }

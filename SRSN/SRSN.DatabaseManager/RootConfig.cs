@@ -66,6 +66,7 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));
             services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
             services.AddScoped(typeof(IIngredientsService), typeof(IngredientsService));
+            services.AddScoped(typeof(IPostService), typeof(PostService));
 
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc => {
@@ -128,6 +129,9 @@ namespace SRSN.DatabaseManager
 
                 mc.CreateMap<CategoryViewModel, CategoryMain>();
                 mc.CreateMap<CategoryMain , CategoryViewModel>();
+
+                mc.CreateMap<PostViewModel, Post>();
+                mc.CreateMap<Post, PostViewModel>();
 
 
             });

@@ -21,7 +21,7 @@ namespace SRSN.DatabaseManager.Entities
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
-        public virtual DbSet<AspNetUsersService> AspNetUsers { get; set; }
+        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<CategoryItem> CategoryItem { get; set; }
         public virtual DbSet<CategoryMain> CategoryMain { get; set; }
         public virtual DbSet<Collection> Collection { get; set; }
@@ -125,7 +125,7 @@ namespace SRSN.DatabaseManager.Entities
                     .HasForeignKey(d => d.UserId);
             });
 
-            modelBuilder.Entity<AspNetUsersService>(entity =>
+            modelBuilder.Entity<AspNetUsers>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedEmail)
                     .HasName("EmailIndex");
@@ -319,6 +319,14 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Post>(entity =>
             {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UpdateTime).HasColumnType("datetime");
+
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.Post)
                     .HasForeignKey(d => d.RecipeId)
@@ -370,6 +378,10 @@ namespace SRSN.DatabaseManager.Entities
             modelBuilder.Entity<RecipeCategory>(entity =>
             {
                 entity.ToTable("Recipe_Category");
+
+                entity.HasIndex(e => new { e.CategoryItemId, e.RecipeId })
+                    .HasName("Uniquekey_Recipe_Category")
+                    .IsUnique();
 
                 entity.HasOne(d => d.CategoryItem)
                     .WithMany(p => p.RecipeCategory)

@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace SRSN.DatabaseManager.Entities
+namespace SRSN.DatabaseManager.ViewModels
 {
-    public partial class SharedPost
+    public class PostViewModel
     {
-        public SharedPost()
-        {
-            Comment = new HashSet<Comment>();
-        }
-
         public int Id { get; set; }
         public string UserId { get; set; }
         public double? Price { get; set; }
@@ -19,9 +13,8 @@ namespace SRSN.DatabaseManager.Entities
         public int? RecipeId { get; set; }
         public string ContentPost { get; set; }
         public string VideoUrl { get; set; }
-
-        public virtual Recipe Recipe { get; set; }
-        public virtual AspNetUsersService User { get; set; }
-        public virtual ICollection<Comment> Comment { get; set; }
+        public DateTime? CreateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
+        public bool? Active { get; set; }
     }
 }

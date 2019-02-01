@@ -52,13 +52,13 @@ namespace SRSN.ClientApi.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=12345678;Trusted_Connection=False;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
 
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
@@ -319,6 +319,14 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<Post>(entity =>
             {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UpdateTime).HasColumnType("datetime");
+
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.Post)
                     .HasForeignKey(d => d.RecipeId)

@@ -29,7 +29,7 @@ namespace SRSN.ClientApi.Controllers
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.UserId = userId;
             request.CreateTime = DateTime.Now;
-            await commentService.CreateAsync(request);
+            await commentService.CreateAsync(request);  
             return Ok(new
             {
                 message = "Create comment successful"
@@ -64,11 +64,11 @@ namespace SRSN.ClientApi.Controllers
 
         [HttpDelete("deactivateComment")]
         [Authorize]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int Id)
         {
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-            await commentService.DeActiveComment(id);
+            await commentService.DeActiveComment(Id);
             return Ok(new
             {
                 message = "Deactivate comment successfull"

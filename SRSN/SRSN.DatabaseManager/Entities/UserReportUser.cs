@@ -11,7 +11,7 @@ namespace SRSN.DatabaseManager.Entities
         public int? Description { get; set; }
         public DateTime? CreateTime { get; set; }
 
-        public virtual AspNetUsersService ReportedUser { get; set; }
-        public virtual AspNetUsersService User { get; set; }
+        public virtual AspNetUsers ReportedUser { get; set; }
+        public virtual AspNetUsers User { get; set; }
     }
 }

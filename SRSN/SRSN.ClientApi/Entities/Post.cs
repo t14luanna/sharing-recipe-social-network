@@ -20,6 +20,9 @@ namespace SRSN.ClientApi.Entities
         public int? RecipeId { get; set; }
         public string ContentPost { get; set; }
         public string VideoUrl { get; set; }
+        public DateTime? CreateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
+        public bool? Active { get; set; }
 
         public virtual Recipe Recipe { get; set; }
         public virtual AspNetUsers User { get; set; }

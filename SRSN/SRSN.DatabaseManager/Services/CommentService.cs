@@ -11,7 +11,7 @@ namespace SRSN.DatabaseManager.Services
 {
     public interface ICommentService : IBaseService<Comment, CommentViewModel>
     {
-        Task DeActiveComment(int Id);
+        Task DeActiveComment(int id);
     }
 
     public class CommentService : BaseService<Comment, CommentViewModel>, ICommentService
@@ -20,9 +20,9 @@ namespace SRSN.DatabaseManager.Services
         {
         }
 
-        public async Task DeActiveComment(int Id)
+        public async Task DeActiveComment(int id)
         {
-            var comment = await this.selfDbSet.FindAsync(Id);
+            var comment = await this.selfDbSet.FindAsync(id);
             comment.Active = false;
             this.selfDbSet.Update(comment);
             await this.unitOfWork.Commit();

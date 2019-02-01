@@ -12,7 +12,6 @@ namespace SRSN.DatabaseManager.ViewModels
         public string NotiContent { get; set; }
         public DateTime? CreateTime { get; set; }
         public bool? IsRead { get; set; }
-
-        public virtual AspNetUsersService User { get; set; }
+        
     }
 }
