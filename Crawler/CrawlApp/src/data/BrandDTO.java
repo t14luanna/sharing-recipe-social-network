@@ -22,8 +22,12 @@ public class BrandDTO {
         this.id = Integer.parseInt((String) brand.get("id"));
         this.title = (String) brand.get("title");
         
-        this.products = new CategoryDTO((JSONObject) brand.get("products"));
-        this.stores = new CategoryDTO((JSONObject) brand.get("stores"));
+        try{
+            this.products = new CategoryDTO((JSONObject) brand.get("products"));
+            this.stores = new CategoryDTO((JSONObject) brand.get("stores"));
+        }catch(Exception e){
+            
+        }
     }
 
     public int getId() {

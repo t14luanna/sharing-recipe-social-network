@@ -111,17 +111,21 @@ public class Crawler {
                 });
             }
             if(element.getNextPage() != null){
-                WebElement nextPage = driver.findElement(By.xpath(element.getNextPage().getSelector()));
-                if(nextPage != null){
-                    String linkNextPage;
-                    if(element.getValueSelector().length() > 0){
-                        linkNextPage = nextPage.getAttribute(element.getValueSelector());
-                    } else {
-                        linkNextPage = nextPage.getText();
+                try{
+                    WebElement nextPage = driver.findElement(By.xpath(element.getNextPage().getSelector()));
+                    if(nextPage != null){
+                        String linkNextPage;
+                        if(element.getValueSelector().length() > 0){
+                            linkNextPage = nextPage.getAttribute(element.getValueSelector());
+                        } else {
+                            linkNextPage = nextPage.getText();
+                        }
+                        if(linkNextPage != null){
+                            nextURL = linkNextPage;
+                        }
                     }
-                    if(linkNextPage != null){
-                        nextURL = linkNextPage;
-                    }
+                } catch(Exception e){
+                    
                 }
             }
 
@@ -131,7 +135,6 @@ public class Crawler {
             }                       
         }
         
-        System.out.println(result);
         this.results.add(result);
         
         if(nextURL != null){
@@ -143,7 +146,6 @@ public class Crawler {
     public void crawl(){
         if(this.brand.getElements().size() > 0){
             crawlElements(this.brand.getElements());
-            System.out.println(this.results);
         }
     }
     
