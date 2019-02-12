@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SRSN.ClientApi", "SRSN.Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SRSN.ClientView", "SRSN.ClientView\SRSN.ClientView.csproj", "{2B04340A-875D-45B7-82E6-B5908DBDAF60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SRSN.DatabaseManager", "SRSN.DatabaseManager\SRSN.DatabaseManager.csproj", "{28C8EE05-FFFD-49ED-A3D2-08A793C1E134}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SRSN.DatabaseManager", "SRSN.DatabaseManager\SRSN.DatabaseManager.csproj", "{28C8EE05-FFFD-49ED-A3D2-08A793C1E134}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SRSN.Client_View", "SRSN.Client_View\SRSN.Client_View.csproj", "{226325A6-DEA1-415C-B06B-56522F33472B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{28C8EE05-FFFD-49ED-A3D2-08A793C1E134}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28C8EE05-FFFD-49ED-A3D2-08A793C1E134}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28C8EE05-FFFD-49ED-A3D2-08A793C1E134}.Release|Any CPU.Build.0 = Release|Any CPU
+		{226325A6-DEA1-415C-B06B-56522F33472B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{226325A6-DEA1-415C-B06B-56522F33472B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{226325A6-DEA1-415C-B06B-56522F33472B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{226325A6-DEA1-415C-B06B-56522F33472B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

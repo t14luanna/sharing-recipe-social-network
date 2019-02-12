@@ -61,6 +61,19 @@ namespace SRSN.ClientApi.Controllers
             }
         }
 
+        [HttpGet("read-popular")]
+        public async Task<ActionResult> ReadPopular()
+        {
+            try
+            {
+                return Ok(recipeService.GetPopularRecipes());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> Update([FromBody]RequestCreateRecipeWithConstraintViewMode request)

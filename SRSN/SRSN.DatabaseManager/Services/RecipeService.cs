@@ -20,6 +20,7 @@ namespace SRSN.DatabaseManager.Services
         Task DeActiveRecipe(int id);
         Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId);
+       ICollection<RecipeViewModel> GetPopularRecipes();
     }
 
     public class RecipeService : BaseService<Recipe, RecipeViewModel>, IRecipeService
@@ -124,6 +125,11 @@ namespace SRSN.DatabaseManager.Services
 
                 throw ex;
             }
+        }
+
+        public ICollection<RecipeViewModel> GetPopularRecipes()
+        {
+            return this.Get().Take(6).ToList();
         }
 
         public async Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
