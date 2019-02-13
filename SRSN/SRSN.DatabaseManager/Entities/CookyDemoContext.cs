@@ -52,7 +52,7 @@ namespace SRSN.DatabaseManager.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=123456789;Trusted_Connection=False;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
 
@@ -264,6 +264,11 @@ namespace SRSN.DatabaseManager.Entities
             modelBuilder.Entity<Ingredients>(entity =>
             {
                 entity.Property(e => e.IngredientName).HasMaxLength(50);
+
+                entity.HasOne(d => d.Store)
+                    .WithMany(p => p.Ingredients)
+                    .HasForeignKey(d => d.StoreId)
+                    .HasConstraintName("FK_Ingredients_Store");
             });
 
             modelBuilder.Entity<LikePost>(entity =>
@@ -314,9 +319,13 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Post>(entity =>
             {
-                entity.Property(e => e.CreateTime).HasColumnType("date");
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.UpdateTime).HasColumnType("date");
+                entity.Property(e => e.CreateTime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.Post)
@@ -370,6 +379,10 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.ToTable("Recipe_Category");
 
+                entity.HasIndex(e => new { e.CategoryItemId, e.RecipeId })
+                    .HasName("Uniquekey_Recipe_Category")
+                    .IsUnique();
+
                 entity.HasOne(d => d.CategoryItem)
                     .WithMany(p => p.RecipeCategory)
                     .HasForeignKey(d => d.CategoryItemId)
@@ -385,7 +398,9 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.ToTable("Recipe_Ingredient");
 
-                entity.Property(e => e.Quantitative).HasMaxLength(50);
+                entity.Property(e => e.IngredientName).HasMaxLength(100);
+
+                entity.Property(e => e.Quantitative).HasMaxLength(100);
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.RecipeIngredient)

@@ -1,0 +1,251 @@
+{
+  "brands":[
+    {
+            "id":"1",
+            "title":"Bach Hoa Xanh",
+            "products":{
+              "urls":[
+                    "https://www.bachhoaxanh.com/mi",
+                    "https://www.bachhoaxanh.com/gao-gao-nep",
+                    "https://www.bachhoaxanh.com/dau-an",
+                    "https://www.bachhoaxanh.com/nuoc-tuong",
+                    "https://www.bachhoaxanh.com/nuoc-mam",
+                    "https://www.bachhoaxanh.com/tuong-ot-ca-den",
+                    "https://www.bachhoaxanh.com/duong-hat-nem-bot-ngot-muoi",
+                    "https://www.bachhoaxanh.com/nuoc-cham-gia-vi-khac",
+                    "https://www.bachhoaxanh.com/kho-bo-hat-cac-loai",
+                    "https://www.bachhoaxanh.com/mi-nui-bun-kho",
+                    "https://www.bachhoaxanh.com/bot-che-bien-san",
+                    "https://www.bachhoaxanh.com/do-dong-lanh-do-mat",
+                    "https://www.bachhoaxanh.com/do-dong-hop",
+                    "https://www.bachhoaxanh.com/thuc-pham-khac"
+              ],
+              "elements":[
+                {
+                  "title":"product",
+                  "type":"link",
+                  "selector":"//ul[@class='cate']/li/a",
+                  "value":"href",
+                  "elements":[
+                      {
+                        "title":"Name",
+                        "type":"data",
+                        "selector":"//h1[@class='nameproduct']",
+                        "value":""
+                      },
+                      {
+                        "title":"Price",
+                        "type":"data",
+                        "selector":"//div[@class='boxprice']/strong",
+                        "value":""
+                      },
+                      {
+                        "title":"Image",
+                        "type":"data",
+                        "selector":"//div[@class='owl-item active center']//img",
+                        "value":"src"
+                      }
+                  ],
+                  "beforeLoad":[
+                    {
+                      "selector":"//li[@class='nextPaging product']/a[@class='viewmore']",
+                      "hasMore":true
+                    }
+                  ]
+                }
+              ]
+            },
+            "stores":{
+                  "urls": ["https://www.bachhoaxanh.com/he-thong-sieu-thi"],
+                  "elements": [
+                      {
+                          "title": "category",
+                          "type": "link",
+                          "selector": "//div[@class='listprovince']//aside/a",
+                          "value": "href",
+                          "elements": [
+                              {
+                                  "title": "store",
+                                  "type": "link",
+                                  "selector": "//ul[@class='listshop']/li//a[1]",
+                                  "value": "href",
+                                  "elements": [
+                                      {
+                                          "title": "Name",
+                                          "type": "data",
+                                          "selector": "//h1[@class='storename']",
+                                          "value": ""
+                                      },
+                                      {
+                                          "title": "Address",
+                                          "type": "data",
+                                          "selector": "//div[@class='detailinfo']//h2",
+                                          "value": ""
+                                      }
+                                  ],
+                                  "beforeLoad": [
+                                      {
+                                          "selector": "//a[@class='viewmoreshop']",
+                                          "hasMore": true
+                                      }
+                                  ]
+                              }
+                          ],
+                          "beforeLoad": [
+                              {
+                                  "selector": "//div[@id='cur-province']",
+                                  "hasMore": false
+                              }
+                          ]
+                      }
+                  ]
+            }
+    },
+    {
+            "id":"2",
+            "title":"Coopmart",
+            "products":{
+                "urls":[
+                    "https://coopmart.vn/danh-muc/thuc-pham-tuoi-song_8IiFnmF",
+                    "https://coopmart.vn/danh-muc/dong-lanh-and-bao-quan-mat_xqLn09V",
+                    "https://coopmart.vn/danh-muc/thuc-pham-dong-goi_h69DVFF"
+                ],
+                "elements":[
+                    {
+                        "title":"category",
+                        "type":"link",
+                        "selector":"//li[@class='hassub active']/div[@class='sub']/ul/li/a",
+                        "value":"href",
+                        "elements":[
+                            {
+                                "title":"product",
+                                "type":"link",
+                                "selector":"//div[@class='col-xs-6 col-sm-4 col-md-3 col-lg-3 col-xl-3 nopadding' and position() > 2]/div/figure/a[@class='product-img']",
+                                "value":"href",
+                                "elements": [
+                                    {
+                                        "title":"Name",
+                                        "type":"data",
+                                        "selector":"//h1[@class='product-page-name']",
+                                        "value":""
+                                    },
+                                    {
+                                        "title":"Price",
+                                        "type":"data",
+                                        "selector":"//div[@class='product-price clearfix']/div[@class='new']",
+                                        "value":""
+                                    },
+                                    {
+                                        "title":"Image",
+                                        "type":"data",
+                                        "selector":"//a[@class='fancybox container-main-image']/img",
+                                        "value":"src"
+                                    }
+                                ],
+                                "nextPage":{
+                                    "title":"product",
+                                    "type":"link",
+                                    "selector":"//ul[@class='pagination']/li[@class='selected']/following-sibling::li/a",
+                                    "value":"href"
+                                }
+                            }
+                        ]
+                      }
+                ]  
+            }
+    },
+    {
+            "id":"5",
+            "title":"aeon",
+            "products":{
+                "urls":[
+                    "https://aeoneshop.com/collections/thuc-pham-kho",
+                    "https://aeoneshop.com/collections/gia-vi-dang-bot",
+                    "https://aeoneshop.com/collections/gia-vi-dang-nuoc",
+                    "https://aeoneshop.com/collections/dau-an",
+                    "https://aeoneshop.com/collections/cac-loai-hat"
+                ],
+                "elements":[
+                    {
+  
+                        "title":"product",
+                        "type":"link",
+                        "selector":"//div[@class='product-detail']/div[@class='left-block']/a",
+                        "value":"href",
+                        "elements": [
+                            {
+                                "title":"Name",
+                                "type":"data",
+                                "selector":"//div[@class='zoomWrapper']/img",
+                                "value":"alt"
+                            },
+                            {
+                                "title":"Price",
+                                "type":"data",
+                                "selector":"//div[@class='price_product']//span[contains(@class,'price')]",
+                                "value":""
+                            },
+                            {
+                                "title":"Image",
+                                "type":"data",
+                                "selector":"//div[@class='zoomWrapper']/img",
+                                "value":"src"
+                            }
+                        ]
+                    }
+                ]  
+            }
+    },
+    {
+            "id":"6",
+            "title":"adayroi",
+            "products":{
+                "urls":[
+                    "https://www.adayroi.com/gio-qua-tet-c2028"
+                ],
+                "elements":[
+                    {
+                        "title":"category",
+                        "type":"link",
+                        "selector":"//li[@class=' category-item category-item_lv2']/a",
+                        "value":"href",
+                        "elements":[
+                            {
+                                "title":"product",
+                                "type":"link",
+                                "selector":"//div[@class='product-item__container']/a[@class='product-item__thumbnail']",
+                                "value":"href",
+                                "elements": [
+                                    {
+                                        "title":"Name",
+                                        "type":"data",
+                                        "selector":"//div[@class='product-detail__title']/h1",
+                                        "value":""
+                                    },
+                                    {
+                                        "title":"Price",
+                                        "type":"data",
+                                        "selector":"//div[@class='price-info__sale']",
+                                        "value":""
+                                    },
+                                    {
+                                        "title":"Image",
+                                        "type":"data",
+                                        "selector":"//div[@class='pull-left single-container ict_product-gallery__stage ']/img",
+                                        "value":"src"
+                                    }
+                                ],
+                                "nextPage":{
+                                    "title":"product",
+                                    "type":"link",
+                                    "selector":"//nav[@class='Page navigation']//li[@class='active']/following-sibling::li/a",
+                                    "value":"href"
+                                }
+                            }
+                        ]
+                      }
+                ]  
+            }
+    }
+  ]
+}

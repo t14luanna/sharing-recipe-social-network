@@ -21,21 +21,20 @@ namespace SRSN.ClientApi.Controllers
             this.postService = postService;
         }
 
-        [HttpPost("createPost")]
+        [HttpPost("create")]
         
         public async Task<ActionResult> Create([FromBody]PostViewModel request)
         {
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.UserId = userId;
-            request.CreateTime = DateTime.UtcNow.AddHours(7);
             await postService.CreateAsync(request);
             return Ok(new {
                 message = "Create new post successfully"
             });
         }
 
-        [HttpPut("updatePost")]
+        [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> Update([FromBody]PostViewModel request)
         {
@@ -49,7 +48,7 @@ namespace SRSN.ClientApi.Controllers
             });
         }
 
-        [HttpDelete("deactivatePost")]
+        [HttpDelete("deactivate")]
         [Authorize]
         public async Task<ActionResult> Delete(int postId)
         {
@@ -61,7 +60,7 @@ namespace SRSN.ClientApi.Controllers
             });
         }
 
-        [HttpGet("getPostByUserId")]
+        [HttpGet("get-post-by-userid")]
         public ActionResult GetAllPostByUserId(int userId)
         {
             return Ok(postService.Get(u => u.UserId == userId));

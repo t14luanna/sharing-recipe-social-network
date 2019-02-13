@@ -8,6 +8,8 @@ namespace SRSN.DatabaseManager.ViewModels
     {
         public RecipeViewModel RecipeVM { get; set; }
         public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
+        public List<RecipeIngredientViewModel> listIngredient { get; set; }
+        public List<RecipeCategoryViewModel> listCategory { get; set; }
     }
 
     public class RecipeViewModel
@@ -24,6 +26,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public int? Serving { get; set; }
         public bool? Active { get; set; }
         public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
-
+        public List<RecipeIngredientViewModel> listIngredient { get; set; }
+        public List<RecipeCategoryViewModel> listCategory { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SRSN.DatabaseManager.Identities;
+using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
 
 namespace SRSN.ClientApi.Controllers
@@ -17,6 +18,7 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        
         private UserManager<SRSNUser> userManager;
         private IMapper mapper;
         public AccountController(UserManager<SRSNUser> userManager, IMapper mapper)
@@ -84,7 +86,30 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(user, userVM);
             return Ok(userVM);
         }
-
+        [HttpGet("get-top-ten")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<AccountViewModel>> GetTopUser()
+        {
+            var list = new List<AccountViewModel>();
+            foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point).Take(10))
+            {
+                list.Add(new AccountViewModel()
+                {
+                    Id = u.Id,
+                    Username = u.UserName,
+                    FirstName = u.FirstName,
+                    Address = u.Address,
+                    Birthdate = u.Birthdate,
+                    Email = u.Email,
+                    Gender = u.Gender,
+                    LastName = u.LastName,
+                    Phone = u.Phone ,
+                    Point = u.Point
+                    
+                });
+            }
+            return list;
+        }
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> UpdateProfile([FromBody] AccountEditViewModel data)
