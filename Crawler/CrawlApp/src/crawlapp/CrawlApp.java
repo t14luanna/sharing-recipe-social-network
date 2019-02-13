@@ -33,8 +33,7 @@ public class CrawlApp {
     
     public static void main(String[] args) {
         init();
-        crawlProduct(0);
-        crawlStore(0);
+        crawlAll();
     }
     
     public static void init(){
@@ -108,10 +107,18 @@ public class CrawlApp {
                 dao.create(dto);
                 System.out.println(count + " : " + next);
             } catch (Exception ex) {
+                System.out.println(ex.getMessage());
                 System.out.println("Error: " + count);
             }
         }
         
         crawler.close();
+    }
+    
+    public static void crawlAll(){
+        for (int i = 0; i < brands.size(); i++) {
+            crawlProduct(i);
+            crawlStore(i);
+        }
     }
 }

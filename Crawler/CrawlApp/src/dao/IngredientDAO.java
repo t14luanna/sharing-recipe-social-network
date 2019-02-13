@@ -8,8 +8,8 @@ package dao;
 import dto.IngredientDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import utils.DBUtils;
 
 /**
@@ -18,6 +18,9 @@ import utils.DBUtils;
  */
 public class IngredientDAO {
     public void create(IngredientDTO dto) throws SQLException, ClassNotFoundException{
+        if(check(dto.getName())){
+            return;
+        }
         Connection connection = DBUtils.getConnection();
         String sql = "Insert into Ingredient (Name, Price, Image,BrandId) "
                 + " values (?, ?, ?, ?) ";
@@ -36,6 +39,27 @@ public class IngredientDAO {
             statement.close();
             connection.close();
         }
+    }
+    
+    public boolean check(String name) throws SQLException, ClassNotFoundException{
+        Connection connection = DBUtils.getConnection();
+        String sql = "SELECT *  FROM Ingredient WHERE Name = ?";
 
+        PreparedStatement statement = connection.prepareStatement(sql);
+        try{
+
+
+            statement.setString(1, name);
+
+            ResultSet res = statement.executeQuery();
+            if(!res.next()){
+                return false;
+            }
+            
+            return true;
+        } finally{
+            statement.close();
+            connection.close();
+        }
     }
 }

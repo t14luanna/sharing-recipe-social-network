@@ -238,7 +238,58 @@
                                 "nextPage":{
                                     "title":"product",
                                     "type":"link",
-                                    "selector":"//nav[@class='Page navigation']//li[@class='active']/following-sibling::li/a",
+                                    "selector":"//nav[@class='Page navigation']//li[@class='active']/following-sibling::li[position() != last()]/a",
+                                    "value":"href"
+                                }
+                            }
+                        ]
+                      }
+                ]  
+            }
+    },
+    {
+            "id":"6",
+            "title":"vnplus",
+            "products":{
+                "urls":[
+                    "https://www.adayroi.com/gio-qua-tet-c2028"
+                ],
+                "elements":[
+                    {
+                        "title":"category",
+                        "type":"link",
+                        "selector":"//li[@class=' category-item category-item_lv2']/a",
+                        "value":"href",
+                        "elements":[
+                            {
+                                "title":"product",
+                                "type":"link",
+                                "selector":"//div[@class='product-item__container']/a[@class='product-item__thumbnail']",
+                                "value":"href",
+                                "elements": [
+                                    {
+                                        "title":"Name",
+                                        "type":"data",
+                                        "selector":"//div[@class='product-detail__title']/h1",
+                                        "value":""
+                                    },
+                                    {
+                                        "title":"Price",
+                                        "type":"data",
+                                        "selector":"//div[@class='price-info__sale']",
+                                        "value":""
+                                    },
+                                    {
+                                        "title":"Image",
+                                        "type":"data",
+                                        "selector":"//div[@class='pull-left single-container ict_product-gallery__stage ']/img",
+                                        "value":"src"
+                                    }
+                                ],
+                                "nextPage":{
+                                    "title":"product",
+                                    "type":"link",
+                                    "selector":"//nav[@class='Page navigation']//li[@class='active']/following-sibling::li[position() != last()]/a",
                                     "value":"href"
                                 }
                             }

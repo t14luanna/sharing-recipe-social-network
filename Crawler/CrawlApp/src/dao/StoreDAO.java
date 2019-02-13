@@ -3,6 +3,7 @@ package dao;
 import dto.StoreDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import utils.DBUtils;
 
@@ -18,6 +19,9 @@ import utils.DBUtils;
  */
 public class StoreDAO {
     public void create(StoreDTO dto) throws SQLException, ClassNotFoundException{
+        if(check(dto.getName())){
+            return;
+        }
         Connection connection = DBUtils.getConnection();
         String sql = "Insert into Store (Name, Address,BrandId) "
                 + " values (?, ?, ?) ";
@@ -36,5 +40,27 @@ public class StoreDAO {
             connection.close();
         }
 
+    }
+    
+    public boolean check(String name) throws SQLException, ClassNotFoundException{
+        Connection connection = DBUtils.getConnection();
+        String sql = "SELECT *  FROM Store WHERE Name = ?";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        try{
+
+
+            statement.setString(1, name);
+
+            ResultSet res = statement.executeQuery();
+            if(!res.next()){
+                return false;
+            }
+            
+            return true;
+        } finally{
+            statement.close();
+            connection.close();
+        }
     }
 }
