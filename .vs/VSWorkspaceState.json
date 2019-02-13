@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\SRSN",
+    "\\SRSN\\SRSN.ClientApi",
+    "\\SRSN\\SRSN.DatabaseManager",
+    "\\SRSN\\SRSN.DatabaseManager\\Entities",
+    "\\SRSN\\SRSN.DatabaseManager\\ViewModels",
+    "\\SRSN\\SRSN.Service\\BaseModels",
+    "\\SRSN\\SRSN.Service\\Services"
+  ],
+  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\Entities\\Post.cs",
+  "PreviewInSolutionExplorer": false
+}

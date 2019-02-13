@@ -9,7 +9,7 @@ namespace SRSN.DatabaseManager.Entities
         public int IngredientId { get; set; }
         public int? RecipeId { get; set; }
         public bool? IsBought { get; set; }
-        public string UserId { get; set; }
+        public int? UserId { get; set; }
 
         public virtual Ingredients Ingredient { get; set; }
         public virtual Recipe Recipe { get; set; }

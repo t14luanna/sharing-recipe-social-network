@@ -60,7 +60,7 @@ namespace SRSN.ClientApi.Controllers
         [AllowAnonymous]
         public ActionResult ReadByUserName(string userId)
         {
-            return Ok(collectionService.Get(u => u.UserId.Equals(userId)));
+            return Ok(collectionService.Get(u => u.UserId.Equals(userId) && u.Active == true));
         }
 
         [HttpPut("update")]

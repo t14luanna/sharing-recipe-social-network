@@ -12,7 +12,8 @@ namespace SRSN.ClientApi.Entities
 
         public int Id { get; set; }
         public string CollectionName { get; set; }
-        public string UserId { get; set; }
+        public int UserId { get; set; }
+        public bool? Active { get; set; }
 
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }

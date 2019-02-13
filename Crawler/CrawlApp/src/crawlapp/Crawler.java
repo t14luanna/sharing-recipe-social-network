@@ -20,6 +20,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
+
 /**
  *
  * @author LUANNA
@@ -151,7 +153,6 @@ public class Crawler {
     
     private boolean waitForJStoLoad(){
         WebDriverWait wait = new WebDriverWait(driver, 30);
-        
         ExpectedCondition<Boolean> jQueryLoad = new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver driver) {
@@ -169,7 +170,7 @@ public class Crawler {
                 return ((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete");
             }
         };
-        
+        wait.until(jsLoad);
         return wait.until(jQueryLoad) && wait.until(jsLoad);
     }
     

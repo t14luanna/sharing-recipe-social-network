@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SRSN.DatabaseManager.Identities;
+using SRSN.DatabaseManager.Services;
+using SRSN.DatabaseManager.ViewModels;
 
 namespace SRSN.ClientApi.Controllers
 {
@@ -13,25 +18,39 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        
         private UserManager<SRSNUser> userManager;
-        public AccountController(UserManager<SRSNUser> userManager)
+        private IMapper mapper;
+        public AccountController(UserManager<SRSNUser> userManager, IMapper mapper)
         {
             this.userManager = userManager;
+            this.mapper = mapper;
         }
 
-        [HttpGet("register")]
-        public async Task<ActionResult> Register([FromQuery] string username, [FromQuery] string password)
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] AccountEditViewModel data)
         {
-            var user = new SRSNUser()
+            // check existed user
+            var existedUsername = await userManager.FindByNameAsync(data.UsernameVM);
+            if (existedUsername != null)
             {
-                UserName = username,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                Email = username
-            };
+                return Ok(new { message = "Username da ton tai" });
+            }
 
-            await userManager.CreateAsync(user, password);
 
-            return Ok(new { message = "Tao thanh cong user nao do" });
+            var user = new SRSNUser();
+            mapper.Map(data, user);
+            user.SecurityStamp = Guid.NewGuid().ToString();
+            user.UserName = data.UsernameVM;
+
+            if (data.Password != data.ConfirmPassword)
+            {
+                return BadRequest();
+            }
+            
+            await userManager.CreateAsync(user, data.Password);
+            return Ok(new { message = "register thanh cong" });
+
         }
 
 
@@ -58,7 +77,80 @@ namespace SRSN.ClientApi.Controllers
             }
         }
 
+        [HttpGet("read")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ReadByUserId(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            var userVM = new AccountViewModel();
+            mapper.Map(user, userVM);
+            return Ok(userVM);
+        }
+        [HttpGet("get-top-ten")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<AccountViewModel>> GetTopUser()
+        {
+            var list = new List<AccountViewModel>();
+            foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point).Take(10))
+            {
+                list.Add(new AccountViewModel()
+                {
+                    Id = u.Id,
+                    Username = u.UserName,
+                    FirstName = u.FirstName,
+                    Address = u.Address,
+                    Birthdate = u.Birthdate,
+                    Email = u.Email,
+                    Gender = u.Gender,
+                    LastName = u.LastName,
+                    Phone = u.Phone ,
+                    Point = u.Point
+                    
+                });
+            }
+            return list;
+        }
+        [HttpPut("update")]
+        [Authorize]
+        public async Task<ActionResult> UpdateProfile([FromBody] AccountEditViewModel data)
+        {
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            var currentUser = await userManager.FindByIdAsync(userId);
+            mapper.Map(data, currentUser);
+            await userManager.UpdateAsync(currentUser);
+            
+            return Ok(new
+            {
+                message = $"Ban da update thanh cong User co ten la: {currentUser.UserName}"
+            });
+        }
+
+        [HttpPut("change-password")]
+        [Authorize]
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordViewModel data)
+        {
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var currentUser = await userManager.FindByIdAsync(userId);
+            var result = await userManager.ChangePasswordAsync(currentUser, data.CurrentPassword, data.NewPassword);
+            if(result.Succeeded)
+            {
+                return Ok(new
+                {
+                    message = $"Ban da doi password thanh cong User co ten la: {currentUser.UserName}"
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    message = result.ToString()
+                });
+            }
+        }
     }
 
 }

@@ -14,7 +14,7 @@ namespace SRSN.DatabaseManager.Services
     {
         Task<CollectionViewModel> DeactiveAsync(int id);
     }
-    public class CollectionService : BaseService<Collection,CollectionViewModel>, ICollectionService
+    public class CollectionService : BaseService<Collection,CollectionViewModel>, ICollectionService 
     {
         public CollectionService(IUnitOfWork unitOfWork, IMapper mapper):base (unitOfWork, mapper)
         {

@@ -10,6 +10,7 @@ namespace SRSN.DatabaseManager.Entities
         public double? Pirce { get; set; }
         public string ImageUrl { get; set; }
         public int? StoreId { get; set; }
+        public string IngredientName { get; set; }
 
         public virtual Ingredients Ingredient { get; set; }
         public virtual Store Store { get; set; }
