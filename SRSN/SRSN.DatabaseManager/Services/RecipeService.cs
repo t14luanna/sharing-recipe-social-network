@@ -141,7 +141,7 @@ namespace SRSN.DatabaseManager.Services
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking().OrderByDescending(r => r.ViewQuantity).Take(6).ToList();
+                var listItems = this.selfDbSet.AsNoTracking().OrderByDescending(t => t.EvRating).OrderByDescending(t => t.ViewQuantity).Take(6).ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
