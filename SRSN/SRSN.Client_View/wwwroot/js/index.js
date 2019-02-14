@@ -14,9 +14,11 @@
                 <ul class="news-post-meta post-meta">
                    <li class="author"><a href="#">${recipe.fullName}</a></li>
                    <li class="date">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear() }</li >
+                   
                 </ul>
                 <div class="short-separator"></div>
                 <div class="rating-box">
+                    <span class="rating-figure"><i class="fa fa-eye" aria-hidden="true">&nbsp&nbsp${recipe.viewQuantity}</i></span>&nbsp&nbsp
                     <span class="rating-icons">
                         <svg class="icon-container" width="25" height="19" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 19">
                             <g>
