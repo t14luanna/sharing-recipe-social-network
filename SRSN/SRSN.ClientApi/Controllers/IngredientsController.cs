@@ -26,7 +26,7 @@ namespace SRSN.ClientApi.Controllers
         [HttpGet("read")]
         public ActionResult Get([FromQuery] string ingredientName)
         {
-            var result = ingredientsService.Get(p => p.IngredientName.Contains(ingredientName, StringComparison.CurrentCultureIgnoreCase));
+            var result = ingredientsService.Get(p => p.Name.Contains(ingredientName, StringComparison.CurrentCultureIgnoreCase));
             return Ok(result);
         }
 

@@ -3,15 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Desktop/Capstone%20project/SRSN.Project/Crawler/CrawlApp/src/data/BrandDTO.java</file>
-            <file>file:/C:/Users/Admin/Desktop/Capstone%20project/SRSN.Project/Crawler/CrawlApp/config.json</file>
-            <file>file:/C:/Users/Admin/Desktop/Capstone%20project/SRSN.Project/Crawler/CrawlApp/src/data/ButtonClickDTO.java</file>
-            <file>file:/C:/Users/Admin/Desktop/Capstone%20project/SRSN.Project/Crawler/CrawlApp/src/dao/IngredientDAO.java</file>
-            <file>file:/C:/Users/Admin/Desktop/Capstone%20project/SRSN.Project/Crawler/CrawlApp/src/dao/StoreDAO.java</file>
-            <file>file:/C:/Users/Admin/Desktop/Capstone%20project/SRSN.Project/Crawler/CrawlApp/src/crawlapp/Crawler.java</file>
-            <file>file:/C:/Users/Admin/Desktop/Capstone%20project/SRSN.Project/Crawler/CrawlApp/src/utils/FileUtils.java</file>
-            <file>file:/C:/Users/Admin/Desktop/Capstone%20project/SRSN.Project/Crawler/CrawlApp/src/crawlapp/CrawlApp.java</file>
-            <file>file:/C:/Users/Admin/Desktop/Capstone%20project/SRSN.Project/Crawler/CrawlApp/src/utils/DBUtils.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/crawlapp/CrawlApp.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/data/ButtonClickDTO.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/data/ElementDTO.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/dto/IngredientDTO.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/dao/IngredientDAO.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/dao/StoreDAO.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/data/CategoryDTO.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/data/BrandDTO.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/config.json</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/utils/FileUtils.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/crawlapp/Crawler.java</file>
+            <file>file:/G:/CAPSTONE/de%20tai/IS/Code/Crawler/CrawlApp/src/dto/StoreDTO.java</file>
         </group>
     </open-files>
 </project-private>

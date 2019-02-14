@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
 
@@ -17,10 +19,11 @@ namespace SRSN.ClientApi.Controllers
     public class RecipeController : ControllerBase
     {
         private IRecipeService recipeService;
-
-        public RecipeController(IRecipeService recipeService)
+        private UserManager<SRSNUser> userManager;
+        public RecipeController(IRecipeService recipeService, UserManager<SRSNUser> userManager)
         {
             this.recipeService = recipeService;
+            this.userManager = userManager;
         }
         [HttpPost("create")]
         [Authorize]
@@ -66,7 +69,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetPopularRecipes());
+                return Ok(await recipeService.GetPopularRecipes(this.userManager));
             }
             catch (Exception ex)
             {
