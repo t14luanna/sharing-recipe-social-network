@@ -108,6 +108,7 @@ public class CrawlApp {
                 dao.create(dto);
                 System.out.println(count + " : " + next);
             } catch (Exception ex) {
+                System.out.println(ex.getMessage());
                 System.out.println("Error: " + count);
             }
         }

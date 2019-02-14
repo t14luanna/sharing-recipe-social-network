@@ -1551,7 +1551,7 @@ label > span {
     color: #1da1f2;
     background-color: #fff;
     border-radius: 50%;
-    font-family: "FontAwesome";
+    font-family: "FontAwesome"!important;
     font-size: 18px;
     line-height: 53px;
     text-align: center;

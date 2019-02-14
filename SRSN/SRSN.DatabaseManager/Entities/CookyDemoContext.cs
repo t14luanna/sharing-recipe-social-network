@@ -46,6 +46,7 @@ namespace SRSN.DatabaseManager.Entities
         public virtual DbSet<UserFollowing> UserFollowing { get; set; }
         public virtual DbSet<UserReportRecipe> UserReportRecipe { get; set; }
         public virtual DbSet<UserReportUser> UserReportUser { get; set; }
+        public virtual DbSet<UserViewRecipe> UserViewRecipe { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -58,7 +59,7 @@ namespace SRSN.DatabaseManager.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
 
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
@@ -244,12 +245,6 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<IngredientList>(entity =>
             {
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.IngredientList)
-                    .HasForeignKey(d => d.IngredientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_IngredientList_Ingredients");
-
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.IngredientList)
                     .HasForeignKey(d => d.RecipeId)
@@ -263,12 +258,14 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Ingredients>(entity =>
             {
-                entity.Property(e => e.IngredientName).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(50);
 
-                entity.HasOne(d => d.Store)
+                entity.Property(e => e.Price).HasMaxLength(50);
+
+                entity.HasOne(d => d.Brand)
                     .WithMany(p => p.Ingredients)
-                    .HasForeignKey(d => d.StoreId)
-                    .HasConstraintName("FK_Ingredients_Store");
+                    .HasForeignKey(d => d.BrandId)
+                    .HasConstraintName("FK_Ingredients_StoreBrand");
             });
 
             modelBuilder.Entity<LikePost>(entity =>
@@ -402,11 +399,6 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.Property(e => e.Quantitative).HasMaxLength(100);
 
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.RecipeIngredient)
-                    .HasForeignKey(d => d.IngredientId)
-                    .HasConstraintName("FK_Recipe_Ingredient_Ingredients");
-
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeIngredient)
                     .HasForeignKey(d => d.RecipeId)
@@ -423,16 +415,6 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Store>(entity =>
             {
-                entity.Property(e => e.Address).HasMaxLength(50);
-
-                entity.Property(e => e.Lat).HasMaxLength(10);
-
-                entity.Property(e => e.Long).HasMaxLength(10);
-
-                entity.Property(e => e.Phone).HasMaxLength(50);
-
-                entity.Property(e => e.StoreName).HasMaxLength(50);
-
                 entity.HasOne(d => d.Brand)
                     .WithMany(p => p.Store)
                     .HasForeignKey(d => d.BrandId)
@@ -445,11 +427,9 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.Property(e => e.Description).HasMaxLength(50);
 
-                entity.Property(e => e.Email).HasMaxLength(50);
-
-                entity.Property(e => e.Fanpage).HasMaxLength(50);
-
                 entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.Phone).HasMaxLength(50);
 
                 entity.Property(e => e.Website).HasMaxLength(50);
             });
@@ -526,6 +506,25 @@ namespace SRSN.DatabaseManager.Entities
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_Report_User_AspNetUsers");
+            });
+
+            modelBuilder.Entity<UserViewRecipe>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RecipeId });
+
+                entity.ToTable("User_View_Recipe");
+
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.UserViewRecipe)
+                    .HasForeignKey(d => d.RecipeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_View_Recipe_Recipe");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserViewRecipe)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_View_Recipe_AspNetUsers");
             });
         }
     }

@@ -740,9 +740,12 @@ a.mean-expand {
   margin-left: 0;
 }
 .header-var1 nav > ul > li > a {
-  padding: 12px 0;
-  border-bottom: 2px inset transparent;
-  transition: none;
+    padding: 12px 0;
+    border-bottom: 2px inset transparent;
+    transition: none;
+    font-weight: 400;
+    font-family: 'Lora', serif;
+    font-style: italic;
 }
 .header-var1 nav > ul > li > a:hover {
   color: #6ebe3b;

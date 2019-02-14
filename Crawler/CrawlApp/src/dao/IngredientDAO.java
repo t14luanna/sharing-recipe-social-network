@@ -19,7 +19,7 @@ import utils.DBUtils;
 public class IngredientDAO {
     public void create(IngredientDTO dto) throws SQLException, ClassNotFoundException{
         Connection connection = DBUtils.getConnection();
-        String sql = "Insert into Ingredient (Name, Price, Image,BrandId) "
+        String sql = "Insert into Ingredients (Name, Price, ImageUrl,BrandId) "
                 + " values (?, ?, ?, ?) ";
 
         PreparedStatement statement = connection.prepareStatement(sql);

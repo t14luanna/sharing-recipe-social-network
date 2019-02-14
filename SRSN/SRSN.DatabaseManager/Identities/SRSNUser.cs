@@ -25,6 +25,9 @@ namespace SRSN.DatabaseManager.Identities
         public string LastName { get; set; }
         public int? Point { get; set; }
 
+        // them o day ne
+        public string AvatarImageUrl { get; set; }
+
         /// <summary>
         /// Cai ham nay co the tao ra cho controller 1 cai accesstoken de ho tra ve cho nguopi dung
         /// </summary>

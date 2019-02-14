@@ -17,9 +17,9 @@ public class DBUtils {
          throws SQLException, ClassNotFoundException {
      String hostName = "localhost";
      String sqlInstanceName = "SQLEXPRESS";
-     String database = "FoodCrawlData";
+     String database = "CookyDemo";
      String userName = "sa";
-     String password = "123";
+     String password = "baongoc1997";
  
      return getConnection(hostName, sqlInstanceName, database,
              userName, password);

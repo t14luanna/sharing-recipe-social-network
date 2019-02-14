@@ -11,7 +11,6 @@ namespace SRSN.DatabaseManager.Entities
         public bool? IsBought { get; set; }
         public int? UserId { get; set; }
 
-        public virtual Ingredients Ingredient { get; set; }
         public virtual Recipe Recipe { get; set; }
         public virtual AspNetUsers User { get; set; }
     }

@@ -137,6 +137,8 @@ namespace SRSN.DatabaseManager.Migrations
 
                     b.Property<string>("Address");
 
+                    b.Property<string>("AvatarImageUrl");
+
                     b.Property<DateTime?>("Birthdate");
 
                     b.Property<string>("ConcurrencyStamp")

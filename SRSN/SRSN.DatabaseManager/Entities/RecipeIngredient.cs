@@ -11,7 +11,6 @@ namespace SRSN.DatabaseManager.Entities
         public string IngredientName { get; set; }
         public string Quantitative { get; set; }
 
-        public virtual Ingredients Ingredient { get; set; }
         public virtual Recipe Recipe { get; set; }
     }
 }

@@ -29,6 +29,7 @@ namespace SRSN.DatabaseManager.Entities
             UserReportRecipe = new HashSet<UserReportRecipe>();
             UserReportUserReportedUser = new HashSet<UserReportUser>();
             UserReportUserUser = new HashSet<UserReportUser>();
+            UserViewRecipe = new HashSet<UserViewRecipe>();
         }
 
         public int Id { get; set; }
@@ -54,6 +55,7 @@ namespace SRSN.DatabaseManager.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? Point { get; set; }
+        public string AvatarImageUrl { get; set; }
 
         public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
@@ -77,5 +79,6 @@ namespace SRSN.DatabaseManager.Entities
         public virtual ICollection<UserReportRecipe> UserReportRecipe { get; set; }
         public virtual ICollection<UserReportUser> UserReportUserReportedUser { get; set; }
         public virtual ICollection<UserReportUser> UserReportUserUser { get; set; }
+        public virtual ICollection<UserViewRecipe> UserViewRecipe { get; set; }
     }
 }
