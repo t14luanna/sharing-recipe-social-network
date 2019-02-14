@@ -14,6 +14,7 @@ namespace SRSN.DatabaseManager.Entities
             RecipeCategory = new HashSet<RecipeCategory>();
             RecipeIngredient = new HashSet<RecipeIngredient>();
             StepsOfRecipe = new HashSet<StepsOfRecipe>();
+            UserViewRecipe = new HashSet<UserViewRecipe>();
         }
 
         public int Id { get; set; }
@@ -27,7 +28,8 @@ namespace SRSN.DatabaseManager.Entities
         public int? CookTime { get; set; }
         public int? Serving { get; set; }
         public bool? Active { get; set; }
-
+        public int? ViewQuantity { get; set; }
+        public double EvRating { get; set; }
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }
         public virtual ICollection<IngredientList> IngredientList { get; set; }
@@ -36,5 +38,6 @@ namespace SRSN.DatabaseManager.Entities
         public virtual ICollection<RecipeCategory> RecipeCategory { get; set; }
         public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
         public virtual ICollection<StepsOfRecipe> StepsOfRecipe { get; set; }
+        public virtual ICollection<UserViewRecipe> UserViewRecipe { get; set; }
     }
 }

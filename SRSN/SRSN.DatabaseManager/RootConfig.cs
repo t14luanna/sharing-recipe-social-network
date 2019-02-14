@@ -110,7 +110,7 @@ namespace SRSN.DatabaseManager
                   .ForMember(x => x.Post, y => y.Ignore());
                 mc.CreateMap<RecipeIngredientViewModel, RecipeIngredient>()
                  .ForMember(x => x.Recipe, y => y.Ignore())
-                 .ForMember(x => x.Ingredient, y => y.Ignore());
+                 .ForMember(x => x.IngredientId, y => y.Ignore());
                 mc.CreateMap<RecipeCategoryViewModel, RecipeCategory>()
                 .ForMember(x => x.Recipe, y => y.Ignore())
                 .ForMember(x => x.CategoryItem, y => y.Ignore());

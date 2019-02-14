@@ -44,6 +44,7 @@
     <Compile Include="Entities\UserFollowing.cs" />
     <Compile Include="Entities\UserReportRecipe.cs" />
     <Compile Include="Entities\UserReportUser.cs" />
+    <Compile Include="Entities\UserViewRecipe.cs" />
   </ItemGroup>
 
   <ItemGroup>

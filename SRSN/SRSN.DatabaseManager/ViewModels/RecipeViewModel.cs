@@ -25,6 +25,9 @@ namespace SRSN.DatabaseManager.ViewModels
         public int? CookTime { get; set; }
         public int? Serving { get; set; }
         public bool? Active { get; set; }
+        public int? ViewQuantity { get; set; }
+        public double EvRating { get; set; }
+        public string FullName { get; set; }
         public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
         public List<RecipeIngredientViewModel> listIngredient { get; set; }
         public List<RecipeCategoryViewModel> listCategory { get; set; }

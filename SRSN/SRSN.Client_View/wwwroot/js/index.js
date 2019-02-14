@@ -11,6 +11,11 @@
                     </a>
                 </h3>
                 <div class="short-separator"></div>
+                <ul class="news-post-meta post-meta">
+                   <li class="author"><a href="#">${recipe.fullName}</a></li>
+                   <li class="date">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear() }</li >
+                </ul>
+                <div class="short-separator"></div>
                 <div class="rating-box">
                     <span class="rating-icons">
                         <svg class="icon-container" width="25" height="19" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 19">
@@ -26,7 +31,7 @@
                             </g>
                         </svg>
                     </span>
-                    <span class="rating-figure">(1 / 5)</span>
+                    <span class="rating-figure">(${recipe.evRating} / 5)</span>
                 </div>
             </div>
         </div>
@@ -34,11 +39,13 @@
 
 const callRecipeApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-popular");
-    var data = await res.json();
-    for (var item of data) {
+    var data2 = (await res.json()).result;
+    
+    for (var item of data2) {
         let element = createSingleRecipeElement(item);
         $("#list-single-recipe").append(element);
     }
+
 };
 
 // load recipe
