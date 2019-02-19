@@ -110,6 +110,30 @@ namespace SRSN.ClientApi.Controllers
             }
             return list;
         }
+        [HttpGet("get-popular")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<AccountViewModel>> GetPopular()
+        {
+            var list = new List<AccountViewModel>();
+            foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point).Take(1))
+            {
+                list.Add(new AccountViewModel()
+                {
+                    Id = u.Id,
+                    Username = u.UserName,
+                    FirstName = u.FirstName,
+                    Address = u.Address,
+                    Birthdate = u.Birthdate,
+                    Email = u.Email,
+                    Gender = u.Gender,
+                    LastName = u.LastName,
+                    Phone = u.Phone,
+                    Point = u.Point
+
+                });
+            }
+            return list;
+        }
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> UpdateProfile([FromBody] AccountEditViewModel data)

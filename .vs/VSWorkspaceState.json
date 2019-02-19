@@ -5,10 +5,8 @@
     "\\SRSN\\SRSN.ClientApi",
     "\\SRSN\\SRSN.DatabaseManager",
     "\\SRSN\\SRSN.DatabaseManager\\Entities",
-    "\\SRSN\\SRSN.DatabaseManager\\ViewModels",
-    "\\SRSN\\SRSN.Service\\BaseModels",
-    "\\SRSN\\SRSN.Service\\Services"
+    "\\SRSN\\SRSN.DatabaseManager\\ViewModels"
   ],
-  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\Entities\\Post.cs",
+  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\ViewModels\\PostViewModel.cs",
   "PreviewInSolutionExplorer": false
 }

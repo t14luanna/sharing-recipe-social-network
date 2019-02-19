@@ -33,14 +33,14 @@ namespace SRSN.DatabaseManager.Services
             // get list ingredient like name
             var listIngredientLikeName = selfDbSet
                 .AsNoTracking()
-                .Where(p => p.Name.Contains(ingredientName, StringComparison.CurrentCultureIgnoreCase));
+                .Where(p => p.IngredientName.Contains(ingredientName, StringComparison.CurrentCultureIgnoreCase));
 
             // create new list Store ViewModel
             var listStoreVM = new List<StoreViewModel>();
             foreach (var ingredient in listIngredientLikeName)
             {
                 // convert store => store VM
-                var store = storeRepo.Find(ingredient.BrandId);
+                var store = storeRepo.Find(ingredient.Id);
                 if(store != null)
                 {
                     var storeVM = this.EntityToVM<Store, StoreViewModel>(store);

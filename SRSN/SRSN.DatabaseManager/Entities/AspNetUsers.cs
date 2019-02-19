@@ -26,10 +26,10 @@ namespace SRSN.DatabaseManager.Entities
             UserBlockUser = new HashSet<UserBlock>();
             UserFollowingFollowingUser = new HashSet<UserFollowing>();
             UserFollowingUser = new HashSet<UserFollowing>();
+            UserRecipePoint = new HashSet<UserRecipePoint>();
             UserReportRecipe = new HashSet<UserReportRecipe>();
             UserReportUserReportedUser = new HashSet<UserReportUser>();
             UserReportUserUser = new HashSet<UserReportUser>();
-            UserViewRecipe = new HashSet<UserViewRecipe>();
         }
 
         public int Id { get; set; }
@@ -76,9 +76,9 @@ namespace SRSN.DatabaseManager.Entities
         public virtual ICollection<UserBlock> UserBlockUser { get; set; }
         public virtual ICollection<UserFollowing> UserFollowingFollowingUser { get; set; }
         public virtual ICollection<UserFollowing> UserFollowingUser { get; set; }
+        public virtual ICollection<UserRecipePoint> UserRecipePoint { get; set; }
         public virtual ICollection<UserReportRecipe> UserReportRecipe { get; set; }
         public virtual ICollection<UserReportUser> UserReportUserReportedUser { get; set; }
         public virtual ICollection<UserReportUser> UserReportUserUser { get; set; }
-        public virtual ICollection<UserViewRecipe> UserViewRecipe { get; set; }
     }
 }

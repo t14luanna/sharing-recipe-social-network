@@ -7,16 +7,13 @@ namespace SRSN.DatabaseManager.Entities
     {
         public Ingredients()
         {
-            IngredientBrand = new HashSet<IngredientBrand>();
+            RecipeIngredient = new HashSet<RecipeIngredient>();
         }
 
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Price { get; set; }
-        public string ImageUrl { get; set; }
-        public int? BrandId { get; set; }
+        public string IngredientName { get; set; }
+        public int? UserId { get; set; }
 
-        public virtual StoreBrand Brand { get; set; }
-        public virtual ICollection<IngredientBrand> IngredientBrand { get; set; }
+        public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
     }
 }

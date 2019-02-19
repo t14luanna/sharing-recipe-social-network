@@ -7,7 +7,7 @@ namespace SRSN.DatabaseManager.Entities
     {
         public StoreBrand()
         {
-            Ingredients = new HashSet<Ingredients>();
+            Products = new HashSet<Products>();
             Store = new HashSet<Store>();
         }
 
@@ -17,7 +17,7 @@ namespace SRSN.DatabaseManager.Entities
         public string Website { get; set; }
         public string Phone { get; set; }
 
-        public virtual ICollection<Ingredients> Ingredients { get; set; }
+        public virtual ICollection<Products> Products { get; set; }
         public virtual ICollection<Store> Store { get; set; }
     }
 }
