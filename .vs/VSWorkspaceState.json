@@ -7,6 +7,6 @@
     "\\SRSN\\SRSN.DatabaseManager\\Entities",
     "\\SRSN\\SRSN.DatabaseManager\\ViewModels"
   ],
-  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\Entities\\Post.cs",
+  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\ViewModels\\PostViewModel.cs",
   "PreviewInSolutionExplorer": false
 }
