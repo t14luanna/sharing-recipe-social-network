@@ -112,12 +112,12 @@
 const callAccountApi = async () => {
     var response = await fetch("https://localhost:44361/api/account/get-popular");
     var data = await response.json();
-    for (var var item of data) {
+    for (var item of data) {
         let element = readPopularUser(item);
         $("#wrapper - head - chef").append(element);
     }
 }
 
-$(document).ready(e) => {
+$(document).ready((e) => {
     callAccountApi();
-}
+});

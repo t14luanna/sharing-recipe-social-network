@@ -53,5 +53,7 @@ namespace SRSN.DatabaseManager.Services
             return listStoreVM;
         }
 
+        
+        
     }
 }

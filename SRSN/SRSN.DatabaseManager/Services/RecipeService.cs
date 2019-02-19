@@ -23,6 +23,10 @@ namespace SRSN.DatabaseManager.Services
         Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId);
         Task<ICollection<RecipeViewModel>> GetPopularRecipes(UserManager<SRSNUser> userManager);
+        Task<ICollection<RecipeViewModel>> GetLatestRecipes(UserManager<SRSNUser> userManager);
+        Task<ICollection<RecipeViewModel>> Get1000LatestRecipes(UserManager<SRSNUser> userManager);
+        Task<ICollection<RecipeViewModel>> GetRandomRecipes(UserManager<SRSNUser> userManager);
+        Task<ICollection<RecipeViewModel>> GetRecipeWithID(UserManager<SRSNUser> userManager, int recipeId);
     }
 
     public class RecipeService : BaseService<Recipe, RecipeViewModel>, IRecipeService
@@ -134,19 +138,14 @@ namespace SRSN.DatabaseManager.Services
             try
             {
                 var list = new List<RecipeViewModel>();
-
+            
                 // hien tai o day dang dung trong 1 action cua service
                 // khong nen dung ham cua service de su dung nen dung Repository 
                 // o day la dbSet cua chinh ban than no
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking()
-                    .Where(t=> t.ViewQuantity != null)
-                    .OrderByDescending(t => t.EvRating)
-                    .OrderByDescending(t => t.ViewQuantity)
-                    .Take(6)
-                    .ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 13 * FROM Recipe WHERE Active = 'True'  ORDER BY EvRating DESC, ViewQuantity DESC").Where(a => a.Active == true).Take(13).ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
@@ -168,7 +167,76 @@ namespace SRSN.DatabaseManager.Services
                 return null;
             }
         }
+        public async Task<ICollection<RecipeViewModel>> GetLatestRecipes(UserManager<SRSNUser> userManager)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
 
+                // hien tai o day dang dung trong 1 action cua service
+                // khong nen dung ham cua service de su dung nen dung Repository 
+                // o day la dbSet cua chinh ban than no
+                // 
+                // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
+                // 2. nen dung dbSet ( nghia la repository de ma query )
+                var listItems = this.selfDbSet.AsNoTracking().OrderByDescending(t => t.CreateTime).Where(a => a.Active == true).Take(11).ToList();
+                foreach (var item in listItems)
+                {
+                    // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+
+                    // apply automapper 
+                    var recipeViewModel = this.EntityToVM(item);
+                    // da co duoc du lieu cua entity trong view model cap nhat them vai field dac biet nhu la fullname chi viewmodel moi co
+                    recipeViewModel.FullName = fullName;
+                    list.Add(recipeViewModel);
+
+                }
+                return list;
+
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public async Task<ICollection<RecipeViewModel>> Get1000LatestRecipes(UserManager<SRSNUser> userManager)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+
+                // hien tai o day dang dung trong 1 action cua service
+                // khong nen dung ham cua service de su dung nen dung Repository 
+                // o day la dbSet cua chinh ban than no
+                // 
+                // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
+                // 2. nen dung dbSet ( nghia la repository de ma query )
+                var listItems = this.selfDbSet.AsNoTracking().OrderByDescending(t => t.CreateTime).Where(a => a.Active == true).Take(1000).ToList();
+                foreach (var item in listItems)
+                {
+                    // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+
+                    // apply automapper 
+                    var recipeViewModel = this.EntityToVM(item);
+                    // da co duoc du lieu cua entity trong view model cap nhat them vai field dac biet nhu la fullname chi viewmodel moi co
+                    recipeViewModel.FullName = fullName;
+                    list.Add(recipeViewModel);
+
+                }
+                return list;
+
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public async Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
         {
             var stepRecipeDBSet = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
@@ -212,6 +280,60 @@ namespace SRSN.DatabaseManager.Services
                 }
             }
         }
+
+        public async Task<ICollection<RecipeViewModel>> GetRandomRecipes(UserManager<SRSNUser> userManager)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("Select top 6 * from Recipe order by NEWID()").Where(a => a.Active == true).ToList();
+                foreach (var item in listItems)
+                {
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+
+                    // apply automapper 
+                    var recipeViewModel = this.EntityToVM(item);
+                    
+                    recipeViewModel.FullName = fullName;
+                    list.Add(recipeViewModel);
+
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public async Task<ICollection<RecipeViewModel>> GetRecipeWithID(UserManager<SRSNUser> userManager, int recipeId)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("select * from Recipe where Id="+recipeId+" and Active='1'").ToList();
+                foreach (var item in listItems)
+                {
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+
+                    // apply automapper 
+                    var recipeViewModel = this.EntityToVM(item);
+
+                    recipeViewModel.FullName = fullName;
+                    list.Add(recipeViewModel);
+
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 
 }

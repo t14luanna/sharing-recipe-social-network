@@ -1,4 +1,36 @@
-﻿const createSingleRecipeElement = (recipe) =>
+﻿
+const createSingleRecipeElement = (singeRecipe) =>
+    `<div class="recipe-single animated wow flipInY">
+        <div class="recipe-image">
+            <a href="#"><img src="${singeRecipe.imageCover}" alt="image" /></a>
+        </div>
+        <div class="outer-detail">
+            <div class="detail">
+                <h3>
+                    <a href="/recipe/${singeRecipe.id}">
+                        ${singeRecipe.recipeName}
+                    </a>
+                </h3>
+                <div class="short-separator"></div>
+                <ul class="news-post-meta post-meta">
+                   <li class="author"><a href="#">${singeRecipe.fullName}</a></li>
+                   <li class="date">${ new Date(singeRecipe.createTime).getDay() + "/" + new Date(singeRecipe.createTime).getMonth() + "/" + new Date(singeRecipe.createTime).getFullYear()}</li >
+                   
+                </ul>
+                <div class="short-separator"></div>
+                <div class="rating-box">
+                    <span class="rating-figure"><i class="fa fa-eye" aria-hidden="true" style="font-size:20px;">&nbsp&nbsp${singeRecipe.viewQuantity}</i></span>&nbsp&nbsp
+                    <span class="rating-icons">
+                         <i class="fa fa-star-half-o" aria-hidden="true" style="
+                                    font-size: 20px;
+                                    color: green;"></i>
+                    </span>
+                    <span class="rating-figure">(${singeRecipe.evRating} / 5)</span>
+                </div>
+            </div>
+        </div>
+    </div>`;
+const createSingleLatestRecipeElement = (recipe) =>
     `<div class="recipe-single animated wow flipInY">
         <div class="recipe-image">
             <a href="#"><img src="${recipe.imageCover}" alt="image" /></a>
@@ -6,52 +38,180 @@
         <div class="outer-detail">
             <div class="detail">
                 <h3>
-                    <a href="#">
+                    <a href="/recipe/${recipe.id}">
                         ${recipe.recipeName}
                     </a>
                 </h3>
                 <div class="short-separator"></div>
                 <ul class="news-post-meta post-meta">
                    <li class="author"><a href="#">${recipe.fullName}</a></li>
-                   <li class="date">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear() }</li >
+                   <li class="date">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</li >
                    
                 </ul>
                 <div class="short-separator"></div>
-                <div class="rating-box">
-                    <span class="rating-figure"><i class="fa fa-eye" aria-hidden="true">&nbsp&nbsp${recipe.viewQuantity}</i></span>&nbsp&nbsp
-                    <span class="rating-icons">
-                        <svg class="icon-container" width="25" height="19" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 19">
-                            <g>
-                                <title>background</title>
-                                <rect fill="none" height="21" width="27" y="-1" x="-1" />
-                            </g>
-                            <g>
-                                <title>Layer 1</title>
-                                <path class="icon-svg"
-                                        d="m24.671816,17.625433c0,0.438 -0.286999,0.801001 -0.681,0.935001c-0.095001,0.036999 -0.198002,0.064999 -0.318001,0.064999l-16.000998,0c-0.553,0 -1,-0.448 -1,-1c0,-0.553999 0.447,-1 1,-1l14.950999,0c-0.500999,-5.053999 -4.764997,-9 -9.950999,-9c-5.523,0 -10,4.477001 -10,10c0,0 0.063,1 -1,1c-1.062,0 -1,-1 -1,-1c0,-5.769999 4.071,-10.581999 9.495001,-11.734999c-0.306002,-0.52 -0.495001,-1.117001 -0.495001,-1.765001c0,-1.933999 1.566999,-3.499999 3.5,-3.499999c1.931999,0 3.499,1.567 3.499,3.499999c0,0.739 -0.232998,1.423 -0.624998,1.989c4.984999,1.459 8.625998,6.056 8.625998,11.511l0,0zm-11.499,-15c-0.828999,0 -1.500999,0.670001 -1.500999,1.499001c0,0.827999 0.672001,1.5 1.500999,1.5c0.828001,0 1.499001,-0.672001 1.499001,-1.5c0,-0.829 -0.671,-1.499001 -1.499001,-1.499001l0,0z"
-                                        clip-rule="evenodd" fill-rule="evenodd" />
-                            </g>
-                        </svg>
-                    </span>
-                    <span class="rating-figure">(${recipe.evRating} / 5)</span>
-                </div>
+               
             </div>
         </div>
     </div>`;
-
-const callRecipeApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
-    var data2 = (await res.json());
-    
-    for (var item of data2) {
-        let element = createSingleRecipeElement(item);
-        $("#list-single-recipe").append(element);
+const createSingleRandomRecipeElement = (recipe) =>
+    `<div class="recipe-single animated wow flipInY">
+                                    <div class="recipe-image">
+                                        <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
+                                    </div>
+                                    <div class="outer-detail">
+                                        <div class="detail">
+                                            <h3>
+                                                <a href="#">
+                                                   ${recipe.recipeName}
+                                                </a>
+                                            </h3>
+                                            <div class="short-separator"></div>
+                                            <a href="#" class="read-more">read more</a>
+                                        </div>
+                                    </div>
+      </div>`;
+const createSingleRecipeWidgetElement = (recipe) =>
+    `<li>
+                                            <div class="thumb">
+                                                <a href="/recipe/${recipe.id}">
+                                                    <img src="${recipe.imageCover}" alt="thumbnail" />
+                                                </a>
+                                            </div>
+                                            <div class="detail">
+                                                <a href="#">${recipe.recipeName}</a>
+                                                <span class="post-date">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</span>
+                                            </div>
+                                        </li>`;
+const createSingleBanner = (recipe) =>
+    `<div class="slide-detail-inner">
+                            <h2><a href="/recipe/${recipe.id}">${recipe.recipeName}</a></h2>
+                            <div class="short-separator"></div>
+                            <div class="rating-box">
+                                <span class="rating-figure">
+                                    <i class="fa fa-star-half-o" aria-hidden="true" style="
+                                    font-size: 20px;
+                                    color: green;"></i>&nbsp&nbsp
+                                (${recipe.evRating} / 5)</span>
+                            </div>
+                            <p>
+                               ${recipe.contentRecipe}
+                            </p>
+                            <a class="read-more-bordered" href="recipe-detail.html">Read More</a>
+                        </div>`;
+const createSingleRecipeOfDay = (recipe) =>
+    `<img src="${recipe.imageCover}" alt="Recipe of the day">
+                            <div class="recipe-contents-outer">
+                                <div class="recipe-contents text-center">
+                                    <div class="recipe-content-inner">
+                                        <span class="tag">Recipe of the Day</span>
+                                        <h2><a href="#">${recipe.recipeName}</a></h2>
+                                        <div class="short-separator"></div>
+                                        <p>
+                                            ${recipe.contentRecipe}
+                                        </p>
+                                        <a href="#" class="read-more">Read More</a>
+                                    </div>
+                                </div>
+                            </div>`;
+const callRandomRecipeApi = async () => {
+    var res = await fetch("https://localhost:44361/api/recipe/read-random");
+    var data = (await res.json()).result;
+    for (var item of data) {
+        let element = createSingleRandomRecipeElement(item);
+        $("#list-random-recipe").append(element);
     }
-
 };
+
+const callLatestRecipeApi = async () => {
+    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var data = (await res.json()).result;
+    var count = 0;
+    for (var item of data) {
+        count++;
+        if (count == 1) {
+            var elementRecipe = createSingleRecipeOfDay(item);
+            $("#single-recipe-of-day").append(elementRecipe);
+        } else {
+            var element = createSingleLatestRecipeElement(item);
+            $("#list-single-latest-recipe").append(element);
+            if (count == 7) {
+                break;
+            }
+        }
+    }
+};
+const callPopularRecipeBannerApi = async () => {
+    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var data = (await res.json()).result;
+    var count = 0;
+    for (var item of data) {
+        count++;
+        switch (count) {
+            case 1:
+                var element = createSingleBanner(item);
+                $("#single-banner1").append(element);
+                break;
+            case 2:
+                var element = createSingleBanner(item);
+                $("#single-banner2").append(element);
+                break;
+            case 3:
+                var element = createSingleBanner(item);
+                $("#single-banner3").append(element);
+                break;
+        }
+    }
+};
+const callPopularRecipeApi = async () => {
+    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var data = (await res.json()).result;
+    var count = 0;
+    for (var item of data) {
+        count++;
+        if (count >= 4) {
+            let element = createSingleRecipeElement(item);
+            $("#list-single-recipe").append(element);
+        }
+        if (count == 9) {
+            break;
+        }
+    }
+};
+const callPopularRecipeWidgetApi = async () => {
+    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var data = (await res.json()).result;
+    var count = 0;
+    for (var item of data) {
+        count++;
+        if (count >= 10) {
+            let element = createSingleRecipeWidgetElement(item);
+            $("#list-popular-recipe-widget").append(element);
+        }
+    }
+};
+const callLatestRecipeWidgetApi = async () => {
+    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var data = (await res.json()).result;
+    var count = 0;
+    for (var item of data) {
+        count++;
+        if (count >= 8) {
+            let element = createSingleRecipeWidgetElement(item);
+            $("#list-latest-recipe-widget").append(element);
+        }
+    }
+};
+
+
+
 
 // load recipe
 $(document).ready((e) => {
-    callRecipeApi();
+    callPopularRecipeBannerApi();
+    callPopularRecipeWidgetApi();
+    callPopularRecipeApi();
+    callLatestRecipeApi();
+    callLatestRecipeWidgetApi();
+    callRandomRecipeApi();
 });
 
