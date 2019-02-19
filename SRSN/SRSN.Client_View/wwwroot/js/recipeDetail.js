@@ -77,32 +77,6 @@ const createSingleStepOfRecipe = (step) =>
                                                 </div>
                                             </div>
                                         </dd>`;
-const createAboutChef = (chef) =>
-    ` <div class="listing">
-                                    <div class="image">
-                                        <div class="image-inner">
-                                            <a href="#"><img src="${chef.avatarImageUrl}" alt="chef" /></a>
-                                        </div>
-                                    </div>
-                                    <div class="detail">
-                                        <div class="row">
-                                            <div class="col-sm-8">
-                                                <h4><a href="#">${chef.fullName}</a></h4>
-
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <ul class="chef-social-links">
-                                                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                                    <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <p>
-                                           ${chef.description}
-                                        </p>
-                                    </div>
-                                </div>`;
 
 const createSingleRelatedRecipe = (recipe) =>
     `
@@ -128,7 +102,16 @@ const createSingleRelatedRecipe = (recipe) =>
                                             </div>
                                         </div>
                                     </div>`;
+const callRelatedRecipeApi = async () => {
+    var res = await fetch("https://localhost:44361/api/recipe/read-related-recipe?userId=2");
+    var data = (await res.json()).result;
 
+    for (var item of data) {
+        let element = createSingleRelatedRecipe(item);
+
+        $("#list-related-recipe").append(element);
+    }
+};
 const callRecipeDetailApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-recipeid?recipeId=2");
     var data = (await res.json()).result;
@@ -149,7 +132,20 @@ const callIngrdientsOfRecipeApi = async () => {
         $("#list-of-ingredients").append(ingredient);
     }
 };
+
+const callStepOfRecipeApi = async () => {
+    
+    var res = await fetch("https://localhost:44361/api/StepsOfRecipe/read-steps?recipeId=8");
+    var data = (await res.json()).result;
+
+    for (var item of data) {
+        var step = createSingleStepOfRecipe(item);
+        $("#list-step-recipe").append(step);
+    }
+};
 $(document).ready((e) => {
     callRecipeDetailApi();
     callIngrdientsOfRecipeApi();
+    callStepOfRecipeApi();
+    callRelatedRecipeApi();
 });

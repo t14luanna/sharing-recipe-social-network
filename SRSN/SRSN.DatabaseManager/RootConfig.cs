@@ -59,6 +59,7 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRecipeService), typeof(RecipeService));
             services.AddScoped(typeof(ICollectionService), typeof(CollectionService));
+            services.AddScoped(typeof(IStepsOfRecipeService), typeof(StepsOfRecipeService));
             services.AddScoped(typeof(IUserBlockService), typeof(UserBlockService));
             services.AddScoped(typeof(ILikePostService), typeof(LikePostService));
             services.AddScoped(typeof(ICommentService), typeof(CommentService));
@@ -132,6 +133,9 @@ namespace SRSN.DatabaseManager
 
                 mc.CreateMap<PostViewModel, Post>();
                 mc.CreateMap<Post, PostViewModel>();
+
+                mc.CreateMap<StepsOfRecipeViewModel, StepsOfRecipe>();
+                mc.CreateMap<StepsOfRecipe, StepsOfRecipeViewModel>();
 
 
             });

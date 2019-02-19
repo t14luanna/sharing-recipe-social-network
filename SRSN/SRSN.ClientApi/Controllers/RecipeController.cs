@@ -19,12 +19,15 @@ namespace SRSN.ClientApi.Controllers
     public class RecipeController : ControllerBase
     {
         private IRecipeService recipeService;
+        
         private UserManager<SRSNUser> userManager;
+
         public RecipeController(IRecipeService recipeService, UserManager<SRSNUser> userManager)
         {
-            this.recipeService = recipeService;
-            this.userManager = userManager;
+            this.recipeService = recipeService ;
+            this.userManager = userManager ;
         }
+
         [HttpPost("create")]
         [Authorize]
         public async Task<ActionResult> Create([FromBody]RequestCreateRecipeWithConstraintViewMode request)
@@ -76,12 +79,25 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        
         [HttpGet("read-latest")]
         public async Task<ActionResult> ReadLatest()
         {
             try
             {
                 return Ok(recipeService.GetLatestRecipes(this.userManager));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("read-related-recipe")]
+        public async Task<ActionResult> ReadRelatedRecipe([FromQuery]int userId)
+        {
+            try
+            {
+                return Ok(recipeService.GetRelatedRecipe(userId ));
             }
             catch (Exception ex)
             {

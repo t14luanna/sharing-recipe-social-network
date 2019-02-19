@@ -15,17 +15,6 @@ namespace SRSN.ClientApi.Controllers
         {
             this.recipeIngredientService = recipeIngredientService;
         }
-        [HttpGet("read-ingredients-of-recipe")]
-        public async Task<ActionResult> ReadPopular([FromQuery]int recipeId)
-        {
-            try
-            {
-                return Ok(recipeIngredientService.GetRecipeIngredients(recipeId));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
-            }
-        }
+        
     }
 }
