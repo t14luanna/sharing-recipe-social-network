@@ -6671,4 +6671,8 @@ div.widget-measurements .default-btn {
 .rating-recipe > input:checked + label:hover, /* hover current star when changing rating */
 .rating-recipe > input:checked ~ label:hover,
 .rating-recipe > label:hover ~ input:checked ~ label, /* lighten current selection */
-.rating-recipe > input:checked ~ label:hover ~ label { color: #FFED85;  } 
+.rating-recipe > input:checked ~ label:hover ~ label { color: #FFED85;  }
+.slide-home-page {
+    height: 570px;
+    background-size: cover
+}
