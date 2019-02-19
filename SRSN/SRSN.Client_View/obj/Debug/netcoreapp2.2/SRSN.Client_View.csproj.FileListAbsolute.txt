@@ -29,3 +29,4 @@ G:\CAPSTONE\de tai\IS\Code\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Cl
 G:\CAPSTONE\de tai\IS\Code\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.pdb
 G:\CAPSTONE\de tai\IS\Code\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.csproj.CopyComplete
 G:\CAPSTONE\de tai\IS\Code\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\Razor\Pages\Recipe.g.cshtml.cs
+G:\CAPSTONE\de tai\IS\Code\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\Razor\Pages\Recipe_Detail.g.cshtml.cs

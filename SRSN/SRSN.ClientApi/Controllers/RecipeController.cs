@@ -76,7 +76,55 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("read-latest")]
+        public async Task<ActionResult> ReadLatest()
+        {
+            try
+            {
+                return Ok(recipeService.GetLatestRecipes(this.userManager));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+         [HttpGet("read-latest-page")]
+        public async Task<ActionResult> Read1000Latest()
+        {
+            try
+            {
+                return Ok(recipeService.Get1000LatestRecipes(this.userManager));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
+        [HttpGet("read-random")]
+        public async Task<ActionResult> ReadRandom()
+        {
+            try
+            {
+                return Ok(recipeService.GetRandomRecipes(this.userManager));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("read-recipeid")]
+        public async Task<ActionResult> ReadRecipeWithId(int recipeId)
+        {
+            try
+            {
+                return Ok(recipeService.GetRecipeWithID(this.userManager, recipeId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> Update([FromBody]RequestCreateRecipeWithConstraintViewMode request)

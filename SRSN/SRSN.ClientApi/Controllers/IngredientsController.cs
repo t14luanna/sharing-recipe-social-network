@@ -36,6 +36,7 @@ namespace SRSN.ClientApi.Controllers
             var result = ingredientsService.GetListStoreByIngredientName(ingredientName);
             return Ok(result);
         }
+        
 
     }
 }
