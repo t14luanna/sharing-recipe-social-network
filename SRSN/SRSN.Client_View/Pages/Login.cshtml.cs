@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace SRSN.Client_View.Pages
 {
-    public class Recipe_DetailModel : PageModel
+    public class LoginModel : PageModel
     {
         public void OnGet()
         {

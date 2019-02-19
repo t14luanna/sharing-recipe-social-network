@@ -65,29 +65,29 @@
                                 </div>
                             </div>
 
-                            <div class="recipe-steps">
-                                <h3 class="lined">Step by Step method</h3>
-                                <dl class="accordion clearfix">
-                                    <dt class="current">
-                                        <span class="arrow"><i class="fa fa-minus"></i><i class="fa fa-minus stand"></i></span><strong>Step 1: </strong>Rinse the chicken pieces in cold
-                                        water and pat dry.
-                                    </dt>
-                                    <dd>
-                                        <div class="row">
-                                            <div class="col-sm-7">
-                                                <p>
-                                                    Rinse the chicken pieces in cold water and pat dry. Place the chicken in a large, resealable zip-top bag and pour in the marinade.
-                                                </p>
-                                                <br />
-                                                <p>
-                                                    Toss the chicken inside the bag to cover evenly with the marinade and refrigerate for 12 hours or as long as overnight.
-                                                </p>
+                                <div class="recipe-steps">
+                                    <h3 class="lined">Step by Step method</h3>
+                                    <dl class="accordion clearfix" id="list-step-recipe">
+                                        <dt class="current">
+                                            <span class="arrow"><i class="fa fa-minus"></i><i class="fa fa-minus stand"></i></span><strong>Step 1: </strong>Rinse the chicken pieces in cold
+                                            water and pat dry.
+                                        </dt>
+                                        <dd>
+                                            <div class="row">
+                                                <div class="col-sm-7">
+                                                    <p>
+                                                        Rinse the chicken pieces in cold water and pat dry. Place the chicken in a large, resealable zip-top bag and pour in the marinade.
+                                                    </p>
+                                                    <br />
+                                                    <p>
+                                                        Toss the chicken inside the bag to cover evenly with the marinade and refrigerate for 12 hours or as long as overnight.
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <img src="images/temp-images/steps-tab1.jpg" alt="image" />
+                                                </div>
                                             </div>
-                                            <div class="col-sm-5">
-                                                <img src="/recipepress/images/temp-images/steps-tab1.jpg" alt="image" />
-                                            </div>
-                                        </div>
-                                    </dd>
+                                        </dd>
 
                                     <dt>
                                         <span class="arrow"><i class="fa fa-minus"></i><i class="fa fa-minus stand"></i></span>Put the chicken pieces in cold resealable zip-top bag and pour in the marinade
@@ -211,58 +211,28 @@
                             </div>
                         </div>
 
-                        <div class="about-chef">
-                            <h3 class="lined">About Chef</h3>
-                            <div class="listing">
-                                <div class="image">
-                                    <div class="image-inner">
-                                        <a href="#"><img src="/recipepress/images/temp-images/about-chef-detail.jpg" alt="chef" /></a>
-                                    </div>
-                                </div>
-                                <div class="detail">
-                                    <div class="row">
-                                        <div class="col-sm-8">
-                                            <h4><a href="#">james anderson</a></h4>
+                            
 
+                            <div class="related-recipes">
+                                <h3 class="lined">Related Recipes</h3>
+                                <div class="boxed-recipes text-center" id="list-related-recipe">
+                                    <!--single recipe-->
+                                    <div class="recipe-single">
+                                        <div class="recipe-image">
+                                            <a href="#"><img src="images/temp-images/main-recipe1.jpg" alt="image"></a>
                                         </div>
-                                        <div class="col-sm-4">
-                                            <ul class="chef-social-links">
-                                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <p>
-                                        Rinse the chicken pieces in cold water and pat dry. Place the chicken in a large,
-                                        resealable zip-top bag and pour in the marinade. Toss the chicken inside the
-                                        bag to cover evenly with the marinade and refrigerate.
-                                    </p>
-                                    <a href="#" class="read-more-angle">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="related-recipes">
-                            <h3 class="lined">Related Recipes</h3>
-                            <div class="boxed-recipes text-center">
-                                <!--single recipe-->
-                                <div class="recipe-single">
-                                    <div class="recipe-image">
-                                        <a href="#"><img src="/recipepress/images/temp-images/main-recipe1.jpg" alt="image"></a>
-                                    </div>
-                                    <div class="outer-detail">
-                                        <div class="detail">
-                                            <h3>
-                                                <a href="#">
-                                                    Pasto Pizza with fillas
-                                                    Cheese Toppings
-                                                </a>
-                                            </h3>
-                                            <div class="short-separator"></div>
-                                            <div class="rating-box">
-                                                <span class="rating-icons">
-                                                    <svg class="icon-container" width="25" height="19" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 19">
+                                        <div class="outer-detail">
+                                            <div class="detail">
+                                                <h3>
+                                                    <a href="#">
+                                                        Pasto Pizza with fillas
+                                                        Cheese Toppings
+                                                    </a>
+                                                </h3>
+                                                <div class="short-separator"></div>
+                                                <div class="rating-box">
+                                                    <span class="rating-icons">
+                                                        <svg class="icon-container" width="25" height="19" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 19">
 
                                                         <g>
                                                             <title>background</title>
@@ -996,6 +966,22 @@
 @section  Scripts {
     <script src="~/js/recipeDetail.js"></script>
     <script type="text/javascript">
-        callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
+        // fetch and render element to html
+        (async () => {
+
+            await callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
+            @*await callIngrdientsOfRecipeApi(@(RouteData.Values["recipe_id"]));
+            await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));*@
+            await callRelatedRecipeApi(@(RouteData.Values["recipe_id"]));
+            // Recipe slider variation two
+            $('.slider-detail2').slick({
+                autoplay: true,
+                infinite: true,
+                pauseOnHover: true,
+                prevArrow: $('.left-arrow'),
+                nextArrow: $('.right-arrow')
+            });
+        })();
+       
     </script>
 }
