@@ -104,8 +104,9 @@ namespace SRSN.ClientApi.Controllers
                     Gender = u.Gender,
                     LastName = u.LastName,
                     Phone = u.Phone ,
-                    Point = u.Point
-                    
+                    Point = u.Point,
+                    Description = u.Description,
+                    AvatarImageUrl = u.AvatarImageUrl
                 });
             }
             return list;
@@ -128,8 +129,9 @@ namespace SRSN.ClientApi.Controllers
                     Gender = u.Gender,
                     LastName = u.LastName,
                     Phone = u.Phone,
-                    Point = u.Point
-
+                    Point = u.Point,
+                    Description = u.Description,
+                    AvatarImageUrl = u.AvatarImageUrl
                 });
             }
             return list;

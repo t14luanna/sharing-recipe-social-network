@@ -22,7 +22,8 @@ namespace SRSN.DatabaseManager.ViewModels
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? Point { get; set; }
-
+        public string Description { get; set; }
+        public string AvatarImageUrl { get; set; }
     }
 
     public class AccountViewModel
@@ -37,5 +38,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? Point { get; set; }
+        public string Description { get; set; }
+        public string AvatarImageUrl { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace SRSN.DatabaseManager.Identities
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Config db context manually
-            optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
+            optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=123456789;Trusted_Connection=False;");
         }
     }
 }

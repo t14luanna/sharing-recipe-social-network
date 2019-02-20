@@ -18,8 +18,8 @@ namespace SRSN.DatabaseManager.Entities
         }
 
         public int Id { get; set; }
-        public string ContentRecipe { get; set; }
         public string ImageCover { get; set; }
+        public string ContentRecipe { get; set; }
         public DateTime? CreateTime { get; set; }
         public DateTime? UpdateTime { get; set; }
         public int? UserId { get; set; }
