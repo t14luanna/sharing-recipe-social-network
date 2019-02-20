@@ -115,7 +115,7 @@ const createSingleRecipeOfDay = (recipe) =>
                             </div>`;
 const callRandomRecipeApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-random");
-    var data = (await res.json()).result;
+    var data = await res.json();
     for (var item of data) {
         let element = createSingleRandomRecipeElement(item);
         $("#list-random-recipe").append(element);
@@ -124,7 +124,7 @@ const callRandomRecipeApi = async () => {
 
 const callLatestRecipeApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-latest");
-    var data = (await res.json()).result;
+    var data = await res.json();
     var count = 0;
     for (var item of data) {
         count++;
@@ -142,9 +142,9 @@ const callLatestRecipeApi = async () => {
 };
 const callPopularRecipeBannerApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-popular");
-    var data = (await res.json()).result;
+    var data = await res.json();
     var count = 0;
-    for (var item of data) {
+    for (let item of data) {
         count++;
         switch (count) {
             case 1:
@@ -160,28 +160,31 @@ const callPopularRecipeBannerApi = async () => {
                 $("#single-banner3").append(element);
                 break;
         }
+        if (count == 3) {
+            break;
+        }
     }
 };
 const callPopularRecipeApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-popular");
-    var data = (await res.json()).result;
+    var list = await res.json();
     var count = 0;
-    for (var item of data) {
+    for (var item of list) {
         count++;
         if (count >= 4) {
             let element = createSingleRecipeElement(item);
             $("#list-single-recipe").append(element);
         }
-        if (count == 9) {
+        if (count == 9){
             break;
         }
     }
 };
 const callPopularRecipeWidgetApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-popular");
-    var data = (await res.json()).result;
+    var list = await res.json();
     var count = 0;
-    for (var item of data) {
+    for (var item of list) {
         count++;
         if (count >= 10) {
             let element = createSingleRecipeWidgetElement(item);
@@ -191,7 +194,7 @@ const callPopularRecipeWidgetApi = async () => {
 };
 const callLatestRecipeWidgetApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-latest");
-    var data = (await res.json()).result;
+    var data = await res.json();
     var count = 0;
     for (var item of data) {
         count++;
@@ -202,16 +205,4 @@ const callLatestRecipeWidgetApi = async () => {
     }
 };
 
-
-
-
-// load recipe
-$(document).ready((e) => {
-    callPopularRecipeBannerApi();
-    callPopularRecipeWidgetApi();
-    callPopularRecipeApi();
-    callLatestRecipeApi();
-    callLatestRecipeWidgetApi();
-    callRandomRecipeApi();
-});
 

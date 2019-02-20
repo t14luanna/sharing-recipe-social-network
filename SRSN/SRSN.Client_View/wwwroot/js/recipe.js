@@ -1,9 +1,9 @@
 ﻿
 $('#pagination-container').pagination({
     dataSource: 'https://localhost:44361/api/recipe/read-latest-page',
-    locator: 'result',
+    locator: '',// array
     totalNumberLocator: function (response) {
-        return response.result.length;
+        return response.length;
     },
     //totalNumber: 40,
     pageSize: 9,
@@ -80,7 +80,7 @@ const createSingleRecipeWidgetPageElement = (recipe) =>
 
 const callPopularRecipePageApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-popular");
-    var data = (await res.json()).result;
+    var data = await res.json();
     var count = 0;
     for (var item of data) {
         count++;
@@ -107,16 +107,8 @@ const saveRecentRecipeLocalStorage = async () => {
 
 
     var recentRecipe = { 'id': "1", 'imageCover': "nghia", 'recipeName': "đâs", 'createTime': "đâs" };
-
-    
     // Put the object into storage
     localStorage.setItem(key, JSON.stringify(recentRecipe));
     
 }
 
-// load recipe
-$(document).ready((e) => {
-    callPopularRecipePageApi();
-    loadRecentRecipeLocalStorage();
-    saveRecentRecipeLocalStorage();
-});

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace SRSN.ClientApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class RecipeIngredientController: ControllerBase
     {
         private IRecipeIngredientService recipeIngredientService;
@@ -16,5 +18,6 @@ namespace SRSN.ClientApi.Controllers
             this.recipeIngredientService = recipeIngredientService;
         }
         
+
     }
 }

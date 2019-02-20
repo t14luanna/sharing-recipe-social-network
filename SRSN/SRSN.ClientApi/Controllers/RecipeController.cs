@@ -66,6 +66,18 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("read-ingredients")]
+        public async Task<ActionResult> ReadIngredients(int recipeId)
+        {
+            try
+            {
+                return Ok(await recipeService.GetAllIngredientByRecipeId(recipeId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
         [HttpGet("read-popular")]
         public async Task<ActionResult> ReadPopular()
@@ -85,7 +97,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetLatestRecipes(this.userManager));
+                return Ok( await recipeService.GetLatestRecipes(this.userManager));
             }
             catch (Exception ex)
             {
@@ -97,7 +109,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetRelatedRecipe(userId ));
+                return Ok(await recipeService.GetRelatedRecipe(userId ));
             }
             catch (Exception ex)
             {
@@ -109,7 +121,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.Get1000LatestRecipes(this.userManager));
+                return Ok(await recipeService.Get1000LatestRecipes(this.userManager));
             }
             catch (Exception ex)
             {
@@ -122,7 +134,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetRandomRecipes(this.userManager));
+                return Ok( await recipeService.GetRandomRecipes(this.userManager));
             }
             catch (Exception ex)
             {
@@ -134,7 +146,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetRecipeWithID(this.userManager, recipeId));
+                return Ok(await recipeService.GetRecipeWithID(this.userManager, recipeId));
             }
             catch (Exception ex)
             {

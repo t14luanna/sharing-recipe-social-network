@@ -80,7 +80,12 @@ namespace SRSN.ClientApi.Controllers
         {
             return Ok(commentService.Get(p => p.PostId == postId));
          }
-        
+
+        [HttpGet("getCommentByRecipe")]
+        public ActionResult GetAllCommentByRecipeId(int recipeId)
+        {
+            return Ok(commentService.Get());//chưa xong truyen vao recipe id
+        }
 
         [HttpGet("get-all")]
         public ActionResult GetAll()
