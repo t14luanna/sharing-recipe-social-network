@@ -134,6 +134,26 @@ const createSingleRecipeDetailElement = (recipe) =>
                                             </div>
                                         </li>`;
 
+const createSingleRatingComment = (comment) =>
+    `<li>
+                                   <span class="rating-icons">
+                                                             <i class="fa fa-star-half-o" aria-hidden="true" style="
+                                                                        font-size: 20px;
+                                                                        color: green;"></i>
+                                                        </span>
+                                                        <span class="rating-figure">(${comment.star} / 5)</span>
+                                    <div class="avatar">
+                                        <a href="#"><img src="${comment.avatarUrl}" alt="avatar" /></a>
+                                    </div>
+                                    <div class="comment">
+                                        <h5><a href="#">${comment.fullName}</a></h5>
+                                        <span class="time">${comment.createTime}</span>
+                                        <p>
+                                            ${comment.contentRating}
+                                        </p>
+                                        
+                                    </div>
+                                </li>`;
 const callLatestRecipeDetailApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-latest");
     var data = await res.json();
@@ -197,8 +217,21 @@ const callRecipeDetailApi = async (id) => {
     }
 
     callRelatedRecipeApi(userid);
+    callReadRatingCommentApi(id);
 };
-
+const callReadRatingCommentApi = async (id) => {
+    var res = await fetch(`https://localhost:44361/api/RatingRecipe/read-rating?recipeId=${id}`);
+    var data = (await res.json());
+    var count = 0;
+    for (var item of data) {
+       
+        count++;
+        
+        var element = createSingleRatingComment(item)
+        $("#list-rating-comment").append(element);
+    }
+    $("#numOfComment").append(count);
+}
 const callStepOfRecipeApi = async (id) => {
 
     var res = await fetch(`https://localhost:44361/api/recipe/read-ingredients?recipeId=${id}`);

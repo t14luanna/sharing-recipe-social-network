@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
 
@@ -15,10 +17,13 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class RatingRecipeController : ControllerBase
     {
+        private UserManager<SRSNUser> userManager;
         private IRatingRecipeService ratingRecipeService;
-        public RatingRecipeController(IRatingRecipeService ratingRecipeService)
+
+        public RatingRecipeController(UserManager<SRSNUser> userManager, IRatingRecipeService ratingRecipeService)
         {
-            this.ratingRecipeService = ratingRecipeService;
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this.ratingRecipeService = ratingRecipeService ?? throw new ArgumentNullException(nameof(ratingRecipeService));
         }
 
         [HttpPost("createRating")]
@@ -28,7 +33,7 @@ namespace SRSN.ClientApi.Controllers
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.UserId = int.Parse(userId);
-            if(request.Star == null || request.Star == 0)
+            if (request.Star == null || request.Star == 0)
             {
                 return Ok(new
                 {
@@ -58,9 +63,23 @@ namespace SRSN.ClientApi.Controllers
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.UserId = int.Parse(userId);
             await ratingRecipeService.UpdateAsync(request);
-            return Ok(new {
+            return Ok(new
+            {
                 message = "Update Rating sucessfull"
             });
+        }
+        [HttpGet("read-rating")]
+        public async Task<ActionResult> ReadCommentRecipe(int recipeId)
+        {
+            try
+            {
+
+                return Ok(await ratingRecipeService.GetRatingComment(this.userManager, recipeId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
     }
 }

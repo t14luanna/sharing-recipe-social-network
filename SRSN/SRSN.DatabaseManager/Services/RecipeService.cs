@@ -354,10 +354,9 @@ namespace SRSN.DatabaseManager.Services
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
                     var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
-
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
-
+                    
                     recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
 

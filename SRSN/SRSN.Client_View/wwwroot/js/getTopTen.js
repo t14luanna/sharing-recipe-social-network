@@ -18,7 +18,7 @@
                                 </div>
                             </div>
                         </div>
-                    </li>`
+                    </li>`;
 
 const callAccountApi = async () => {
     var response = await fetch("https://localhost:44361/api/account/get-top-ten");
@@ -27,7 +27,7 @@ const callAccountApi = async () => {
         let element = readPopularUser(item);
         $("#chef-team").append(element);
     }
-}
+};
 
 $(document).ready(e) => {
     callAccountApi();
