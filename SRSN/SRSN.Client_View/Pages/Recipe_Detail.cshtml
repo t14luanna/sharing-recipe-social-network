@@ -974,6 +974,7 @@
             await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));*@
             await callRelatedRecipeApi(@(RouteData.Values["recipe_id"]));
             // Recipe slider variation two
+
             $('.slider-detail2').slick({
                 autoplay: true,
                 infinite: true,
@@ -981,6 +982,11 @@
                 prevArrow: $('.left-arrow'),
                 nextArrow: $('.right-arrow')
             });
+            $('dl.accordion dt').on("click", function () {
+                $(this).siblings('dt').removeClass('current');
+                $(this).addClass('current').next('dd').stop(true, true).slideDown(500).siblings('dd').stop(true, true).slideUp(500);
+            });
+
         })();
        
     </script>
