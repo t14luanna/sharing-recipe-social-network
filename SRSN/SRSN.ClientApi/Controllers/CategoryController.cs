@@ -20,11 +20,11 @@ namespace SRSN.ClientApi.Controllers
         {
             this.categoryService = categoryService;
         }
-        [HttpGet("read")]
+        [HttpGet("read-categoryitem")]
         [AllowAnonymous]
-        public async Task<ActionResult> ReadCategory()
+        public async Task<ActionResult> ReadCategory(int categoryMainId)
         {
-            return Ok(categoryService.Get());
+            return Ok( await categoryService.GetListCategoryItems(categoryMainId));
         }
     }
 }

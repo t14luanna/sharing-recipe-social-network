@@ -10,6 +10,6 @@ namespace SRSN.DatabaseManager.ViewModels
         public int Id { get; set; }
         public string CategoryName { get; set; }
 
-        public virtual ICollection<CategoryItem> CategoryItem { get; set; }
+        public List<CategoryItemViewModel> ListCategoryItem { get; set; }
     }
 }
