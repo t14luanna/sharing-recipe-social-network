@@ -93,20 +93,10 @@ namespace SRSN.ClientApi.Controllers
             var list = new List<AccountViewModel>();
             foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point).Take(10))
             {
-                list.Add(new AccountViewModel()
-                {
-                    Id = u.Id,
-                    Username = u.UserName,
-                    FirstName = u.FirstName,
-                    Address = u.Address,
-                    Birthdate = u.Birthdate,
-                    Email = u.Email,
-                    Gender = u.Gender,
-                    LastName = u.LastName,
-                    Phone = u.Phone ,
-                    Point = u.Point
-                    
-                });
+                var user = u;
+                var userVM = new AccountViewModel();
+                mapper.Map(user, userVM);
+                list.Add(userVM);
             }
             return list;
         }

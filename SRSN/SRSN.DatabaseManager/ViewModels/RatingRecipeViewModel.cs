@@ -13,5 +13,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public string ImageUrl { get; set; }
         public DateTime? CreateTime { get; set; }
         public string ContentRating { get; set; }
+        public string FullName { get; set; }
+        public string AvatarUrl { get; set; }
     }
 }
