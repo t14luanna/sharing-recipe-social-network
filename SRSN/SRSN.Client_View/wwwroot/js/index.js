@@ -18,14 +18,12 @@ const createSingleRecipeElement = (singeRecipe) =>
                    
                 </ul>
                 <div class="short-separator"></div>
-                <div class="rating-box">
-                    <span class="rating-figure"><i class="fa fa-eye" aria-hidden="true" style="font-size:20px;">&nbsp&nbsp${singeRecipe.viewQuantity}</i></span>&nbsp&nbsp
-                    <span class="rating-icons">
-                         <i class="fa fa-star-half-o" aria-hidden="true" style="
-                                    font-size: 20px;
-                                    color: green;"></i>
-                    </span>
-                    <span class="rating-figure">(${singeRecipe.evRating} / 5)</span>
+                <ul class="news-post-meta post-meta">
+                    <li class="rating-figure"><i class="fa fa-eye" aria-hidden="true">${singeRecipe.viewQuantity}</i></li>
+                    <li class="rating-icons">
+                         <i class="fa fa-star-half-o" aria-hidden="true"></i>
+                        <span class="rating-figure">(${singeRecipe.evRating} / 5)</span>
+                    </li>
                 </div>
             </div>
         </div>

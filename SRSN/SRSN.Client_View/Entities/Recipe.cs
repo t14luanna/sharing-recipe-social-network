@@ -14,11 +14,12 @@ namespace SRSN.Client_View.Entities
             RecipeCategory = new HashSet<RecipeCategory>();
             RecipeIngredient = new HashSet<RecipeIngredient>();
             StepsOfRecipe = new HashSet<StepsOfRecipe>();
-            UserViewRecipe = new HashSet<UserViewRecipe>();
+            UserRecipePoint = new HashSet<UserRecipePoint>();
         }
 
         public int Id { get; set; }
         public string ImageCover { get; set; }
+        public string ContentRecipe { get; set; }
         public DateTime? CreateTime { get; set; }
         public DateTime? UpdateTime { get; set; }
         public int? UserId { get; set; }
@@ -29,6 +30,7 @@ namespace SRSN.Client_View.Entities
         public int? Serving { get; set; }
         public bool? Active { get; set; }
         public int? ViewQuantity { get; set; }
+        public double? EvRating { get; set; }
 
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }
@@ -38,6 +40,6 @@ namespace SRSN.Client_View.Entities
         public virtual ICollection<RecipeCategory> RecipeCategory { get; set; }
         public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
         public virtual ICollection<StepsOfRecipe> StepsOfRecipe { get; set; }
-        public virtual ICollection<UserViewRecipe> UserViewRecipe { get; set; }
+        public virtual ICollection<UserRecipePoint> UserRecipePoint { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
@@ -19,9 +20,9 @@ namespace SRSN.ClientApi.Controllers
     public class AccountController : ControllerBase
     {
         
-        private UserManager<SRSNUser> userManager;
+        private SRSNUserManager userManager;
         private IMapper mapper;
-        public AccountController(UserManager<SRSNUser> userManager, IMapper mapper)
+        public AccountController(SRSNUserManager userManager, IMapper mapper)
         {
             this.userManager = userManager;
             this.mapper = mapper;
@@ -47,10 +48,16 @@ namespace SRSN.ClientApi.Controllers
             {
                 return BadRequest();
             }
-            
-            await userManager.CreateAsync(user, data.Password);
-            return Ok(new { message = "register thanh cong" });
-
+           
+            var result = await userManager.CreateAsync(user, data.Password);
+            if(result.Succeeded)
+            {
+                return Ok(new { message = "register thanh cong" });
+            }
+            else
+            {
+                return Ok(new { message = "register that bai", errors = JsonConvert.SerializeObject(result.Errors) });
+            }
         }
 
 
@@ -118,8 +125,9 @@ namespace SRSN.ClientApi.Controllers
                     Gender = u.Gender,
                     LastName = u.LastName,
                     Phone = u.Phone,
-                    Point = u.Point
-
+                    Point = u.Point,
+                    Description = u.Description,
+                    AvatarImageUrl = u.AvatarImageUrl
                 });
             }
             return list;

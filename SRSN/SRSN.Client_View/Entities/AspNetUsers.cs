@@ -26,10 +26,10 @@ namespace SRSN.Client_View.Entities
             UserBlockUser = new HashSet<UserBlock>();
             UserFollowingFollowingUser = new HashSet<UserFollowing>();
             UserFollowingUser = new HashSet<UserFollowing>();
+            UserRecipePoint = new HashSet<UserRecipePoint>();
             UserReportRecipe = new HashSet<UserReportRecipe>();
             UserReportUserReportedUser = new HashSet<UserReportUser>();
             UserReportUserUser = new HashSet<UserReportUser>();
-            UserViewRecipe = new HashSet<UserViewRecipe>();
         }
 
         public int Id { get; set; }
@@ -55,6 +55,7 @@ namespace SRSN.Client_View.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? Point { get; set; }
+        public string AvatarImageUrl { get; set; }
 
         public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
@@ -75,9 +76,9 @@ namespace SRSN.Client_View.Entities
         public virtual ICollection<UserBlock> UserBlockUser { get; set; }
         public virtual ICollection<UserFollowing> UserFollowingFollowingUser { get; set; }
         public virtual ICollection<UserFollowing> UserFollowingUser { get; set; }
+        public virtual ICollection<UserRecipePoint> UserRecipePoint { get; set; }
         public virtual ICollection<UserReportRecipe> UserReportRecipe { get; set; }
         public virtual ICollection<UserReportUser> UserReportUserReportedUser { get; set; }
         public virtual ICollection<UserReportUser> UserReportUserUser { get; set; }
-        public virtual ICollection<UserViewRecipe> UserViewRecipe { get; set; }
     }
 }

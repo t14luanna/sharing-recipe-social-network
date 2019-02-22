@@ -52,7 +52,8 @@ namespace SRSN.DatabaseManager
                 };
             });
 
-            services.AddScoped(typeof(IdentityDbContext<SRSNUser, IdentityRole<int>,int>), typeof(SRSNUserManager));
+            services.AddScoped(typeof(IdentityDbContext<SRSNUser, IdentityRole<int>,int>), typeof(SRSNIdentityDbContext));
+            services.AddScoped(typeof(SRSNUserManager));
             services.AddScoped(typeof(DbContext), typeof(CookyDemoContext));
             
             // cau hinh Services
