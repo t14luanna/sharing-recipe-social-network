@@ -73,7 +73,6 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-
                 return Ok(await ratingRecipeService.GetRatingComment(this.userManager, recipeId));
             }
             catch (Exception ex)

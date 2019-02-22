@@ -29,6 +29,7 @@ const callAccountApi = async () => {
     }
 };
 
-$(document).ready(e) => {
+$(document).ready(function (){
     callAccountApi();
-}
+});
+    
