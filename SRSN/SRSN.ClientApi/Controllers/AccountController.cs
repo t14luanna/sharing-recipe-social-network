@@ -28,7 +28,7 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register([FromBody] AccountEditViewModel data)
+        public async Task<ActionResult> Register([FromForm] AccountEditViewModel data)
         {
             // check existed user
             var existedUsername = await userManager.FindByNameAsync(data.UsernameVM);
