@@ -22,7 +22,7 @@ public class IngredientDAO {
             return;
         }
         Connection connection = DBUtils.getConnection();
-        String sql = "Insert into Ingredient (Name, Price, Image,BrandId) "
+        String sql = "Insert into Products (Name, Price, Image,BrandId) "
                 + " values (?, ?, ?, ?) ";
 
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -43,7 +43,7 @@ public class IngredientDAO {
     
     public boolean check(String name) throws SQLException, ClassNotFoundException{
         Connection connection = DBUtils.getConnection();
-        String sql = "SELECT *  FROM Ingredient WHERE Name = ?";
+        String sql = "SELECT *  FROM Products WHERE Name = ?";
 
         PreparedStatement statement = connection.prepareStatement(sql);
         try{

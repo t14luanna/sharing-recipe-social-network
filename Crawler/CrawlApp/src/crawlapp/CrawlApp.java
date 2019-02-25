@@ -65,53 +65,15 @@ public class CrawlApp {
     }
     
     public static void crawlStore(int pos){
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler(1, brands.get(pos).getId());
         crawler.start(brands.get(pos).getStores());
-        JSONArray result = crawler.getResults();
-
-        StoreDAO dao = new StoreDAO();
-        int count = 0;
-        for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-            count++;
-            JSONObject next = (JSONObject) iterator.next();
-            String name = (String) next.get("Name");
-            String address = (String) next.get("Address");
-            StoreDTO dto = new StoreDTO(name, address, brands.get(pos).getId());
-            try {
-                dao.create(dto);
-                System.out.println(count + " : " + next);
-            } catch (Exception ex) {
-                System.out.println("Error: " + count);
-            }
-        }
-        
         crawler.close();
     }
     
     public static void crawlProduct(int pos){
-        Crawler crawler = new Crawler();
+        Crawler crawler = new Crawler(0, brands.get(pos).getId());
         crawler.start(brands.get(pos).getProducts());
-        
-        JSONArray result = crawler.getResults();
-
-        IngredientDAO dao = new IngredientDAO();
-        int count = 0;
-        for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-            count++;
-            JSONObject next = (JSONObject) iterator.next();
-            String name = (String) next.get("Name");
-            String price = (String) next.get("Price");
-            String image = (String) next.get("Image");
-            IngredientDTO dto = new IngredientDTO(name, price, image, brands.get(pos).getId());
-            try {
-                dao.create(dto);
-                System.out.println(count + " : " + next);
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-                System.out.println("Error: " + count);
-            }
-        }
-        
+            
         crawler.close();
     }
     
