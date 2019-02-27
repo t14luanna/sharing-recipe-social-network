@@ -11,7 +11,6 @@ namespace SRSN.ClientApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class CategoryController : ControllerBase
     {
 
@@ -21,10 +20,9 @@ namespace SRSN.ClientApi.Controllers
             this.categoryService = categoryService;
         }
         [HttpGet("read")]
-        [AllowAnonymous]
         public async Task<ActionResult> ReadCategory()
         {
-            return Ok(categoryService.Get());
+            return Ok(categoryService.GetCategoryMain());
         }
     }
 }

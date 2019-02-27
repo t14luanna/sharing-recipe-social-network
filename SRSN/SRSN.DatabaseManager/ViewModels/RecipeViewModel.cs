@@ -12,6 +12,20 @@ namespace SRSN.DatabaseManager.ViewModels
         public List<RecipeCategoryViewModel> listCategory { get; set; }
     }
 
+    public class RequestSubmitRecipeModel
+    {
+        public String ImageCover { get; set; }
+        public String ContentRecipe { get; set; }
+        public String RecipeName { get; set; }
+        public int Serving { get; set; }
+        public int Cooktime { get; set; }
+        public int LevelRecipe { get; set; }
+        public String VideoLink { get; set; }
+        public List<String> ListCategory { get; set; }
+        public List<RecipeIngredientCreateViewModel> ListIngredient { get; set; }
+        public List<StepsOfRecipeCreateViewModel> ListSORVM { get; set; }
+    }
+
     public class RecipeViewModel
     {
         public int Id { get; set; }

@@ -5,7 +5,6 @@ W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\bin\Debug\netcor
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\bin\Debug\netcoreapp2.2\SRSN.Client_View.pdb
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\bin\Debug\netcoreapp2.2\SRSN.Client_View.Views.dll
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\bin\Debug\netcoreapp2.2\SRSN.Client_View.Views.pdb
-W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.csprojAssemblyReference.cache
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.csproj.CoreCompileInputs.cache
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.RazorAssemblyInfo.cache
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.RazorAssemblyInfo.cs
@@ -17,6 +16,7 @@ W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcor
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\Razor\Pages\Error.g.cshtml.cs
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\Razor\Pages\Index.g.cshtml.cs
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\Razor\Pages\Privacy.g.cshtml.cs
+W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\Razor\Pages\Recipe\SubmitRecipe.g.cshtml.cs
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\Razor\Pages\Shared\_CookieConsentPartial.g.cshtml.cs
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\Razor\Pages\Shared\_Layout.g.cshtml.cs
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\Razor\Pages\Shared\_ValidationScriptsPartial.g.cshtml.cs
@@ -28,3 +28,4 @@ W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcor
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.dll
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.pdb
 W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.csproj.CopyComplete
+W:\Projects\sharing-recipe-social-network\SRSN\SRSN.Client_View\obj\Debug\netcoreapp2.2\SRSN.Client_View.csprojAssemblyReference.cache

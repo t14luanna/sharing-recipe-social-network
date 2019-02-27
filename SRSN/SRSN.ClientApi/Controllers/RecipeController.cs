@@ -74,6 +74,19 @@ namespace SRSN.ClientApi.Controllers
             }
         }
 
+        [HttpGet("read-lastest")]
+        public async Task<ActionResult> ReadLastest()
+        {
+            try
+            {
+                return Ok(recipeService.GetLastestRecipes());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> Update([FromBody]RequestCreateRecipeWithConstraintViewMode request)
@@ -85,6 +98,15 @@ namespace SRSN.ClientApi.Controllers
             return Ok(new
             {
                 message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
+            });
+        }
+
+        [HttpPost("submit-recipe")]
+        public async Task<ActionResult> SubmitRecipe([FromBody]RequestSubmitRecipeModel request)
+        {
+            return Ok(new
+            {
+                message = $"Ban da tao thanh cong Recipe"
             });
         }
     }
