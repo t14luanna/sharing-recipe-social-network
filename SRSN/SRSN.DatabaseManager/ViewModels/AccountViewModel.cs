@@ -19,11 +19,13 @@ namespace SRSN.DatabaseManager.ViewModels
         public string ConfirmPassword { get; set; }
         public int Gender { get; set; }
         public DateTime? Birthdate { get; set; }
+        public string BirthdateStr { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? Point { get; set; }
         public string Description { get; set; }
         public string AvatarImageUrl { get; set; }
+
     }
 
     public class AccountViewModel

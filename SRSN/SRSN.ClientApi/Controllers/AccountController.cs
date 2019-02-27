@@ -52,7 +52,15 @@ namespace SRSN.ClientApi.Controllers
             var result = await userManager.CreateAsync(user, data.Password);
             if(result.Succeeded)
             {
-                return Ok(new { message = "register thanh cong" });
+                var existedUser = await userManager.FindByNameAsync(user.UserName);
+                var token = await user.AuthorizeAsync(userManager, existedUser);
+                return Ok(new
+                {
+                    message = "register thanh cong",
+                    success = true,
+                    token = token,
+                    username = user.UserName
+                });
             }
             else
             {

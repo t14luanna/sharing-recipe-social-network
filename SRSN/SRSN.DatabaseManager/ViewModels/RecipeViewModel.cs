@@ -7,7 +7,7 @@ namespace SRSN.DatabaseManager.ViewModels
     public class RequestCreateRecipeWithConstraintViewMode
     {
         public RecipeViewModel RecipeVM { get; set; }
-        public List<CategoryItemViewModel> ListSORVM { get; set; }
+        public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
         public List<RecipeIngredientViewModel> listIngredient { get; set; }
         public List<RecipeCategoryViewModel> listCategory { get; set; }
     }
@@ -30,7 +30,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public double EvRating { get; set; }
         public string FullName { get; set; }
         public string Avarta { get; set; }
-        public List<CategoryItemViewModel> ListSORVM { get; set; }
+        public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
         public List<RecipeIngredientViewModel> listIngredient { get; set; }
         public List<RecipeCategoryViewModel> listCategory { get; set; }
     }

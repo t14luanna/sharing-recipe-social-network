@@ -3,10 +3,6 @@
                                 <div class="wrapper-recipe-heading">
                                     <div class="heading">
                                         <h2>${recipe.recipeName}</h2>
-
-                                    </div>
-                                    <div class="recipe-media">
-                                        <a class="print-button" href="#"><i class="fa fa-print"></i> In công thức</a>
                                     </div>
                                 </div>
 
@@ -43,7 +39,6 @@
                                             <li><span>Độ khó : </span>${recipe.levelRecipe}</li>
                                         </ul>
                                     </div>
-                                    <a href="${recipe.videoLink}" class="swipebox slider-video-button">Xem Video</a>
                                 </div>`;
 const createContentRecipe = (recipe) =>
     `<span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="
@@ -78,7 +73,7 @@ const createSingleStepOfRecipe = (step) =>
                                                     
                                                 </div>
                                                 <div class="col-sm-5">
-                                                    <img src="${step.imageUrl}" alt="image" />
+                                                    <img class="img-step-recipe" src="${step.imageUrl}" alt="image" />
                                                 </div>
                                             </div>
                                         </dd>`;

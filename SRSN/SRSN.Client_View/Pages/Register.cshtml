@@ -3,6 +3,14 @@
 
 }
 
+<style>
+    .error-area {
+        color: red;
+    }
+    .daterangepicker .drp-calendar {
+        max-width: 100% !important;
+    }
+</style>
 <!--banner ends-->
 <div class="recipes-home-body inner-page">
     <div class="container">
@@ -12,58 +20,31 @@
                     <h2>Đăng ký</h2>
                     <div class="submit-recipe-form">
                         <form action="#" method="post" id="register-form">
-                            <label for="title">Username*</label>
-                            <input type="text" name="usernameVM" />
-                            <label for="title">Họ*</label>
-                            <input type="text" name="lastName" />
+                            <label for="title">Tên đăng nhập *</label>
+                            <input type="text" name="usernameVM" required />
+                            <label for="title">Họ *</label>
+                            <input type="text" name="lastName" required />
                             <br />
-                            <label for="title">Tên*</label>
-                            <input type="text" name="firstName" />
+                            <label for="title">Tên *</label>
+                            <input type="text" name="firstName" required />
                             <label for="title">Email*</label>
-                            <input type="text" name="email" />
-                            <label for="title">Password*</label>
-                            <input type="text" name="password" />
-                            <label for="title">ConfirmPassword*</label>
-                            <input type="text" name="confirmPassword" />
-                            <div class="row">
-                                <div class="col-sm-12"><label for="recipe-type">Ngày sinh</label></div>
-                                <div class="col-sm-4">
-                                    <select name="recipe-type" id="recipe-type" class="advance-selectable">
-                                        <option value="t0" selected="selected">None</option>
-                                        <option value="t1">type 1</option>
-                                        <option value="t2">type 2</option>
-                                        <option value="t3">type 3</option>
-                                        <option value="t4">type 4</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <select name="cuisine" id="cuisine-select" class="advance-selectable">
-                                        <option value="c0" selected="selected">None</option>
-                                        <option value="c1">type 1</option>
-                                        <option value="c2">type 2</option>
-                                        <option value="c3">type 3</option>
-                                        <option value="c4">type 4</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <select name="course" id="course-select" class="advance-selectable">
-                                        <option value="cr0" selected="selected">None</option>
-                                        <option value="cr1">type 1</option>
-                                        <option value="cr2">type 2</option>
-                                        <option value="cr3">type 3</option>
-                                        <option value="cr4">type 4</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12"><label for="recipe-type">Giới tính</label></div>
-                                <div class="col-sm-12">
-                                    <select name="recipe-type" id="recipe-type" class="advance-selectable">
-                                        <option value="t0" selected="selected">None</option>
-                                        <option value="t1">type 1</option>
-                                        <option value="t2">type 2</option>
-                                        <option value="t3">type 3</option>
-                                        <option value="t4">type 4</option>
-                                    </select>
-                                </div>
+                            <input type="email" name="email" placeholder="Ví dụ: ten.ho@@gmail.com" required />
+                            <label for="title">Mật khẩu*</label>
+                            <input type="password" name="password" placeholder="Ví dụ: abC@@1234" required />
+                            <label for="title">Xác nhận mật khẩu*</label>
+                            <input type="password" name="confirmPassword" placeholder="Ví dụ: abC@@1234" required />
+                            <label for="birthdateStr">Ngày sinh</label>
+                            <input type="text" name="birthdateStr" id="birthdateStr" required />
+                            <input type="hidden" name="birthdate" id="birthdate" />
+                            <label for="gender">Giới tính</label>
+                            <select name="gender" id="gender" class="advance-selectable">
+                                <option value="0" selected="selected">Nam</option>
+                                <option value="1">Nữ</option>
+                            </select>
+                            <input type="hidden" name="description" />
+                            <input type="hidden" name="avatarUrl"/>
+                            <div class="row error-area">
+
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="recipe-submit-btn">Đăng ký</button>
@@ -382,22 +363,101 @@
 @section Scripts
 {
     <script>
+        function validateRegisterForm(form) {
+            var password = form['password'].value;
+            var confirmPassword = form['confirmPassword'].value;
+            if (!(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/.test(password)))
+            {
+                $('.error-area').html(`
+                        <p>At least one upper case English letter</p>
+                        <p>At least one lower case English letter</p>
+                        <p>At least one digit</p>
+                        <p>At least one special character</p>
+                        <p>Minimum eight in length</p>`);
+                return false;
+            }
+            if (password !== confirmPassword)
+            {
+                alert("Mật khẩu và xác nhận mật khẩu không trùng khớp");
+                return false;
+            }
+            console.log(form['usernameVM']);
+            return true;
+        }
         $("#register-form").on("submit", function (e) {
             e.preventDefault();
-            var formData = $('#register-form').serialize();
-            $.ajax({
-                url: "https://localhost:44361/api/account/register",
-                data: formData,
-                dataType: 'json',
-                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                method: "POST",
-                success: function () {
-                    window.location.href = "/";
-                },
-                error: function (error) {
-                    console.log("Register Error: ", error)
+            var isValidated = validateRegisterForm(e.target);
+            if (isValidated) {
+                var formData = $('#register-form').serializeArray();
+                var data = {};
+                $.map(formData, function (n, i) {
+                    data[n['name']] = n['value'];
+                });
+
+                fetch("https://localhost:44361/api/account/register", {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(data), // data can be `string` or {object}!
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(response => {
+                    if (response.success) {
+                        localStorage.setItem("authorization", JSON.stringify(response.token));
+                        localStorage.setItem("username", response.username);
+                        window.location.href = '/';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+            else
+            {
+                alert("Đăng ký thất bại")
+            }
+        });
+
+        $(function () {
+            $('#birthdateStr').daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                minYear: 1901,
+                "locale": {
+                    "format": "DD/MM/YYYY",
+                    "separator": " - ",
+                    "applyLabel": "Xác nhận",
+                    "cancelLabel": "Hủy",
+                    "fromLabel": "Từ",
+                    "toLabel": "Đến",
+                    "customRangeLabel": "Tùy chọn",
+                    "daysOfWeek": [
+                        "Chủ nhật",
+                        "Thứ hai",
+                        "Thứ ba",
+                        "Thứ tư",
+                        "Thứ năm",
+                        "Thứ sáu",
+                        "Thứ bảy"
+                    ],
+                    "monthNames": [
+                        "Tháng 1",
+                        "Tháng 2",
+                        "Tháng 3",
+                        "Tháng 4",
+                        "Tháng 5",
+                        "Tháng 6",
+                        "Tháng 7",
+                        "Tháng 8",
+                        "Tháng 9",
+                        "Tháng 10",
+                        "Tháng 11",
+                        "Tháng 12"
+                    ],
+                    "firstDay": 1,
                 }
-            })
+            }, function (currentTime) {
+                $("#birthdate").val((new Date(currentTime).toLocaleDateString()));
+            });
         });
     </script>
 }

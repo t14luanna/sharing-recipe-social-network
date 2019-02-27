@@ -34,8 +34,9 @@
     <link rel="stylesheet" href="/recipepress/css/bootstrap-theme.css" />
     <!--animate stylesheet-->
     <link rel="stylesheet" href="/recipepress/css/animate.css" />
-    <!--main stylesheet-->
+    <!--main stylesheet-->  
     <link rel="stylesheet" href="/recipepress/css/main.css" />
+    <link rel="stylesheet" href="~/css/daterangepicker.css"/>
 </head>
 <body>
     <!--pre-loader-->
@@ -70,9 +71,8 @@
                                         </li>
                                         <li>
                                             <a href="#">Cộng đồng</a>
-
                                         </li>
-                                        <li><a href="our-chefs.html">Top Thành viên</a></li>
+                                        <li><a href="/TopUsers">Top Thành viên</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -91,9 +91,12 @@
                                         <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                         <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
                                     </ul>
-                                    <span class="sign-in-buttons">
+                                    <span class="sign-in-buttons authorized-group" style="display: none;">
+                                        <a class="information" href="/account/information" id="authorized-group-username">Username</a>
+                                    </span>
+                                    <span class="sign-in-buttons unauthorized-group">
                                         <a class="login" href="/login">Login</a>
-                                        <a class="register" href="#">Register</a>
+                                        <a class="register" href="/register">Register</a>
                                     </span>
                                 </div>
                                 <nav class="nav-collapse">
@@ -269,6 +272,7 @@
         </div>
     </div>
     <!--footer ends-->
+
     <script src="/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="/recipepress/js/jquery-ui.js"></script>
     <script src="/recipepress/js/flexslider/jquery.flexslider-min.js"></script>
@@ -279,6 +283,10 @@
     <script src="/recipepress/js/jquery.form.js"></script>
     <script src="/recipepress/js/jquery.validate.min.js"></script>
     <script src="/recipepress/js/jquery.swipebox.js"></script>
+    <script src="~/js/moment.min.js"></script>
+    <script src="/js/daterangepicker.min.js"></script>
+    <script src="/js/site.js"></script>
+
     @RenderSection("Scripts", required: false)
     <script src="/recipepress/js/custom.js"></script>
 

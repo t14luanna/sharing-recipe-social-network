@@ -17,11 +17,11 @@ namespace SRSN.DatabaseManager.Services
 {
     public interface IRecipeService : IBaseService<Recipe, RecipeViewModel>
     {
-        Task CreateRecipeWithSteps(RecipeViewModel recipeVM, List<CategoryItemViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient
+        Task CreateRecipeWithSteps(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient
             , List<RecipeCategoryViewModel> listCategory);
         
         Task DeActiveRecipe(int id);
-        Task UpdateRecipe(RecipeViewModel recipeVM, List<CategoryItemViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
+        Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId);
         Task<ICollection<RecipeViewModel>> GetAllIngredientByRecipeId(int recipeId);
         Task<ICollection<RecipeViewModel>> GetPopularRecipes(UserManager<SRSNUser> userManager);
@@ -118,7 +118,7 @@ namespace SRSN.DatabaseManager.Services
                     var category = categoryRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
                     if (stepOfRecipeRepo.Count() > 0)
                     {
-                        recipe.ListSORVM = await stepOfRecipes.ProjectTo<CategoryItemViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                        recipe.ListSORVM = await stepOfRecipes.ProjectTo<StepsOfRecipeViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
                     }
                     if (ingredientRepo.Count() > 0)
                     {
@@ -153,7 +153,7 @@ namespace SRSN.DatabaseManager.Services
 
                     if (stepOfRecipeRepo.Count() > 0)
                     {
-                        recipe.ListSORVM = await stepOfRecipes.ProjectTo<CategoryItemViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                        recipe.ListSORVM = await stepOfRecipes.ProjectTo<StepsOfRecipeViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
                     }
                     if (ingredientRepo.Count() > 0)
                     {
@@ -273,7 +273,7 @@ namespace SRSN.DatabaseManager.Services
                 return null;
             }
         }
-        public async Task UpdateRecipe(RecipeViewModel recipeVM, List<CategoryItemViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
+        public async Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
         {
             var stepRecipeDBSet = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
             var recipeIngredientDBSet = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
@@ -288,7 +288,7 @@ namespace SRSN.DatabaseManager.Services
                     await this.unitOfWork.Commit();
                     foreach (var sorVM in listSORVM)
                     {
-                        var sorEntity = this.VMToEntity<StepsOfRecipe, CategoryItemViewModel>(sorVM);
+                        var sorEntity = this.VMToEntity<StepsOfRecipe, StepsOfRecipeViewModel>(sorVM);
                         sorEntity.RecipeId = recipeEntity.Id;
                         stepRecipeDBSet.Update(sorEntity);
                         await this.unitOfWork.Commit();
@@ -393,7 +393,10 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-       
+        public Task CreateRecipeWithSteps(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

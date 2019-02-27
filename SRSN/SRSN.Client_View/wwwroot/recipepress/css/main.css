@@ -5938,7 +5938,8 @@ div.widget-measurements {
 /*--------------------*/
 .wrapper-detail-contents.detail-2 .wrapper-recipe-heading .heading {
     overflow: hidden;
-    width: 80%;
+    width: 100%;
+    /*width: 80%;*/
 }
 
 .wrapper-detail-contents.detail-2 .wrapper-recipe-heading .recipe-media {
@@ -6791,7 +6792,7 @@ div.widget-measurements {
         margin-bottom: 10px;
     }
 
-    .submit-recipe-form input[type="text"] {
+    .submit-recipe-form input[type="text"], .submit-recipe-form input[type="password"], .submit-recipe-form input[type="email"] {
         width: 100%;
         height: 40px;
         padding-left: 20px;
@@ -8023,8 +8024,8 @@ div.widget-measurements {
     background-size: cover
 }
 
-.slide-detail-inner p, .recipe-content-inner p {
-    display: -webkit-box;
+.slide-detail-inner p, .recipe-content-inner p, .detail p {
+    display: -webkit-box!important;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -8032,4 +8033,8 @@ div.widget-measurements {
 }
 .fa-eye, fa-star-half-o {
     font-size: 13px;
+}
+.img-step-recipe{
+    width: 306px;
+    height: 222px;
 }
