@@ -80,9 +80,9 @@ $('#submitBtn').on("click", async function (event) {
         Cooktime: cooktime,
         LevelRecipe: level,
         VideoLink: videoCode,
-        ListCategory: categoriesItem,
+        listCategory: categoriesItem,
         ListSORVM: steps,
-        ListIngredient: ingredients
+        listIngredient: ingredients
     };
 
     console.log(data);

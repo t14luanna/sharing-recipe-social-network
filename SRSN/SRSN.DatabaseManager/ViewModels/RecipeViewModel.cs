@@ -20,6 +20,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public int Serving { get; set; }
         public int Cooktime { get; set; }
         public int LevelRecipe { get; set; }
+        public int UserId { get; set; }
         public String VideoLink { get; set; }
         public List<String> ListCategory { get; set; }
         public List<RecipeIngredientCreateViewModel> ListIngredient { get; set; }
