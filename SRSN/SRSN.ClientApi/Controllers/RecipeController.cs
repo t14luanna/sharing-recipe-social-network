@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using SRSN.DatabaseManager.Identities;
+using SRSN.DatabaseManager.Redis;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
+using StackExchange.Redis;
 
 namespace SRSN.ClientApi.Controllers
 {
@@ -18,14 +22,16 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private IRecipeService recipeService;
-        
-        private UserManager<SRSNUser> userManager;
+        private string userRecipeRecommendPrefix = "RCS_User_";
 
+        private IRecipeService recipeService;
+        private UserManager<SRSNUser> userManager;
+        private IDatabase redisDatabase;
         public RecipeController(IRecipeService recipeService, UserManager<SRSNUser> userManager)
         {
             this.recipeService = recipeService ;
             this.userManager = userManager ;
+            this.redisDatabase = RedisUtil.Connection.GetDatabase();
         }
 
         [HttpPost("create")]
@@ -116,7 +122,30 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-         [HttpGet("read-latest-page")]
+
+        [HttpGet("read-recommend-recipes")]
+        public async Task<ActionResult> ReadRecommendRecipes([FromQuery]int userId)
+        {
+            try
+            {
+                var key = $"{userRecipeRecommendPrefix}{userId}";
+                var datas = await redisDatabase.SortedSetRangeByScoreWithScoresAsync(key);
+                var listRecipe = new List<RecipeViewModel>();
+                foreach (var data in datas)
+                {
+                    int recipeId = 0;
+                    int.TryParse(data.Element, out recipeId);
+                    var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
+                    listRecipe.Add(recipe);
+                }
+                return Ok(listRecipe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("read-latest-page")]
         public async Task<ActionResult> Read1000Latest()
         {
             try

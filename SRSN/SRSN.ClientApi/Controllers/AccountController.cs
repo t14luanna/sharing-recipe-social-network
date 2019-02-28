@@ -70,26 +70,30 @@ namespace SRSN.ClientApi.Controllers
 
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromQuery] string username, [FromQuery] string password)
+        public async Task<ActionResult> Login([FromBody] AccountEditViewModel data)
         {
-            var user = await userManager.FindByNameAsync(username);
+            var user = await userManager.FindByNameAsync(data.UsernameVM);
             if(user != null)
             {
-                var isCorrect = await userManager.CheckPasswordAsync(user, password);
-                if (!isCorrect)
-                {
-                    return Unauthorized();
-                }
-                else
+                var isCorrect = await userManager.CheckPasswordAsync(user, data.Password);
+                if(isCorrect)
                 {
                     var token = await user.AuthorizeAsync(userManager, user);
-                    return Ok(token);
+                    return Ok(new
+                    {
+                        message = "Đăng nhập thành công",
+                        success = true,
+                        token = token,
+                        username = user.UserName
+                    });
                 }
             }
-            else
+
+            return Ok(new
             {
-                return Unauthorized();
-            }
+                message = "Đăng nhập thất bại, tên đăng nhập hoặc mật khẩu không chính xác.",
+                success = false,
+            });
         }
 
         [HttpGet("read")]

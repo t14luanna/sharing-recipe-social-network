@@ -7,6 +7,7 @@
     .error-area {
         color: red;
     }
+
     .daterangepicker .drp-calendar {
         max-width: 100% !important;
     }
@@ -21,18 +22,22 @@
                     <div class="submit-recipe-form">
                         <form action="#" method="post" id="register-form">
                             <label for="title">Tên đăng nhập *</label>
-                            <input type="text" name="usernameVM" required />
+                            <input type="text" name="usernameVM" required autocomplete="off" readonly
+                                   onfocus="this.removeAttribute('readonly');" />
                             <label for="title">Họ *</label>
                             <input type="text" name="lastName" required />
                             <br />
                             <label for="title">Tên *</label>
                             <input type="text" name="firstName" required />
                             <label for="title">Email*</label>
-                            <input type="email" name="email" placeholder="Ví dụ: ten.ho@@gmail.com" required />
+                            <input type="email" name="email" placeholder="Ví dụ: ten.ho@@gmail.com" required autocomplete="off" readonly
+                                   onfocus="this.removeAttribute('readonly');" />
                             <label for="title">Mật khẩu*</label>
-                            <input type="password" name="password" placeholder="Ví dụ: abC@@1234" required />
+                            <input type="password" name="password" placeholder="Ví dụ: abC@@1234" required autocomplete="off" readonly
+                                   onfocus="this.removeAttribute('readonly');" />
                             <label for="title">Xác nhận mật khẩu*</label>
-                            <input type="password" name="confirmPassword" placeholder="Ví dụ: abC@@1234" required />
+                            <input type="password" name="confirmPassword" placeholder="Ví dụ: abC@@1234" required autocomplete="off" readonly
+                                   onfocus="this.removeAttribute('readonly');" />
                             <label for="birthdateStr">Ngày sinh</label>
                             <input type="text" name="birthdateStr" id="birthdateStr" required />
                             <input type="hidden" name="birthdate" id="birthdate" />
@@ -42,7 +47,7 @@
                                 <option value="1">Nữ</option>
                             </select>
                             <input type="hidden" name="description" />
-                            <input type="hidden" name="avatarUrl"/>
+                            <input type="hidden" name="avatarUrl" />
                             <div class="row error-area">
 
                             </div>
@@ -88,6 +93,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     </svg>
                                         </div>
                                     </li>
@@ -112,6 +129,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     </svg>
                                         </div>
                                     </li>
@@ -125,8 +154,32 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
                                             <path class="icon-svg" d="M20.578,22.897c0.136,0.065,0.28,0.094,0.421,0.094c0.377,0,0.738-0.213,0.908-0.577l7-14.998
             c0.234-0.5,0.018-1.095-0.484-1.329c-0.498-0.233-1.093-0.015-1.328,0.484l-7,14.997C19.86,22.069,20.077,22.665,20.578,22.897z" />
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -141,6 +194,18 @@
             c-1.643,0.352-3.037,1.346-3.965,2.68c-3.431,1.07-5.183,2.472-5.183,4.174c0,11.025,8.973,19.996,20.001,19.996
             s20.001-8.971,20.001-19.996C41.001,20.454,39.573,19.155,36.758,18.129z M21,39.988c-8.926,0-16.334-6.536-17.741-15.069
             c3.524,2.025,10.662,3.07,17.741,3.07s14.217-1.045,17.74-3.07C37.334,33.452,29.926,39.988,21,39.988z" />
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -171,6 +236,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     </svg>
                                         </div>
                                     </li>
@@ -185,6 +262,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
                                             <path class="icon-svg" d="M7,23c0.554,0,1-0.448,1-1c0-3.458,2.987-6.273,6.661-6.273c0.207,0,0.413,0.012,0.617,0.031
         c0.323,0.023,0.641-0.105,0.852-0.355C17.404,13.875,19.311,13,21.361,13c1.477,0,2.875,0.448,4.046,1.295
         c0.445,0.323,1.071,0.223,1.396-0.224c0.325-0.446,0.223-1.072-0.224-1.396c-0.748-0.541-1.567-0.954-2.433-1.235
@@ -194,9 +283,33 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
                                             <path class="icon-svg" d="M23.049,18.313c-0.29,0.468-0.145,1.085,0.323,1.377c0.47,0.291,1.087,0.146,1.377-0.323C25.669,17.885,27.258,17,29.001,17
         C31.756,17,34,19.243,34,22c0,0.552,0.447,1,1,1c0.552,0,1-0.448,1-1c0-3.86-3.141-7.001-6.999-7.001
         C26.561,14.999,24.337,16.239,23.049,18.313z" />
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -361,27 +474,31 @@
 </div>
 
 @section Scripts
-{
+    {
     <script>
+        const changeHeadername = async () => {
+            var someText = "Đăng ký";
+            $('.main-heading h1').append(document.createTextNode(someText));
+        };
+        (async () => {
+            await changeHeadername();
+        })();
         function validateRegisterForm(form) {
             var password = form['password'].value;
             var confirmPassword = form['confirmPassword'].value;
-            if (!(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/.test(password)))
-            {
+            if (!(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/.test(password))) {
                 $('.error-area').html(`
-                        <p>At least one upper case English letter</p>
-                        <p>At least one lower case English letter</p>
-                        <p>At least one digit</p>
-                        <p>At least one special character</p>
-                        <p>Minimum eight in length</p>`);
+                                <p>At least one upper case English letter</p>
+                                <p>At least one lower case English letter</p>
+                                <p>At least one digit</p>
+                                <p>At least one special character</p>
+                                <p>Minimum eight in length</p>`);
                 return false;
             }
-            if (password !== confirmPassword)
-            {
+            if (password !== confirmPassword) {
                 alert("Mật khẩu và xác nhận mật khẩu không trùng khớp");
                 return false;
             }
-            console.log(form['usernameVM']);
             return true;
         }
         $("#register-form").on("submit", function (e) {
@@ -401,18 +518,17 @@
                         'Content-Type': 'application/json'
                     }
                 })
-                .then(res => res.json())
-                .then(response => {
-                    if (response.success) {
-                        localStorage.setItem("authorization", JSON.stringify(response.token));
-                        localStorage.setItem("username", response.username);
-                        window.location.href = '/';
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+                    .then(res => res.json())
+                    .then(response => {
+                        if (response.success) {
+                            localStorage.setItem("authorization", JSON.stringify(response.token));
+                            localStorage.setItem("username", response.username);
+                            window.location.href = '/';
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             }
-            else
-            {
+            else {
                 alert("Đăng ký thất bại")
             }
         });

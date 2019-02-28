@@ -51,7 +51,7 @@ namespace SRSN.DatabaseManager
                     ValidateAudience = false
                 };
             });
-
+           
             services.AddScoped(typeof(IdentityDbContext<SRSNUser, IdentityRole<int>,int>), typeof(SRSNIdentityDbContext));
             services.AddScoped(typeof(SRSNUserManager));
             services.AddScoped(typeof(DbContext), typeof(CookyDemoContext));

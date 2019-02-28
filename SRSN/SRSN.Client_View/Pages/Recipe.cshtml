@@ -103,7 +103,12 @@
     <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
     <script src="~/js/recipe.js"></script>
     <script type="text/javascript">
+        const changeHeadername = async () => {
+            var someText = "Công thức";
+            $('.main-heading h1').append(document.createTextNode(someText));
+        };
         (async () => {
+            await changeHeadername();
             await callPopularRecipePageApi();
             await callListCategoryItemRecipePage();
         })();

@@ -22,18 +22,15 @@
                             <br />
                             <div class="ingredients-checkbox">
                                 <div class="ingredients">
-                                    <h3>Ingredients</h3>
-                                    <ul id="list-of-ingredients">
-                                       
-                                    </ul>
+                                    <h3>Nguyên liệu</h3>
+                                    <button id="myBtn">Open Modal</button>
+                                    <ul id="list-of-ingredients"></ul>
                                 </div>
                             </div>
 
-                                <div class="recipe-steps">
-                                    <h3 class="lined">Step by Step method</h3>
-                                    <dl class="accordion clearfix" id="list-step-recipe">
-                                        
-                                    </dl>
+                            <div class="recipe-steps">
+                                <h3 class="lined">Các bước thực hiện</h3>
+                                <dl class="accordion clearfix" id="list-step-recipe"></dl>
 
                             </div>
 
@@ -66,20 +63,18 @@
                             </div>
                         </div>
 
-                            
 
-                            <div class="related-recipes">
-                                <h3 class="lined">Related Recipes</h3>
-                                <div class="boxed-recipes text-center" id="list-related-recipe">
-                                   
+
+                        <div class="related-recipes">
+                            <h3 class="lined">Related Recipes</h3>
+                            <div class="boxed-recipes text-center" id="list-related-recipe">
+
                             </div>
                         </div>
 
                         <div class="recipe-comments">
                             <h3 class="lined">Comments (<span id="numOfComment"></span>)</h3>
-                            <ul id="list-rating-comment">
-                                
-                            </ul>
+                            <ul id="list-rating-comment"></ul>
                         </div>
 
                         <div class="comment-form">
@@ -127,9 +122,7 @@
 
                             <div class="category-list">
                                 <!--<div class="list-inner">-->
-                                <ul id="list-category-item-recipe-detail">
-                                    
-                                </ul>
+                                <ul id="list-category-item-recipe-detail"></ul>
                                 <!--</div>-->
                             </div>
                         </div>
@@ -137,10 +130,7 @@
                         <!--popular recipes widget-->
                         <div class="widget latest-news-widget">
                             <h2>popular recipes</h2>
-                            <ul id="popular-recipes-detail">
-                               
-
-                            </ul>
+                            <ul id="popular-recipes-detail"></ul>
                         </div>
                         <!--popular recipes widget ends-->
                         <div class="widget">
@@ -151,9 +141,7 @@
                         <!--latest news widget-->
                         <div class="widget latest-news-widget">
                             <h2>Latest Recipes</h2>
-                            <ul id="latest-recipe-detail">
-                               
-                            </ul>
+                            <ul id="latest-recipe-detail"></ul>
                         </div>
                         <!--latest news widget ends-->
                         <!--get social-->
@@ -184,24 +172,95 @@
 
                             </ul>
                         </div>
+
                         <!--get social ends-->
                     </div>
                 </aside>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="row modal-content">
+            <div class="col-md-12 modal-header">
+                <span class="close">&times;</span>
+            </div>
+            <div class="col-md-12 modal-body">
+                <div class="col-md-5">
+                    <div class="modal-component-1">
+
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="modal-component-2">
+                        <div id="map"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
 
-@section  Scripts {
+@section Scripts {
     <script src="~/js/recipeDetail.js"></script>
+
     <script type="text/javascript">
         // fetch and render element to html
+        const changeHeadername = async () => {
+            var someText = "Công thức chi tiết";
+            $('.main-heading h1').append(document.createTextNode(someText));
+        };
+        var map, infoWindow;
+        function initMap() {
+            //// The location of Uluru
+            //var uluru = { lat: -25.344, lng: 131.036 };
+            //// The map, centered at Uluru
+            //var map = new google.maps.Map(
+            //    document.getElementById('map'), { zoom: 4, center: uluru });
+            //// The marker, positioned at Uluru
+            //var marker = new google.maps.Marker({ position: uluru, map: map });
 
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 10.762622, lng: 106.660172 },
+                zoom: 15
+            });
+            infoWindow = new google.maps.InfoWindow;
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Vị trí của bạn');
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+                }, function () {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        };
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Lỗi: Dịch vụ định vị xảy ra lỗi' :
+                'Lỗi: Trình duyệt của bạn không hỗ trợ định vị');
+            infoWindow.open(map);
+        };
         (async () => {
-
+            await changeHeadername();
             await callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
-            
             await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));
             await callPopularRecipeDetailPageApi();
             await callLatestRecipeDetailApi();
@@ -219,7 +278,34 @@
                 $(this).addClass('current').next('dd').stop(true, true).slideDown(500).siblings('dd').stop(true, true).slideUp(500);
             });
         })();
-        
-        
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo&callback=initMap">
     </script>
 }

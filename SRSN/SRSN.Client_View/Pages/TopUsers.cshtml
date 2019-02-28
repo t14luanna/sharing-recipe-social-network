@@ -1,342 +1,46 @@
 ﻿@page
 @model SRSN.Client_View.Pages.TopThanhVienModel
 @{
-    Layout = null;
     ViewData["Title"] = "TopThanhVien";
 }
+<section class="wrapper-main-contents all-chefs">
+    <div class="container">
+        <div class="line-heading">
+            <h2>Top User</h2>
+        </div>
+        <!--Get top user-->
+        <div class="wrapper-head-chef">
+            <div class=head-chef id="read-top-user">
 
-<!DOCTYPE html>
-<html>
 
-<!-- Mirrored from templates.majesticthemes.com/recipepress/our-chefs.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:11:07 GMT -->
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+            </div>
+            <div class="bg-corner-head-chef">
+                <img src="recipepress/images/temp-images/bg-corner-shef.jpg" alt="image" />
+            </div>
+        </div>
 
-    <title>Food & Health</title>
-    <!--google fonts-->
-    <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Karla:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-    <!--jquery ui stylesheet-->
-    <link rel="stylesheet" href="../../code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+        <div class="line-heading">
+            <h2>Top Ten Users</h2>
+        </div>
 
-    <!-- site favicon -->
-    <link rel="icon" href="recipepress/images/favicon.png" />
-
-    <!--selectric stylesheet-->
-    <link rel="stylesheet" href="recipepress/css/selectric.css" />
-    <!--font awesome stylesheet-->
-    <link rel="stylesheet" href="recipepress/css/font-awesome.min.css" />
-    <!--swipe box stylesheet-->
-    <link rel="stylesheet" href="recipepress/css/swipebox.css" />
-    <!-- mean menu stylesheet-->
-    <link rel="stylesheet" href="recipepress/css/meanmenu.css" />
-    <!--slick slider stylesheet-->
-    <link rel="stylesheet" href="recipepress/css/slick.css" />
-    <link rel="stylesheet" href="recipepress/css/slick-theme.css" />
-    <!--bootstrap stylesheets-->
-    <link rel="stylesheet" href="recipepress/css/bootstrap.css" />
-    <link rel="stylesheet" href="recipepress/css/bootstrap-theme.css" />
-    <!--animate stylesheet-->
-    <link rel="stylesheet" href="recipepress/css/animate.css" />
-    <!--main stylesheet-->
-    <link rel="stylesheet" href="recipepress/css/main.css" />
-</head>
-<body>
-    <!--pre-loader-->
-    <div class="preloader">
-        <div class="loadr">
-            <svg viewbox="0 0 74.6 81">
-                <path d="M67.8,12.9C51.7,5.2,26.2,0.2,26.2,0.2c-10.9-1.8-9.3,11.4-9,20.2c0,0.7,0.1,1.4,0.1,2c7.8,1.5,19.7,4,29.2,7.4c11.4,4.1,9.6,8.3,9.2,16c-0.2,4.9-0.4,14,1.1,21.3c7.7,1.4,13.8,1.9,13.1-0.3c-6.3-7.2-0.1-29.6,1.8-34.2C73.3,28.7,79.3,18.4,67.8,12.9z">      </path>
-                <path d="M58.9,79.5c-6.5-5.6-6.2-23.6-5.8-31.3c0.4-7.7,2.1-11.9-9.2-16c-15.3-5.5-37.3-8.8-37.3-8.8c-9.1-1.1-6.6,8.4-5.5,15.1c1.7,10,5.4,22,7.9,27.8c2.8,6.5,8.9,7.3,8.9,7.3S65.4,85.1,58.9,79.5z"></path>
-            </svg>
+        <!--Get top ten user-->
+        <div class="wrapper-chef-team">
+            <ul class="chef-team" id="list-top-ten-users"></ul>
         </div>
     </div>
-    <!--pre-loader ends-->
-    <!--header-->
-    <header>
-        <div class="header header-var1 fade-load-down">
-            <div class="responsive-menu"></div>
-            <div class="nav-var1">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-5">
+</section>
 
-                            <div class="left-nav">
-                                <nav class="nav-collapse">
-                                    <ul class="main-menu left">
-                                        <li>
-                                            <a href="index.html">Home</a>
-                                            <ul>
-                                                <li><a href="variation1.html">variation one</a></li>
-                                                <li><a href="variation2.html">variation two</a></li>
-                                                <li><a href="variation3.html">variation three</a></li>
-                                                <li><a href="variation4.html">variation four</a></li>
-                                                <li><a href="variation5.html">variation five</a></li>
-                                                <li><a href="variation6.html">variation six</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="recipe-listing.html">Recent Recipes</a>
-                                            <ul>
-                                                <li><a href="recipe-listing.html">recipe listing list view</a></li>
-                                                <li><a href="recipe-listing-grid.html">recipe listing grid view</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#">Recipe Detail</a>
-                                            <ul>
-                                                <li><a href="recipe-detail.html">recipe detail version 1</a></li>
-                                                <li><a href="recipe-detail2.html">recipe detail version 2</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="our-chefs.html">Chefs</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
+@section Scripts {
 
-                        <div class="col-md-2">
-                            <div class="logo-wrapper">
-                                <a href="#"><img src="recipepress/images/logo.png" alt="logo" /></a>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="right-nav">
-                                <div class="wrapper-links">
-                                    <ul class="header-social-icons">
-                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                    </ul>
-                                    <span class="sign-in-buttons">
-                                        <a class="login" href="#">Login</a>
-                                        <a class="register" href="#">Register</a>
-                                    </span>
-                                </div>
-                                <nav class="nav-collapse">
-                                    <ul class="main-menu right">
-                                        <li>
-                                            <a href="blog.html">blog</a>
-                                            <ul>
-                                                <li><a href="single.html">Single post</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="elements.html">elements</a></li>
-                                        <li><a href="contact.html">contact</a></li>
-                                        <li><a class="submit-recipe" href="submit-recipe.html">Submit recipe</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </header>
-    <!--header ends-->
-    <!--banner-->
-    <div class="banner banner-blog">
-        <div class="container ">
-            <div class="main-heading">
-                <h1>our chefs</h1>
-            </div>
-
-        </div>
-    </div>
-    <div class="advance-search">
-        <!--advance search form-->
-
-        <div class="container">
-            <div class="wrapper-search">
-                <div class="container-tags">
-                    <span class="tag">
-                        <span class="tag-inner">Find Recipes <i class="fa fa-angle-down"></i></span>
-                    </span>
-
-                </div>
-                <div class="outer-advance-search">
-
-                    <form action="#" id="advance-search">
-                        <fieldset>
-                            <div class="inner-advance-search">
-
-                                <div class="form-field">
-                                    <label for="ingredient">ingredient</label>
-                                    <select name="ingredient" id="ingredient" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Ingredient</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-field">
-                                    <label for="course">course</label>
-                                    <select name="course" id="course" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Course</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-field">
-                                    <label for="cuisine">cuisine</label>
-                                    <select name="cuisine" id="cuisine" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Cuisine</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-field">
-                                    <label for="time">Cooking Time</label>
-                                    <select name="time" id="time" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Cooking Time</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-field">
-                                    <label for="calories">calories</label>
-                                    <select name="calories" id="calories" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Calories</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
-                                </div>
-
-                                <button type="submit"><i class="fa fa-search"></i></button>
-
-                            </div>
-                        </fieldset>
-
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!--advance search form ends-->
-    </div>
-    <!--banner ends-->
-    <!--main content area-->
-    <section class="wrapper-main-contents all-chefs">
-        <div class="container">
-            <div class="line-heading">
-                <h2>Top User</h2>
-            </div>
-            <!--Get top user-->
-            <div class="wrapper-head-chef">
-                <div class=head-chef id="read-top-user">
-                    
-
-                </div>
-                <div class="bg-corner-head-chef">
-                    <img src="recipepress/images/temp-images/bg-corner-shef.jpg" alt="image" />
-                </div>
-            </div>
-
-            <div class="line-heading">
-                <h2>Top Ten Users</h2>
-            </div>
-
-            <!--Get top ten user-->
-            <div class="wrapper-chef-team">
-                <ul class="chef-team" id="list-top-ten-users">
-                    
-
-                </ul>
-            </div>
-        </div>
-    </section>
-    <!--main content area ends-->
-    <!--footer-->
-    <div class="footer footer-variant-one footer-fluid">
-        <div class="container">
-            <div class="footer-inner">
-                <div class="text-center">
-                    <a class="logo-footer wow animated zoomIn" href="index.html"><img src="recipepress/images/logo2.png" alt="Logo" /></a>
-                    <p class="wow animated flipInX">
-                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                        <br />
-                        magna aliquyam erat, with an extra ordinary design and quality development features in low
-                    </p>
-
-                </div>
-
-                <div class="subs-social-options">
-                    <div class="row custom-row-footer">
-                        <div class="col-md-6 custom-col-options">
-                            <div class="left-side">
-                                <div class="widget widget-footer news-letter-signup wow animated flipInY">
-                                    <h2>Newsletter Signup</h2>
-
-                                    <form class="subs-form" action="#" method="post">
-                                        <div class="email-field">
-                                            <input type="email" name="email" placeholder="Enter you email address" />
-                                            <button><i class="fa fa-paper-plane-o"></i></button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-md-6">
-                            <div class="right-side">
-                                <div class="widget widget-footer social-icons">
-                                    <h2 class="wow animated fadeInRight">Get Social with Us</h2>
-                                    <ul>
-                                        <li class="wow animated bounceInRight"><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                        <li class="wow animated bounceInRight animation-delay100ms"><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                        <li class="wow animated bounceInRight animation-delay200ms"><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                                        <li class="wow animated bounceInRight animation-delay300ms"><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                        <li class="wow animated bounceInRight animation-delay400ms"><a href="#"><i class="fa fa-youtube-play"></i></a></li>
-                                        <li class="wow animated bounceInRight animation-delay500ms"><a href="#"><i class="fa fa-flickr"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="footer-copyright text-center wow animated flipInX">
-                    <p>&copy; Copyright 2015 All Rights Reserved by <a href="#">Majestic Themes</a></p>
-                </div>
-                <div class="corner-image wow animated fadeInRight">
-                    <img src="recipepress/images/footer-corner-image.jpg" alt="image" />
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--footer ends-->
-
-    <script src="recipepress/js/jquery-1.11.3.min.js"></script>
-    <script src="recipepress/js/jquery-ui.js"></script>
-    <script src="recipepress/js/slick.min.js"></script>
-    <script src="recipepress/js/jquery.meanmenu.js"></script>
-    <script src="recipepress/js/jquery.selectric.min.js"></script>
-    <script src="recipepress/js/wow.js"></script>
-    <script src="recipepress/js/jquery.form.js"></script>
-    <script src="recipepress/js/jquery.validate.min.js"></script>
-    <script src="recipepress/js/jquery.swipebox.js"></script>
-    <script src="recipepress/js/custom.js"></script>
     <script src="~/js/getTopTen.js"></script>
-
-</body>
-
-<!-- Mirrored from templates.majesticthemes.com/recipepress/our-chefs.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:12:01 GMT -->
-</html>
+   
+    <script type="text/javascript">
+        const changeHeadername = async () => {
+            var someText = "Top thành viên";
+            $('.main-heading h1').append(document.createTextNode(someText));
+        };
+        (async () => {
+            await changeHeadername();
+        })();
+    </script>
+}

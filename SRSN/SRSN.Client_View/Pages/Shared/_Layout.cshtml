@@ -34,9 +34,12 @@
     <link rel="stylesheet" href="/recipepress/css/bootstrap-theme.css" />
     <!--animate stylesheet-->
     <link rel="stylesheet" href="/recipepress/css/animate.css" />
-    <!--main stylesheet-->  
+    <!--main stylesheet-->
     <link rel="stylesheet" href="/recipepress/css/main.css" />
-    <link rel="stylesheet" href="~/css/daterangepicker.css"/>
+    <link rel="stylesheet" href="~/css/daterangepicker.css" />
+    <link rel="stylesheet" href="~/recipepress/css/custom.css" />
+    @RenderSection("StyleOptional", required: false)
+
 </head>
 <body>
     <!--pre-loader-->
@@ -70,7 +73,7 @@
 
                                         </li>
                                         <li>
-                                            <a href="#">Cộng đồng</a>
+                                            <a href="/Newsfeed">Cộng đồng</a>
                                         </li>
                                         <li><a href="/TopUsers">Top Thành viên</a></li>
                                     </ul>
@@ -123,7 +126,7 @@
     <div class="banner banner-blog">
         <div class="container ">
             <div class="main-heading">
-                <h1>Recipe listing page</h1>
+                <h1></h1>
             </div>
 
         </div>
@@ -285,10 +288,9 @@
     <script src="/recipepress/js/jquery.swipebox.js"></script>
     <script src="~/js/moment.min.js"></script>
     <script src="/js/daterangepicker.min.js"></script>
-    <script src="/js/site.js"></script>
-
-    @RenderSection("Scripts", required: false)
     <script src="/recipepress/js/custom.js"></script>
+    <script src="/js/site.js"></script>
+    @RenderSection("Scripts", required: false)
 
 </body>
 <!-- Mirrored from templates.majesticthemes.com/recipepress/recipe-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:10:38 GMT -->

@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Redis\RedisUtil.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="Entities\AspNetRoleClaims.cs" />
     <Compile Include="Entities\AspNetRoles.cs" />
     <Compile Include="Entities\AspNetUserClaims.cs" />
@@ -48,6 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Redis\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -61,6 +66,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.1" />
   </ItemGroup>
 

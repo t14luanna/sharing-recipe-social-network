@@ -52,7 +52,7 @@ const createContentRecipe = (recipe) =>
                                     </p>`  ;
 
 const createSingleIngredientOfRecipe = (ingredient) =>
-    ` <li>
+    ` <li class="col-sm-3">
                                                 <label>
                                                     <input type="checkbox" id="${ingredient.recipeId}"/>
                                                     ${ingredient.ingredientName} ${ingredient.quantitative}

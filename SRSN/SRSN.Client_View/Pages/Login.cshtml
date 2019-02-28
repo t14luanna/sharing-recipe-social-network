@@ -2,6 +2,7 @@
 @{
 
 }
+
 <!--banner ends-->
 <div class="recipes-home-body inner-page">
     <div class="container">
@@ -12,9 +13,12 @@
                     <div class="submit-recipe-form">
                         <form action="#" method="post" id="login-form">
                             <label for="title">Tên đăng nhập</label>
-                            <input type="text" name="username" />
-                            <label for="title">Mật khẩu*</label>
-                            <input type="text" name="password" />
+                            <input type="text" name="usernameVM" id="usernameVM" autocomplete="off" />
+                            <label for="title">Mật khẩu</label>
+                            <input type="password" name="password" id="password" autocomplete="off" />
+                            <div id="area-error">
+
+                            </div>
                             <div class="text-center">
                                 <button type="submit" class="recipe-submit-btn">Đăng nhập</button>
                             </div>
@@ -104,28 +108,48 @@
 
         $("#login-form").on("submit", async function (e) {
             e.preventDefault();
-            var formData = $('#login-form').serialize();
-            $.ajax({
-                url: "https://localhost:44361/api/account/login?" + formData,
-                method: "POST",
-                success: function (data) {
-                    // Get Object Token and add username into
-                    var username = $("input[name='username']").val();
-                    // store to local storage
-                    window.localStorage.setItem("authorization", JSON.stringify(data));
-                    window.localStorage.setItem("username", username);
-                    window.location.href = "/";
-                },
-                error: function (error) {
-                    console.log("Login Submit Error: ", error)
+            //var formData = $('#login-form').serializeArray();
+            //var data = {};
+            //$.map(formData, function (n, i) {
+            //    data[n['name']] = n['value'];
+            //});
+            fetch("https://localhost:44361/api/account/login", {
+                method: 'POST', // or 'PUT'
+                body: JSON.stringify({
+                    'usernameVM': $('#usernameVM').val(),
+                    'password': $('#password').val(),
+
+                }), // data can be `string` or {object}!
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             })
+            .then(res => res.json())
+            .then(response => {
+                if (response.success) {
+                    localStorage.setItem("authorization", JSON.stringify(response.token));
+                    localStorage.setItem("username", $("#usernameVM").val());
+                    window.location.href = '/';
+                } else {
+                    var errorP = document.createElement("p");
+                    errorP.append(response.message);
+                    $("#area-error").html(errorP.outerHTML);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error)
+            });
         });
 
     </script>
     <script type="text/javascript">
         // fetch and render element to html
+        const changeHeadername = async () => {
+            var someText = "Đăng nhập";
+            $('.main-heading h1').append(document.createTextNode(someText));
+        };
         (async () => {
+            await changeHeadername();
             await callLatestRecipeWidgetLoginPageApi();
             await callListCategoryItemLoginPageApi();
             await callPopularLoginPageApi();
