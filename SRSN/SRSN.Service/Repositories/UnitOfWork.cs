@@ -12,9 +12,11 @@ namespace SRSN.Service.Repositories
     public interface IUnitOfWork
     {
         DbContext GetDbContext();
-        Task Commit();
+        Task CommitAsync();
+        void Commit();
         void Dispose();
-        Task<IDbContextTransaction> GetDbTransaction();
+        Task<IDbContextTransaction> GetDbTransactionAsync();
+        IDbContextTransaction GetDbTransaction();
     }
 
     public class UnitOfWork : IUnitOfWork
@@ -26,8 +28,12 @@ namespace SRSN.Service.Repositories
             this.dbContext = dbContext;
             isDisposed = false;
         }
+        void IUnitOfWork.Commit()
+        {
+            this.dbContext.SaveChanges();
+        }
 
-        public async Task Commit()
+        public async Task CommitAsync()
         {
             await this.dbContext.SaveChangesAsync();
         }
@@ -46,9 +52,15 @@ namespace SRSN.Service.Repositories
             return dbContext;
         }
 
-        public async Task<IDbContextTransaction> GetDbTransaction()
+        public async Task<IDbContextTransaction> GetDbTransactionAsync()
         {
             return await dbContext.Database.BeginTransactionAsync();
         }
+        IDbContextTransaction IUnitOfWork.GetDbTransaction()
+        {
+            return dbContext.Database.BeginTransaction();
+        }
+
+        
     }
 }

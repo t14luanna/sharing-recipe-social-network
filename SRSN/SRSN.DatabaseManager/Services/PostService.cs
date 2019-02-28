@@ -29,7 +29,7 @@ namespace SRSN.DatabaseManager.Services
             var post = await selfDbSet.FindAsync(Id);
             post.Active = false;
             this.selfDbSet.Update(post);
-            await unitOfWork.Commit();
+            await unitOfWork.CommitAsync();
         }
 
         public IQueryable<object> GetAllPostByUserId(int userId)

@@ -25,7 +25,7 @@ namespace SRSN.DatabaseManager.Services
             var comment = await this.selfDbSet.FindAsync(id);
             comment.Active = false;
             this.selfDbSet.Update(comment);
-            await this.unitOfWork.Commit();
+            await this.unitOfWork.CommitAsync();
         }
 
         public IQueryable<object> GetAllCommentByPostId(int postId)

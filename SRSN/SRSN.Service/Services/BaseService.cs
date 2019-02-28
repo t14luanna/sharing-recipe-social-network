@@ -72,7 +72,7 @@ namespace SRSN.Service.Services
         {
             var entity = VMToEntity(data);
             await selfDbSet.AddAsync(entity);
-            await unitOfWork.Commit();
+            await unitOfWork.CommitAsync();
             var newVM = EntityToVM(entity);
             return newVM;
         }
@@ -81,7 +81,7 @@ namespace SRSN.Service.Services
         {
             var entity = VMToEntity(data);
             selfDbSet.Remove(entity);
-            await unitOfWork.Commit();
+            await unitOfWork.CommitAsync();
             var newVM = EntityToVM(entity);
         }
 
@@ -103,7 +103,7 @@ namespace SRSN.Service.Services
         {
             var entity = VMToEntity(data);
             selfDbSet.Update(entity);
-            await unitOfWork.Commit();
+            await unitOfWork.CommitAsync();
             var newVM = EntityToVM(entity);
             return newVM;
 

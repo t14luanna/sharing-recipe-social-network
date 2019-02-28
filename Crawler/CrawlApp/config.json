@@ -198,7 +198,7 @@
     },
     {
             "id":"6",
-            "title":"adayroi",
+            "title":"vinmart",
             "products":{
                 "urls":[
                     "https://www.adayroi.com/gio-qua-tet-c2028"
@@ -238,7 +238,7 @@
                                 "nextPage":{
                                     "title":"product",
                                     "type":"link",
-                                    "selector":"//nav[@class='Page navigation']//li[@class='active']/following-sibling::li/a",
+                                    "selector":"//nav[@class='Page navigation']//li[@class='active']/following-sibling::li[position() != last()]/a",
                                     "value":"href"
                                 }
                             }

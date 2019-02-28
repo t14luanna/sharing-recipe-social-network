@@ -12,4 +12,11 @@ namespace SRSN.DatabaseManager.ViewModels
         public string IngredientName { get; set; }
         public string Quantitative { get; set; }
     }
+
+    public class RecipeIngredientCreateViewModel
+    {
+        public int? IngredientId { get; set; }
+        public string IngredientName { get; set; }
+        public string Quantitative { get; set; }
+    }
 }

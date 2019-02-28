@@ -78,7 +78,7 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<RecipeViewModel, Recipe>();
                 mc.CreateMap<Recipe, RecipeViewModel>();
 
-                mc.CreateMap<CategoryItemViewModel, StepsOfRecipe>()
+                mc.CreateMap<StepsOfRecipeViewModel, StepsOfRecipe>()
                     .ForMember(x => x.Recipe, y => y.Ignore());
 
 

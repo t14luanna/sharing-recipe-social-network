@@ -24,7 +24,7 @@ namespace SRSN.DatabaseManager.Services
             var trueEntity = await selfDbSet.FindAsync(id);
             trueEntity.Active = false;
             selfDbSet.Update(trueEntity);
-            await unitOfWork.Commit();
+            await unitOfWork.CommitAsync();
             var newVM = EntityToVM(trueEntity);
             return newVM;
 

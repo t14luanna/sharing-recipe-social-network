@@ -41,7 +41,7 @@ namespace SRSN.ClientApi.Controllers
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.RecipeVM.UserId = userId;
-            await recipeService.CreateRecipeWithSteps(request.RecipeVM, request.ListSORVM, request.listIngredient, request.listCategory);
+            await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.listIngredient, request.listCategory);
             return Ok(new
             {
                 message = $"Ban da tao thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
@@ -182,6 +182,19 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("read-lastest")]
+        public async Task<ActionResult> ReadLastest()
+        {
+            try
+            {
+                return Ok(recipeService.GetLastestRecipes());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> Update([FromBody]RequestCreateRecipeWithConstraintViewMode request)
@@ -194,6 +207,29 @@ namespace SRSN.ClientApi.Controllers
             {
                 message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
             });
+        }
+
+        [HttpPost("submit-recipe")]
+        public async Task<ActionResult> SubmitRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request)
+        {
+            try
+            {
+                 ClaimsPrincipal claims = this.User;
+                var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                request.RecipeVM.UserId = userId;
+                await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.listIngredient, request.listCategory);
+                return Ok(new
+                {
+                    message = $"Ban da tao thanh cong Recipe"
+                });
+            } catch(Exception ex)
+            {
+                return Ok(new
+                {
+                    success = false,
+                    message = $"Ban tao recipe that bai"
+                });
+            }
         }
     }
     #endregion

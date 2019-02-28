@@ -17,9 +17,10 @@ namespace SRSN.DatabaseManager.Services
 {
     public interface IRecipeService : IBaseService<Recipe, RecipeViewModel>
     {
-        Task CreateRecipeWithSteps(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient
+        Task CreateRecipeWithStepsAsync(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient
             , List<RecipeCategoryViewModel> listCategory);
-        
+        void CreateRecipeWithSteps(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient
+      , List<RecipeCategoryViewModel> listCategory);
         Task DeActiveRecipe(int id);
         Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId);
@@ -30,6 +31,8 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<RecipeViewModel>> GetRandomRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> GetRecipeWithID(UserManager<SRSNUser> userManager, int recipeId);
         Task<ICollection<RecipeViewModel>> GetRelatedRecipe(int userId);
+       ICollection<RecipeViewModel> GetPopularRecipes();
+       ICollection<RecipeViewModel> GetLastestRecipes();
     }
     
     
@@ -40,7 +43,8 @@ namespace SRSN.DatabaseManager.Services
         {
         }
 
-        public async Task CreateRecipeWithSteps(RecipeViewModel recipeVM, List<CategoryItemViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
+        public async Task CreateRecipeWithStepsAsync(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient
+            , List<RecipeCategoryViewModel> listCategory)
         {
             // lay ra repository cua stepRecipeDbSet
             var stepRecipeDbSet = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
@@ -48,7 +52,7 @@ namespace SRSN.DatabaseManager.Services
             var recipeCategoryDBSet = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
             // O day chung ta can phai dung  Transaction vi phai tao Recipe truoc sau do moi tao step recipe 
             // => neu 1 trong cac buoc tren chet thi minh se rollback
-            using (var transaction = await this.unitOfWork.GetDbTransaction())
+            using (var transaction = await this.unitOfWork.GetDbTransactionAsync())
             {
                 try
                 {
@@ -58,30 +62,30 @@ namespace SRSN.DatabaseManager.Services
                     recipeEntity.Active = true;
                     await this.selfDbSet.AddAsync(recipeEntity);
                     // Buoc nay cap nhat len db that de recipeEntity co duoc Id ( vi la id tu tang )
-                    await this.unitOfWork.Commit();
+                    await this.unitOfWork.CommitAsync();
                     // duyet het list step of recipes de add tung phan tu vao dbcontext
                     foreach (var sorVM in listSORVM)
                     {
-                        var sorEntity = this.VMToEntity<StepsOfRecipe, CategoryItemViewModel>(sorVM);
+                        var sorEntity = this.VMToEntity<StepsOfRecipe, StepsOfRecipeViewModel>(sorVM);
                         // dung dung step recipe repository de create va dung quen cap nhat Recipe Id cho Entity
                         sorEntity.RecipeId = recipeEntity.Id;
                         await stepRecipeDbSet.AddAsync(sorEntity);
                         // cap nhat lai dbcontext, moi duoc add list step of recipe len db
-                        await this.unitOfWork.Commit();
+                        await this.unitOfWork.CommitAsync();
                     }
                     foreach (var ingredient in listIngredient)
                     {
                         var ingredientEntity = this.VMToEntity<RecipeIngredient, RecipeIngredientViewModel>(ingredient);
                         ingredientEntity.RecipeId = recipeEntity.Id;
                         await recipeIngredientDBSet.AddAsync(ingredientEntity);
-                        await this.unitOfWork.Commit();
+                        await this.unitOfWork.CommitAsync();
                     }
                     foreach (var category in listCategory)
                     {
                         var categoryEntity = this.VMToEntity<RecipeCategory, RecipeCategoryViewModel>(category);
                         categoryEntity.RecipeId = recipeEntity.Id;
                         await recipeCategoryDBSet.AddAsync(categoryEntity);
-                        await this.unitOfWork.Commit();
+                        await this.unitOfWork.CommitAsync();
                     }
                     transaction.Commit();
                 }
@@ -99,7 +103,7 @@ namespace SRSN.DatabaseManager.Services
             var recipe = await this.selfDbSet.FindAsync(id);
             recipe.Active = false;
             this.selfDbSet.Update(recipe);
-            await this.unitOfWork.Commit();
+            await this.unitOfWork.CommitAsync();
         }
 
         public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId)
@@ -265,7 +269,7 @@ namespace SRSN.DatabaseManager.Services
 
                 }
                 return list;
-
+       
 
             }
             catch (Exception ex)
@@ -273,39 +277,49 @@ namespace SRSN.DatabaseManager.Services
                 return null;
             }
         }
+        public ICollection<RecipeViewModel> GetPopularRecipes()
+        {
+            return this.Get().AsNoTracking().Where(r => r.Active == true).Take(4).ToList();
+        }
+
+        public ICollection<RecipeViewModel> GetLastestRecipes()
+        {
+            return this.Get().AsNoTracking().Where(r => r.Active == true).OrderBy(r => r.CreateTime).Take(4).ToList();
+        }
+
         public async Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
         {
             var stepRecipeDBSet = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
             var recipeIngredientDBSet = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
             var recipeCategoryDBSet = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
-            using (var transaction = await this.unitOfWork.GetDbTransaction())
+            using (var transaction = await this.unitOfWork.GetDbTransactionAsync())
             {
                 try
                 {
                     var recipeEntity = this.VMToEntity(recipeVM);
                     recipeEntity.UpdateTime = DateTime.Now;
                     this.selfDbSet.Update(recipeEntity);
-                    await this.unitOfWork.Commit();
+                    await this.unitOfWork.CommitAsync();
                     foreach (var sorVM in listSORVM)
                     {
                         var sorEntity = this.VMToEntity<StepsOfRecipe, StepsOfRecipeViewModel>(sorVM);
                         sorEntity.RecipeId = recipeEntity.Id;
                         stepRecipeDBSet.Update(sorEntity);
-                        await this.unitOfWork.Commit();
+                        await this.unitOfWork.CommitAsync();
                     }
                     foreach (var ingredient in listIngredient)
                     {
                         var ingredientEntity = this.VMToEntity<RecipeIngredient, RecipeIngredientViewModel>(ingredient);
                         ingredientEntity.RecipeId = recipeEntity.Id;
                         recipeIngredientDBSet.Update(ingredientEntity);
-                        await this.unitOfWork.Commit();
+                        await this.unitOfWork.CommitAsync();
                     }
                     foreach (var category in listCategory)
                     {
                         var categoryEntity = this.VMToEntity<RecipeCategory, RecipeCategoryViewModel>(category);
                         categoryEntity.RecipeId = recipeEntity.Id;
                         recipeCategoryDBSet.Update(categoryEntity);
-                        await this.unitOfWork.Commit();
+                        await this.unitOfWork.CommitAsync();
                     }
                     transaction.Commit();
                 }
@@ -393,10 +407,61 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-        public Task CreateRecipeWithSteps(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
+        public void CreateRecipeWithSteps(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient
+        , List<RecipeCategoryViewModel> listCategory)
         {
-            throw new NotImplementedException();
+            // lay ra repository cua stepRecipeDbSet
+            var stepRecipeDbSet = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
+            var recipeIngredientDBSet = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
+            var recipeCategoryDBSet = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
+            // O day chung ta can phai dung  Transaction vi phai tao Recipe truoc sau do moi tao step recipe 
+            // => neu 1 trong cac buoc tren chet thi minh se rollback
+            using (var transaction = this.unitOfWork.GetDbTransaction())
+            {
+                try
+                {
+                    // Bien doi recipeVM => recipeEntity
+                    var recipeEntity = this.VMToEntity(recipeVM);
+                    recipeEntity.CreateTime = DateTime.Now;
+                    recipeEntity.Active = true;
+                     this.selfDbSet.Add(recipeEntity);
+                    // Buoc nay cap nhat len db that de recipeEntity co duoc Id ( vi la id tu tang )
+                     this.unitOfWork.Commit();
+                    // duyet het list step of recipes de add tung phan tu vao dbcontext
+                    foreach (var sorVM in listSORVM)
+                    {
+                        var sorEntity = this.VMToEntity<StepsOfRecipe, StepsOfRecipeViewModel>(sorVM);
+                        // dung dung step recipe repository de create va dung quen cap nhat Recipe Id cho Entity
+                        sorEntity.RecipeId = recipeEntity.Id;
+                         stepRecipeDbSet.Add(sorEntity);
+                        // cap nhat lai dbcontext, moi duoc add list step of recipe len db
+                         this.unitOfWork.Commit();
+                    }
+                    foreach (var ingredient in listIngredient)
+                    {
+                        var ingredientEntity = this.VMToEntity<RecipeIngredient, RecipeIngredientViewModel>(ingredient);
+                        ingredientEntity.RecipeId = recipeEntity.Id;
+                         recipeIngredientDBSet.AddAsync(ingredientEntity);
+                         this.unitOfWork.Commit();
+                    }
+                    foreach (var category in listCategory)
+                    {
+                        var categoryEntity = this.VMToEntity<RecipeCategory, RecipeCategoryViewModel>(category);
+                        categoryEntity.RecipeId = recipeEntity.Id;
+                         recipeCategoryDBSet.AddAsync(categoryEntity);
+                         this.unitOfWork.Commit();
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    // neu bi loi thi rollback va throw cho phia ngoai controller catch
+                    transaction.Rollback();
+                    throw ex;
+                }
+            }
         }
+
     }
 
 }
