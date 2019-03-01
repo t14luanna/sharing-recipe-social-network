@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -27,11 +28,13 @@ namespace SRSN.ClientApi.Controllers
         private IRecipeService recipeService;
         private UserManager<SRSNUser> userManager;
         private IDatabase redisDatabase;
-        public RecipeController(IRecipeService recipeService, UserManager<SRSNUser> userManager)
+        private IMapper mapper;
+        public RecipeController(IRecipeService recipeService, UserManager<SRSNUser> userManager, IMapper mapper)
         {
             this.recipeService = recipeService ;
             this.userManager = userManager ;
             this.redisDatabase = RedisUtil.Connection.GetDatabase();
+            this.mapper = mapper;
         }
 
         [HttpPost("create")]
@@ -123,11 +126,13 @@ namespace SRSN.ClientApi.Controllers
             }
         }
 
-        [HttpGet("read-recommend-recipes")]
-        public async Task<ActionResult> ReadRecommendRecipes([FromQuery]int userId)
+        [HttpGet("newsfeed")]
+        public async Task<ActionResult> ReadRecommendRecipes()
         {
             try
             {
+                ClaimsPrincipal claims = this.User;
+                var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var key = $"{userRecipeRecommendPrefix}{userId}";
                 var datas = await redisDatabase.SortedSetRangeByScoreWithScoresAsync(key);
                 var listRecipe = new List<RecipeViewModel>();
@@ -136,6 +141,9 @@ namespace SRSN.ClientApi.Controllers
                     int recipeId = 0;
                     int.TryParse(data.Element, out recipeId);
                     var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
+                    var recipeUserID = await userManager.FindByIdAsync(recipe.UserId);
+                    recipe.AccountVM = new AccountViewModel();
+                    mapper.Map(recipeUserID, recipe.AccountVM);
                     listRecipe.Add(recipe);
                 }
                 return Ok(listRecipe);

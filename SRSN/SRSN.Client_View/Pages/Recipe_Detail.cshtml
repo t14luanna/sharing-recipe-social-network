@@ -11,13 +11,10 @@
                 <div class="recipe-set ">
                     <div class="wrapper-detail-contents detail-2">
                         <div class="single-recipe-detail" id="banner-recipe">
-
                         </div>
-
-
                         <div class="recipe-detail-body">
                             <div id="content-recipe">
-
+                                <!--Content-->
                             </div>
                             <br />
                             <div class="ingredients-checkbox">
@@ -27,14 +24,10 @@
                                     <ul id="list-of-ingredients"></ul>
                                 </div>
                             </div>
-
                             <div class="recipe-steps">
                                 <h3 class="lined">Các bước thực hiện</h3>
                                 <dl class="accordion clearfix" id="list-step-recipe"></dl>
-
                             </div>
-
-
                             <div class="separator-post"></div>
                             <div class="tags-icons">
                                 <div class="row">
@@ -183,7 +176,6 @@
     </div>
     <!-- The Modal -->
     <div id="myModal" class="modal">
-
         <!-- Modal content -->
         <div class="row modal-content">
             <div class="col-md-12 modal-header">
@@ -191,8 +183,21 @@
             </div>
             <div class="col-md-12 modal-body">
                 <div class="col-md-5">
-                    <div class="modal-component-1">
+                    <div class="modal-component-1" id="modal-products">
+                        <style>
+                            .modal-list-product-item{
 
+                            }
+                            .modal-product-item {
+                                cursor: pointer;
+                            }
+                            .modal-product-item:hover {
+                                background-color: dodgerblue;
+                            }
+                        </style>
+                        <ul class="modal-list-product-item">
+                           
+                        </ul>
                     </div>
                 </div>
                 <div class="col-md-7">
@@ -259,11 +264,24 @@
             infoWindow.open(map);
         };
         (async () => {
+            // Init elements
             await changeHeadername();
             await callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
             await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));
             await callPopularRecipeDetailPageApi();
             await callLatestRecipeDetailApi();
+
+            // Init products on modal list product item
+            // Get ingredient names
+            $('input[name=ingredient]').each(async function (index, element) {
+                // Get name
+                var value = element.getAttribute("value");
+                if (value) {
+                    var ingredientName = value.split('-')[1];
+                    await callReadProductByIngredientNameApi(ingredientName);
+                }
+            });
+
             callListCategoryItemDetailPage();
             // Recipe slider variation two
             $('.slider-detail2').slick({
@@ -303,6 +321,14 @@
                 modal.style.display = "none";
             }
         }
+
+
+        $(".modal-product-item").on('click', function (e) {
+            var current = e.currentTarget;
+            var ingredient_name = current.getAttribute('data-ingredient-name');
+        });
+
+
 
     </script>
     <script async defer

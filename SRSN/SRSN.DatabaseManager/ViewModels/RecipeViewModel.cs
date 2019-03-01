@@ -48,5 +48,6 @@ namespace SRSN.DatabaseManager.ViewModels
         public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
         public List<RecipeIngredientViewModel> listIngredient { get; set; }
         public List<RecipeCategoryViewModel> listCategory { get; set; }
+        public AccountViewModel AccountVM { get; set; }
     }
 }

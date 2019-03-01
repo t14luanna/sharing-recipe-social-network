@@ -69,6 +69,7 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
             services.AddScoped(typeof(IIngredientsService), typeof(IngredientsService));
             services.AddScoped(typeof(IPostService), typeof(PostService));
+            services.AddScoped(typeof(IProductService), typeof(ProductService));
 
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc => {
@@ -138,6 +139,9 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<CategoryItemViewModel, StepsOfRecipe>();
                 mc.CreateMap<StepsOfRecipe, CategoryItemViewModel>();
 
+                mc.CreateMap<ProductViewModel, Products>()
+                    .ForMember(x => x.Brand, y=>y.Ignore());
+                mc.CreateMap<Products, ProductViewModel>();
 
             });
             var mapper = mapperConfig.CreateMapper();

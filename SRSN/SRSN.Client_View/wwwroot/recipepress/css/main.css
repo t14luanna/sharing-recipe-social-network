@@ -8084,3 +8084,14 @@ input:-webkit-autofill:active {
         cursor: pointer;
     }
 
+.img-post-newsfeed{
+    width: 100%;
+    height: 230px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.fa-map-marker {
+    font-size: 20px;
+    color: #64ad36;
+}
