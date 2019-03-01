@@ -29,6 +29,7 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<RecipeViewModel>> GetRandomRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> GetRecipeWithID(UserManager<SRSNUser> userManager, int recipeId);
         Task<ICollection<RecipeViewModel>> GetRelatedRecipe(int userId);
+        Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName);
     }
     
     
@@ -339,7 +340,7 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetRelatedRecipe( int userId)
+        public async Task<ICollection<RecipeViewModel>> GetRelatedRecipe(int userId)
         {
             try
             {
@@ -361,7 +362,32 @@ namespace SRSN.DatabaseManager.Services
             {
                 return null;
             }
-        }
-    }
 
+        }
+
+        public async Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT top 3 * FROM Recipe WHERE RecipeName LIKE '%" + recipeName + "%' order by Id DESC" ).ToList();
+                foreach (var item in listItems)
+                {
+                    //apply automapper
+                    var recipeViewModel = this.EntityToVM(item);
+
+                    list.Add(recipeViewModel);
+                    
+                }
+                return list;
+            } 
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+    }
 }

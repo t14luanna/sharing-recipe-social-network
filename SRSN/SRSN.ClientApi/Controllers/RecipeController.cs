@@ -97,7 +97,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetRelatedRecipe(userId ));
+                return Ok(recipeService.GetRelatedRecipe(userId));
             }
             catch (Exception ex)
             {
@@ -153,6 +153,19 @@ namespace SRSN.ClientApi.Controllers
             {
                 message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
             });
+        }
+
+        [HttpGet("read-recipename")]
+        public async Task<ActionResult> ReadRecipeName([FromQuery]string recipeName)
+        {
+            try
+            {
+                return Ok(recipeService.GetRecipeNameLike(recipeName));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
     }
     #endregion

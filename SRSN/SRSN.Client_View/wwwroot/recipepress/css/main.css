@@ -6676,3 +6676,41 @@ div.widget-measurements .default-btn {
     height: 570px;
     background-size: cover
 }
+
+/*Search bar CSS*/
+#custom-advance-search {
+    position: relative;
+}
+
+#custom-quick-result {
+    position: absolute;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid grey;
+    border-top: transparent;
+    width: 100%;
+    left: 0;
+    top: 100%;
+    z-index: 1;
+
+    display: none;
+    flex-direction: column;
+}
+
+#custom-quick-result * {
+    padding: 5px 10px;
+    width: 100%;
+    height: max-content;
+    margin-bottom: 10px;
+    transition: background-color 0.2s ease-in-out;
+
+    cursor: pointer;
+}
+
+#custom-quick-result *:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+
+#custom-quick-result *:last-of-type {
+    margin: unset;
+}
