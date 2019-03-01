@@ -195,6 +195,8 @@ const callPopularRecipeBannerApi = async () => {
         }
     }
 };
+const getRecipeResult = (recipe) => `<div>${recipe.recipeName}</div>`
+const getUserName = (account) => `<div>${account.userName}</div>`
 const callPopularRecipeApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-popular");
     var list = await res.json();
@@ -235,7 +237,56 @@ const callLatestRecipeWidgetApi = async () => {
     }
 };
 
-
-function fileStack() {
-
+//Gọi API search Recipe
+const callSearchRecipeApi = async (searchVal) => {
+    if (!searchVal) {
+        $("#custom-quick-result div").remove();
+        $("#custom-quick-result").css('display', 'none');
+        return;
+    }
+    var res = await fetch("https://localhost:44361/api/recipe/read-recipename" + (searchVal ? "?recipeName=" + searchVal : ""));
+    var data = (await res.json()).result;
+    if (data.length == 0) {
+        $("#custom-quick-result div").remove();
+        $("#custom-quick-result").css('display', 'none');
+        return;
+    }
+    $("#custom-quick-result div").remove();
+    $("#custom-quick-result").css('display', 'none');
+    for (var item of data) {
+        let element = getRecipeResult(item);
+        $("#custom-quick-result").append(element);
+    }
+    $('#custom-quick-result').css('display', 'flex');
 }
+
+const attachInputSearchCallback = () => {
+    $('#custom-input-search').on("keyup", function () {
+        var searchVal = $("#custom-input-search").val();
+        callSearchRecipeApi(searchVal);
+    })
+
+    $("#custom-input-search").on("focus", function () {
+        var searchVal = $("#custom-input-search").val();
+        if (searchVal) {
+            callSearchRecipeApi(searchVal);
+        } else {
+            return;
+        }
+    })
+
+    $("#custom-input-search").on("blur", function () {
+        $("#custom-quick-result div").remove();
+        $("#custom-quick-result").css('display', 'none');
+    })
+}
+// load recipe
+//$(document).ready((e) => {
+//    callPopularRecipeBannerApi();
+//    callPopularRecipeWidgetApi();
+//    callPopularRecipeApi();
+//    callLatestRecipeApi();
+//    callLatestRecipeWidgetApi();
+//    callRandomRecipeApi();
+    
+//});

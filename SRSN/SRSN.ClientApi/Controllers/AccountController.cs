@@ -105,6 +105,8 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(user, userVM);
             return Ok(userVM);
         }
+
+
         [HttpGet("get-top-ten")]
         [AllowAnonymous]
         public async Task<IEnumerable<AccountViewModel>> GetTopUser()
@@ -144,6 +146,39 @@ namespace SRSN.ClientApi.Controllers
             }
             return list;
         }
+
+        [HttpGet("read-username")]
+        public async Task<IEnumerable<AccountViewModel>> findUsername(string username)
+        {
+            try
+            {
+                var list = new List<AccountViewModel>();
+
+                foreach (var u in userManager.Users.Where(u => u.Username.Contains(username)).ToList()) {
+                    list.Add(new AccountViewModel()
+                    {
+                        Id = u.Id,
+                        Username = u.UserName,
+                        FirstName = u.FirstName,
+                        Address = u.Address,
+                        Birthdate = u.Birthdate,
+                        Email = u.Email,
+                        Gender = u.Gender,
+                        LastName = u.LastName,
+                        Phone = u.Phone,
+                        Point = u.Point,
+                        Description = u.Description,
+                        AvatarImageUrl = u.AvatarImageUrl
+                    });
+                }
+                return list.OrderByDescending(t => t.Id).Take(3);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> UpdateProfile([FromBody] AccountEditViewModel data)
@@ -185,6 +220,8 @@ namespace SRSN.ClientApi.Controllers
                 });
             }
         }
+
+        
     }
 
 }

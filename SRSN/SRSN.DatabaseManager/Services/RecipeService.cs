@@ -31,11 +31,12 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<RecipeViewModel>> GetRandomRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> GetRecipeWithID(UserManager<SRSNUser> userManager, int recipeId);
         Task<ICollection<RecipeViewModel>> GetRelatedRecipe(int userId);
-       ICollection<RecipeViewModel> GetPopularRecipes();
-       ICollection<RecipeViewModel> GetLastestRecipes();
+        ICollection<RecipeViewModel> GetPopularRecipes();
+        ICollection<RecipeViewModel> GetLastestRecipes();
+        Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName);
     }
-    
-    
+
+
     public class RecipeService : BaseService<Recipe, RecipeViewModel>, IRecipeService
     {
 
@@ -161,7 +162,7 @@ namespace SRSN.DatabaseManager.Services
                     }
                     if (ingredientRepo.Count() > 0)
                     {
-                        recipe.listIngredient =await ingredient.ProjectTo<RecipeIngredientViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                        recipe.listIngredient = await ingredient.ProjectTo<RecipeIngredientViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
                     }
 
                 }
@@ -235,7 +236,7 @@ namespace SRSN.DatabaseManager.Services
 
                 }
                 return list;
-                
+
             }
             catch (Exception ex)
             {
@@ -269,7 +270,7 @@ namespace SRSN.DatabaseManager.Services
 
                 }
                 return list;
-       
+
 
             }
             catch (Exception ex)
@@ -370,7 +371,7 @@ namespace SRSN.DatabaseManager.Services
                     var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
-                    
+
                     recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
 
@@ -383,7 +384,7 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetRelatedRecipe( int userId)
+        public async Task<ICollection<RecipeViewModel>> GetRelatedRecipe(int userId)
         {
             try
             {
@@ -395,7 +396,7 @@ namespace SRSN.DatabaseManager.Services
 
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
-                    
+
                     list.Add(recipeViewModel);
 
                 }
@@ -424,32 +425,32 @@ namespace SRSN.DatabaseManager.Services
                     var recipeEntity = this.VMToEntity(recipeVM);
                     recipeEntity.CreateTime = DateTime.Now;
                     recipeEntity.Active = true;
-                     this.selfDbSet.Add(recipeEntity);
+                    this.selfDbSet.Add(recipeEntity);
                     // Buoc nay cap nhat len db that de recipeEntity co duoc Id ( vi la id tu tang )
-                     this.unitOfWork.Commit();
+                    this.unitOfWork.Commit();
                     // duyet het list step of recipes de add tung phan tu vao dbcontext
                     foreach (var sorVM in listSORVM)
                     {
                         var sorEntity = this.VMToEntity<StepsOfRecipe, StepsOfRecipeViewModel>(sorVM);
                         // dung dung step recipe repository de create va dung quen cap nhat Recipe Id cho Entity
                         sorEntity.RecipeId = recipeEntity.Id;
-                         stepRecipeDbSet.Add(sorEntity);
+                        stepRecipeDbSet.Add(sorEntity);
                         // cap nhat lai dbcontext, moi duoc add list step of recipe len db
-                         this.unitOfWork.Commit();
+                        this.unitOfWork.Commit();
                     }
                     foreach (var ingredient in listIngredient)
                     {
                         var ingredientEntity = this.VMToEntity<RecipeIngredient, RecipeIngredientViewModel>(ingredient);
                         ingredientEntity.RecipeId = recipeEntity.Id;
-                         recipeIngredientDBSet.AddAsync(ingredientEntity);
-                         this.unitOfWork.Commit();
+                        recipeIngredientDBSet.AddAsync(ingredientEntity);
+                        this.unitOfWork.Commit();
                     }
                     foreach (var category in listCategory)
                     {
                         var categoryEntity = this.VMToEntity<RecipeCategory, RecipeCategoryViewModel>(category);
                         categoryEntity.RecipeId = recipeEntity.Id;
-                         recipeCategoryDBSet.AddAsync(categoryEntity);
-                         this.unitOfWork.Commit();
+                        recipeCategoryDBSet.AddAsync(categoryEntity);
+                        this.unitOfWork.Commit();
                     }
                     transaction.Commit();
                 }
@@ -462,6 +463,33 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-    }
+        public async Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
 
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT top 3 * FROM Recipe WHERE RecipeName LIKE '%" + recipeName + "%' order by Id DESC").ToList();
+                foreach (var item in listItems)
+                {
+                    //apply automapper
+                    var recipeViewModel = this.EntityToVM(item);
+
+                    list.Add(recipeViewModel);
+
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+    }
 }
+
+
+
+
+
+

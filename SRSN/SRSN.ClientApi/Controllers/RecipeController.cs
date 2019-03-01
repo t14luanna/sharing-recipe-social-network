@@ -31,8 +31,8 @@ namespace SRSN.ClientApi.Controllers
         private IMapper mapper;
         public RecipeController(IRecipeService recipeService, UserManager<SRSNUser> userManager, IMapper mapper)
         {
-            this.recipeService = recipeService ;
-            this.userManager = userManager ;
+            this.recipeService = recipeService;
+            this.userManager = userManager;
             this.redisDatabase = RedisUtil.Connection.GetDatabase();
             this.mapper = mapper;
         }
@@ -100,13 +100,13 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-        
+
         [HttpGet("read-latest")]
         public async Task<ActionResult> ReadLatest()
         {
             try
             {
-                return Ok( await recipeService.GetLatestRecipes(this.userManager));
+                return Ok(await recipeService.GetLatestRecipes(this.userManager));
             }
             catch (Exception ex)
             {
@@ -118,7 +118,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(await recipeService.GetRelatedRecipe(userId ));
+                return Ok(await recipeService.GetRelatedRecipe(userId));
             }
             catch (Exception ex)
             {
@@ -171,7 +171,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok( await recipeService.GetRandomRecipes(this.userManager));
+                return Ok(await recipeService.GetRandomRecipes(this.userManager));
             }
             catch (Exception ex)
             {
@@ -222,7 +222,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                 ClaimsPrincipal claims = this.User;
+                ClaimsPrincipal claims = this.User;
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 request.RecipeVM.UserId = userId;
                 await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.listIngredient, request.listCategory);
@@ -230,13 +230,26 @@ namespace SRSN.ClientApi.Controllers
                 {
                     message = $"Ban da tao thanh cong Recipe"
                 });
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return Ok(new
                 {
                     success = false,
                     message = $"Ban tao recipe that bai"
                 });
+            }
+        }
+        [HttpGet("read-recipename")]
+        public async Task<ActionResult> ReadRecipeName([FromQuery]string recipeName)
+        {
+            try
+            {
+                return Ok(recipeService.GetRecipeNameLike(recipeName));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
             }
         }
     }
