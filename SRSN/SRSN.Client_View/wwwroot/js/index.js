@@ -1,8 +1,52 @@
 ﻿
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyAD2Vqg-rHzg9WJee0Yh0VGH_i_5BQT61E",
+    authDomain: "srsnproject.firebaseapp.com",
+    databaseURL: "https://srsnproject.firebaseio.com",
+    projectId: "srsnproject",
+    storageBucket: "srsnproject.appspot.com",
+    messagingSenderId: "237911674213"
+};
+firebase.initializeApp(config);
+var username = window.localStorage.getItem("username");
+var myDataRef = firebase.database().ref(username);
+// Đừng xóa cái này nhé, nó dùng để push data lên firebase.
+//myDataRef.push({
+//    "1": "121",
+//    "2": "28/2/2019"
+//});
+myDataRef.on('child_changed', function (snapshot) {
+    var text = ""; 
+    snapshot.forEach(function (childSnapshot) {
+        //var childKey = childSnapshot.key;
+        var childData = childSnapshot.val();
+        text +=  childData + "<br/>";
+    });
+    displayNotifi(text);
+});
+
+myDataRef.on('child_added', function (snapshot) {
+    var text = "";
+    snapshot.forEach(function (childSnapshot) {
+        //var childKey = childSnapshot.key;
+        var childData = childSnapshot.val();
+        text += childData + "<br/>";
+    });
+    displayNotifi(text);
+});
+
+
+function displayNotifi(name) {
+    let element = createSingleNotificationElement(name);
+    $("#list-notification").prepend(element);
+};
+const createSingleNotificationElement = (name) =>
+    `<li ><a href="#">${name}</a></li>`;
 const createSingleRecipeElement = (singeRecipe) =>
     `<div class="recipe-single animated wow flipInY">
         <div class="recipe-image">
-            <a href="#"><img src="${singeRecipe.imageCover}" alt="image" /></a>
+            <a href="/recipe/${singeRecipe.id}"><img src="${singeRecipe.imageCover}" alt="image" /></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -31,7 +75,7 @@ const createSingleRecipeElement = (singeRecipe) =>
 const createSingleLatestRecipeElement = (recipe) =>
     `<div class="recipe-single animated wow flipInY">
         <div class="recipe-image">
-            <a href="#"><img src="${recipe.imageCover}" alt="image" /></a>
+            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -59,7 +103,7 @@ const createSingleRandomRecipeElement = (recipe) =>
                                     <div class="outer-detail">
                                         <div class="detail">
                                             <h3>
-                                                <a href="#">
+                                                <a href="/recipe/${recipe.id}">
                                                    ${recipe.recipeName}
                                                 </a>
                                             </h3>
@@ -76,7 +120,7 @@ const createSingleRecipeWidgetElement = (recipe) =>
                                                 </a>
                                             </div>
                                             <div class="detail">
-                                                <a href="#">${recipe.recipeName}</a>
+                                                <a href="/recipe/${recipe.id}">${recipe.recipeName}</a>
                                                 <span class="post-date">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</span>
                                             </div>
                                         </li>`;
@@ -94,7 +138,7 @@ const createSingleBanner = (recipe) =>
                             <p>
                                ${recipe.contentRecipe}
                             </p>
-                            <a class="read-more-bordered" href="recipe-detail.html">Read More</a>
+                            <a class="read-more-bordered" href="/recipe/${recipe.id}">Read More</a>
                         </div>`;
 const createSingleRecipeOfDay = (recipe) =>
     `<img src="${recipe.imageCover}" alt="Recipe of the day">
@@ -102,12 +146,12 @@ const createSingleRecipeOfDay = (recipe) =>
                                 <div class="recipe-contents text-center">
                                     <div class="recipe-content-inner">
                                         <span class="tag">Recipe of the Day</span>
-                                        <h2><a href="#">${recipe.recipeName}</a></h2>
+                                        <h2><a href="/recipe/${recipe.id}">${recipe.recipeName}</a></h2>
                                         <div class="short-separator"></div>
                                         <p>
                                             ${recipe.contentRecipe}
                                         </p>
-                                        <a href="#" class="read-more">Read More</a>
+                                        <a href="/recipe/${recipe.id}" class="read-more">Read More</a>
                                     </div>
                                 </div>
                             </div>`;

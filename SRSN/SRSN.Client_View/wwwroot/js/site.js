@@ -10,17 +10,15 @@
     var authorization = window.localStorage.getItem("authorization");
 
     if (authorization && username) {
-        $(".authorized-group").css("display", "inline-table");
+        $(".authorized-group").css("display", "inline-table");//index, recipe page
+        $(".noti-message-icon").css("display", "inline-table");//index, recipe page
+        $("#noti-message-icon").css("display", "inline-table");//member profile page
         $("#authorized-group-username").text(username);
-
         $(".unauthorized-group").css("display", "none");
 
     } else {
         $(".authorized-group").css("display", "none");
         $(".unauthorized-group").css("display", "inline-table");
-
-
-    
     }
 
 

@@ -1,0 +1,96 @@
+﻿.mem-statis-box {
+    margin: 15px 0;
+    overflow: hidden;
+    text-align: center;
+    width: 300px;
+    margin: auto;
+}
+
+.headline {
+    color: black;
+    font-size: 18px;
+    padding: 10px 0;
+    display: block;
+}
+
+.mem-statis-box .val {
+    border: .5px solid #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+    .mem-statis-box .val .newbee.active {
+        background: #00bcd4;
+    }
+
+    .mem-statis-box .val .tastee.active {
+        background: #ffc107;
+    }
+
+    .mem-statis-box .val .cookee.active {
+        background: #ff4f4f;
+    }
+
+    .mem-statis-box .val .chefee.active {
+        background: #a930ca;
+    }
+
+    .mem-statis-box .val .mastee.active {
+        background: #ff0834;
+    }
+
+    .mem-statis-box .val span {
+        width: 20%;
+        height: 12px;
+        display: block;
+        margin: 0;
+        outline: none;
+        float: left;
+        border-right: .5px solid #e0e0e0;
+        background: #f6f6f6;
+    }
+
+    .mem-statis-box .val .mastee {
+        border-right: 0;
+    }
+
+
+.user-lvl.newbee {
+    color: #00bcd4;
+}
+
+.user-lvl.tastee {
+    color: #ffc107;
+}
+
+.user-lvl.cookee {
+    color: #ff4f4f;
+}
+
+.user-lvl.chefee {
+    color: #a930ca;
+}
+
+.user-lvl.mastee {
+    color: #ff0834;
+}
+
+.mem-statis-box .text span {
+    display: block;
+    width: 20%;
+    float: left;
+    text-align: center;
+    padding: 2px 0;
+    font-size: 12px;
+}
+
+.mem-statis-box .val span {
+    width: 20%;
+    height: 12px;
+    display: block;
+    margin: 0;
+    outline: none;
+    float: left;
+    border-right: .5px solid #e0e0e0;
+    background: #f6f6f6;
+}
