@@ -154,7 +154,7 @@ namespace SRSN.ClientApi.Controllers
             {
                 var list = new List<AccountViewModel>();
 
-                foreach (var u in userManager.Users.Where(u => u.Username.Contains(username)).ToList()) {
+                foreach (var u in userManager.Users.Where(u => u.UserName.Contains(username)).ToList()) {
                     list.Add(new AccountViewModel()
                     {
                         Id = u.Id,

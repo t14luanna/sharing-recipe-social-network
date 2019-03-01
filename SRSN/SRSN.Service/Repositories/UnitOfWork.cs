@@ -19,7 +19,7 @@ namespace SRSN.Service.Repositories
         IDbContextTransaction GetDbTransaction();
     }
 
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork   
     {
         private DbContext dbContext;
         private bool isDisposed;

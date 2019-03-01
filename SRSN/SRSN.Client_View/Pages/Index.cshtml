@@ -73,8 +73,22 @@
                                                 <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                                 <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                                <li style="display: none" class="noti-message-icon">
+                                                    <nav class="nav-collapse header-social-icons">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="#"><i class="fa fa-bell"></i></a>
+                                                                <ul id="list-notification">
+                                                                    
+                                                                </ul>
+                                                            </li>
+                                                            <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
+                                                        </ul>
+                                                    </nav>
+                                                </li>
                                             </ul>
-                                            <span class="sign-in-buttons authorized-group" style="display: none;">
+
+                                            <span class="sign-in-buttons authorized-group" style="display: none;" id="user">
                                                 <a class="information" href="/account/information" id="authorized-group-username">Username</a>
                                             </span>
                                             <span class="sign-in-buttons unauthorized-group">
@@ -124,6 +138,8 @@
                 </div>
             </div>
             <!-- nav ends-->
+        </div>
+        <div id="messgesDiv" style="width:500px">
         </div>
     </header>
     <!--header ends-->
@@ -236,9 +252,7 @@
                                     </div>
                                     <div class="category-list">
                                         <!--<div class="list-inner">-->
-                                        <ul id="list-category-item">
-                                           
-                                        </ul>
+                                        <ul id="list-category-item"></ul>
                                         <!--</div>-->
                                     </div>
                                 </div>
@@ -340,7 +354,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="footer-copyright text-center wow animated flipInY">
+                <div class="footer-copyright text-center wow animated flipInY" >
                     <p>&copy; Copyright 2015 All Rights Reserved by <a href="#">Majestic Themes</a></p>
                 </div>
                 <div class="corner-image wow animated fadeInRight">
@@ -349,28 +363,28 @@
             </div>
         </div>
     </div>
+
     <!--footer ends-->
+   
 
 </body>
 <!-- Mirrored from templates.majesticthemes.com/recipepress/v6.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:13:42 GMT -->
 </html>
 
 
-
-    <script src="/recipepress/js/jquery-1.11.3.min.js"></script>
-    <script src="/recipepress/js/jquery-ui.js"></script>
-    <script src="/recipepress/js/slick.min.js"></script>
-    <script src="/recipepress/js/jquery.meanmenu.js"></script>
-    <script src="/recipepress/js/jquery.selectric.min.js"></script>
-    <script src="/recipepress/js/wow.js"></script>
-    <script src="/recipepress/js/jquery.form.js"></script>
-    <script src="/recipepress/js/jquery.validate.min.js"></script>
-    <script src="/recipepress/js/jquery.swipebox.js"></script>
-    <script src="/recipepress/js/custom.js"></script>
-    <script src="~/js/index.js"></script>
-    <script src="~/js/site.js"></script>
-
-    <script type="text/javascript">
+<script src="/recipepress/js/jquery-1.11.3.min.js"></script>
+<script src="/recipepress/js/jquery-ui.js"></script>
+<script src="/recipepress/js/slick.min.js"></script>
+<script src="/recipepress/js/jquery.meanmenu.js"></script>
+<script src="/recipepress/js/jquery.selectric.min.js"></script>
+<script src="/recipepress/js/wow.js"></script>
+<script src="/recipepress/js/jquery.form.js"></script>
+<script src="/recipepress/js/jquery.validate.min.js"></script>
+<script src="/recipepress/js/jquery.swipebox.js"></script>
+<script src="/recipepress/js/custom.js"></script>
+<script src="~/js/index.js"></script>
+<script src="~/js/site.js"></script>
+<script type="text/javascript">
         // fetch and render element to html
         (async () => {
             await callPopularRecipeBannerApi();
@@ -381,5 +395,6 @@
             await callRandomRecipeApi();
             await callListCategoryItem();
             await attachInputSearchCallback();
-        })();
-    </script>
+    })();
+</script>
+<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
