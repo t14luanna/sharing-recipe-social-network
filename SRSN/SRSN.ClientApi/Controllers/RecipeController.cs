@@ -252,6 +252,19 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("read-recipename-page")]
+        public async Task<ActionResult> ReadRecipeNamePage([FromQuery]string recipeName)
+        {
+            try
+            {
+                return Ok(recipeService.GetRecipeName(recipeName));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
     #endregion
 }

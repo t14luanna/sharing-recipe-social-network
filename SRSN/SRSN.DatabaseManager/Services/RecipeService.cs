@@ -34,6 +34,7 @@ namespace SRSN.DatabaseManager.Services
         ICollection<RecipeViewModel> GetPopularRecipes();
         ICollection<RecipeViewModel> GetLastestRecipes();
         Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName);
+        Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
     }
 
 
@@ -470,6 +471,29 @@ namespace SRSN.DatabaseManager.Services
                 var list = new List<RecipeViewModel>();
 
                 var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT top 3 * FROM Recipe WHERE RecipeName LIKE '%" + recipeName + "%' order by Id DESC").ToList();
+                foreach (var item in listItems)
+                {
+                    //apply automapper
+                    var recipeViewModel = this.EntityToVM(item);
+
+                    list.Add(recipeViewModel);
+
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE '%" + recipeName + "%' order by Id DESC").ToList();
                 foreach (var item in listItems)
                 {
                     //apply automapper
