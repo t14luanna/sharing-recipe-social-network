@@ -21,5 +21,4 @@
         $(".unauthorized-group").css("display", "inline-table");
     }
 
-
 })();

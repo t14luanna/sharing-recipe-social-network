@@ -63,7 +63,7 @@ const createAvatarContainer = (user) =>
                                         <span class="tastee" id="ranktastee"></span>
                                         <span class="cookee" id="rankcookee"></span>
                                         <span class="chefee" id="rankchefee"></span>
-                                        <span class="mastee active" id="rankmastee"></span>
+                                        <span class="mastee" id="rankmastee"></span>
                                     </div>
                                     <div class="text">
                                         <span class="user-lvl newbee"> newbee</span>
@@ -76,7 +76,7 @@ const createAvatarContainer = (user) =>
                                 </div>
                             </div>
                             <div class="cover--user-desc fw--400 fs--18 fstyle--i text-darkest">
-                                <p>${user.status}</p>
+                                <p>${user.description}</p>
                             </div>`;
 const createPersonalInfoElement = (info) =>
     `<table class="table">
@@ -108,8 +108,7 @@ const createPersonalInfoElement = (info) =>
                                                             </tr>
                                                         </tbody>
                                                     </table>`;
-const createStatusField = (status) =>
-    `<textarea name="Text1" cols="90" rows="3">${status}</textarea>`;
+
 const createDescription = (des) =>
     `<textarea name="Text1" cols="90" rows="5" > ${des}</textarea >`;
 const createContactInfo = (user) =>
@@ -136,14 +135,14 @@ const createContactInfo = (user) =>
                                                             </tr>
                                                         </tbody>
                                                     </table>`;
-const callAccountInfoApi = async (id) => {
-    var res = await fetch(`https://localhost:44361/api/account/read?userId=${id}`);
+const callAccountInfoApi = async () => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+
+    var res = await fetch(`https://localhost:44361/api/account/read-userinfo?token=${token}`);
     var data = await res.json();
     var element = createAvatarContainer(data);
     $("#avatar-container").append(element);
-
-    var status = createStatusField(data.status);
-    $("#status-field").append(status);
 
     var personalInfo = createPersonalInfoElement(data);
     $("#personal-info").append(personalInfo);
@@ -155,5 +154,25 @@ const callAccountInfoApi = async (id) => {
     $("#user-contact").append(contact);
 
     $("#myselect option[data-value='" + data.gender + "']").attr("selected", "selected");
-    $("#ranknewbee").attr("class","newbee active");
+    if (data.point >= 0 && data.point <= 99) {
+        $("#ranknewbee").attr("class", "newbee active");
+    } else if (data.point >= 100 && data.point <= 499) {
+        $("#ranknewbee").attr("class", "newbee active");
+        $("#ranktastee").attr("class", "tastee active");
+    } else if (data.point >= 500 && data.point <= 999) {
+        $("#ranknewbee").attr("class", "newbee active");
+        $("#ranktastee").attr("class", "tastee active");
+        $("#rankcookee").attr("class", "cookee active");
+    } else if (data.point >= 1000 && data.point <= 4999) {
+        $("#ranknewbee").attr("class", "newbee active");
+        $("#ranktastee").attr("class", "tastee active");
+        $("#rankcookee").attr("class", "cookee active");
+        $("#rankchefee").attr("class", "chefee active");
+    } else if (data.point >= 5000) {
+        $("#ranknewbee").attr("class", "newbee active");
+        $("#ranktastee").attr("class", "tastee active");
+        $("#rankcookee").attr("class", "cookee active");
+        $("#rankchefee").attr("class", "chefee active");
+        $("#rankmastee").attr("class", "mastee active");
+    }
 };
