@@ -19,10 +19,10 @@
 $('.add-button.add-ing').on("click", function (event) {
 
     var newMajesticItem = '<li style="display: none">' +
-        '<div class="add-fields"><span class="ingredient-handler-list handler-list">' + 
+        '<div class="add-fields"><span class="ingredient-handler-list handler-list">' +
         '<i class="fa fa-arrows"></i></span >' +
         '<input class="ingredient-quantity" type="number" step="1"' +
-        'name="ingredientsQuantity" id="ingredientsQuantity" />' + 
+        'name="ingredientsQuantity" id="ingredientsQuantity" />' +
         '<select class="ingredient-weight" name="ingredientsWeight">' +
         '<option value="1" selected>g</option><option value="1000">kg</option></select>' +
         '<input class="ingredient-detail" type="text" name="ingredients" id="ingredients" />' +
@@ -45,8 +45,8 @@ $('#submitBtn').on("click", async function (event) {
     var videoCode = $("input[name='videoCode']").val();
 
     var ingredientsQuantity = $("input[name='ingredientsQuantity']");
-    var ingredientsWeight= $("select[name='ingredientsWeight']");
-    var ingredientsName= $("input[name='ingredients']");
+    var ingredientsWeight = $("select[name='ingredientsWeight']");
+    var ingredientsName = $("input[name='ingredients']");
     var ingredients = [];
     $(ingredientsQuantity).each(i => {
         ingredients.push({
@@ -98,7 +98,7 @@ $('#submitBtn').on("click", async function (event) {
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${ token}`
         }
     });
     var mains = await res.json();
@@ -113,10 +113,10 @@ function openTab(tab) {
     document.getElementById(tab).style.display = "block";
 }
 
-const loadCategory = async () => {
+const loadcategory = async () => {
     var res = await fetch("https://localhost:44361/api/category/read");
     var mains = await res.json();
-    $(mains).each((i,main) => {
+    $(mains).each((i, main) => {
         var div = document.createElement("div");
         div.setAttribute("class", "category-main row");
         var h3 = document.createElement("h3");
@@ -134,11 +134,8 @@ const loadCategory = async () => {
             itemDiv.innerHTML = itemElement;
             //$(itemDiv).on("click", (event) => { console.log(itemDiv); });
             div.append(itemDiv);
-        });     
+        });
         $('#phanloai').append(div);
     });
 }
 
-$(document).ready((e) => {
-    loadCategory();
-});

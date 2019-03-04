@@ -1,4 +1,4 @@
-﻿@page "/account/{userId}"
+﻿@page "/account/information"
 @model SRSN.Client_View.Pages.MemberProfileModel
 @{
     Layout = null;
@@ -171,32 +171,17 @@
                                         <div class="content--nav pb--30">
                                             <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
                                                 <li><a href="member-activity-personal.html">Dòng thời gian</a></li>
-                                                <li class="active"><a href="member-profile.html">Giới thiệu</a></li>
-                                                <li><a href="member-friends.html">Đang theo dõi(231)</a></li>
-                                                <li><a href="member-groups.html">Công thức của tôi(1110)</a></li>
-                                                <li><a href="member-media-all.html">Quản lý nguyên liệu(56)</a></li>
+                                                <li class="active"><a href="/account/information">Giới thiệu</a></li>
+                                                <li><a href="/memberfriends">Đang theo dõi(231)</a></li>
+                                                <li><a href="member-groups.html">C.thức của tôi(1110)</a></li>
+                                                <li><a href="member-media-all.html">Q.lý nguyên liệu(56)</a></li>
                                             </ul>
                                         </div>
                                         <!-- Content Nav End -->
                                         <!-- Profile Details Start -->
                                         <div class="profile--details fs--14">
                                             <!-- Profile Item Start -->
-                                            <div class="profile--item">
-                                                <div class="profile--heading">
-                                                    <h3 class="h4 fw--700">
-                                                        <span class="mr--4">Viết gì hôm nay</span>
-                                                        <i class="ml--10 text-primary"></i>
-
-                                                    </h3>
-                                                    <div class="profile--info" id="status-field">
-
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <button class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
-                                                </div>
-                                            </div>
-
+                                            
                                             <div class="profile--item">
                                                 <div class="profile--heading">
                                                     <h3 class="h4 fw--700">
@@ -519,7 +504,7 @@
 <script type="text/javascript">
     // fetch and render element to html
     (async () => {
-        await callAccountInfoApi(@(RouteData.Values["userId"]));
+        await callAccountInfoApi();
     })();
 </script>
 
