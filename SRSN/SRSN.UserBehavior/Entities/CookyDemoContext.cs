@@ -52,6 +52,7 @@ namespace SRSN.UserBehavior.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
@@ -473,6 +474,12 @@ namespace SRSN.UserBehavior.Entities
                 entity.HasKey(e => new { e.UserId, e.RecipeId });
 
                 entity.ToTable("User_Recipe_Point");
+
+                entity.Property(e => e.IsLike).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.IsShare).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.IsView).HasDefaultValueSql("((0))");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.UserRecipePoint)

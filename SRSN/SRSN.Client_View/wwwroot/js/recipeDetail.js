@@ -118,22 +118,20 @@ const createProductItemElement = (product) =>
 
 const createSingleRatingComment = (comment) =>
     `<li>
-        <span class="rating-icons">
-                                    <i class="fa fa-star-half-o" aria-hidden="true" style="
-                                            font-size: 20px;
-                                            color: green;"></i>
-                            </span>
-                            <span class="rating-figure">(${comment.star} / 5)</span>
+       
         <div class="avatar">
-            <a href="#"><img src="${comment.avatarUrl}" alt="avatar" /></a>
+
+            <a href="#"><img class="avatar-comment" src="${comment.avatarUrl}" alt="avatar" /></a>
         </div>
         <div class="comment">
-            <h5><a href="#">${comment.fullName}</a></h5>
+            
+<h5><a href="#">${comment.fullName}</a></h5>
             <span class="time">${comment.createTime}</span>
+            <span class="rating-figure comment-rating-star">${comment.star} / 5 <i class="fa fa-star" aria-hidden="true"></i></span>
             <p>
                 ${comment.contentRating}
             </p>
-                                        
+                <a href="#" class="reply-button">Reply</a>                        
         </div>
     </li>`;
 const createSingleCategoryItemDetailPage = (item) =>
@@ -213,7 +211,7 @@ const callIngrdientsOfRecipeApi = async (id) => {
             var ingredient = createSingleIngredientOfRecipe(ingredients);
             $("#list-of-ingredients").append(ingredient);
         }
-       
+
     }
 };
 const callRecipeDetailApi = async (id) => {
@@ -237,9 +235,12 @@ const callReadRatingCommentApi = async (id) => {
     var data = (await res.json());
     var count = 0;
     for (var item of data) {
-       
+
         count++;
-        
+        let date = new Date(item.createTime);
+        var hr = date.getHours();
+        var min = date.getMinutes();
+        item.createTime = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
         var element = createSingleRatingComment(item)
         $("#list-rating-comment").append(element);
     }
@@ -272,5 +273,67 @@ const callStepOfRecipeApi = async (id) => {
             num = num + step;
             $("#list-step-recipe").append(num);
         }
+    }
+};
+
+
+const callReadNearByStoresApi = async (userLat, userLong, productId) => {
+
+    var res = await fetch(`https://localhost:44361/api/product/read-nearby-store?userLat=${userLat}&userLong=${userLong}&productId=${productId}`);
+    var data = (await res.json());
+
+    for (var item of data) {
+        var itemLatLng = { lat: item.lat, lng: item.long };
+        var marker = new google.maps.Marker({
+            position: itemLatLng,
+            icon: {
+                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+            }
+        });
+        addInfoWindow(marker, item.name);
+        marker.setMap(map);
+    }
+};
+
+function addInfoWindow(marker, message) {
+
+    var infoWindow = new google.maps.InfoWindow({
+        content: message
+    });
+
+    google.maps.event.addListener(marker, 'click', function () {
+        infoWindow.open(map, marker);
+    });
+}
+const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    if (!star) {
+        $(".alert-comment").css("display", "block");
+        $(".alert-comment").html("Bạn chưa chọn mức sao đánh giá (rating)");
+        return;
+    }
+    if (!token) {
+        $(".alert-comment").css("display", "block");
+        $(".alert-comment").html("Hãy đăng nhập để đánh giá bài viết");
+        return;
+    }
+    var data = {
+        recipeId: recipeId,
+        contentRating: comment,
+        star: star
+    };
+    var res = await fetch("https://localhost:44361/api/ratingrecipe/create-rating", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (res.status == 200) {
+        $(".alert-success").css("display", "block");
+        $("textarea[name='comment']").val('');
+        callReadRatingCommentApi(recipeId);
     }
 };

@@ -26,7 +26,7 @@ namespace SRSN.ClientApi.Controllers
             this.ratingRecipeService = ratingRecipeService ?? throw new ArgumentNullException(nameof(ratingRecipeService));
         }
 
-        [HttpPost("createRating")]
+        [HttpPost("create-rating")]
         [Authorize]
         public async Task<ActionResult> CreateRating([FromBody]RatingRecipeViewModel request)
         {
