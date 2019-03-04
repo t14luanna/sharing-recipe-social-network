@@ -148,13 +148,14 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpGet("read-username")]
-        public async Task<IEnumerable<AccountViewModel>> findUsername(string username)
+        public async Task<ActionResult<AccountViewModel>> findUsername(string username)
         {
             try
             {
                 var list = new List<AccountViewModel>();
 
-                foreach (var u in userManager.Users.Where(u => u.UserName.Contains(username)).ToList()) {
+                foreach (var u in userManager.Users.Where(u => u.UserName.Contains(username)).ToList().OrderByDescending(t => t.Id).Take(3))
+                {
                     list.Add(new AccountViewModel()
                     {
                         Id = u.Id,
@@ -171,7 +172,7 @@ namespace SRSN.ClientApi.Controllers
                         AvatarImageUrl = u.AvatarImageUrl
                     });
                 }
-                return list.OrderByDescending(t => t.Id).Take(3);
+                return Ok(list);
             }
             catch (Exception ex)
             {

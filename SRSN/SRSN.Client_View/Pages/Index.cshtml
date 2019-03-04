@@ -183,14 +183,14 @@
                     </span>
                 </div>
                 <div class="outer-advance-search">
-                    <form action="#" id="advance-search">
+                    <form id="advance-search">
                         <fieldset>
                             <div class="inner-advance-search" style="width: 50%">
                                 <div id="custom-advance-search" class="form-field">
-                                    <input id="custom-input-search" style="outline: none; border: 1px solid grey; font-size: 2rem; padding: 0px 10px; border-radius: 5px; " type="text" name="name" value="" />
+                                    <input id="custom-input-search" style="outline: none; border: 1px solid grey; font-size: 2rem; padding: 0px 10px; border-radius: 5px; " type="text" value="" />
                                     <div id="custom-quick-result"></div>
                                 </div>
-                                <button style="width: 100px; border-radius: 5px; height: 40px" type="submit"><i class="fa fa-search"></i></button>
+                                <button id="searchBtn" style="width: 100px; border-radius: 5px; height: 40px" type="submit"><i class="fa fa-search"></i></button>
                             </div>
                         </fieldset>
                     </form>
@@ -384,6 +384,8 @@
 <script src="/recipepress/js/custom.js"></script>
 <script src="~/js/index.js"></script>
 <script src="~/js/site.js"></script>
+<script src="~/js/recipe.js"></script>
+<script src="~/js/SearchPageResult.js"></script>
 <script type="text/javascript">
         // fetch and render element to html
         (async () => {
@@ -395,6 +397,34 @@
             await callRandomRecipeApi();
             await callListCategoryItem();
             await attachInputSearchCallback();
+            
     })();
+
+</script>
+<script>
+    $("#searchBtn").on("click", function (e) {
+        e.preventDefault();
+
+        fetch("https://localhost:44361/api/recipe/read-recipename?recipeName=" + $('#custom-input-search').val(),
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(response => {
+                localStorage.setItem("recipeName", $('searchString').val());
+                window.location.pathname = '/SearchRecipe';
+                console.log(response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
 </script>
 <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+
+@section Scripts {
+    
+}
