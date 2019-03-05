@@ -210,14 +210,14 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpPost("submit-recipe")]
-        public async Task<ActionResult> SubmitRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request)
+        public async Task<ActionResult> SubmitRecipe([FromBody]RecipeSubmitViewModel request)
         {
             try
             {
                  ClaimsPrincipal claims = this.User;
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-                request.RecipeVM.UserId = userId;
-                await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.listIngredient, request.listCategory);
+                request.UserId = userId;
+                await recipeService.SubmitRecipeWithStepsAsync(request);
                 return Ok(new
                 {
                     message = $"Ban da tao thanh cong Recipe"
@@ -227,7 +227,8 @@ namespace SRSN.ClientApi.Controllers
                 return Ok(new
                 {
                     success = false,
-                    message = $"Ban tao recipe that bai"
+                    message = $"Ban tao recipe that bai",
+                    error = ex.ToString()
                 });
             }
         }

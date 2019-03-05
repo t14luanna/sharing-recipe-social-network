@@ -1,4 +1,21 @@
-﻿$('.add-button.add-steps').on("click", function (event) {
+﻿const apikey = 'AJQOnJX4sQs2oOshsbuO2z';
+
+const client = filestack.init(apikey);
+
+document.querySelector('input').addEventListener('change', (event) => {
+    //const files = event.target.files;
+    //const file = files.item(0);
+
+    //client.upload(file)
+    //    .then(res => {
+    //        console.log('success: ', res);
+    //    })
+    //    .catch(err => {
+    //        console.log(err);
+    //    });
+});
+
+$('.add-recipe-steps').on("click", function (event) {
     event.preventDefault();
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields">' +
@@ -16,7 +33,7 @@
     bindMajesticItem();
 });
 
-$('.add-button.add-ing').on("click", function (event) {
+$('.add-ingredient').on("click", function (event) {
 
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' + 
@@ -36,74 +53,24 @@ $('.add-button.add-ing').on("click", function (event) {
 });
 
 $('#submitBtn').on("click", async function (event) {
-    var avatar = $("input[name='avatarUpload']").val();
-    var title = $("input[name='title']").val();
-    var content = $("#recipe-content").val();
-    var serving = $("input[name='serving']").val();
-    var cooktime = $("input[name='cooktime']").val();
-    var level = $("input[name='level']").val();
-    var videoCode = $("input[name='videoCode']").val();
+    var data = getData();
 
-    var ingredientsQuantity = $("input[name='ingredientsQuantity']");
-    var ingredientsWeight= $("select[name='ingredientsWeight']");
-    var ingredientsName= $("input[name='ingredients']");
-    var ingredients = [];
-    $(ingredientsQuantity).each(i => {
-        ingredients.push({
-            IngredientName: $(ingredientsName[i]).val(),
-            Quantitative: $(ingredientsQuantity[i]).val() * $(ingredientsWeight[i]).children("option:selected").val()
-        });
-    });
+    data = await uploadImageSubmit(data);
 
-    var stepDescription = $("textarea[name='stepsDes']");
-    var stepsImage = $("input[name='stepsImage']");
-    var steps = [];
-    $(stepDescription).each(i => {
-        steps.push({
-            Description: $(stepDescription[i]).val(),
-            ImageUrl: $(stepsImage[i]).val()
-        });
-    });
-
-    var categoriesItemList = $("input[name='categoryItem']:checked");
-    var categoriesItem = [];
-    $(categoriesItemList).each((i, item) => {
-        var categoryRecipeE = {
-            'categoryItemId': Number.parseInt($(item).val())
-        }
-        categoriesItem.push(categoryRecipeE);
-    });
-
-
-    var data = {
-        RecipeVM: {
-            ImageCover: avatar,
-            ContentRecipe: content,
-            RecipeName: title,
-            Serving: serving,
-            Cooktime: cooktime,
-            LevelRecipe: level,
-            VideoLink: videoCode
-        },
-        ListCategory: categoriesItem,
-        ListSORVM: steps,
-        ListIngredient: ingredients
-    };
-
-    console.log(data);
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: '{}',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         }
+    }).then((res) => {
+        console.log(res);
     });
-    var mains = await res.json();
-    console.log(mains);
 });
+
 function openTab(tab) {
     var i;
     var x = document.getElementsByClassName("city");
@@ -137,6 +104,92 @@ const loadCategory = async () => {
         });     
         $('#phanloai').append(div);
     });
+}
+
+function getData() {
+    var avatar = $("input[name='avatarUpload']")[0].files[0];
+    var title = $("input[name='title']").val();
+    var content = $("#recipe-content").val();
+    var serving = $("input[name='serving']").val();
+    var cooktime = $("input[name='cooktime']").val();
+    var level = $("input[name='level']").val();
+    var videoCode = $("input[name='videoCode']").val();
+
+    var ingredientsQuantity = $("input[name='ingredientsQuantity']");
+    var ingredientsWeight = $("select[name='ingredientsWeight']");
+    var ingredientsName = $("input[name='ingredients']");
+    var ingredients = [];
+    $(ingredientsQuantity).each(i => {
+        ingredients.push({
+            IngredientName: $(ingredientsName[i]).val(),
+            Quantitative: $(ingredientsQuantity[i]).val() * $(ingredientsWeight[i]).children("option:selected").val()
+        });
+    });
+
+    var stepDescription = $("textarea[name='stepsDes']");
+    var stepsImage = $("input[name='stepsImage']");
+    var steps = [];
+    $(stepDescription).each(i => {
+        steps.push({
+            Description: $(stepDescription[i]).val(),
+            ImageUrl: $(stepsImage[i])[0].files[0]
+        });
+    });
+
+    var categoriesItemList = $("input[name='categoryItem']:checked");
+    var categoriesItem = [];
+    $(categoriesItemList).each((i, item) => {
+        var categoryRecipeE = {
+            categoryItemId: Number.parseInt($(item).val())
+        }
+        categoriesItem.push(categoryRecipeE);
+    });
+
+
+    var data = {
+        RecipeVM: {
+            ImageCover: avatar,
+            ContentRecipe: content,
+            RecipeName: title,
+            Serving: serving,
+            Cooktime: cooktime,
+            LevelRecipe: level,
+            VideoLink: videoCode,
+            ListCategory: categoriesItem,
+            ListSORVM: steps,
+            ListIngredient: ingredients
+        }
+    };
+
+    return data;
+}
+
+function uploadImageSubmit(data) {
+    return new Promise(async (resolve, reject) => {
+        await uploadFile(data.RecipeVM.ImageCover).then((res) => {
+            data.RecipeVM.ImageCover = res.url;
+        });
+
+        $(data.ListSORVM).each(async (i, step) => {
+            await uploadFile(step.ImageUrl).then((res) => {
+                data.ListSORVM[i].ImageUrl = res.url;
+            });
+        });
+
+        return resolve(data);
+    });
+}
+
+function uploadFile(file) {
+    return new Promise((resolve, reject) => {
+        client.upload(file)
+        .then(res => {
+            resolve(res);
+        })
+        .catch(err => {
+            reject(err);
+        });
+    })
 }
 
 $(document).ready((e) => {
