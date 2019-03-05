@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SRSN.Client_View", "SRSN.Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SRSN.UserBehavior", "SRSN.UserBehavior\SRSN.UserBehavior.csproj", "{51437806-D719-47A3-B99A-C9A664AD8E95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SRSN.UpdateLatLongStore", "SRSN.UpdateLatLongStore\SRSN.UpdateLatLongStore.csproj", "{BF18F08C-0359-4ECE-B67A-7A5ABC08131B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{51437806-D719-47A3-B99A-C9A664AD8E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51437806-D719-47A3-B99A-C9A664AD8E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51437806-D719-47A3-B99A-C9A664AD8E95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF18F08C-0359-4ECE-B67A-7A5ABC08131B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF18F08C-0359-4ECE-B67A-7A5ABC08131B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF18F08C-0359-4ECE-B67A-7A5ABC08131B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF18F08C-0359-4ECE-B67A-7A5ABC08131B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

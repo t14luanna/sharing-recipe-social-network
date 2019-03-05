@@ -20,8 +20,12 @@
                             <div class="ingredients-checkbox">
                                 <div class="ingredients">
                                     <h3>Nguyên liệu</h3>
-                                    <button id="myBtn">Open Modal</button>
+                                    
                                     <ul id="list-of-ingredients"></ul>
+                                    <div class="col-md-12">
+                                        @*<button id="myBtn">Open Modal</button>*@
+                                        <a id="myBtn"  class="default-btn mid-button theme-color pull-right">Cửa hàng gần nhất</a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="recipe-steps">
@@ -43,13 +47,9 @@
                                     </div>
                                     <div class="col-sm-5">
                                         <div class="details-social-icons">
-                                            <ul>
-                                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-plus"></i></a></li>
-                                            </ul>
+                                            <a href="#" title="Like"><i class="fa fa-2x fa-heart-o"></i></a>
+                                            <a href="#" title="Chia sẻ"><i class="fa fa-2x fa-share"></i></a>
+                                            <a href="#" title="Thêm vào BST"><i class="fa fa-2x fa-plus"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -73,34 +73,36 @@
                         <div class="comment-form">
                             <h3 class="lined">Leave Comment</h3>
 
-                            <form action="#" method="post">
+                            <div class="form-rating">
+                                <p class="alert green alert-success">Đăng đánh giá thành công!<span class="close-alert"><i class="fa fa-close"></i></span></p>
+                                <p class="alert red alert-comment"><span class="close-alert"><i class="fa fa-close"></i></span></p>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="col-md-3 rating-title">Đánh giá công thức</div>
                                         <div class="col-md-8">
                                             <fieldset class="rating-recipe">
                                                 <input type="radio" id="star5" name="rating" value="5" /><label class="full" for="star5" title="Awesome - 5 stars"></label>
-                                                <input type="radio" id="star4half" name="rating" value="4 and a half" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
+                                                <input type="radio" id="star4half" name="rating" value="4.5" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
                                                 <input type="radio" id="star4" name="rating" value="4" /><label class="full" for="star4" title="Pretty good - 4 stars"></label>
-                                                <input type="radio" id="star3half" name="rating" value="3 and a half" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label>
+                                                <input type="radio" id="star3half" name="rating" value="3.5" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label>
                                                 <input type="radio" id="star3" name="rating" value="3" /><label class="full" for="star3" title="Meh - 3 stars"></label>
-                                                <input type="radio" id="star2half" name="rating" value="2 and a half" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
+                                                <input type="radio" id="star2half" name="rating" value="2.5" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
                                                 <input type="radio" id="star2" name="rating" value="2" /><label class="full" for="star2" title="Kinda bad - 2 stars"></label>
-                                                <input type="radio" id="star1half" name="rating" value="1 and a half" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label>
+                                                <input type="radio" id="star1half" name="rating" value="1.5" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label>
                                                 <input type="radio" id="star1" name="rating" value="1" /><label class="full" for="star1" title="Sucks big time - 1 star"></label>
-                                                <input type="radio" id="starhalf" name="rating" value="half" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
+                                                <input type="radio" id="starhalf" name="rating" value="0.5" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
                                             </fieldset>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <textarea name="comment" id="comment"
                                                   placeholder="Bình luận:
-* Mẹo: Nội dung đánh giá phải mang tính chất khách quan, từ chia sẻ đánh giá của bạn sẽ giúp rất nhiều cho người dùng có quyết định lựa chọn đúng đắn."></textarea>
+                                                  * Mẹo: Nội dung đánh giá phải mang tính chất khách quan, từ chia sẻ đánh giá của bạn sẽ giúp rất nhiều cho người dùng có quyết định lựa chọn đúng đắn."></textarea>
                                     </div>
                                 </div>
 
                                 <button class="submit-comment">Đánh giá</button>
-                            </form>
+                            </div>
                         </div>
 
 
@@ -183,21 +185,13 @@
             </div>
             <div class="col-md-12 modal-body">
                 <div class="col-md-5">
+                   
                     <div class="modal-component-1" id="modal-products">
-                        <style>
-                            .modal-list-product-item{
-
-                            }
-                            .modal-product-item {
-                                cursor: pointer;
-                            }
-                            .modal-product-item:hover {
-                                background-color: dodgerblue;
-                            }
-                        </style>
-                        <ul class="modal-list-product-item">
-                           
-                        </ul>
+                        <div class="email-field box-search-ingre">
+                            <input onkeyup="filterIngredients()" id="filter-ingredient" type="text" placeholder="Tìm kiếm">
+                            <button><i class="fa fa-search"></i></button>
+                        </div>
+                        <ul id="modal-list-item" class="modal-list-product-item"></ul>
                     </div>
                 </div>
                 <div class="col-md-7">
@@ -220,33 +214,26 @@
             var someText = "Công thức chi tiết";
             $('.main-heading h1').append(document.createTextNode(someText));
         };
-        var map, infoWindow;
+        var map, infoWindow, pos, marker;
         function initMap() {
-            //// The location of Uluru
-            //var uluru = { lat: -25.344, lng: 131.036 };
-            //// The map, centered at Uluru
-            //var map = new google.maps.Map(
-            //    document.getElementById('map'), { zoom: 4, center: uluru });
-            //// The marker, positioned at Uluru
-            //var marker = new google.maps.Marker({ position: uluru, map: map });
-
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 10.762622, lng: 106.660172 },
                 zoom: 15
             });
             infoWindow = new google.maps.InfoWindow;
-
-            // Try HTML5 geolocation.
+            marker = new google.maps.Marker;
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    var pos = {
+                    pos = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
                     };
-
+                    marker.setPosition(pos);
+                    marker.setMap(map);
+                    marker.setAnimation(google.maps.Animation.BOUNCE);
                     infoWindow.setPosition(pos);
                     infoWindow.setContent('Vị trí của bạn');
-                    infoWindow.open(map);
+                    infoWindow.open(map, marker);
                     map.setCenter(pos);
                 }, function () {
                     handleLocationError(true, infoWindow, map.getCenter());
@@ -314,22 +301,44 @@
         span.onclick = function () {
             modal.style.display = "none";
         }
-
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+            if (event.target.className == 'modal-product-item') {
+                var current = event.target;
+                var productId = current.getAttribute('data-product-id');
+                callReadNearByStoresApi(pos.lat, pos.lng, productId);
+            }
         }
 
-
-        $(".modal-product-item").on('click', function (e) {
-            var current = e.currentTarget;
-            var ingredient_name = current.getAttribute('data-ingredient-name');
+        function filterIngredients() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById("filter-ingredient");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("modal-list-item");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        };
+        var star;
+        $("input[name='rating']").on("click", function (e) {
+            star = parseFloat(e.target.value);
+            
         });
+        $(".submit-comment").on("click", function () {
+            var comment = $("textarea[name='comment']").val();
+            callCreateRatingRecipeApi(@(RouteData.Values["recipe_id"]), star, comment);
 
-
-
+        });
     </script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo&callback=initMap">

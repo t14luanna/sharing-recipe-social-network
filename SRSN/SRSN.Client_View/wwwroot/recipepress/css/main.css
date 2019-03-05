@@ -5770,10 +5770,11 @@ div.widget-measurements {
 
     .tags-icons .details-social-icons a {
         color: #736e6b;
+        margin-right: 10px;
     }
 
         .tags-icons .details-social-icons a:hover {
-            color: #000000;
+            color: #6ebe3b;
         }
 
 .related-recipes .rating-box {
@@ -8026,19 +8027,22 @@ div.widget-measurements {
 }
 
 .slide-detail-inner p, .recipe-content-inner p, .detail p {
-    display: -webkit-box!important;
+    display: -webkit-box !important;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .fa-eye, fa-star-half-o {
     font-size: 13px;
 }
-.img-step-recipe{
+
+.img-step-recipe {
     width: 306px;
     height: 222px;
 }
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -8084,18 +8088,20 @@ input:-webkit-autofill:active {
         cursor: pointer;
     }
 
-.img-post-newsfeed{
+.img-post-newsfeed {
     width: 100%;
     height: 230px;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
 }
+
 .fa-map-marker {
     font-size: 20px;
     color: #64ad36;
 }
-}
+
+
 
 /*Search bar CSS*/
 #custom-advance-search {
@@ -8112,25 +8118,63 @@ input:-webkit-autofill:active {
     left: 0;
     top: 100%;
     z-index: 1;
-
     display: none;
     flex-direction: column;
 }
 
-#custom-quick-result * {
-    padding: 5px 10px;
-    width: 100%;
-    height: max-content;
-    margin-bottom: 10px;
-    transition: background-color 0.2s ease-in-out;
+    #custom-quick-result * {
+        padding: 5px 10px;
+        width: 100%;
+        height: max-content;
+        margin-bottom: 10px;
+        transition: background-color 0.2s ease-in-out;
+        cursor: pointer;
+    }
 
+        #custom-quick-result *:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        #custom-quick-result *:last-of-type {
+            margin: unset;
+        }
+
+#myBtn{
+    cursor: pointer
+}
+.box-search-ingre{
+    margin-bottom:10px;
+}
+.modal-product-item {
     cursor: pointer;
+    font-family: "Times New Roman", Times, serif
+}
+#modal-list-item {
+    height: 300px;
+    overflow-y: auto !important
 }
 
-#custom-quick-result *:hover {
-    background-color: rgba(0,0,0,0.1);
+.modal-product-item:hover {
+    color: #c1452b;
 }
-
-#custom-quick-result *:last-of-type {
-    margin: unset;
+.comment-form .form-rating {
+    background-color: #ffffff;
+    padding: 25px;
+    color: black;
+}
+.alert-comment{
+    display: none;
+}
+.avatar-comment{
+    width: 83px;
+    height: 78px;
+}
+.alert-success{
+    display: none;
+}
+.comment-rating-star {
+    float: right
+}
+.fa-star {
+    color: #FFED85
 }

@@ -48,7 +48,8 @@ const callNewsfeedPageApi = async () => {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
-        }
+        },
+        
     });
     var data = await res.json();
     var count = 0;

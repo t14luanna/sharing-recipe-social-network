@@ -12,5 +12,8 @@ namespace SRSN.DatabaseManager.ViewModels
         public string CollectionName { get; set; }
         public string UserId { get; set; }
         public bool? Active { get; set; }
+        public int? SaveCount { get; set; }
+        public string CoverImage { get; set; }
+        public string FullName { get; set; }
     }
 }

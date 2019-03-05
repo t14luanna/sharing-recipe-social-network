@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -121,6 +122,7 @@ namespace SRSN.ClientApi.Controllers
             }
             return list;
         }
+        
         [HttpGet("get-popular")]
         [AllowAnonymous]
         public async Task<IEnumerable<AccountViewModel>> GetPopular()
@@ -146,7 +148,19 @@ namespace SRSN.ClientApi.Controllers
             }
             return list;
         }
+        [HttpGet("read-userinfo")]
+        public async Task<ActionResult> readUserFromToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var readToken = handler.ReadJwtToken(token);
+            string userId = readToken.Payload.First().Value.ToString();
 
+            var user = await userManager.FindByIdAsync(userId);
+            var userVM = new AccountViewModel();
+            mapper.Map(user, userVM);
+            return Ok(userVM);
+
+        }
         [HttpGet("read-username")]
         public async Task<ActionResult<AccountViewModel>> findUsername(string username)
         {
@@ -179,7 +193,7 @@ namespace SRSN.ClientApi.Controllers
                 return null;
             }
         }
-
+        
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> UpdateProfile([FromBody] AccountEditViewModel data)

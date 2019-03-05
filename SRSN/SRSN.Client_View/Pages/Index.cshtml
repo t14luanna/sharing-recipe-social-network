@@ -78,9 +78,7 @@
                                                         <ul>
                                                             <li>
                                                                 <a href="#"><i class="fa fa-bell"></i></a>
-                                                                <ul id="list-notification">
-                                                                    
-                                                                </ul>
+                                                                <ul id="list-notification"></ul>
                                                             </li>
                                                             <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
                                                         </ul>
@@ -130,7 +128,7 @@
                                 <a href="blog.html">Blog</a>
 
                             </li>
-                            <li><a href="elements.html">Bộ sưu tập</a></li>
+                            <li><a href="/Collection">Bộ sưu tập</a></li>
                             <li><a href="contact.html">Liên hệ</a></li>
                             <li class="submit-recipe"><a href="/SubmitRecipe">Đăng công thức</a></li>
                         </ul>
@@ -187,7 +185,7 @@
                         <fieldset>
                             <div class="inner-advance-search" style="width: 50%">
                                 <div id="custom-advance-search" class="form-field">
-                                    <input id="custom-input-search" style="outline: none; border: 1px solid grey; font-size: 2rem; padding: 0px 10px; border-radius: 5px; " type="text" value="" />
+                                    <input id="custom-input-search" style="outline: none; border: 1px solid grey; font-size: 2rem; padding: 0px 10px; border-radius: 5px; "type="text" value="" />
                                     <div id="custom-quick-result"></div>
                                 </div>
                                 <button id="searchBtn" style="width: 100px; border-radius: 5px; height: 40px" type="submit"><i class="fa fa-search"></i></button>
@@ -354,7 +352,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="footer-copyright text-center wow animated flipInY" >
+                <div class="footer-copyright text-center wow animated flipInY">
                     <p>&copy; Copyright 2015 All Rights Reserved by <a href="#">Majestic Themes</a></p>
                 </div>
                 <div class="corner-image wow animated fadeInRight">
@@ -365,13 +363,14 @@
     </div>
 
     <!--footer ends-->
-   
+
 
 </body>
 <!-- Mirrored from templates.majesticthemes.com/recipepress/v6.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:13:42 GMT -->
 </html>
 
 
+<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
 <script src="/recipepress/js/jquery-1.11.3.min.js"></script>
 <script src="/recipepress/js/jquery-ui.js"></script>
 <script src="/recipepress/js/slick.min.js"></script>
@@ -387,6 +386,7 @@
 <script src="~/js/recipe.js"></script>
 <script src="~/js/SearchPageResult.js"></script>
 <script type="text/javascript">
+
         // fetch and render element to html
         (async () => {
             await callPopularRecipeBannerApi();
@@ -398,7 +398,7 @@
             await callListCategoryItem();
             await attachInputSearchCallback();
             
-    })();
+})();
 
 </script>
 <script>
@@ -415,7 +415,16 @@
             .then(res => res.json())
             .then(response => {
                 localStorage.setItem("recipeName", $('searchString').val());
-                window.location.pathname = '/SearchRecipe';
+                var searchValue = $('#custom-input-search').val();
+                var win = window.open('/RecipeSearch?recipeName=' + searchValue);
+                if (win) {
+                    //Browser has allowed it to be opened
+                    win.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                }
+                //window.location.pathname = '/SearchRecipe';
                 console.log(response);
             })
             .catch(error => {
@@ -423,5 +432,7 @@
             });
     });
 </script>
+
 <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+
 

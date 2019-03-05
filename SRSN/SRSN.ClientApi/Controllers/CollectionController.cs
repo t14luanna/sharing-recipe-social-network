@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
 
@@ -16,14 +18,16 @@ namespace SRSN.ClientApi.Controllers
     [Authorize]
     public class CollectionController : ControllerBase
     {
+        private UserManager<SRSNUser> userManager;
         private ICollectionService collectionService;
         /// <summary>
         /// Constructor cua controller Recipe
         /// Nhan vao 1 dbContext duoc new san o Startup.cs
         /// </summary>
         /// <param name="dbContext"></param>
-        public CollectionController(ICollectionService collectionService)
+        public CollectionController(UserManager<SRSNUser> userManager, ICollectionService collectionService)
         {
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.collectionService = collectionService;
         }
         /// <summary>
@@ -62,7 +66,19 @@ namespace SRSN.ClientApi.Controllers
         {
             return Ok(collectionService.Get(u => u.UserId.Equals(userId) && u.Active == true));
         }
-
+        [HttpGet("read-top-collection")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ReadTopPopularCollection()
+        {
+            try
+            {
+                return Ok(await collectionService.GetTopCollection(this.userManager));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpPut("update")]
         public async Task<ActionResult> Update([FromBody] CollectionViewModel request)
         {

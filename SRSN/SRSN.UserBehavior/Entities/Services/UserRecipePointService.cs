@@ -27,5 +27,10 @@ namespace SRSN.UserBehavior.Entities.Services
             }
             return null;
         }
+        public void Update(UserRecipePoint data)
+        {
+            this.dbSet.Attach(data).State = EntityState.Modified;
+            uow.Commit();
+        }
     }
 }

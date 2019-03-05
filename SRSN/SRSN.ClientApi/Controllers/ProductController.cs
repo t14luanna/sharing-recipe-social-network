@@ -32,6 +32,19 @@ namespace SRSN.ClientApi.Controllers
                 return Ok(new List<ProductViewModel>());
             }
         }
-
+        [HttpGet("read-nearby-store")]
+        public ActionResult ReadNearByStore([FromQuery]int productId, [FromQuery] double userLat, [FromQuery] double userLong)
+        {
+            try
+            {
+                var listStore = productService.GetListStoreByProductID(productId, userLat, userLong);
+                return Ok(listStore);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new List<ProductViewModel>());
+            }
+        }
     }
+
 }

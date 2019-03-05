@@ -21,7 +21,8 @@ namespace SRSN.DatabaseManager
         public static void Entry(IServiceCollection services, IConfiguration configuration)
         {
             // cau hinh db context
-            services.AddDbContext<CookyDemoContext>(builder => {
+            services.AddDbContext<CookyDemoContext>(builder =>
+            {
                 builder.UseSqlServer(configuration.GetConnectionString("DbConnectionString"));
             });
             services.AddDbContext<SRSNIdentityDbContext>(builder =>
@@ -51,11 +52,11 @@ namespace SRSN.DatabaseManager
                     ValidateAudience = false
                 };
             });
-           
-            services.AddScoped(typeof(IdentityDbContext<SRSNUser, IdentityRole<int>,int>), typeof(SRSNIdentityDbContext));
+
+            services.AddScoped(typeof(IdentityDbContext<SRSNUser, IdentityRole<int>, int>), typeof(SRSNIdentityDbContext));
             services.AddScoped(typeof(SRSNUserManager));
             services.AddScoped(typeof(DbContext), typeof(CookyDemoContext));
-            
+
             // cau hinh Services
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRecipeService), typeof(RecipeService));
@@ -70,9 +71,11 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(IIngredientsService), typeof(IngredientsService));
             services.AddScoped(typeof(IPostService), typeof(PostService));
             services.AddScoped(typeof(IProductService), typeof(ProductService));
+            services.AddScoped(typeof(IUserFollowingService), typeof(UserFollowingService));
 
             // cau hinh AutoMapper
-            var mapperConfig = new MapperConfiguration(mc => {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
                 mc.CreateMissingTypeMaps = true;
 
                 // chung ta se cau hinh ignore tai day
@@ -87,8 +90,8 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<Collection, CollectionViewModel>();
 
                 mc.CreateMap<AccountEditViewModel, SRSNUser>()
-                    .ForMember(x => x.AccessFailedCount, y=> y.Ignore())
-                    .ForMember(x => x.ConcurrencyStamp, y=> y.Ignore())
+                    .ForMember(x => x.AccessFailedCount, y => y.Ignore())
+                    .ForMember(x => x.ConcurrencyStamp, y => y.Ignore())
                     .ForMember(x => x.EmailConfirmed, y => y.Ignore())
                     .ForMember(x => x.LockoutEnabled, y => y.Ignore())
                     .ForMember(x => x.LockoutEnd, y => y.Ignore())
@@ -131,16 +134,19 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<Notification, NotificationViewModel>();
 
                 mc.CreateMap<CategoryViewModel, CategoryMain>();
-                mc.CreateMap<CategoryMain , CategoryViewModel>();
+                mc.CreateMap<CategoryMain, CategoryViewModel>();
 
                 mc.CreateMap<PostViewModel, Post>();
                 mc.CreateMap<Post, PostViewModel>();
+
+                mc.CreateMap<AccountViewModel, UserFollowing>();
+                mc.CreateMap<UserFollowing, AccountViewModel>();
 
                 mc.CreateMap<CategoryItemViewModel, StepsOfRecipe>();
                 mc.CreateMap<StepsOfRecipe, CategoryItemViewModel>();
 
                 mc.CreateMap<ProductViewModel, Products>()
-                    .ForMember(x => x.Brand, y=>y.Ignore());
+                    .ForMember(x => x.Brand, y => y.Ignore());
                 mc.CreateMap<Products, ProductViewModel>();
 
             });

@@ -1,5 +1,5 @@
 ﻿var getSearchResultAPI = (recipe) =>
-    `                            <div class="listing" itemid="${recipe.id}">
+    `<div class="listing" itemid="${recipe.id}">
                                 <div class="image">
                                     <a href="#">
                                         <img src="${recipe.imageCover}" alt="image"/>
@@ -27,17 +27,24 @@
                             </div>`;
 
 const callSearchResultAPI = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-recipename");
-    var data = await res.json();
+
+    var url = window.location.href;
+    var recipeName = url.split("=")[1];
+    console.log(recipeName);
+    var res = await fetch("https://localhost:44361/api/recipe/read-recipename-page?recipeName=" + recipeName);
+    var a = await res.json();
+    var data = a.result;
     var count = 0;
+    //console.log(data);
+    //console.log(res.result);
+
     for (var item of data) {
+        console.log(item);
         count++;
         let element = getSearchResultAPI(item);
-        $("#list-popular-recipe-widget").append(element);
-        if (count >= 5) {
-            break;
-        }
-    }
+        $("#list-latest-recipe-page").append(element);
+        
+    } 
 };
 
 

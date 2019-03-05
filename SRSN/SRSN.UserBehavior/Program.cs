@@ -5,6 +5,7 @@ using SRSN.UserBehavior.Redis;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using SRSN.UserBehavior.CollaborativeFilteringCore;
 
 namespace SRSN.UserBehavior
 {
@@ -49,9 +50,13 @@ namespace SRSN.UserBehavior
                 using (var unitOfWork = new UnitOfWork())
                 using (var redisClient = RedisUtil.GetDatabase().GetClient())
                 {
+                    var userRecipePointService = new UserRecipePointService(unitOfWork);
+
+                    var dataMining = new DataMining(userRecipePointService);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Loading user recipe point data...");
-                    var userRecipePointService = new UserRecipePointService(unitOfWork);
+                    dataMining.CalculateTruePointOfUserRecipeRating();
+                    Console.WriteLine("Loading user recipe point data...");
                     var data = userRecipePointService.GetListUserRecipePoints().Result;
                     Console.WriteLine("Loading user recipe point data success!\n");
                     Console.WriteLine("Start collaborative filtering system");
