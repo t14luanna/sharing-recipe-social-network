@@ -19,7 +19,7 @@
 const callPopularCollectionPageApi = async () => {
     var res = await fetch("https://localhost:44361/api/collection/read-top-collection");
     var data = await res.json();
-    var count = 0;
+   
     for (var item of data) {
         count++;
         var noImgUrl = '/recipepress/images/no-image-icon-15.png'

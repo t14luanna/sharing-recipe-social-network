@@ -67,7 +67,8 @@ const createSingleStepOfRecipe = (step) =>
     </dd>`;
 
 const createSingleRelatedRecipe = (recipe) =>
-    `<div class="recipe-single">
+    `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
             <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image"></a>
         </div>
@@ -90,8 +91,9 @@ const createSingleRelatedRecipe = (recipe) =>
         </div>
     </div>`;
 const createSingleRecipeDetailPageElement = (recipe) =>
-    ` <li>
-            <div class="thumb">
+    ` <li onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
+            <div class="thumb" >
                 <a href="/recipe/${recipe.id}">
                     <img src="${recipe.imageCover}" alt="thumbnail" />
                 </a>
@@ -102,7 +104,8 @@ const createSingleRecipeDetailPageElement = (recipe) =>
             </div>
         </li>`;
 const createSingleRecipeDetailElement = (recipe) =>
-    `<li>
+    `<li onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="thumb">
             <a href="/recipe/${recipe.id}">
                 <img src="${recipe.imageCover}" alt="thumbnail" />
@@ -161,7 +164,7 @@ const callListCategoryItemDetailPage = async () => {
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
             let element = createSingleCategoryItemDetailPage(cateItem);
-            $("#list-category-item-recipe-detail").append(element);
+            $("#list-category-item-recipe-detail").append(element); 
         }
     }
 };

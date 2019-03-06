@@ -83,7 +83,7 @@
 
                         <div class="col-md-2">
                             <div class="logo-wrapper">
-                                <a href="#"><img src="/recipepress/images/logo.png" alt="logo" /></a>
+                                <a href="/index"><img src="/recipepress/images/logo.png" alt="logo" /></a>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -320,6 +320,11 @@
         };
         firebase.initializeApp(config);
         var username = window.localStorage.getItem("username");
+
+        //token
+        var authorization = localStorage.getItem("authorization");
+        var token = (JSON.parse(authorization))["token"];//dựa vào token để lấy noti, ko dựa vào id sẽ bị lộ
+       
         if (username != null) {
 
             var myDataRef = firebase.database().ref(username);
@@ -343,10 +348,12 @@
                 displayNotifi(text);
             });
         }
-
+        //var myDataRef = firebase.database().ref("eyJuYW1laWQiOiIyNyIsInVuaXF1ZV9uYW1lIjoibmdoaWFoaCIsIm5iZiI6MTU1MTg0MzIwNSwiZXhwIjoxNTUyNDczMjA1LCJpYXQiOjE1NTE4NDMyMDUsImlzcyI6Imh0dHA6Ly9zcnNuLmNvbSIsImF1ZCI6Imh0dHA6Ly9zcnNuLmNvbSJ9");
         //myDataRef.push({
-        //    "1": "121",
-        //    "2": "28/2/2019"
+        //    "1": "hom nay ngay 6/3",
+        //    "2": "6/3/2019",
+        //    "3": "link",
+        //    "isRead": "True"
         //});
         function displayNotifi(name) {
             let element = createSingleNotificationElement(name);

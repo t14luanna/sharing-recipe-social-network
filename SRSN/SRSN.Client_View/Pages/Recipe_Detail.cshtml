@@ -20,11 +20,11 @@
                             <div class="ingredients-checkbox">
                                 <div class="ingredients">
                                     <h3>Nguyên liệu</h3>
-                                    
+
                                     <ul id="list-of-ingredients"></ul>
                                     <div class="col-md-12">
                                         @*<button id="myBtn">Open Modal</button>*@
-                                        <a id="myBtn"  class="default-btn mid-button theme-color pull-right">Cửa hàng gần nhất</a>
+                                        <a id="myBtn" class="default-btn mid-button theme-color pull-right">Cửa hàng gần nhất</a>
                                     </div>
                                 </div>
                             </div>
@@ -185,7 +185,7 @@
             </div>
             <div class="col-md-12 modal-body">
                 <div class="col-md-5">
-                   
+
                     <div class="modal-component-1" id="modal-products">
                         <div class="email-field box-search-ingre">
                             <input onkeyup="filterIngredients()" id="filter-ingredient" type="text" placeholder="Tìm kiếm">
@@ -332,7 +332,7 @@
         var star;
         $("input[name='rating']").on("click", function (e) {
             star = parseFloat(e.target.value);
-            
+
         });
         $(".submit-comment").on("click", function () {
             var comment = $("textarea[name='comment']").val();
@@ -344,3 +344,5 @@
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo&callback=initMap">
     </script>
 }
+<script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
+<script src="~/js/recipe.js"></script>

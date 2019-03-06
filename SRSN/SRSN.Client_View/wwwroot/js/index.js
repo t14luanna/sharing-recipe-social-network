@@ -2,7 +2,8 @@
 const createSingleNotificationElement = (name) =>
     `<li ><a href="#">${name}</a></li>`;
 const createSingleRecipeElement = (singeRecipe) =>
-    `<div class="recipe-single animated wow flipInY">
+    `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${singeRecipe.id},'${singeRecipe.recipeName}', '${singeRecipe.imageCover}',
+                                                                                        '${new Date(singeRecipe.createTime).getDay() + "/" + new Date(singeRecipe.createTime).getMonth() + "/" + new Date(singeRecipe.createTime).getFullYear()}')">
         <div class="recipe-image">
             <a href="/recipe/${singeRecipe.id}"><img src="${singeRecipe.imageCover}" alt="image" /></a>
         </div>
@@ -31,7 +32,8 @@ const createSingleRecipeElement = (singeRecipe) =>
         </div>
     </div>`;
 const createSingleLatestRecipeElement = (recipe) =>
-    `<div class="recipe-single animated wow flipInY">
+    `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
             <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
         </div>
@@ -54,7 +56,8 @@ const createSingleLatestRecipeElement = (recipe) =>
         </div>
     </div>`;
 const createSingleRandomRecipeElement = (recipe) =>
-    `<div class="recipe-single animated wow flipInY">
+    `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                     <div class="recipe-image">
                                         <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
                                     </div>
@@ -71,7 +74,8 @@ const createSingleRandomRecipeElement = (recipe) =>
                                     </div>
       </div>`;
 const createSingleRecipeWidgetElement = (recipe) =>
-    `<li>
+    `<li onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                             <div class="thumb">
                                                 <a href="/recipe/${recipe.id}">
                                                     <img src="${recipe.imageCover}" alt="thumbnail" />
@@ -83,7 +87,8 @@ const createSingleRecipeWidgetElement = (recipe) =>
                                             </div>
                                         </li>`;
 const createSingleBanner = (recipe) =>
-    `<div class="slide-detail-inner">
+    `<div class="slide-detail-inner" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                             <h2><a href="/recipe/${recipe.id}">${recipe.recipeName}</a></h2>
                             <div class="short-separator"></div>
                             <div class="rating-box">
@@ -99,7 +104,8 @@ const createSingleBanner = (recipe) =>
                             <a class="read-more-bordered" href="/recipe/${recipe.id}">Read More</a>
                         </div>`;
 const createSingleRecipeOfDay = (recipe) =>
-    `<img src="${recipe.imageCover}" alt="Recipe of the day">
+    `<img src="${recipe.imageCover}" alt="Recipe of the day" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                             <div class="recipe-contents-outer">
                                 <div class="recipe-contents text-center">
                                     <div class="recipe-content-inner">

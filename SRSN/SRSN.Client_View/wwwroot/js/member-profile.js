@@ -135,11 +135,19 @@ const createContactInfo = (user) =>
                                                             </tr>
                                                         </tbody>
                                                     </table>`;
-const callAccountInfoApi = async () => {
+const callAccountInforApi = async () => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
+    var res = await fetch("https://localhost:44361/api/account/read-userinfo", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
 
-    var res = await fetch(`https://localhost:44361/api/account/read-userinfo?token=${token}`);
+    });
+
+
     var data = await res.json();
     var element = createAvatarContainer(data);
     $("#avatar-container").append(element);

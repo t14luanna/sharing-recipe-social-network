@@ -100,8 +100,10 @@
 
     </div>
 </div>
+<script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
 
 <script src="~/js/login.js"></script>
+<script src="~/js/recipe.js"></script>
 @section Scripts
     {
     <script>
@@ -124,21 +126,21 @@
                     'Content-Type': 'application/json'
                 }
             })
-            .then(res => res.json())
-            .then(response => {
-                if (response.success) {
-                    localStorage.setItem("authorization", JSON.stringify(response.token));
-                    localStorage.setItem("username", $("#usernameVM").val());
-                    window.location.href = '/';
-                } else {
-                    var errorP = document.createElement("p");
-                    errorP.append(response.message);
-                    $("#area-error").html(errorP.outerHTML);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-            });
+                .then(res => res.json())
+                .then(response => {
+                    if (response.success) {
+                        localStorage.setItem("authorization", JSON.stringify(response.token));
+                        localStorage.setItem("username", $("#usernameVM").val());
+                        window.location.href = '/';
+                    } else {
+                        var errorP = document.createElement("p");
+                        errorP.append(response.message);
+                        $("#area-error").html(errorP.outerHTML);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error)
+                });
         });
 
     </script>

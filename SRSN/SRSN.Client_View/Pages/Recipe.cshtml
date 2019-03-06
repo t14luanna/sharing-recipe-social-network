@@ -4,6 +4,7 @@
     
     ViewData["Title"] = "Recipe page";
 }
+
     <div class="recipes-home-body inner-page">
         <div class="container">
             <div class="row">
@@ -66,7 +67,7 @@
                                     <li class="facebook">
                                         <a href="#">
                                             <i class="fa fa-facebook"></i>
-                                            <span class="count">23.5K</span>
+                                            <span class="count" >23.5K</span>
                                             <span class="count-type">Likes</span>
                                         </a>
                                     </li>
@@ -111,6 +112,10 @@
             await changeHeadername();
             await callPopularRecipePageApi();
             await callListCategoryItemRecipePage();
+            await loadRecipeLocalStorage();
         })();
+
+        
+        
     </script>
 }

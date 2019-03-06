@@ -86,15 +86,15 @@
                                 <nav class="nav-collapse">
                                     <ul class="main-menu left">
                                         <li>
-                                            <a href="index.html">Trang chủ</a>
+                                            <a href="/index">Trang chủ</a>
                                         </li>
                                         <li>
-                                            <a href="recipe-listing.html">Công thức</a>
+                                            <a href="/recipe">Công thức</a>
                                         </li>
                                         <li>
-                                            <a href="#">Cộng đồng</a>
+                                            <a href="/newsfeed">Cộng đồng</a>
                                         </li>
-                                        <li><a href="our-chefs.html">Top Thành viên</a></li>
+                                        <li><a href="/topUsers">Top Thành viên</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -102,7 +102,7 @@
 
                         <div class="col-md-2">
                             <div class="logo-wrapper">
-                                <a href="#"><img src="~/recipepress/images/logo.png" alt="logo" /></a>
+                                <a href="/index"><img src="~/recipepress/images/logo.png" alt="logo" /></a>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -135,7 +135,7 @@
                                         <li>
                                             <a href="blog.html">blog</a>
                                         </li>
-                                        <li><a href="elements.html">Bộ sưu tập</a></li>
+                                        <li><a href="/collection">Bộ sưu tập</a></li>
                                         <li><a href="contact.html">Liên hệ</a></li>
                                         <li><a class="submit-recipe" href="submit-recipe.html">Đăng công thức</a></li>
                                     </ul>
@@ -172,7 +172,7 @@
                                             <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
                                                 <li><a href="member-activity-personal.html">Dòng thời gian</a></li>
                                                 <li class="active"><a href="/account/information">Giới thiệu</a></li>
-                                                <li><a href="/memberfriends">Đang theo dõi(231)</a></li>
+                                                <li><a href="/memberfriends">Đang theo dõi(<span id="count-friends"></span>)</a></li>
                                                 <li><a href="member-groups.html">C.thức của tôi(1110)</a></li>
                                                 <li><a href="member-media-all.html">Q.lý nguyên liệu(56)</a></li>
                                             </ul>
@@ -181,7 +181,7 @@
                                         <!-- Profile Details Start -->
                                         <div class="profile--details fs--14">
                                             <!-- Profile Item Start -->
-                                            
+
                                             <div class="profile--item">
                                                 <div class="profile--heading">
                                                     <h3 class="h4 fw--700">
@@ -236,7 +236,7 @@
                                             </div>
                                         </div>
 
-                                       
+
                                         <!-- Profile Details End -->
                                     </div>
 
@@ -477,6 +477,7 @@
     </div>
     <!--footer ends-->
 
+
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
     <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="~/recipepress/js/jquery-ui.js"></script>
@@ -495,16 +496,22 @@
     <!-- ==== Color Switcher Plugin ==== -->
     <script src="~/recipepress/js/color-switcher.min.js"></script>
 
+
     <!-- ==== Main Script ==== -->
     <script src="~/recipepress/js/main.js"></script>
     <script src="~/js/member-profile.js"></script>
+
+   
+
 </body>
 </html>
 
 <script type="text/javascript">
     // fetch and render element to html
-    (async () => {
-        await callAccountInfoApi();
-    })();
-</script>
 
+    (async () => {
+        await callAccountInforApi();
+
+    })();
+
+</script>
