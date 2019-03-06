@@ -9,9 +9,11 @@ using SRSN.Service.Repositories;
 using SRSN.Service.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace SRSN.DatabaseManager.Services
 {
@@ -35,6 +37,7 @@ namespace SRSN.DatabaseManager.Services
         ICollection<RecipeViewModel> GetLastestRecipes();
         Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName);
         Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
+        Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(string categoryName);
     }
 
 
@@ -501,6 +504,32 @@ namespace SRSN.DatabaseManager.Services
 
                     list.Add(recipeViewModel);
 
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(string categoryName)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+                System.Diagnostics.Debug.WriteLine("chipcaber: " + categoryName);
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("Select Recipe.* FROM Recipe " +
+                    "INNER JOIN Recipe_Category ON Recipe.Id = Recipe_Category.RecipeId " +
+                    "INNER JOIN CategoryItem ON Recipe_Category.CategoryItemId = CategoryItem.Id " +
+                    "WHERE CategoryItem.CategoryItemName=N'" + categoryName + "'").ToList();
+
+                
+                foreach (var item in listItems)
+                {
+                    var recipeViewModel = this.EntityToVM(item);
+
+                    list.Add(recipeViewModel);
                 }
                 return list;
             }

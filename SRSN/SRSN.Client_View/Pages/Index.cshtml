@@ -397,6 +397,7 @@
             await callRandomRecipeApi();
             await callListCategoryItem();
             await attachInputSearchCallback();
+            await RedirectAPI();
             
 })();
 
@@ -431,6 +432,8 @@
                 console.error('Error:', error);
             });
     });
+
+    
 </script>
 
 <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>

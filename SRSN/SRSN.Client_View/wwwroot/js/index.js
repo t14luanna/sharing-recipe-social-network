@@ -115,7 +115,7 @@ const createSingleRecipeOfDay = (recipe) =>
                             </div>`;
 const createSingleCategoryItem = (item) =>
     ` <li>
-                                                <a href="#">${item.categoryItemName}</a>
+                                                <a href="#" class="text">${item.categoryItemName}</a>
                                                 <div class="list-icons">
                                                     <svg version="1.1" class="icon-container" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                                          width="42px" height="42px" viewBox="0 0 42 42" enable-background="new 0 0 42 42" xml:space="preserve">
@@ -135,6 +135,42 @@ const createSingleCategoryItem = (item) =>
                                                 </div>
                                             </li>
                                            `;
+
+const RedirectAPI = async () => {
+    $(".text").on("click", function (e) {
+        e.preventDefault();
+        var categoryName = $(this).text();
+        console.log(categoryName);
+        fetch("https://localhost:44361/api/recipe/read-recipe-by-category?categoryName=" + categoryName,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            })
+            .then(res => res.json())
+            .then(response => {
+                
+                var win = window.open('/RecipeByCategory?categoryName=' + categoryName);
+                if (win) {
+                    //Browser has allowed it to be opened
+                    win.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                }
+                //window.location.pathname = '/SearchRecipe';
+                console.log(response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+};
+    
+
+
+//choxem khúc giao diện
 const callListCategoryItem = async () => {
     var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
     var data = await res.json();
@@ -282,6 +318,8 @@ const attachInputSearchCallback = () => {
         $("#custom-quick-result").css('display', 'none');
     })
 }
+
+
 // load recipe
 //$(document).ready((e) => {
 //    callPopularRecipeBannerApi();
@@ -335,3 +373,4 @@ function displayNotifi(name) {
     let element = createSingleNotificationElement(name);
     $("#list-notification").prepend(element);
 };
+
