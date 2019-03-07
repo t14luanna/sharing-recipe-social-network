@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SRSN.DatabaseManager.Entities
+namespace SRSN.UserBehavior.Entities
 {
-    public partial class UserRecipePoint
+    public partial class UserReactionRecipe
     {
         public int UserId { get; set; }
         public int RecipeId { get; set; }

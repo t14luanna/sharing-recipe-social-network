@@ -45,6 +45,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public double EvRating { get; set; }
         public string FullName { get; set; }
         public string Avarta { get; set; }
+        public string Description { get; set; }
         public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
         public List<RecipeIngredientViewModel> listIngredient { get; set; }
         public List<RecipeCategoryViewModel> listCategory { get; set; }

@@ -117,7 +117,7 @@ const createProductItemElement = (product) =>
     `<li class="modal-product-item" data-product-id="${product.id}" data-product-name="${product.name}">${product.name}</li>`;
 
 const createSingleRatingComment = (comment) =>
-    `<li>
+    `<li data-user-id="${comment.id}" name="main-comment">
        
         <div class="avatar">
 
@@ -131,7 +131,7 @@ const createSingleRatingComment = (comment) =>
             <p>
                 ${comment.contentRating}
             </p>
-                <a href="#" class="reply-button">Reply</a>                        
+                <a href="#/" onclick="openReplyView(${comment.id})" class="reply-button">Reply</a>                        
         </div>
     </li>`;
 const createSingleCategoryItemDetailPage = (item) =>
@@ -155,6 +155,33 @@ const createSingleCategoryItemDetailPage = (item) =>
 </svg>
                                                 </div>
                                             </li>`;
+const createChefByRecipeId = (chef) => `<h3 class="lined">About Chef</h3>
+    <div class="listing">
+        <div class="image">
+            <div class="image-inner">
+                <a href="#"><img src="${chef.avatarImageUrl}" alt="chef"/></a>
+            </div>
+        </div>
+        <div class="detail">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h4><a href="#">${chef.username}</a></h4>
+
+                </div>
+                <div class="col-sm-4">
+                    <ul class="chef-social-links">
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <p>
+               ${ chef.description }
+            </p>
+            <a href="#" class="read-more-angle">Read More</a>
+        </div>
+    </div>`;
 const callListCategoryItemDetailPage = async () => {
     var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
     var data = await res.json();
@@ -276,7 +303,16 @@ const callStepOfRecipeApi = async (id) => {
     }
 };
 
+const callChefRecipeApi = async (id) => {
 
+    var res = await fetch(`https://localhost:44361/api/recipe/read-recipe-chef?recipeId=${id}`);
+    var data = (await res.json());
+    var chef = data.accountVM;
+    var description = chef.description != null ? chef.description : "";
+    chef.description = description;
+    let chefView = createChefByRecipeId(chef);
+    $(".about-chef").append(chefView);
+};
 const callReadNearByStoresApi = async (userLat, userLong, productId) => {
 
     var res = await fetch(`https://localhost:44361/api/product/read-nearby-store?userLat=${userLat}&userLong=${userLong}&productId=${productId}`);
@@ -337,3 +373,25 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
         callReadRatingCommentApi(recipeId);
     }
 };
+const createReplyView = (replyUser) => `<ul>
+                <li>
+                    <div class="avatar">
+                        <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar"/></a>
+                    </div>
+                    <div class="comment">
+                        <h5><a href="#">${replyUser.username}</a></h5>
+                        <div class="comment-form">
+                            <textarea class="reply-comment" name="message" id="message" cols="3" rows="3"></textarea>
+                                        <a href="#" class="reply-button">Đăng</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>`;
+const openReplyView = async (cmtId) =>{
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var res = await fetch(`https://localhost:44361/api/account/read-userinfo?token=${token}`);
+    var data = (await res.json());
+    let chefView = createReplyView(data);
+    $(`li[data-user-id=${cmtId}]`).append(chefView);
+}

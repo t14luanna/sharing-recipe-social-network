@@ -10,14 +10,14 @@ namespace SRSN.UserBehavior.Entities.Services
     public class UserRecipePointService
     {
         private UnitOfWork uow;
-        private DbSet<UserRecipePoint> dbSet;
+        private DbSet<UserReactionRecipe> dbSet;
         public UserRecipePointService(UnitOfWork uow)
         {
             this.uow = uow;
-            this.dbSet = this.uow.GetDbContext().Set<UserRecipePoint>();
+            this.dbSet = this.uow.GetDbContext().Set<UserReactionRecipe>();
         }
 
-        public async Task<List<UserRecipePoint>> GetListUserRecipePoints()
+        public async Task<List<UserReactionRecipe>> GetListUserRecipePoints()
         {
             var set = this.dbSet.AsNoTracking();
             var numberOfRow = await set.CountAsync();
@@ -27,7 +27,7 @@ namespace SRSN.UserBehavior.Entities.Services
             }
             return null;
         }
-        public void Update(UserRecipePoint data)
+        public void Update(UserReactionRecipe data)
         {
             this.dbSet.Attach(data).State = EntityState.Modified;
             uow.Commit();

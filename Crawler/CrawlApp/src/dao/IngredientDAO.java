@@ -22,7 +22,7 @@ public class IngredientDAO {
             return;
         }
         Connection connection = DBUtils.getConnection();
-        String sql = "Insert into Products (Name, Price, Image,BrandId) "
+        String sql = "Insert into Products (Name, Price, ImageUrl,BrandId) "
                 + " values (?, ?, ?, ?) ";
 
         PreparedStatement statement = connection.prepareStatement(sql);

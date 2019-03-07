@@ -18,7 +18,7 @@ namespace SRSN.UserBehavior
         private static string redisRecommenderItemBased = "RCS_Recipe_";
         private static string redisRecommenderUserBased = "RCS_User_";
 
-        private UserRecipePoint[] data;
+        private UserReactionRecipe[] data;
         private Matrix<double> normalizedMatrix;
         private Matrix<double> similarityMatrix;
 
@@ -31,7 +31,7 @@ namespace SRSN.UserBehavior
         private int numberOfUsers;
         private int numberOfItems;
 
-        public CollaborativeFiltering(UserRecipePoint[] data, int k, bool isUucf)
+        public CollaborativeFiltering(UserReactionRecipe[] data, int k, bool isUucf)
         {
             this.data = data;
             this.users = data.Select(x => x.UserId).ToArray();
@@ -43,7 +43,7 @@ namespace SRSN.UserBehavior
         }
         public void Normalize()
         {
-            UserRecipePoint[] tempData = new UserRecipePoint[this.data.Count()];
+            UserReactionRecipe[] tempData = new UserReactionRecipe[this.data.Count()];
             this.data.CopyTo(tempData, 0);
             var mu = np.zeros(numberOfUsers);
 

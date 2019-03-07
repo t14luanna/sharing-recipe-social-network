@@ -20,11 +20,10 @@
                             <div class="ingredients-checkbox">
                                 <div class="ingredients">
                                     <h3>Nguyên liệu</h3>
-                                    
+
                                     <ul id="list-of-ingredients"></ul>
                                     <div class="col-md-12">
-                                        @*<button id="myBtn">Open Modal</button>*@
-                                        <a id="myBtn"  class="default-btn mid-button theme-color pull-right">Cửa hàng gần nhất</a>
+                                        <a id="btn-suggest-ingredients" class="default-btn mid-button theme-color pull-right">Cửa hàng gần nhất</a>
                                     </div>
                                 </div>
                             </div>
@@ -47,16 +46,18 @@
                                     </div>
                                     <div class="col-sm-5">
                                         <div class="details-social-icons">
-                                            <a href="#" title="Like"><i class="fa fa-2x fa-heart-o"></i></a>
-                                            <a href="#" title="Chia sẻ"><i class="fa fa-2x fa-share"></i></a>
-                                            <a href="#" title="Thêm vào BST"><i class="fa fa-2x fa-plus"></i></a>
+                                            <a href="#/" title="Like" class="like-button">
+                                                <i class=" fa fa-2x fa-heart-o" onclick="toggleLikeButton(this)"></i>
+                                            </a>
+                                            <a id="btn-share-recipe" title="Chia sẻ"><i class="fa fa-2x fa-share"></i></a>
+                                            <a href="#/" title="Thêm vào BST"><i class="fa fa-2x fa-plus"></i></a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-
+                        <div class="about-chef"></div>
 
                         <div class="related-recipes">
                             <h3 class="lined">Related Recipes</h3>
@@ -177,7 +178,33 @@
 
     </div>
     <!-- The Modal -->
-    <div id="myModal" class="modal">
+    <div id="modal-suggest-ingredients" class="modal">
+        <!-- Modal content -->
+        <div class="row modal-content">
+            <div class="col-md-12 modal-header">
+                <span id="close-modal-suggest" class="close">&times;</span>
+            </div>
+            <div class="col-md-12 modal-body">
+                <div class="col-md-5">
+
+                    <div class="modal-component-1" id="modal-products">
+                        <div class="email-field box-search-ingre">
+                            <input onkeyup="filterIngredients()" id="filter-ingredient" type="text" placeholder="Tìm kiếm">
+                            <button><i class="fa fa-search"></i></button>
+                        </div>
+                        <ul id="modal-list-item" class="modal-list-product-item"></ul>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="modal-component-2">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="modal-share-recipe" class="modal">
         <!-- Modal content -->
         <div class="row modal-content">
             <div class="col-md-12 modal-header">
@@ -185,7 +212,7 @@
             </div>
             <div class="col-md-12 modal-body">
                 <div class="col-md-5">
-                   
+
                     <div class="modal-component-1" id="modal-products">
                         <div class="email-field box-search-ingre">
                             <input onkeyup="filterIngredients()" id="filter-ingredient" type="text" placeholder="Tìm kiếm">
@@ -255,6 +282,7 @@
             await changeHeadername();
             await callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
             await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));
+            await callChefRecipeApi(@(RouteData.Values["recipe_id"]));
             await callPopularRecipeDetailPageApi();
             await callLatestRecipeDetailApi();
 
@@ -283,28 +311,19 @@
                 $(this).addClass('current').next('dd').stop(true, true).slideDown(500).siblings('dd').stop(true, true).slideUp(500);
             });
         })();
-        // Get the modal
-        var modal = document.getElementById('myModal');
 
-        // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
+        $("#btn-suggest-ingredients").on("click", function (e) {
+            $("#modal-suggest-ingredients").css("display", "block")
 
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
+        });
+        $("#close-modal-suggest").on("click", function (e) {
+            $("#modal-suggest-ingredients").css("display", "none")
 
-        // When the user clicks the button, open the modal
-        btn.onclick = function () {
-            modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
+        });
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
+            if (event.target.id == "modal-suggest-ingredients") {
+                $("#modal-suggest-ingredients").css("display", "none");
             }
             if (event.target.className == 'modal-product-item') {
                 var current = event.target;
@@ -332,13 +351,37 @@
         var star;
         $("input[name='rating']").on("click", function (e) {
             star = parseFloat(e.target.value);
-            
+
         });
         $(".submit-comment").on("click", function () {
             var comment = $("textarea[name='comment']").val();
             callCreateRatingRecipeApi(@(RouteData.Values["recipe_id"]), star, comment);
 
         });
+        async function toggleLikeButton(x) {
+            try {
+                var token = JSON.parse(localStorage.getItem('authorization')).token;
+                var recipeId = @(RouteData.Values["recipe_id"]);
+                var res = await fetch(`https://localhost:44361/api/userreactionrecipe/like?recipeId=${recipeId}`, {
+                    method: 'get',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
+                var data = await res.json();
+                if (data.isLike) {
+                    x.classList.add("fa-heart");
+                }
+                else {
+                    x.classList.remove("fa-heart");
+
+                }
+            } catch (e) {
+                alert("Like không thành công")
+
+            }
+        }
     </script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo&callback=initMap">

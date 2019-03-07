@@ -252,6 +252,22 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("read-recipe-chef")]
+        public async Task<ActionResult> ReadChefByRecipeId(int recipeId)
+        {
+            try
+            {
+                var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
+                var recipeUserID = await userManager.FindByIdAsync(recipe.UserId);
+                recipe.AccountVM = new AccountViewModel();
+                mapper.Map(recipeUserID, recipe.AccountVM);
+                return Ok(recipe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
     #endregion
 }

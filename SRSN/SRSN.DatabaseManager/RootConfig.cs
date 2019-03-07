@@ -63,7 +63,7 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(ICollectionService), typeof(CollectionService));
             services.AddScoped(typeof(IStepsOfRecipeService), typeof(StepsOfRecipeService));
             services.AddScoped(typeof(IUserBlockService), typeof(UserBlockService));
-            services.AddScoped(typeof(ILikePostService), typeof(LikePostService));
+            services.AddScoped(typeof(IUserReactionPostService), typeof(UserReactionService));
             services.AddScoped(typeof(ICommentService), typeof(CommentService));
             services.AddScoped(typeof(IRatingRecipeService), typeof(RatingRecipeService));
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));
@@ -72,6 +72,7 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(IPostService), typeof(PostService));
             services.AddScoped(typeof(IProductService), typeof(ProductService));
             services.AddScoped(typeof(IUserFollowingService), typeof(UserFollowingService));
+            services.AddScoped(typeof(IUserReactionRecipeService), typeof(UserReactionRecipeService));
 
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc =>
@@ -111,7 +112,7 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<UserBlockViewModel, UserBlock>()
                    .ForMember(x => x.BlockedUser, y => y.Ignore())
                    .ForMember(x => x.User, y => y.Ignore());
-                mc.CreateMap<LikePostViewModel, LikePost>()
+                mc.CreateMap<UserReactionViewModel, UserReactionPost>()
                   .ForMember(x => x.User, y => y.Ignore())
                   .ForMember(x => x.Post, y => y.Ignore());
                 mc.CreateMap<RecipeIngredientViewModel, RecipeIngredient>()
@@ -149,6 +150,11 @@ namespace SRSN.DatabaseManager
                     .ForMember(x => x.Brand, y => y.Ignore());
                 mc.CreateMap<Products, ProductViewModel>();
 
+                mc.CreateMap<UserReactionRecipe, UserReactionRecipeViewModel>();
+                mc.CreateMap<UserReactionRecipeViewModel, UserReactionRecipe>()
+                    .ForMember(x => x.RatingRecipe, y => y.Ignore())
+                    .ForMember(x => x.Recipe, y => y.Ignore())
+                    .ForMember(x => x.User, y => y.Ignore());
             });
             var mapper = mapperConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);

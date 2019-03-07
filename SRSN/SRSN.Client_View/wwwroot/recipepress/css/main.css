@@ -8178,3 +8178,21 @@ input:-webkit-autofill:active {
 .fa-star {
     color: #FFED85
 }
+.like-button {
+    cursor: pointer;
+    user-select: none;
+}
+.like-button .fa-heart{
+    color: orangered
+}
+.fa-heart:before {
+    content: "\f004" !important
+}
+.user-reply-comment{
+    width: 83px;
+    height: 77px;
+}
+.comment-form .reply-comment {
+    height: 80px!important;
+    margin-bottom: 20px!important;
+}

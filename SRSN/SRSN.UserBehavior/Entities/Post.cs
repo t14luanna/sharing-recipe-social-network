@@ -8,7 +8,7 @@ namespace SRSN.UserBehavior.Entities
         public Post()
         {
             Comment = new HashSet<Comment>();
-            LikePost = new HashSet<LikePost>();
+            UserReactionPost = new HashSet<UserReactionPost>();
         }
 
         public int Id { get; set; }
@@ -27,6 +27,6 @@ namespace SRSN.UserBehavior.Entities
         public virtual Recipe Recipe { get; set; }
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }
-        public virtual ICollection<LikePost> LikePost { get; set; }
+        public virtual ICollection<UserReactionPost> UserReactionPost { get; set; }
     }
 }

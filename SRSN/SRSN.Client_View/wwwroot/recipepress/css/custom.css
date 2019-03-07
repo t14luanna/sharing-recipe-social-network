@@ -99,3 +99,6 @@
 .boxed-recipes .recipe-image{
     height:206px!important;
 }
+.modal .modal-content {
+    overflow: hidden;
+}
