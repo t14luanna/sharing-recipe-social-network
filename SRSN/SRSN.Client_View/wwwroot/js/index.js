@@ -115,7 +115,7 @@ const createSingleRecipeOfDay = (recipe) =>
                             </div>`;
 const createSingleCategoryItem = (item) =>
     ` <li>
-                                                <a href="#">${item.categoryItemName}</a>
+                                                <a href="#" class="text">${item.categoryItemName}</a>
                                                 <div class="list-icons">
                                                     <svg version="1.1" class="icon-container" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                                          width="42px" height="42px" viewBox="0 0 42 42" enable-background="new 0 0 42 42" xml:space="preserve">
@@ -135,6 +135,42 @@ const createSingleCategoryItem = (item) =>
                                                 </div>
                                             </li>
                                            `;
+
+const RedirectAPI = async () => {
+    $(".text").on("click", function (e) {
+        e.preventDefault();
+        var categoryName = $(this).text();
+        console.log(categoryName);
+        fetch("https://localhost:44361/api/recipe/read-recipe-by-category?categoryName=" + categoryName,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            })
+            .then(res => res.json())
+            .then(response => {
+                
+                var win = window.open('/RecipeByCategory?categoryName=' + categoryName);
+                if (win) {
+                    //Browser has allowed it to be opened
+                    win.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                }
+                //window.location.pathname = '/SearchRecipe';
+                console.log(response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+};
+    
+
+
+//choxem khúc giao diện
 const callListCategoryItem = async () => {
     var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
     var data = await res.json();
@@ -173,31 +209,35 @@ const callLatestRecipeApi = async () => {
     }
 };
 const callPopularRecipeBannerApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
-    var data = await res.json();
-    var count = 0;
-    for (let item of data) {
-        count++;
-        switch (count) {
-            case 1:
-                var element = createSingleBanner(item);
-                $("#single-banner1").append(element);
+    try {
+        var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+        var data = await res.json();
+        var count = 0;
+        for (let item of data) {
+            count++;
+            switch (count) {
+                case 1:
+                    var element = createSingleBanner(item);
+                    $("#single-banner1").append(element);
+                    break;
+                case 2:
+                    var element = createSingleBanner(item);
+                    $("#single-banner2").append(element);
+                    break;
+                case 3:
+                    var element = createSingleBanner(item);
+                    $("#single-banner3").append(element);
+                    break;
+            }
+            if (count == 3) {
                 break;
-            case 2:
-                var element = createSingleBanner(item);
-                $("#single-banner2").append(element);
-                break;
-            case 3:
-                var element = createSingleBanner(item);
-                $("#single-banner3").append(element);
-                break;
+            }
         }
-        if (count == 3) {
-            break;
-        }
+    } catch (e) {
+        console.log(e);
     }
 };
-const getRecipeResult = (recipe) => `<div>${recipe.recipeName}</div>`
+const getRecipeResult = (recipe) => `<div class="quick-search-item" onclick="bindingQuickSearchValue('${recipe.recipeName}')">${recipe.recipeName}</div>`
 const getUserName = (account) => `<div>${account.userName}</div>`
 const callPopularRecipeApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-popular");
@@ -262,26 +302,42 @@ const callSearchRecipeApi = async (searchVal) => {
     $('#custom-quick-result').css('display', 'flex');
 }
 
+var bindingQuickSearchValue = function (quickSearchValue) {
+    $("#custom-input-search").val(quickSearchValue);
+
+    $("#custom-quick-result div").remove();
+    $("#custom-quick-result").css('display', 'none');
+};
+
 const attachInputSearchCallback = () => {
     $('#custom-input-search').on("keyup", function () {
         var searchVal = $("#custom-input-search").val();
         callSearchRecipeApi(searchVal);
     })
 
-    $("#custom-input-search").on("focus", function () {
-        var searchVal = $("#custom-input-search").val();
-        if (searchVal) {
-            callSearchRecipeApi(searchVal);
-        } else {
-            return;
-        }
-    })
+    //$("#custom-input-search").on("focus", function () {
+    //    var searchVal = $("#custom-input-search").val();
+    //    if (searchVal) {
+    //        callSearchRecipeApi(searchVal);
+    //    } else {
+    //        return;
+    //    }
+    //})
 
-    $("#custom-input-search").on("blur", function () {
-        $("#custom-quick-result div").remove();
-        $("#custom-quick-result").css('display', 'none');
-    })
+    $(document).on("click", function (e) {
+        if (e.target.className != "quick-search-item" && e.target.id != "custom-input-search") {
+            $("#custom-quick-result div").remove();
+            $("#custom-quick-result").css('display', 'none');
+        }
+    });
+
+    //$("#custom-input-search").on("blur", function () {
+    //    $("#custom-quick-result div").remove();
+    //    $("#custom-quick-result").css('display', 'none');
+    //})
 }
+
+
 // load recipe
 //$(document).ready((e) => {
 //    callPopularRecipeBannerApi();
@@ -335,3 +391,4 @@ function displayNotifi(name) {
     let element = createSingleNotificationElement(name);
     $("#list-notification").prepend(element);
 };
+

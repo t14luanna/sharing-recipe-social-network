@@ -114,7 +114,7 @@ const callAccountApi = async () => {
     var data = await response.json();
     for (var item of data) {
         let element = readPopularUser(item);
-        $("#wrapper- head-chef").append(element);
+        $("#wrapper-head-chef").append(element);
     }
 };
 
