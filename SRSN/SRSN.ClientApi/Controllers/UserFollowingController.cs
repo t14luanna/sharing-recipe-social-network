@@ -23,11 +23,13 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpGet("read-following-user")]
-        public async Task<ActionResult> ReadFollowingUser(int userId)
+        public async Task<ActionResult> ReadFollowingUser(string userName)
         {
             try
             {
-                return Ok(await userFollowingService.getAllFollowingUser(userManager, userId));
+                var user = await userManager.FindByNameAsync(userName);
+                int userid = user.Id;
+                return Ok(await userFollowingService.getAllFollowingUser(userManager, userid));
             }
             catch (Exception ex)
             {

@@ -106,6 +106,15 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(user, userVM);
             return Ok(userVM);
         }
+        [HttpGet("read-username-profile")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ReadByUserName(string userName)
+        {
+            var user = await userManager.FindByNameAsync(userName);
+            var userVM = new AccountViewModel();
+            mapper.Map(user, userVM);
+            return Ok(userVM);
+        }
 
 
         [HttpGet("get-top-ten")]

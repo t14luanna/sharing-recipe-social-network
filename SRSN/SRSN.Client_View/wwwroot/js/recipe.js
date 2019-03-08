@@ -1,41 +1,4 @@
-﻿
-$('#pagination-container').pagination({
-    dataSource: 'https://localhost:44361/api/recipe/read-latest-page',
-    locator: '',// array
-    totalNumberLocator: function (response) {
-        return response.length;
-    },
-    //totalNumber: 40,
-    pageSize: 9,
-    ajax: {
-        beforeSend: function () {
-            $('#list-latest-recipe-page').html('Đang tải dữ liệu ...');
-        }
-    },
-    callback: function (data, pagination) {
-        // template method of yourself
-        var html = template(data, pagination);
-        $('#list-latest-recipe-page').html(html);
-    }
-})
-var template = function (data, pagination) {
-    var pageSize = pagination.pageSize;
-    var currentPageNumber = pagination.pageNumber - 1;
-    var s = "";
-    
-    var count = 0;
-    while (count < pageSize) {
-        var i = currentPageNumber * pageSize + count;
-        if (i >= data.length) {
-            break;
-        }
-        s += createSingleLatestRecipeElementPage(data[i]);
-        count++;
-    }
-    return s;
-}
-
-function saveToLocalStorage(idRe, nameRe, imageRe, dateRe) {
+﻿function saveToLocalStorage(idRe, nameRe, imageRe, dateRe) {
     
     if (typeof (Storage) !== "undefined") {
         var recipe = {};
@@ -82,7 +45,7 @@ function saveToLocalStorage(idRe, nameRe, imageRe, dateRe) {
         
 
     
-}
+};
 
 var createSingleLatestRecipeElementPage = (recipe) =>
     `                            <div class="listing" itemid="${recipe.id}" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
@@ -192,11 +155,12 @@ const callPopularRecipePageApi = async () => {
     var count = 0;
     for (var item of data) {
         count++;
-        let element = createSingleRecipeWidgetPageElement(item);
+        var element = createSingleRecipeWidgetPageElement(item);
         $("#list-popular-recipe-widget").append(element);
         if (count >= 5) {
             break;
         }
     }
 };
+
 

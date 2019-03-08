@@ -24,6 +24,7 @@
                         <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
                     </div>
                 </div>
+
                 <span class="custom-arrows wider">
                     <span class="left-arrow slick-arrow" data-direction="prev" style="display: table-cell;"><i class="fa fa-arrow-left"></i></span>
                     <span class="right-arrow slick-arrow" data-direction="next" style="display: table-cell;"><i class="fa fa-arrow-right"></i></span>
@@ -35,6 +36,7 @@
                 <li><span>Độ khó : </span>${recipe.levelRecipe}</li>
             </ul>
         </div>
+        <a href="${recipe.videoLink}" class="swipebox slider-video-button">Watch Video</a>
     </div>`;
 const createContentRecipe = (recipe) =>
     `<span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>&nbsp&nbsp(${recipe.evRating} / 5)</span>

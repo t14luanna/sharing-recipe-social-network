@@ -1,10 +1,10 @@
 ﻿const readTopTenUsers = (account) =>
  `<li>
     <div class="single-chef">
-        <a href="#"><img src=${account.avatarImageUrl} alt="team" /></a>
+        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="team" /></a>
         <div class="chef-detail">
             <div class="chef-detail-inner">
-                <h4>${account.firstName}</h4>
+                <h4>${account.firstName} ${account.lastName}</h4>
                 <span class="type">executive chef</span>
                 <p>${account.description}</p>
                 <ul class="social-icons-chef">
@@ -20,10 +20,10 @@
 
 const readTopUser = (account) =>
     `<div class="left-side" >
-                        <a href="#"><img src=${account.avatarImageUrl} alt="head chef" /></a>
+                        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="head chef" /></a>
                     </div>
                     <div class="right-side">
-                        <h3><a href="#">${account.firstName}</a></h3>
+                        <h3><a href="/account/information/${account.username}">${account.firstName} ${account.lastName}</a></h3>
                         <span class="type">head chef</span>
                         <ul class="expertise">
                             <li>
