@@ -5,8 +5,9 @@
     "\\SRSN\\SRSN.ClientApi",
     "\\SRSN\\SRSN.DatabaseManager",
     "\\SRSN\\SRSN.DatabaseManager\\Entities",
+    "\\SRSN\\SRSN.DatabaseManager\\Services",
     "\\SRSN\\SRSN.DatabaseManager\\ViewModels"
   ],
-  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\ViewModels\\PostViewModel.cs",
+  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\Services\\RecipeService.cs",
   "PreviewInSolutionExplorer": false
 }
