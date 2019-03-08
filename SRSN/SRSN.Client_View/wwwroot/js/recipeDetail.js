@@ -24,6 +24,7 @@
                         <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
                     </div>
                 </div>
+
                 <span class="custom-arrows wider">
                     <span class="left-arrow slick-arrow" data-direction="prev" style="display: table-cell;"><i class="fa fa-arrow-left"></i></span>
                     <span class="right-arrow slick-arrow" data-direction="next" style="display: table-cell;"><i class="fa fa-arrow-right"></i></span>
@@ -35,6 +36,7 @@
                 <li><span>Độ khó : </span>${recipe.levelRecipe}</li>
             </ul>
         </div>
+        <a href="${recipe.videoLink}" class="swipebox slider-video-button">Watch Video</a>
     </div>`;
 const createContentRecipe = (recipe) =>
     `<span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>&nbsp&nbsp(${recipe.evRating} / 5)</span>
@@ -67,7 +69,8 @@ const createSingleStepOfRecipe = (step) =>
     </dd>`;
 
 const createSingleRelatedRecipe = (recipe) =>
-    `<div class="recipe-single">
+    `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
             <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image"></a>
         </div>
@@ -90,8 +93,9 @@ const createSingleRelatedRecipe = (recipe) =>
         </div>
     </div>`;
 const createSingleRecipeDetailPageElement = (recipe) =>
-    ` <li>
-            <div class="thumb">
+    ` <li onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
+            <div class="thumb" >
                 <a href="/recipe/${recipe.id}">
                     <img src="${recipe.imageCover}" alt="thumbnail" />
                 </a>
@@ -102,7 +106,8 @@ const createSingleRecipeDetailPageElement = (recipe) =>
             </div>
         </li>`;
 const createSingleRecipeDetailElement = (recipe) =>
-    `<li>
+    `<li onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="thumb">
             <a href="/recipe/${recipe.id}">
                 <img src="${recipe.imageCover}" alt="thumbnail" />
@@ -188,7 +193,7 @@ const callListCategoryItemDetailPage = async () => {
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
             let element = createSingleCategoryItemDetailPage(cateItem);
-            $("#list-category-item-recipe-detail").append(element);
+            $("#list-category-item-recipe-detail").append(element); 
         }
     }
 };

@@ -140,7 +140,7 @@
                             </div>
                             <div class="category-list">
                                 <!--<div class="list-inner">-->
-                                <ul id="list-category-item-recipe-page"></ul>
+                                <ul id="list-category-item-submitpage"></ul>
                                 <!--</div>-->
                             </div>
                         </div>
@@ -148,7 +148,7 @@
                         <!--popular recipes widget-->
                         <div class="widget latest-news-widget">
                             <h2>popular recipes</h2>
-                            <ul id="list-popular-recipe-widget"></ul>
+                            <ul id="list-popular-recipe-widget-submitpage"></ul>
                         </div>
                         <!--popular recipes widget ends-->
                         <div class="widget">
@@ -159,7 +159,7 @@
                         <!--latest news widget-->
                         <div class="widget latest-news-widget">
                             <h2>Latest News</h2>
-                            <ul id="list-latest-recipe-submit-page"></ul>
+                            <ul id="list-latest-recipe-widget-submitpage"></ul>
                         </div>
                         <!--latest news widget ends-->
                         <!--get social-->
@@ -285,6 +285,8 @@
 <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="~/js/submit-recipe.js"></script>
 
+<script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
+<script src="~/js/recipe.js"></script>
 <script src="~/recipepress/js/jquery-ui.js"></script>
 
 <script src="~/recipepress/js/slick.min.js"></script>
@@ -295,7 +297,6 @@
 <script src="~/recipepress/js/jquery.validate.min.js"></script>
 <script src="~/recipepress/js/jquery.swipebox.js"></script>
 <script src="~/recipepress/js/custom.js"></script>
-<script type="text/javascript" src="~/js/recipe.js"></script>
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
@@ -310,8 +311,9 @@
         (async () => {
             await changeHeadername();
             await loadcategory();
-            await callPopularRecipePageApi();
-            //await callListCategoryItemRecipePage();
+            await callLatestRecipeWidgetSubmitPageApi();
+            await callListCategoryItemSubmitPageApi();
+            await callPopularSubmitPageApi();
         })();
 
     </script>

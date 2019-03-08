@@ -1,5 +1,6 @@
 ﻿const createSingleRecipeWidgetLoginPage = (recipe) =>
-    ` <li>
+    ` <li onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')>
                                         <div class="thumb">
                                             <a href="/recipe/${recipe.id}">
                                                 <img src="${recipe.imageCover}" alt="thumbnail" />

@@ -106,6 +106,15 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(user, userVM);
             return Ok(userVM);
         }
+        [HttpGet("read-username-profile")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ReadByUserName(string userName)
+        {
+            var user = await userManager.FindByNameAsync(userName);
+            var userVM = new AccountViewModel();
+            mapper.Map(user, userVM);
+            return Ok(userVM);
+        }
 
 
         [HttpGet("get-top-ten")]
@@ -149,11 +158,10 @@ namespace SRSN.ClientApi.Controllers
             return list;
         }
         [HttpGet("read-userinfo")]
-        public async Task<ActionResult> readUserFromToken(string token)
+        public async Task<ActionResult> readUserFromToken()
         {
-            var handler = new JwtSecurityTokenHandler();
-            var readToken = handler.ReadJwtToken(token);
-            string userId = readToken.Payload.First().Value.ToString();
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var user = await userManager.FindByIdAsync(userId);
             var userVM = new AccountViewModel();

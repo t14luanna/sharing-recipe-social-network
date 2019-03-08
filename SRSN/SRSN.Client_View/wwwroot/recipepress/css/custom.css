@@ -84,21 +84,92 @@
     background-color: #64ad36;
     color: white;
 }
+
 .modal-component-1, .modal-component-2 {
     border: 2px solid #64ad36;
     border-radius: 3px;
     height: 350px;
 }
+
 #map {
     width: 100%;
     height: 100%;
 }
-.boxed-recipes .recipe-image img{
-    height: 100%!important;
+
+.boxed-recipes .recipe-image img {
+    height: 100% !important;
+}
+
+.boxed-recipes .recipe-image {
+    height: 206px !important;
+}
+
+/*notifi*/
+@-webkit-keyframes glowing {
+    0% {
+        color: #ffffff;
+    }
+
+    50% {
+        color: #ff000c;
+    }
+
+    100% {
+        color: #d3344c;
+    }
+}
+
+@-moz-keyframes glowing {
+    0% {
+        color: #ffffff;
+    }
+
+    50% {
+        color: #ff000c;
+    }
+
+    100% {
+        color: #d3344c;
+    }
+}
+
+@-o-keyframes glowing {
+    0% {
+        color: #ffffff;
+    }
+
+    50% {
+        color: #ff000c;
+    }
+
+    100% {
+        color: #d3344c;
+    }
+}
+
+@keyframes glowing {
+    0% {
+        color: #ffffff;
+    }
+
+    50% {
+        color: #ff000c;
+    }
+
+    100% {
+        color: #d3344c;
+    }
 }
 .boxed-recipes .recipe-image{
     height:206px!important;
 }
 .modal .modal-content {
     overflow: hidden;
+}
+
+#noti-color {
+    -webkit-animation: glowing 1500ms infinite;
+    -moz-animation: glowing 1500ms infinite;
+    -o-animation: glowing 1500ms infinite;
+    animation: glowing 1500ms infinite;
 }

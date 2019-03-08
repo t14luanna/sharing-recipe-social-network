@@ -34,8 +34,7 @@ namespace SRSN.DatabaseManager.Services
                 var user = await userManager.FindByIdAsync(item.FollowingUserId.ToString());
                 var userVM = new AccountViewModel();
                 mapper.Map(user, userVM);
-                
-                
+                                
                 listAccount.Add(userVM);
             }
 

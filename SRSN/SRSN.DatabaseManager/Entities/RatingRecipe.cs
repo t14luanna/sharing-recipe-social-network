@@ -6,7 +6,7 @@ namespace SRSN.DatabaseManager.Entities
     public partial class RatingRecipe
     {
         public int Id { get; set; }
-        public double? Star { get; set; }
+        public int? Star { get; set; }
         public int? UserId { get; set; }
         public int? RecipeId { get; set; }
         public string ImageUrl { get; set; }

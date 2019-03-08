@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "/account/memberfriends/{userName}"
 @model SRSN.Client_View.Pages.MemberFriendsModel
 @{
     Layout = null;
@@ -23,7 +23,7 @@
     <link href='https://fonts.googleapis.com/css?family=Karla:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <!--jquery ui stylesheet-->
-    <link rel="stylesheet" href="../../code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
 
     <!-- site favicon -->
     <link rel="icon" href="~/recipepress/images/favicon.png" />
@@ -63,6 +63,8 @@
 
     <!-- ==== Custom Stylesheet ==== -->
     <link rel="stylesheet" href="~/recipepress/css/custom.css">
+
+    <link rel="stylesheet" href="~/recipepress/css/rankuser.css">
 </head>
 
 <body>
@@ -91,15 +93,15 @@
                                 <nav class="nav-collapse">
                                     <ul class="main-menu left">
                                         <li>
-                                            <a href="index.html">Trang chủ</a>
+                                            <a href="/index">Trang chủ</a>
                                         </li>
                                         <li>
-                                            <a href="recipe-listing.html">Công thức</a>
+                                            <a href="/recipe">Công thức</a>
                                         </li>
                                         <li>
-                                            <a href="#">Cộng đồng</a>
+                                            <a href="/newsfeed">Cộng đồng</a>
                                         </li>
-                                        <li><a href="our-chefs.html">Top Thành viên</a></li>
+                                        <li><a href="/topUsers">Top Thành viên</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -107,7 +109,7 @@
 
                         <div class="col-md-2">
                             <div class="logo-wrapper">
-                                <a href="#"><img src="~/recipepress/images/logo.png" alt="logo" /></a>
+                                <a href="/index"><img src="~/recipepress/images/logo.png" alt="logo" /></a>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -122,7 +124,7 @@
                                         <ul>
                                             <li>
                                                 <a href="#"><i class="fa fa-bell"></i></a>
-                                                <ul id="list-notifi"></ul>
+                                                <ul id="list-notification"></ul>
                                             </li>
                                             <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
                                         </ul>
@@ -140,7 +142,7 @@
                                         <li>
                                             <a href="blog.html">blog</a>
                                         </li>
-                                        <li><a href="elements.html">Bộ sưu tập</a></li>
+                                        <li><a href="/collection">Bộ sưu tập</a></li>
                                         <li><a href="contact.html">Liên hệ</a></li>
                                         <li><a class="submit-recipe" href="submit-recipe.html">Đăng công thức</a></li>
                                     </ul>
@@ -162,27 +164,8 @@
 
                     <!-- Cover Header Start -->
                     <div class="cover--header pt--80 text-center" data-bg-img="img/cover-header-img/bg-01.jpg" data-overlay="0.6" data-overlay-color="white">
-                        <div class="container">
-                            <div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
-                                <img src="~/recipepress/img/cover-header-img/avatar-01.jpg" alt="">
-                            </div>
+                        <div class="container" id="avatar-container">
 
-                            <div class="cover--user-name">
-                                <h2 class="h3 fw--600">Eileen K. Ruiz</h2>
-                            </div>
-
-                            <div class="cover--user-activity">
-                                <p>
-                                    <i class="fa mr--8 fa-clock-o"></i>Active 1 year 9 monts ago
-                                </p>
-                            </div>
-
-                            <div class="cover--user-desc fw--400 fs--18 fstyle--i text-darkest">
-                                <p>
-                                    Hello everyone ! There are many variations of passages of Lorem Ipsum available, but the
-                                    majority have suffered alteration in some form, by injected humour.
-                                </p>
-                            </div>
                         </div>
                     </div>
                     <!-- Cover Header End -->
@@ -197,8 +180,8 @@
                                         <div class="content--nav pb--30">
                                             <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
                                                 <li><a href="member-activity-personal.html">Dòng thời gian</a></li>
-                                                <li><a href="member-profile.html">Giới thiệu</a></li>
-                                                <li class="active"><a href="member-friends.html">Đang theo dõi(231)</a></li>
+                                                <li><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
+                                                <li class="active"><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
                                                 <li><a href="member-groups.html">Công thức của tôi(1110)</a></li>
                                                 <li><a href="member-media-all.html">Quản lý nguyên liệu(56)</a></li>
                                             </ul>
@@ -221,554 +204,12 @@
                                         <!-- Filter Nav End -->
                                         <!-- Member Items Start -->
                                         <div class="member--items">
-                                            <div class="row gutter--15 AdjustRow">
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="~/recipepress/img/members-img/member-01.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Rosa R. Secor</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="~/recipepress/img/members-img/member-02.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Juan Bishop</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="~/recipepress/img/members-img/member-03.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Kelly Salazar</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="img/members-img/member-04.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Gregory L. Caudill</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="img/members-img/member-05.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">William P. Waite</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="img/members-img/member-06.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Eileen K. Ruiz</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="img/members-img/member-07.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Byron H. Robinson</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="img/members-img/member-08.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Kelly Brewer</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="img/members-img/member-09.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Jessica James</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="img/members-img/member-10.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Kelvin S. Williams</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="img/members-img/member-11.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Denise K. Chambers</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
-
-                                                <div class="col-md-3 col-xs-6 col-xxs-12">
-                                                    <!-- Member Item Start -->
-                                                    <div class="member--item online">
-                                                        <div class="img img-circle">
-                                                            <a href="member-activity-personal.html" class="btn-link">
-                                                                <img src="img/members-img/member-12.jpg" alt="">
-                                                            </a>
-                                                        </div>
-
-                                                        <div class="name">
-                                                            <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">Brendan K. Heywood</a>
-                                                            </h3>
-                                                        </div>
-
-                                                        <div class="activity">
-                                                            <p>
-                                                                <i class="fa mr--8 fa-clock-o"></i>Active 5 monts ago
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="actions">
-                                                            <ul class="nav">
-                                                                <li>
-                                                                    <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-envelope-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Add Friend" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" title="Media" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-folder-o"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Member Item End -->
-                                                </div>
+                                            <div class="row gutter--15 AdjustRow" id="list-following-user">
                                             </div>
-                                        </div>
-                                        <!-- Member Items End -->
-                                        <!-- Page Count Start -->
-                                        <div class="page--count pt--30">
-                                            <label class="ff--primary fs--14 fw--500 text-darker">
-                                                <span>Viewing</span>
 
-                                                <a href="#" class="btn-link">
-                                                    <i class="fa fa-caret-left"></i>
-                                                </a>
-                                                <input type="number" name="page-count" value="01" class="form-control form-sm">
-                                                <a href="#" class="btn-link">
-                                                    <i class="fa fa-caret-right"></i>
-                                                </a>
-
-                                                <span>of 68</span>
-                                            </label>
+                                            <div id="pagination-container" class="page-nav"></div>
                                         </div>
-                                        <!-- Page Count End -->
+
                                     </div>
                                 </div>
                                 <!-- Main Content End -->
@@ -960,7 +401,7 @@
                                         <!-- Ad Widget Start -->
                                         <div class="ad--widget">
                                             <a href="#">
-                                                <img src="img/widgets-img/ad.jpg" alt="" class="center-block">
+                                                <img src="~/recipepress/img/widgets-img/ad.jpg" alt="" class="center-block">
                                             </a>
                                         </div>
                                         <!-- Ad Widget End -->
@@ -990,7 +431,7 @@
                     <div class="msg-list">
                         <div class="incoming_msg incoming_msg-chatbox">
                             <div class="incoming_msg_img">
-                                <img class="receiver-avatar" src="img/topics-img/avatar-01.jpg" alt="sunil">
+                                <img class="receiver-avatar" src="~/recipepress/img/topics-img/avatar-01.jpg" alt="sunil">
                             </div>
                             <div class="received_msg">
                                 <div class="received_withd_msg">
@@ -1003,7 +444,7 @@
                         </div>
                         <div class="incoming_msg incoming_msg-chatbox">
                             <div class="incoming_msg_img">
-                                <img class="receiver-avatar" src="img/topics-img/avatar-01.jpg" alt="sunil">
+                                <img class="receiver-avatar" src="~/recipepress/img/topics-img/avatar-01.jpg" alt="sunil">
                             </div>
                             <div class="received_msg">
                                 <div class="received_withd_msg">
@@ -1016,7 +457,7 @@
                         </div>
                         <div class="incoming_msg incoming_msg-chatbox">
                             <div class="incoming_msg_img">
-                                <img class="receiver-avatar" src="img/topics-img/avatar-01.jpg" alt="sunil">
+                                <img class="receiver-avatar" src="~/recipepress/img/topics-img/avatar-01.jpg" alt="sunil">
                             </div>
                             <div class="received_msg">
                                 <div class="received_withd_msg">
@@ -1030,7 +471,7 @@
 
                         <div class="incoming_msg incoming_msg-chatbox">
                             <div class="incoming_msg_img">
-                                <img class="receiver-avatar" src="img/topics-img/avatar-01.jpg" alt="sunil">
+                                <img class="receiver-avatar" src="~/recipepress/img/topics-img/avatar-01.jpg" alt="sunil">
                             </div>
                             <div class="received_msg">
                                 <div class="received_withd_msg">
@@ -1069,7 +510,7 @@
             <div class="footer-inner">
                 <div class="text-center">
                     <a class="logo-footer" href="index.html">
-                        <img src="images/logo2.png" alt="Logo" />
+                        <img src="~/recipepress/images/logo2.png" alt="Logo" />
                     </a>
                     <p class="flipInX">
                         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
@@ -1145,7 +586,7 @@
                     </p>
                 </div>
                 <div class="corner-image fadeInRight">
-                    <img src="images/footer-corner-image.jpg" alt="image" />
+                    <img src="~/recipepress/images/footer-corner-image.jpg" alt="image" />
                 </div>
             </div>
         </div>
@@ -1153,6 +594,7 @@
     <!--footer ends-->
 
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+    <script src="~/js/notification.js"></script>
     <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="~/recipepress/js/jquery-ui.js"></script>
     <script src="~/recipepress/js/slick.min.js"></script>
@@ -1163,10 +605,16 @@
     <script src="~/recipepress/js/jquery.validate.min.js"></script>
     <script src="~/recipepress/js/jquery.swipebox.js"></script>
     <script src="~/recipepress/js/custom.js"></script>
-    <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    @*<script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>*@
     <script src="~/recipepress/js/plugins.min.js"></script>
+    <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
+    <script src="~/js/cover-header-profile.js"></script>
     <script src="~/js/member-friends.js"></script>
+
+
     <script src="~/js/site.js"></script>
+
+    @*<script src="~/js/site.js"></script>*@
 
     <!-- ==== Color Switcher Plugin ==== -->
     <script src="~/recipepress/js/color-switcher.min.js"></script>
@@ -1178,3 +626,16 @@
 <!-- Mirrored from templates.majesticthemes.com/recipepress/recipe-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:10:38 GMT -->
 
 </html>
+
+<script>
+     
+    // fetch and render element to html
+    (async () => {
+   
+     
+        await loadAvatarContainer("@(RouteData.Values["userName"])");
+        await callFollowingUserApi("@(RouteData.Values["userName"])");
+                
+    })();
+   
+</script>

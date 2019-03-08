@@ -14,6 +14,7 @@
     <link href='https://fonts.googleapis.com/css?family=Karla:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <!--jquery ui stylesheet-->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
     <!-- site favicon -->
     <link rel="icon" href="/recipepress/images/favicon.png" />
@@ -38,6 +39,7 @@
     <link rel="stylesheet" href="/recipepress/css/main.css" />
     <link rel="stylesheet" href="~/css/daterangepicker.css" />
     <link rel="stylesheet" href="~/recipepress/css/custom.css" />
+
     @RenderSection("StyleOptional", required: false)
 
 </head>
@@ -83,7 +85,7 @@
 
                         <div class="col-md-2">
                             <div class="logo-wrapper">
-                                <a href="#"><img src="/recipepress/images/logo.png" alt="logo" /></a>
+                                <a href="/index"><img src="/recipepress/images/logo.png" alt="logo" /></a>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -95,12 +97,13 @@
                                         <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
 
                                     </ul>
-                                    <div class="noti-message-icon" style="display:inline-table;">
+                                    <div class="noti-message-icon" style="display:none;">
                                         <nav class="nav-collapse header-social-icons">
                                             <ul>
                                                 <li>
-                                                    <a href="#"><i class="fa fa-bell"></i></a>
-                                                    <ul id="list-notification-layout"></ul>
+                                                    <a href="#"><i class="fa fa-bell" id="noti-color"></i></a>
+
+                                                    <ul id="list-notification"></ul>
                                                 </li>
                                                 <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
                                             </ul>
@@ -288,8 +291,6 @@
             </div>
         </div>
     </div>
-    <!--footer ends-->
-
 
     <script src="/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="/recipepress/js/jquery-ui.js"></script>
@@ -304,58 +305,13 @@
     <script src="~/js/moment.min.js"></script>
     <script src="/js/daterangepicker.min.js"></script>
     <script src="/recipepress/js/custom.js"></script>
-    <script src="/js/site.js"></script>
-    @RenderSection("Scripts", required: false)
+
+
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
-    <script>
+    <script src="~/js/notification.js"></script>
+    @RenderSection("Scripts", required: false)
 
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyAD2Vqg-rHzg9WJee0Yh0VGH_i_5BQT61E",
-            authDomain: "srsnproject.firebaseapp.com",
-            databaseURL: "https://srsnproject.firebaseio.com",
-            projectId: "srsnproject",
-            storageBucket: "srsnproject.appspot.com",
-            messagingSenderId: "237911674213"
-        };
-        firebase.initializeApp(config);
-        var username = window.localStorage.getItem("username");
-        if (username != null) {
-
-            var myDataRef = firebase.database().ref(username);
-            myDataRef.on('child_changed', function (snapshot) {
-                var text = "";
-                snapshot.forEach(function (childSnapshot) {
-                    //var childKey = childSnapshot.key;
-                    var childData = childSnapshot.val();
-                    text += childData + "<br/>";
-                });
-                displayNotifi(text);
-            });
-
-            myDataRef.on('child_added', function (snapshot) {
-                var text = "";
-                snapshot.forEach(function (childSnapshot) {
-                    //var childKey = childSnapshot.key;
-                    var childData = childSnapshot.val();
-                    text += childData + "<br/>";
-                });
-                displayNotifi(text);
-            });
-        }
-
-        //myDataRef.push({
-        //    "1": "121",
-        //    "2": "28/2/2019"
-        //});
-        function displayNotifi(name) {
-            let element = createSingleNotificationElement(name);
-            $("#list-notification-layout").prepend(element);
-        };
-        const createSingleNotificationElement = (name) =>
-            `<li ><a href="#">${name}</a></li>`;
-    </script>
-
+    <script src="/js/site.js"></script>
 
 </body>
 <!-- Mirrored from templates.majesticthemes.com/recipepress/recipe-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:10:38 GMT -->
