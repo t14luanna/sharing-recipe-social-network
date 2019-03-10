@@ -45,5 +45,36 @@ namespace SRSN.ClientApi.Controllers
             }
         }
 
+        [HttpGet("is-like")]
+        [Authorize]
+        public async Task<ActionResult> IsLikeRecipe([FromQuery]int recipeId)
+        {
+            try
+            {
+                // Lay ra user id tu Tokentry 
+                var userIdStr = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
+                var userId = int.Parse(userIdStr);
+                var result = await selfService.FirstOrDefaultAsync(x => x.UserId == userId && x.RecipeId == recipeId);
+                if (result != null)
+                {
+                    if(result.IsLike.Value == true)
+                    {
+                        return Ok(result);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

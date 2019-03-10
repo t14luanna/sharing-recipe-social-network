@@ -11,18 +11,6 @@
                     <div>
                         <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
                     </div>
-                    <div>
-                        <a href="${recipe.imageCover} class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
-                    </div>
-                    <div>
-                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
-                    </div>
-                    <div>
-                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
-                    </div>
-                    <div>
-                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
-                    </div>
                 </div>
 
                 <span class="custom-arrows wider">
@@ -121,7 +109,7 @@ const createSingleRecipeDetailElement = (recipe) =>
 const createProductItemElement = (product) =>
     `<li class="modal-product-item" data-product-id="${product.id}" data-product-name="${product.name}">${product.name}</li>`;
 
-const createSingleRatingComment = (comment) =>
+const createSingleRatingComment = (comment, commentReplyCount) =>
     `<li data-user-id="${comment.id}" name="main-comment">
        
         <div class="avatar">
@@ -136,7 +124,7 @@ const createSingleRatingComment = (comment) =>
             <p>
                 ${comment.contentRating}
             </p>
-                <a href="#/" onclick="openReplyView(${comment.id})" class="reply-button">Reply</a>                        
+                <a href="#/" id="comment-link-${comment.id}" onclick="openReplyView(${comment.id}, ${comment.recipeId})" class="reply-button">Bình luận (${commentReplyCount})</a>                        
         </div>
     </li>`;
 const createSingleCategoryItemDetailPage = (item) =>
@@ -188,7 +176,7 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">About Chef</h3>
         </div>
     </div>`;
 const callListCategoryItemDetailPage = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
+    var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
     var data = await res.json();
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
@@ -198,7 +186,7 @@ const callListCategoryItemDetailPage = async () => {
     }
 };
 const callLatestRecipeDetailApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-latest`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -210,7 +198,7 @@ const callLatestRecipeDetailApi = async () => {
     }
 };
 const callPopularRecipeDetailPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-popular`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -224,7 +212,7 @@ const callPopularRecipeDetailPageApi = async () => {
 };
 
 const callRelatedRecipeApi = async (id) => {
-    var res = await fetch(`https://localhost:44361/api/recipe/read-related-recipe?userId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-related-recipe?userId=${id}`);
     var data = (await res.json());
 
     for (var item of data) {
@@ -236,7 +224,7 @@ const callRelatedRecipeApi = async (id) => {
 
 
 const callIngrdientsOfRecipeApi = async (id) => {
-    var res = await fetch(`https://localhost:44361/api/recipe/read-ingredients?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
     var data = (await res.json());
     for (var item of data) {
         for (var ingredients of item.listIngredient) {
@@ -248,7 +236,7 @@ const callIngrdientsOfRecipeApi = async (id) => {
 };
 const callRecipeDetailApi = async (id) => {
     callIngrdientsOfRecipeApi(id);
-    var res = await fetch(`https://localhost:44361/api/recipe/read-recipeid?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${id}`);
     var data = (await res.json());
     var userid;
     for (var item of data) {
@@ -263,24 +251,29 @@ const callRecipeDetailApi = async (id) => {
     callReadRatingCommentApi(id);
 };
 const callReadRatingCommentApi = async (id) => {
-    var res = await fetch(`https://localhost:44361/api/RatingRecipe/read-rating?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/api/RatingRecipe/read-rating?recipeId=${id}`);
     var data = (await res.json());
     var count = 0;
     for (var item of data) {
-
+        var dataCount = (await callCountCommentsApi(id, item.id));
         count++;
         let date = new Date(item.createTime);
         var hr = date.getHours();
         var min = date.getMinutes();
         item.createTime = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
-        var element = createSingleRatingComment(item)
+        var element = createSingleRatingComment(item, dataCount)
         $("#list-rating-comment").append(element);
     }
     $("#numOfComment").append(count);
 }
+const callCountCommentsApi = async (recipeId, recipeParentId) => {
+    var countReply = await fetch(`${BASE_API_URL}/api/comment/get-count-reply-comment?recipeId=${recipeId}&recipeParentId=${recipeParentId}`);
+    var dataCount = (await countReply.json());
+    return dataCount;
+}
 const callReadProductByIngredientNameApi = async (name) => {
     try {
-        var res = await fetch(`https://localhost:44361/api/Product/read-by-ingredient-name?name=${name}`);
+        var res = await fetch(`${BASE_API_URL}/${PRODUCT_API_URL}/read-by-ingredient-name?name=${name}`);
         var data = (await res.json());
         for (var item of data) {
             var element = createProductItemElement(item);
@@ -294,7 +287,7 @@ const callReadProductByIngredientNameApi = async (name) => {
 
 const callStepOfRecipeApi = async (id) => {
 
-    var res = await fetch(`https://localhost:44361/api/recipe/read-ingredients?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
     var data = (await res.json());
     var count = 0;
     for (var item of data) {
@@ -308,9 +301,32 @@ const callStepOfRecipeApi = async (id) => {
     }
 };
 
+const callIsLikeRecipe = async (recipeId) => {
+    try {
+        var authorization = localStorage.getItem("authorization");
+        var token = (JSON.parse(authorization))["token"];
+        var res = await fetch(`${BASE_API_URL}/api/UserReactionRecipe/is-like?recipeId=${recipeId}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (res.status != 404)
+        {
+            $("#like-heart").removeClass("fa-heart");
+            $("#like-heart").addClass("fa-heart");
+        }
+    } catch (e) {
+        $("#like-heart").removeClass("fa-heart");
+        console.log("Is not liked")
+    }
+    
+};
+
 const callChefRecipeApi = async (id) => {
 
-    var res = await fetch(`https://localhost:44361/api/recipe/read-recipe-chef?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe-chef?recipeId=${id}`);
     var data = (await res.json());
     var chef = data.accountVM;
     var description = chef.description != null ? chef.description : "";
@@ -320,7 +336,7 @@ const callChefRecipeApi = async (id) => {
 };
 const callReadNearByStoresApi = async (userLat, userLong, productId) => {
 
-    var res = await fetch(`https://localhost:44361/api/product/read-nearby-store?userLat=${userLat}&userLong=${userLong}&productId=${productId}`);
+    var res = await fetch(`${BASE_API_URL}/api/product/read-nearby-store?userLat=${userLat}&userLong=${userLong}&productId=${productId}`);
     var data = (await res.json());
 
     for (var item of data) {
@@ -364,7 +380,7 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
         contentRating: comment,
         star: star
     };
-    var res = await fetch("https://localhost:44361/api/ratingrecipe/create-rating", {
+    var res = await fetch(`${BASE_API_URL}/api/ratingrecipe/create-rating`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -378,7 +394,7 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
         callReadRatingCommentApi(recipeId);
     }
 };
-const createReplyView = (replyUser) => `<ul>
+const createReplyView = (replyUser, cmtId, recipeId) => `<ul class="reply-${replyUser.username}">
                 <li>
                     <div class="avatar">
                         <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar"/></a>
@@ -386,17 +402,184 @@ const createReplyView = (replyUser) => `<ul>
                     <div class="comment">
                         <h5><a href="#">${replyUser.username}</a></h5>
                         <div class="comment-form">
-                            <textarea class="reply-comment" name="message" id="message" cols="3" rows="3"></textarea>
-                                        <a href="#" class="reply-button">Đăng</a>
+                            <textarea class="reply-comment" name="reply-${cmtId}" id="message" cols="3" rows="3"></textarea>
+                                        <a onclick="callCreateReplyCommentApi(${recipeId}, ${cmtId})" class="reply-button">Đăng</a>
                         </div>
                     </div>
                 </li>
             </ul>`;
-const openReplyView = async (cmtId) =>{
+const openReplyView = async (cmtId, recipeId) => {
+    var repliedEle = $(`.replied`);
+    if (repliedEle[0]) {
+
+        repliedEle.remove();
+
+    }
+    await callGetReplyComtApi(cmtId, recipeId);
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var res = await fetch(`https://localhost:44361/api/account/read-userinfo?token=${token}`);
-    var data = (await res.json());
-    let chefView = createReplyView(data);
+    var res = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var data = await res.json();
+    var elements = $(`.reply-${data.username}`);
+    
+    if (elements[0]) {
+
+        elements.remove();
+
+    }
+    
+    let chefView = createReplyView(data, cmtId, recipeId);
     $(`li[data-user-id=${cmtId}]`).append(chefView);
-}
+};
+const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied replied-${parentId}">
+                <li>
+                    <div class="avatar">
+                        <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}" alt="avatar"/></a>
+                    </div>
+                    <div class="comment">
+                        <h5><a href="#">${replyComment.fullName}</a></h5><span class="time">${replyComment.createTime}</span>
+                        <p>${replyComment.commentContent}</p>
+                    </div>
+                </li>
+            </ul>`;
+const callGetReplyComtApi = async (parentId, recipeId) => {
+    var res = await fetch(`${BASE_API_URL}/api/comment/get-comment-by-parent-comment?recipeId=${recipeId}&recipeParentId=${parentId}`);
+    var data = await res.json();
+    var elements = $(`.replied-${parentId}`);
+    if (elements[0]) {
+        elements.remove();
+    }
+    for (var item of data) {
+        let date = new Date(item.createTime);
+        var hr = date.getHours();
+        var min = date.getMinutes();
+        item.createTime = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
+        var itemReply = createSingleReplyComment(item, parentId);
+
+        $(`li[data-user-id=${parentId}]`).append(itemReply);
+    }
+
+};
+
+const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var comment = $(`textarea[name="reply-${commentParentId}"]`).val();
+    if (comment != "") {
+        var data = {
+            recipeId: recipeId,
+            commentContent: comment,
+            recipeCommentParentID: commentParentId
+        };
+        var res = await fetch(`${BASE_API_URL}/api/comment/createComment`, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (res.status == 200) {
+            var dataCount = (await callCountCommentsApi(recipeId, commentParentId));
+            $(`a[id="comment-link-${commentParentId}"]`).html(`Bình luận (${dataCount})`);
+            await openReplyView(commentParentId, recipeId);
+        }
+    }
+    
+};
+
+const createShareRecipeModal = (recipe, dataUser) => `<div class="activity--list">
+                    <ul class="activity--items nav">
+                        <li>
+                            <div class="activity--item">
+                                <div class="activity--avatar">
+                                    <a href="/MemberProfile">
+                                        <img src="${dataUser.avatarImageUrl}" alt="">
+                                    </a>
+                                </div>
+
+                                <div class="activity--info fs--14">
+                                    <div class="activity--header">
+                                        <p><a href="/MemberProfile">${dataUser.username}</a></p>
+                                    </div>
+
+                                    <div class="activity--content">
+                                        <textarea placeholder="Chia sẻ của bạn" class="textarea-caption"></textarea>
+                                        <div class="link--embed">
+                                            <a class="link--url" href="/recipe/2" data-trigger="video_popup"></a>
+
+                                            <div class="">
+                                                <div class="img-post-newsfeed" style="background-image: url('${recipe.imageCover}');" alt="">
+                                                </div>
+
+                                                <div class="link--info fs--12">
+                                                    <div class="link--title">
+                                                        <h4 class="h6">${recipe.recipeName}</h4>
+                                                    </div>
+
+                                                    <div class="link--desc">
+                                                        <p>${recipe.contentRecipe}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <a id="btn-share-recipe" onclick="callCreateShareRecipeModalApi(${recipe.id})" class="default-btn mid-button theme-color pull-right">Chia sẻ bài viết</a>
+                </div>`;
+
+const callShareRecipeModalApi = async (id) => {
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${id}`);
+    var data = (await res.json());
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var elements = $(`.activity--list`);
+
+    if (elements[0]) {
+
+        elements.remove();
+
+    }
+    var dataUser = await resUser.json();
+    for (var item of data) {
+        var content = createShareRecipeModal(item, dataUser);
+        $("#modal-body-share-recipe").append(content);
+    }
+};
+const callCreateShareRecipeModalApi = async (id) => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var comment = $(`.textarea-caption`).val();
+    var data = {
+        referencedRecipeId: id,
+        sharedStatus: comment,
+    };
+    var res = await fetch(`${BASE_API_URL}/api/recipe/create-share-recipe`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (res.status == 200) {
+        $("#modal-share-recipe").css("display", "none");
+        swal("", "Bạn đã chia sẻ công thức thành công", "success")
+    }
+};

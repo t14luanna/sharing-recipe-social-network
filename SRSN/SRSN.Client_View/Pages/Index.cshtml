@@ -185,7 +185,7 @@
                         <fieldset>
                             <div class="inner-advance-search" style="width: 50%">
                                 <div id="custom-advance-search" class="form-field">
-                                    <input id="custom-input-search" style="outline: none; border: 1px solid grey; font-size: 2rem; padding: 0px 10px; border-radius: 5px; "type="text" value="" />
+                                    <input id="custom-input-search" style="outline: none; border: 1px solid grey; font-size: 2rem; padding: 0px 10px; border-radius: 5px; " type="text" value="" />
                                     <div id="custom-quick-result"></div>
                                 </div>
                                 <button id="searchBtn" style="width: 100px; border-radius: 5px; height: 40px" type="submit"><i class="fa fa-search"></i></button>
@@ -382,6 +382,7 @@
 <script src="/recipepress/js/jquery.validate.min.js"></script>
 <script src="/recipepress/js/jquery.swipebox.js"></script>
 <script src="/recipepress/js/custom.js"></script>
+<script src="~/js/Configuration.js"></script>
 
 <script src="~/js/index.js"></script>
 <script src="~/js/site.js"></script>
@@ -389,19 +390,19 @@
 <script src="~/js/SearchPageResult.js"></script>
 <script type="text/javascript">
 
-        // fetch and render element to html
-        (async () => {
-            await callPopularRecipeBannerApi();
-            await callPopularRecipeWidgetApi();
-            await callPopularRecipeApi();
-            await callLatestRecipeApi();
-            await callLatestRecipeWidgetApi();
-            await callRandomRecipeApi();
-            await callListCategoryItem();
-            await attachInputSearchCallback();
-            await RedirectAPI();
-            
-})();
+    // fetch and render element to html
+    (async () => {
+        await callPopularRecipeBannerApi();
+        await callPopularRecipeWidgetApi();
+        await callPopularRecipeApi();
+        await callLatestRecipeApi();
+        await callLatestRecipeWidgetApi();
+        await callRandomRecipeApi();
+        await callListCategoryItem();
+        await attachInputSearchCallback();
+        await RedirectAPI();
+
+    })();
 
 </script>
 <script>
@@ -436,7 +437,7 @@
             });
     });
 
-    
+
 </script>
 
 <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>

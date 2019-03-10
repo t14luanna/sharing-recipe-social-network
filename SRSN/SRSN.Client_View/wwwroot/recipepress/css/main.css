@@ -5838,7 +5838,7 @@ div.widget-measurements {
 
         .recipe-comments .comment .reply-button {
             float: right;
-            font-family: 'Lora', serif;
+            font-family: 'Lora', serif!important;
             font-style: italic;
         }
 
@@ -8195,4 +8195,10 @@ input:-webkit-autofill:active {
 .comment-form .reply-comment {
     height: 80px!important;
     margin-bottom: 20px!important;
+}
+.reply-button{
+    cursor: pointer;
+}
+.fa-share{
+    cursor: pointer;
 }

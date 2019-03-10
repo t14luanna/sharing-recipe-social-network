@@ -43,6 +43,7 @@
     <Compile Include="Entities\Message.cs" />
     <Compile Include="Entities\Notification.cs" />
     <Compile Include="Entities\Post.cs" />
+    <Compile Include="Entities\Products.cs" />
     <Compile Include="Entities\RatingRecipe.cs" />
     <Compile Include="Entities\Recipe.cs" />
     <Compile Include="Entities\RecipeCategory.cs" />
@@ -52,6 +53,8 @@
     <Compile Include="Entities\StoreBrand.cs" />
     <Compile Include="Entities\UserBlock.cs" />
     <Compile Include="Entities\UserFollowing.cs" />
+    <Compile Include="Entities\UserReactionPost.cs" />
+    <Compile Include="Entities\UserReactionRecipe.cs" />
     <Compile Include="Entities\UserReportRecipe.cs" />
     <Compile Include="Entities\UserReportUser.cs" />
     <Compile Include="Entities\UserViewRecipe.cs" />

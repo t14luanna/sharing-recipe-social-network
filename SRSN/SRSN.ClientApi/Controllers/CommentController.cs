@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
 
@@ -15,9 +17,11 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
+        private UserManager<SRSNUser> userManager;
         private ICommentService commentService;
-        public CommentController(ICommentService commentService)
+        public CommentController(UserManager<SRSNUser> userManager, ICommentService commentService)
         {
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.commentService = commentService;
         }
 
@@ -27,7 +31,7 @@ namespace SRSN.ClientApi.Controllers
         {
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-            request.UserId = userId;
+            request.UserId = int.Parse(userId);
             request.CreateTime = DateTime.Now;
             await commentService.CreateAsync(request);  
             return Ok(new
@@ -52,7 +56,7 @@ namespace SRSN.ClientApi.Controllers
 
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-            request.UserId = userId;
+            request.UserId = int.Parse(userId);
             // choose the vietnam datetime exactly
             request.UpdateTime = DateTime.UtcNow.AddHours(7);
             await commentService.UpdateAsync(request);
@@ -88,6 +92,23 @@ namespace SRSN.ClientApi.Controllers
                 request = commentService.Get()
             });
         }
-        
+        [HttpGet("get-comment-by-parent-comment")]
+        public async Task<ActionResult> GetAllCommentByParentCommentId(int recipeId, int recipeParentId)
+        {
+            try
+            {
+                return Ok(await commentService.GetAllCommentByParentCommentId(this.userManager, recipeId, recipeParentId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("get-count-reply-comment")]
+        public ActionResult GetCountReplyComment(int recipeId, int recipeParentId)
+        {
+            return Ok(commentService.Get(p => p.RecipeId == recipeId && p.RecipeCommentParentId == recipeParentId).Count());
+        }
+
     }
 }

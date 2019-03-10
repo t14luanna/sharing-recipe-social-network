@@ -173,3 +173,21 @@
     -o-animation: glowing 1500ms infinite;
     animation: glowing 1500ms infinite;
 }
+.modal-share-content{
+    width: 50%!important;
+}
+#btn-share-recipe {
+    margin-top: 10px
+}
+.textarea-caption{
+    width: 100%;
+    border: navajowhite;
+    resize: none;
+    outline: none;
+    color: black;
+    font-size: 18px;
+    overflow-y: hidden
+}
+#btn-share-recipe{
+    cursor: pointer
+}

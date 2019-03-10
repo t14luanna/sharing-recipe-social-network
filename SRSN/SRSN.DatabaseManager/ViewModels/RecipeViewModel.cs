@@ -46,6 +46,8 @@ namespace SRSN.DatabaseManager.ViewModels
         public string FullName { get; set; }
         public string Avarta { get; set; }
         public string Description { get; set; }
+        public string SharedStatus { get; set; }
+        public int? ReferencedRecipeId { get; set; }
         public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
         public List<RecipeIngredientViewModel> listIngredient { get; set; }
         public List<RecipeCategoryViewModel> listCategory { get; set; }

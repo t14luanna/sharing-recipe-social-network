@@ -190,7 +190,7 @@ namespace SRSN.DatabaseManager.Services
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 13 * FROM Recipe WHERE Active = 'True'  ORDER BY EvRating DESC, ViewQuantity DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 13 * FROM Recipe WHERE Active = 'True' AND ReferencedRecipeId IS NULL  ORDER BY EvRating DESC, ViewQuantity DESC").ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
@@ -225,7 +225,7 @@ namespace SRSN.DatabaseManager.Services
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 11 * FROM RECIPE WHERE Active='1' ORDER BY CreateTime DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 11 * FROM RECIPE WHERE Active='1' AND ReferencedRecipeId IS NULL ORDER BY CreateTime DESC").ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
@@ -259,7 +259,7 @@ namespace SRSN.DatabaseManager.Services
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 1000 * FROM RECIPE WHERE Active='1' ORDER BY CreateTime DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 1000 * FROM RECIPE WHERE Active='1'AND ReferencedRecipeId IS NULL ORDER BY CreateTime DESC").ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
@@ -342,7 +342,7 @@ namespace SRSN.DatabaseManager.Services
             {
                 var list = new List<RecipeViewModel>();
 
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("Select top 6 * from Recipe order by NEWID()").Where(a => a.Active == true).ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("Select top 6 * from Recipe order by NEWID()").Where(a => a.Active == true && a.ReferencedRecipeId == null).ToList();
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
@@ -394,7 +394,7 @@ namespace SRSN.DatabaseManager.Services
             {
                 var list = new List<RecipeViewModel>();
 
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT top 3 * FROM Recipe WHERE UserId=" + userId + " and Active='1' order by NEWID()").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT top 3 * FROM Recipe WHERE UserId=" + userId + " and Active='1'  AND ReferencedRecipeId IS NULL  order by NEWID()").ToList();
                 foreach (var item in listItems)
                 {
 
@@ -496,7 +496,7 @@ namespace SRSN.DatabaseManager.Services
             {
                 var list = new List<RecipeViewModel>();
 
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE '%" + recipeName + "%' order by Id DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE N'%" + recipeName + "%' order by Id DESC").ToList();
                 foreach (var item in listItems)
                 {
                     //apply automapper

@@ -141,7 +141,7 @@ namespace SRSN.ClientApi.Controllers
                     int recipeId = 0;
                     int.TryParse(data.Element, out recipeId);
                     var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
-                    var recipeUserID = await userManager.FindByIdAsync(recipe.UserId);
+                    var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
                     recipe.AccountVM = new AccountViewModel();
                     mapper.Map(recipeUserID, recipe.AccountVM);
                     listRecipe.Add(recipe);
@@ -285,7 +285,7 @@ namespace SRSN.ClientApi.Controllers
             try
             {
                 var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
-                var recipeUserID = await userManager.FindByIdAsync(recipe.UserId);
+                var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
                 recipe.AccountVM = new AccountViewModel();
                 mapper.Map(recipeUserID, recipe.AccountVM);
                 return Ok(recipe);
@@ -294,6 +294,20 @@ namespace SRSN.ClientApi.Controllers
             {
                 return BadRequest();
             }
+        }
+        [HttpPost("create-share-recipe")]
+        [Authorize]
+        public async Task<ActionResult> CreateShareRecipe([FromBody]RecipeViewModel request)
+        {
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            request.UserId = userId;
+            request.CreateTime = DateTime.Now;
+            await recipeService.CreateAsync(request);
+            return Ok(new
+            {
+                message = $"Ban da tao thanh cong Recipe co ten la: {request.Id}"
+            });
         }
     }
     #endregion

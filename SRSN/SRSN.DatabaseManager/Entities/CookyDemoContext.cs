@@ -50,7 +50,10 @@ namespace SRSN.DatabaseManager.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured) { 
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
 
@@ -195,12 +198,24 @@ namespace SRSN.DatabaseManager.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.RecipeCommentParentId).HasColumnName("RecipeCommentParentID");
+
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Comment)
                     .HasForeignKey(d => d.PostId)
                     .HasConstraintName("FK_Comment_SharedPost");
+
+                entity.HasOne(d => d.RecipeCommentParent)
+                    .WithMany(p => p.Comment)
+                    .HasForeignKey(d => d.RecipeCommentParentId)
+                    .HasConstraintName("FK_Comment_RatingRecipe");
+
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.Comment)
+                    .HasForeignKey(d => d.RecipeId)
+                    .HasConstraintName("FK_Comment_Recipe");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Comment)
@@ -328,11 +343,7 @@ namespace SRSN.DatabaseManager.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.RecipeName).HasMaxLength(50);
-
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.VideoLink).HasMaxLength(50);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Recipe)

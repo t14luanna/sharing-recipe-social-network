@@ -15,7 +15,6 @@ namespace SRSN.ClientApi.Entities
             Comment = new HashSet<Comment>();
             CommentLike = new HashSet<CommentLike>();
             IngredientList = new HashSet<IngredientList>();
-            LikePost = new HashSet<LikePost>();
             MessageCreator = new HashSet<Message>();
             MessageRecipient = new HashSet<Message>();
             Notification = new HashSet<Notification>();
@@ -26,10 +25,11 @@ namespace SRSN.ClientApi.Entities
             UserBlockUser = new HashSet<UserBlock>();
             UserFollowingFollowingUser = new HashSet<UserFollowing>();
             UserFollowingUser = new HashSet<UserFollowing>();
+            UserReactionPost = new HashSet<UserReactionPost>();
+            UserReactionRecipe = new HashSet<UserReactionRecipe>();
             UserReportRecipe = new HashSet<UserReportRecipe>();
             UserReportUserReportedUser = new HashSet<UserReportUser>();
             UserReportUserUser = new HashSet<UserReportUser>();
-            UserViewRecipe = new HashSet<UserViewRecipe>();
         }
 
         public int Id { get; set; }
@@ -65,7 +65,6 @@ namespace SRSN.ClientApi.Entities
         public virtual ICollection<Comment> Comment { get; set; }
         public virtual ICollection<CommentLike> CommentLike { get; set; }
         public virtual ICollection<IngredientList> IngredientList { get; set; }
-        public virtual ICollection<LikePost> LikePost { get; set; }
         public virtual ICollection<Message> MessageCreator { get; set; }
         public virtual ICollection<Message> MessageRecipient { get; set; }
         public virtual ICollection<Notification> Notification { get; set; }
@@ -76,9 +75,10 @@ namespace SRSN.ClientApi.Entities
         public virtual ICollection<UserBlock> UserBlockUser { get; set; }
         public virtual ICollection<UserFollowing> UserFollowingFollowingUser { get; set; }
         public virtual ICollection<UserFollowing> UserFollowingUser { get; set; }
+        public virtual ICollection<UserReactionPost> UserReactionPost { get; set; }
+        public virtual ICollection<UserReactionRecipe> UserReactionRecipe { get; set; }
         public virtual ICollection<UserReportRecipe> UserReportRecipe { get; set; }
         public virtual ICollection<UserReportUser> UserReportUserReportedUser { get; set; }
         public virtual ICollection<UserReportUser> UserReportUserUser { get; set; }
-        public virtual ICollection<UserViewRecipe> UserViewRecipe { get; set; }
     }
 }
