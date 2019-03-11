@@ -16,6 +16,7 @@ namespace SRSN.DatabaseManager.Services
     public interface IUserFollowingService : IBaseService<UserFollowing, AccountViewModel>
     {
         Task<ICollection<AccountViewModel>> getAllFollowingUser(UserManager<SRSNUser> userManager, int userid);
+        Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
     }
     public class UserFollowingService : BaseService<UserFollowing, AccountViewModel>, IUserFollowingService
     {
@@ -28,7 +29,8 @@ namespace SRSN.DatabaseManager.Services
             var listAccount = new List<AccountViewModel>();
 
             var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active='True' AND UserId=" + userid).ToListAsync();
-            
+
+
             foreach (var item in listItems)
             {
                 var user = await userManager.FindByIdAsync(item.FollowingUserId.ToString());
@@ -39,6 +41,22 @@ namespace SRSN.DatabaseManager.Services
             }
 
             return listAccount;
+        }
+        
+        public async Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId)
+        {
+            var listAccount = new List<AccountViewModel>();
+
+            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE UserId=" + userId + " AND FollowingUserId=" + followingUserId).ToListAsync();
+            
+            foreach (var item in listItems)
+            {
+                item.Active = false;
+                this.selfDbSet.Update(item);
+                await this.unitOfWork.CommitAsync();
+            }
+
+            return listItems;
         }
     }
 }

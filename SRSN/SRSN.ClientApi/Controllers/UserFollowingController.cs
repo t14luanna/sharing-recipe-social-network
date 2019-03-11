@@ -36,5 +36,19 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("unfollow-user")]
+        public async Task<ActionResult> UnfollowUser(String userName, int userId)
+        {
+            try
+            {
+                var user = await userManager.FindByNameAsync(userName);
+                return Ok(await userFollowingService.unfollowFollowingUser(userManager, user.Id, userId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }
