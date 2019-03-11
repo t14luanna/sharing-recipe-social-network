@@ -26,13 +26,13 @@
                         <div id="congthuc" class="tab-pane fade in active">
                             <div class="submit-recipe-form">
                                 <label for="upload-image">Ảnh đại diện cho món ăn</label>
-                                <input type="file" name="avatarUpload" id="upload-image" />
-                                <input type="text" name="title" id="title" placeholder="Nhập tên công thức" />
+                                <input type="file" name="avatarUpload" id="upload-image" required/>
+                                <input type="text" name="title" id="title" placeholder="Nhập tên công thức" required/>
                                 <br />
-                                <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức"></textarea>
-                                <input type="number" name="serving" placeholder="Serving" />
-                                <input type="number" name="cooktime" placeholder="Cook time" />
-                                <input type="number" name="level" placeholder="Level" />
+                                <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức"required></textarea>
+                                <input type="number" name="serving" placeholder="Serving" required/>
+                                <input type="number" name="cooktime" placeholder="Cook time" required/>
+                                <input type="number" name="level" placeholder="Level" required/>
                                 <fieldset class="ingredient-set">
                                     <label for="ingredients">Nguyên liệu</label>
                                     <ul class="list-sortable ingredients-list">
@@ -41,12 +41,12 @@
                                                 <span class="ingredient-handler-list handler-list">
                                                     <i class="fa fa-arrows"></i>
                                                 </span>
-                                                <input class="ingredient-quantity" type="number" step="1" name="ingredientsQuantity" />
+                                                <input class="ingredient-quantity" type="number" step="1" name="ingredientsQuantity" required/>
                                                 <select class="ingredient-weight" name="ingredientsWeight">
                                                     <option value="1" selected>g</option>
                                                     <option value="1000">kg</option>
                                                 </select>
-                                                <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" />
+                                                <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" required/>
                                                 <span class="del-list">
                                                     <i class="fa fa-trash"></i>
                                                 </span>
@@ -71,7 +71,7 @@
                                                 </span>
                                             </div>
                                             <div class="image-fields">
-                                                <input type="file" name="stepsImage" />
+                                                <input type="file" name="stepsImage" required/>
                                             </div>
                                         </li>
                                     </ul>

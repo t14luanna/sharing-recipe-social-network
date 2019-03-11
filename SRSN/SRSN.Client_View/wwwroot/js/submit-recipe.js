@@ -2,25 +2,12 @@
 
 const client = filestack.init(apikey);
 
-document.querySelector('input').addEventListener('change', (event) => {
-    //const files = event.target.files;
-    //const file = files.item(0);
-
-    //client.upload(file)
-    //    .then(res => {
-    //        console.log('success: ', res);
-    //    })
-    //    .catch(err => {
-    //        console.log(err);
-    //    });
-});
-
 $('.add-recipe-steps').on("click", function (event) {
     event.preventDefault();
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields">' +
         ' <span class="handler-list"><i class="fa fa-arrows"></i></span>' +
-        '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>' +
+        '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10" required>    </textarea>' +
         ' <span class="del-list"><i class="fa fa-trash"></i></span>' +
         '</div><div class="image-fields">' +
         '<input type = "file" name = "stepsImage" />' +
@@ -39,10 +26,10 @@ $('.add-ingredient').on("click", function (event) {
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' + 
         '<i class="fa fa-arrows"></i></span >' +
         '<input class="ingredient-quantity" type="number" step="1"' +
-        'name="ingredientsQuantity" id="ingredientsQuantity" />' + 
+        'name="ingredientsQuantity" id="ingredientsQuantity" required/>' + 
         '<select class="ingredient-weight" name="ingredientsWeight">' +
         '<option value="1" selected>g</option><option value="1000">kg</option></select>' +
-        '<input class="ingredient-detail" type="text" name="ingredients" id="ingredients" />' +
+        '<input class="ingredient-detail" type="text" name="ingredients" id="ingredients" required />' +
         '<span class="del-list"><i class="fa fa-trash"></i></span></div >' +
         '</li>';
     $('.list-sortable.ingredients-list').append(newMajesticItem);
@@ -55,13 +42,13 @@ $('.add-ingredient').on("click", function (event) {
 $('#submitBtn').on("click", async function (event) {
     var data = getData();
 
-    data = await uploadImageSubmit(data);
+    //data = await uploadImageSubmit(data);
 
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
         method: "POST",
-        body: '{}',
+        body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
