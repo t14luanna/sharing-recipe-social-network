@@ -50,7 +50,10 @@ namespace SRSN.DatabaseManager.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured) { 
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=12345678;Trusted_Connection=False;");
             }
         }
 
@@ -328,11 +331,7 @@ namespace SRSN.DatabaseManager.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.RecipeName).HasMaxLength(50);
-
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.VideoLink).HasMaxLength(50);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Recipe)
