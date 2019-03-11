@@ -1,4 +1,5 @@
-﻿const createSingleBannerRecipeDetail = (recipe) =>
+﻿var listIngredient;
+const createSingleBannerRecipeDetail = (recipe) =>
     `<div class="wrapper-recipe-heading">
         <div class="heading">
             <h2>${recipe.recipeName}</h2>
@@ -107,7 +108,7 @@ const createSingleRecipeDetailElement = (recipe) =>
         </div>
     </li>`;
 const createProductItemElement = (product) =>
-    `<li class="modal-product-item" data-product-id="${product.id}" data-product-name="${product.name}">${product.name}</li>`;
+    `<li class="modal-product-item" data-product-id="${product.id}" data-product-name="${product.ingredientName}">${product.ingredientName}</li>`;
 
 const createSingleRatingComment = (comment, commentReplyCount) =>
     `<li data-user-id="${comment.id}" name="main-comment">
@@ -227,6 +228,7 @@ const callIngrdientsOfRecipeApi = async (id) => {
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
     var data = (await res.json());
     for (var item of data) {
+        listIngredient = item.listIngredient;
         for (var ingredients of item.listIngredient) {
             var ingredient = createSingleIngredientOfRecipe(ingredients);
             $("#list-of-ingredients").append(ingredient);
@@ -271,11 +273,17 @@ const callCountCommentsApi = async (recipeId, recipeParentId) => {
     var dataCount = (await countReply.json());
     return dataCount;
 }
-const callReadProductByIngredientNameApi = async (name) => {
+const callReadProductByIngredientNameApi = async () => {
     try {
-        var res = await fetch(`${BASE_API_URL}/${PRODUCT_API_URL}/read-by-ingredient-name?name=${name}`);
-        var data = (await res.json());
-        for (var item of data) {
+        //var res = await fetch(`${BASE_API_URL}/${PRODUCT_API_URL}/read-by-ingredient-name?name=${name}`);
+        //var data = (await res.json());
+        var itemIngre = $(`.modal-product-item`);
+        if (itemIngre[0]) {
+
+            itemIngre.remove();
+
+        }
+        for (var item of listIngredient) {
             var element = createProductItemElement(item);
             $(".modal-list-product-item").append(element);
         }
@@ -334,9 +342,9 @@ const callChefRecipeApi = async (id) => {
     let chefView = createChefByRecipeId(chef);
     $(".about-chef").append(chefView);
 };
-const callReadNearByStoresApi = async (userLat, userLong, productId) => {
+const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
 
-    var res = await fetch(`${BASE_API_URL}/api/product/read-nearby-store?userLat=${userLat}&userLong=${userLong}&productId=${productId}`);
+    var res = await fetch(`${BASE_API_URL}/api/product/read-nearby-store?userLat=${userLat}&userLong=${userLong}&ingredientName=${ingredientName}`);
     var data = (await res.json());
 
     for (var item of data) {
@@ -347,7 +355,8 @@ const callReadNearByStoresApi = async (userLat, userLong, productId) => {
                 url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
             }
         });
-        addInfoWindow(marker, item.name);
+        var itemName = item.name + " (" + item.address + " )" ;
+        addInfoWindow(marker, itemName);
         marker.setMap(map);
     }
 };

@@ -291,14 +291,14 @@
 
             // Init products on modal list product item
             // Get ingredient names
-            $('input[name=ingredient]').each(async function (index, element) {
-                // Get name
-                var value = element.getAttribute("value");
-                if (value) {
-                    var ingredientName = value.split('-')[1];
-                    await callReadProductByIngredientNameApi(ingredientName);
-                }
-            });
+            //$('input[name=ingredient]').each(async function (index, element) {
+            //    // Get name
+            //    var value = element.getAttribute("value");
+            //    if (value) {
+            //        var ingredientName = value.split('-')[1];
+            //        await callReadProductByIngredientNameApi(ingredientName);
+            //    }
+            //});
 
             callListCategoryItemDetailPage();
             // Recipe slider variation two
@@ -316,6 +316,7 @@
         })();
 
         $("#btn-suggest-ingredients").on("click", function (e) {
+            callReadProductByIngredientNameApi();
             $("#modal-suggest-ingredients").css("display", "block")
 
         });
@@ -342,8 +343,8 @@
             }
             if (event.target.className == 'modal-product-item') {
                 var current = event.target;
-                var productId = current.getAttribute('data-product-id');
-                callReadNearByStoresApi(pos.lat, pos.lng, productId);
+                var ingredientName = current.getAttribute('data-product-name');
+                callReadNearByStoresApi(pos.lat, pos.lng, ingredientName);
             }
         }
 

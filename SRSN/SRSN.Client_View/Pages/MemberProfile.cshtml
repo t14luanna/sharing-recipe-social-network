@@ -165,16 +165,17 @@
                         <div class="container">
                             <div class="row">
                                 <!-- Main Content Start -->
-                                <div class="main--content col-md-8 pb--60" data-trigger="stickyScroll">
+                                <div class="main--content col-md-12 pb--60" data-trigger="stickyScroll">
                                     <div class="main--content-inner drop--shadow">
                                         <!-- Content Nav Start -->
                                         <div class="content--nav pb--30">
                                             <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
                                                 <li><a href="member-activity-personal.html">Dòng thời gian</a></li>
                                                 <li class="active"><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
-                                                <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
-                                                <li><a href="member-groups.html">C.thức của tôi(1110)</a></li>
-                                                <li><a href="member-media-all.html">Q.lý nguyên liệu(56)</a></li>
+                                                <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi</a></li>
+                                                <li><a href="member-groups.html">Công thức của tôi</a></li>
+                                                <li><a href="/account/collection/@(RouteData.Values["userName"])">Bộ sưu tập của tôi</a></li>
+                                                <li><a href="member-media-all.html">Quản lý nguyên liệu</a></li>
                                             </ul>
                                         </div>
                                         <!-- Content Nav End -->
@@ -241,7 +242,7 @@
                                 </div>
                                 <!-- Main Content End -->
                                 <!-- Main Sidebar Start -->
-                                <div class="main--sidebar col-md-4 pb--60" data-trigger="stickyScroll">
+                                @*<div class="main--sidebar col-md-4 pb--60" data-trigger="stickyScroll">
                                     <!-- Widget Start -->
                                     <div class="widget">
                                         <h2 class="h4 fw--700 widget--title">Find A Buddy</h2>
@@ -406,7 +407,7 @@
                                         <!-- Ad Widget End -->
                                     </div>
                                     <!-- Widget End -->
-                                </div>
+                                </div>*@
                                 <!-- Main Sidebar End -->
                             </div>
                         </div>

@@ -8146,12 +8146,14 @@ input:-webkit-autofill:active {
     margin-bottom:10px;
 }
 .modal-product-item {
+    margin-left: 20px;
     cursor: pointer;
     font-family: "Times New Roman", Times, serif
 }
 #modal-list-item {
     height: 300px;
-    overflow-y: auto !important
+    overflow-y: auto !important;
+    list-style-type: circle;
 }
 
 .modal-product-item:hover {
