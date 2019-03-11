@@ -1,4 +1,4 @@
-﻿var listIngredient;
+﻿var listIngredient, recipeMainId;
 const createSingleBannerRecipeDetail = (recipe) =>
     `<div class="wrapper-recipe-heading">
         <div class="heading">
@@ -225,6 +225,7 @@ const callRelatedRecipeApi = async (id) => {
 
 
 const callIngrdientsOfRecipeApi = async (id) => {
+    recipeMainId = id; 
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
     var data = (await res.json());
     for (var item of data) {
@@ -590,5 +591,67 @@ const callCreateShareRecipeModalApi = async (id) => {
     if (res.status == 200) {
         $("#modal-share-recipe").css("display", "none");
         swal("", "Bạn đã chia sẻ công thức thành công", "success")
+    }
+};
+const createCollectionItemModal = (collection) => `<div class="col-md-3 col-xs-6 col-xxs-12 collection-modal-item" onclick="callCreateAddCollectionApi(${collection.id}, ${recipeMainId})">
+                                                        <div class="member--item online  collection-modal-item">
+                                                        <div class="img-recipe-avatar">
+                                                            <a class="btn-link">
+                                                                <img src="${collection.coverImage}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="name">
+                                                            <h3 class="h6 fs--12">
+                                                                <a href="member-activity-personal.html" class="btn-link">${collection.collectionName}</a>
+                                                            </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>`;
+const callReadCollectionModalApi = async () => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var elements = $(`.collection-modal-item`);
+
+    if (elements[0]) {
+
+        elements.remove();
+
+    }
+    var data = await res.json();
+    for (var item of data) {
+        var content = createCollectionItemModal(item);
+        $("#modal-body-add-collection").append(content);
+    }
+};
+const callCreateAddCollectionApi = async (collectionId, recipeId) => {
+    var data = {
+        collectionId: collectionId,
+        recipePostId: recipeId,
+    };
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var res = await fetch(`${BASE_API_URL}/api/collectionPost/create`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (res.status == 200) {
+        $("#modal-add-collection").css("display", "none");
+        swal("", "Bạn đã thêm vào bộ sưu tập thành công", "success")
+    };
+    if (res.status == 400) {
+        $("#modal-add-collection").css("display", "none");
+        swal("", "Công thức này đã tồn tại trong bộ sưu tập", "error")
     }
 };

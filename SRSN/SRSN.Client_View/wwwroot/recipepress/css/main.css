@@ -892,7 +892,7 @@ a.mean-expand {
 
     .header-var1 .right-nav .wrapper-links {
         text-align: right;
-        margin-bottom: 11px;
+        margin-bottom: 0px;
     }
 
     .header-var1 .right-nav .submit-recipe {
@@ -8203,4 +8203,9 @@ input:-webkit-autofill:active {
 }
 .fa-share{
     cursor: pointer;
+}
+#fileUploadedPreview{
+    width: 100px;
+    height: 100px;
+    margin-left: 15%
 }

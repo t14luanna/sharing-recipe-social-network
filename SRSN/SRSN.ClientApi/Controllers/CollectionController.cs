@@ -62,9 +62,10 @@ namespace SRSN.ClientApi.Controllers
 
         [HttpGet("read")]
         [AllowAnonymous]
-        public ActionResult ReadByUserName(string userId)
+        public ActionResult ReadByUserName()
         {
-            return Ok(collectionService.Get(u => u.UserId.Equals(userId) && u.Active == true));
+            var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
+            return Ok(collectionService.Get(u => u.UserId == int.Parse(userId) && u.Active == true));
         }
         [HttpGet("read-top-collection")]
         [AllowAnonymous]

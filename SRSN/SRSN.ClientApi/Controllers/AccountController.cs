@@ -243,8 +243,18 @@ namespace SRSN.ClientApi.Controllers
                 });
             }
         }
+        [HttpGet("read-profile-token")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ReadByToken()
+        {
+            var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
+            var user = await userManager.FindByIdAsync(userId);
+            var userVM = new AccountViewModel();
+            mapper.Map(user, userVM);
+            return Ok(userVM);
+        }
 
-        
+
     }
 
 }

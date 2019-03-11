@@ -15,5 +15,6 @@ namespace SRSN.DatabaseManager.ViewModels
         public int? SaveCount { get; set; }
         public string CoverImage { get; set; }
         public string FullName { get; set; }
+        public int? RecipeCount { get; set; }
     }
 }

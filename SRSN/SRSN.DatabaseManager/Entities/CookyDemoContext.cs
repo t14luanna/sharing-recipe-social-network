@@ -159,6 +159,10 @@ namespace SRSN.DatabaseManager.Entities
             {
                 entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.RecipeCount).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.SaveCount).HasDefaultValueSql("((0))");
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Collection)
                     .HasForeignKey(d => d.UserId)
