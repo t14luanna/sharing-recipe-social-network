@@ -74,6 +74,7 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                     </div>
                                                     <!-- Member Item End -->
                                                 </div>`;
+
 //const callFollowingUserApi = async (userName) => {
 //    var res = await fetch(`https://localhost:44361/api/userfollowing/read-following-user?userName=${userName}`);
 //    var data = await res.json();

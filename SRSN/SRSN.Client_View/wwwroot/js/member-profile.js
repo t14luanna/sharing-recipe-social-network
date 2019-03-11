@@ -98,3 +98,4 @@ const callAccountInforApi = async (username) => {
         $(".read").attr("readonly", "readonly");
     }
 };
+

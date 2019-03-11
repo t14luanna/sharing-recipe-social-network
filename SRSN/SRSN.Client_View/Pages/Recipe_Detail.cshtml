@@ -327,10 +327,20 @@
         })();
 
         $("#btn-suggest-ingredients").on("click", function (e) {
-            callReadProductByIngredientNameApi();
+            if ($("input[name=ingredient]:checked").length > 0) {
+                getCheckedIngredient();
+                let listCheckedIngres = [];
+                $("input[name=ingredient]:checked").each(function () {
+                    listCheckedIngres.push(this.value.split("-")[1]);
+                });
+                callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
+            } else {
+                callReadProductByIngredientNameApi();
+            }
             $("#modal-suggest-ingredients").css("display", "block")
 
         });
+        
         $("#close-modal-suggest").on("click", function (e) {
             $("#modal-suggest-ingredients").css("display", "none");
 

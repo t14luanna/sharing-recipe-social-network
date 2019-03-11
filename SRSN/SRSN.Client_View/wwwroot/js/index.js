@@ -342,5 +342,3 @@ const attachInputSearchCallback = () => {
     //    $("#custom-quick-result").css('display', 'none');
     //})
 }
-
-

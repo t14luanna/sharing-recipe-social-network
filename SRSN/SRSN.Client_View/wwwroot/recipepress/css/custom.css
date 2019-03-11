@@ -219,3 +219,9 @@
     padding: 5px 0px;
     border-radius: 10px
 }
+.nav-collapse ul li{
+    margin-left: 0px!important
+}
+.header-var2.ext-var4 nav ul > li a{
+    color: black!important
+}

@@ -109,7 +109,8 @@ const createSingleRecipeDetailElement = (recipe) =>
     </li>`;
 const createProductItemElement = (product) =>
     `<li class="modal-product-item" data-product-id="${product.id}" data-product-name="${product.ingredientName}">${product.ingredientName}</li>`;
-
+const createCheckedItemElement = (product) =>
+    `<li class="modal-product-item" data-product-id="${product}" data-product-name="${product}">${product}</li>`;
 const createSingleRatingComment = (comment, commentReplyCount) =>
     `<li data-user-id="${comment.id}" name="main-comment">
        
@@ -171,7 +172,7 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">About Chef</h3>
                 </div>
             </div>
             <p>
-               ${ chef.description }
+               ${ chef.description}
             </p>
             <a href="#" class="read-more-angle">Read More</a>
         </div>
@@ -182,7 +183,7 @@ const callListCategoryItemDetailPage = async () => {
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
             let element = createSingleCategoryItemDetailPage(cateItem);
-            $("#list-category-item-recipe-detail").append(element); 
+            $("#list-category-item-recipe-detail").append(element);
         }
     }
 };
@@ -225,7 +226,7 @@ const callRelatedRecipeApi = async (id) => {
 
 
 const callIngrdientsOfRecipeApi = async (id) => {
-    recipeMainId = id; 
+    recipeMainId = id;
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
     var data = (await res.json());
     for (var item of data) {
@@ -293,7 +294,26 @@ const callReadProductByIngredientNameApi = async () => {
     }
 }
 
+const getCheckedIngredient = async () => {
+    try {
+        var itemIngre = $(`.modal-product-item`);
+        if (itemIngre[0]) {
 
+            itemIngre.remove();
+
+        }
+        let listCheckedIngredient = [];
+        $("input[name=ingredient]:checked").each(function () {
+            listCheckedIngredient.push(this.value.split("-")[1]);
+        });
+        for (var item of listCheckedIngredient) {
+            var element = createCheckedItemElement(item);
+            $(".modal-list-product-item").append(element);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+}
 const callStepOfRecipeApi = async (id) => {
 
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
@@ -321,8 +341,7 @@ const callIsLikeRecipe = async (recipeId) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        if (res.status != 404)
-        {
+        if (res.status != 404) {
             $("#like-heart").removeClass("fa-heart");
             $("#like-heart").addClass("fa-heart");
         }
@@ -330,7 +349,7 @@ const callIsLikeRecipe = async (recipeId) => {
         $("#like-heart").removeClass("fa-heart");
         console.log("Is not liked")
     }
-    
+
 };
 
 const callChefRecipeApi = async (id) => {
@@ -356,12 +375,39 @@ const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
                 url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
             }
         });
-        var itemName = item.name + " (" + item.address + " )" ;
+        var itemName = item.name + " (" + item.address + " )";
         addInfoWindow(marker, itemName);
         marker.setMap(map);
     }
 };
-
+const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredientNames) => {
+    
+    var data = {
+        userLat: userLat ,
+        userLong: userLong,
+        ingredientNames: ingredientNames
+    };
+    var res = await fetch(`${BASE_API_URL}/api/product/read-list-ingredient-nearby-store`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    var dataPos = await res.json();
+    for (var item of dataPos) {
+        var itemLatLng = { lat: item.lat, lng: item.long };
+        var marker = new google.maps.Marker({
+            position: itemLatLng,
+            icon: {
+                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+            }
+        });
+        var itemName = item.name + " (" + item.address + " )";
+        addInfoWindow(marker, itemName);
+        marker.setMap(map);
+    }
+};
 function addInfoWindow(marker, message) {
 
     var infoWindow = new google.maps.InfoWindow({
@@ -437,13 +483,13 @@ const openReplyView = async (cmtId, recipeId) => {
     });
     var data = await res.json();
     var elements = $(`.reply-${data.username}`);
-    
+
     if (elements[0]) {
 
         elements.remove();
 
     }
-    
+
     let chefView = createReplyView(data, cmtId, recipeId);
     $(`li[data-user-id=${cmtId}]`).append(chefView);
 };
@@ -501,7 +547,7 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
             await openReplyView(commentParentId, recipeId);
         }
     }
-    
+
 };
 
 const createShareRecipeModal = (recipe, dataUser) => `<div class="activity--list">
