@@ -22,8 +22,13 @@
         $(".authorized-group").css("display", "none");
         $(".unauthorized-group").css("display", "inline-table");
     }
-
+    $("#logoutBtn>.login").on("click", function (e) {
+        localStorage.clear();
+        window.location.href = '/';
+    });
 })();
+
+
 // Initialize Firebase
 //var config = {
 //    apiKey: "AIzaSyAD2Vqg-rHzg9WJee0Yh0VGH_i_5BQT61E",

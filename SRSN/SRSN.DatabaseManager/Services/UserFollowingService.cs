@@ -17,6 +17,7 @@ namespace SRSN.DatabaseManager.Services
     {
         Task<ICollection<AccountViewModel>> getAllFollowingUser(UserManager<SRSNUser> userManager, int userid);
         Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
+        Task<ICollection<UserFollowing>> followUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
     }
     public class UserFollowingService : BaseService<UserFollowing, AccountViewModel>, IUserFollowingService
     {
@@ -45,7 +46,7 @@ namespace SRSN.DatabaseManager.Services
         
         public async Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId)
         {
-            var listAccount = new List<AccountViewModel>();
+            
 
             var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE UserId=" + userId + " AND FollowingUserId=" + followingUserId).ToListAsync();
             
@@ -55,6 +56,31 @@ namespace SRSN.DatabaseManager.Services
                 this.selfDbSet.Update(item);
                 await this.unitOfWork.CommitAsync();
             }
+
+            return listItems;
+        }
+
+        public async Task<ICollection<UserFollowing>> followUser(UserManager<SRSNUser> userManager, int userId, int followingUserId)
+        {
+           
+
+            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE UserId=" + userId + " AND FollowingUserId=" + followingUserId).ToListAsync();
+
+            if (listItems != null && listItems.Count != 0)
+            {
+                var item = listItems[0];
+                item.Active = true;
+                this.selfDbSet.Update(item);
+            } 
+            else
+            {
+                UserFollowing userFollowing = new UserFollowing();
+                userFollowing.UserId = userId;
+                userFollowing.FollowingUserId = followingUserId;
+                userFollowing.Active = true;
+                await this.selfDbSet.AddAsync(userFollowing);
+            }
+            await this.unitOfWork.CommitAsync();
 
             return listItems;
         }

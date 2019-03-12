@@ -22,7 +22,6 @@ const callFollowingUserApi = async (userName) => {
             $('#count-friends').html(data.length);
             $('.unfollow-btn').on('click', function () {
                 var followingUserId = $(this).children('input').val();
-                console.log(followingUserId);
                 unfollowUser(userName, followingUserId);
             });
         }
@@ -47,8 +46,7 @@ const callFollowingUserApi = async (userName) => {
 };
 
 const unfollowUser = async (userName, followingUserId) => {
-    var res = await fetch("https://localhost:44361/api/userfollowing/unfollow-user?userName=" + userName + "&userId=" + followingUserId);
-    var data = await res.json();
+    var res = await fetch("https://localhost:44361/api/userfollowing/unfollow-user?userName=" + userName + "&userFollowingId=" + followingUserId);
     location.reload();
 };
 
@@ -77,7 +75,7 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                                 <li>
                                                                     <a href="#" title="Unfollow" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
                                                                         <input type="hidden" value="${followingUser.id}">
-                                                                        <i class="fa fa-user-plus"></i>
+                                                                        <i class="fa fa-user-times"></i>
                                                                     </a>
                                                                 </li>
                                                                 

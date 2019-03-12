@@ -8,10 +8,16 @@
                 <span class="type">executive chef</span>
                 <p>${account.description}</p>
                 <ul class="social-icons-chef">
-                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                    <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                    <li><a href="#" title="Follow" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
+                            <input type="hidden" value="${account.id}">
+                            <i class="fa fa-user-plus"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
+                            <i class="fa fa-envelope-o"></i>
+                        </a>
+                   </li>
                 </ul>
             </div>
         </div>
@@ -110,10 +116,16 @@ const readTopUser = (account) =>
                         <a class="button-default theme-filled video-button" href="#">Watch Video</a>
 
                         <ul class="social-icons-chef">
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                            <li><a href="" title="Follow" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
+                                <input type="hidden" value="${account.id}">
+                                <i class="fa fa-user-plus"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
+                            <i class="fa fa-envelope-o"></i>
+                                </a>
+                            </li>
                         </ul>
                     </div>`
 
@@ -127,6 +139,12 @@ const callTopTenAccountApi = async () => {
         let element = readTopTenUsers(item);
         $("#list-top-ten-users").append(element);
     }
+    $('.follow-btn').click((e) => {
+        e.preventDefault();
+        var followingUserId = $(".follow-btn > input").val();
+        var userName = localStorage.getItem('username');
+        followUser(userName, followingUserId);
+    });
 };
 
 //Get top user
@@ -137,7 +155,24 @@ const callTopAccountApi = async () => {
         let element = readTopUser(item);
         $("#read-top-user").append(element);
     }
+    $('.follow-btn').click((e) => {
+        e.preventDefault();
+        var followingUserId = $(".follow-btn > input").val();
+        var userName = localStorage.getItem('username');
+        followUser(userName, followingUserId);
+    });
 };
+
+const followUser = async (userName, followingUserId) => {
+    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userName + "&userFollowingId=" + followingUserId)
+        .then(res => res.json())
+        .then(response => {
+            console.log(response);
+            if (response.success) {
+                location.reload();
+            }
+        });
+}
 
 $(document).ready((e) => {
     callTopTenAccountApi();
