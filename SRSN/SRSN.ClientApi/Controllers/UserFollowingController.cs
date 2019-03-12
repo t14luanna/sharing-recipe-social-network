@@ -36,5 +36,19 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("read-user-following-me")]
+        public async Task<ActionResult> ReadUserFollowingMe(string userName)
+        {
+            try
+            {
+                var user = await userManager.FindByNameAsync(userName);
+                int followingUserId = user.Id;
+                return Ok(await userFollowingService.getAllUserFollowingMe(userManager, followingUserId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
