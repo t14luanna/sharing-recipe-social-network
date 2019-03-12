@@ -363,6 +363,7 @@ const callChefRecipeApi = async (id) => {
     $(".about-chef").append(chefView);
 };
 const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
+    setMapOnAll(null);
 
     var res = await fetch(`${BASE_API_URL}/api/product/read-nearby-store?userLat=${userLat}&userLong=${userLong}&ingredientName=${ingredientName}`);
     var data = (await res.json());
@@ -376,12 +377,14 @@ const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
             }
         });
         var itemName = item.name + " (" + item.address + " )";
+        marker.setAnimation(google.maps.Animation.BOUNCE);
         addInfoWindow(marker, itemName);
         marker.setMap(map);
+        markers.push(marker);
     }
 };
 const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredientNames) => {
-    
+    setMapOnAll(null);
     var data = {
         userLat: userLat ,
         userLong: userLong,
@@ -395,17 +398,24 @@ const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredie
         }
     });
     var dataPos = await res.json();
+    setMapOnAll(null);
     for (var item of dataPos) {
         var itemLatLng = { lat: item.lat, lng: item.long };
         var marker = new google.maps.Marker({
             position: itemLatLng,
             icon: {
-                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                scaledSize: new google.maps.Size(35, 35),
             }
         });
         var itemName = item.name + " (" + item.address + " )";
+
+        marker.setAnimation(google.maps.Animation.BOUNCE);
         addInfoWindow(marker, itemName);
         marker.setMap(map);
+        markers.push(marker);
+
+        
     }
 };
 function addInfoWindow(marker, message) {
@@ -701,3 +711,9 @@ const callCreateAddCollectionApi = async (collectionId, recipeId) => {
         swal("", "Công thức này đã tồn tại trong bộ sưu tập", "error")
     }
 };
+var markers = [];
+function setMapOnAll(map) {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+    }
+}
