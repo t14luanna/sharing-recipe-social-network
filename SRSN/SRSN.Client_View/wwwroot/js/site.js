@@ -22,7 +22,10 @@
         $(".authorized-group").css("display", "none");
         $(".unauthorized-group").css("display", "inline-table");
     }
-
+    $("#logoutBtn>.login").on("click", function (e) {
+        localStorage.clear();
+        window.location.href = '/';
+    });
 })();
 const notifiElement = () =>
     ` <li>

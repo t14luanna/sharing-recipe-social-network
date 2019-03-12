@@ -10,7 +10,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
             <div class="recipe-slider">
                 <div class="slider-detail2">
                     <div>
-                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
+                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                 </div>
 
@@ -52,7 +52,7 @@ const createSingleStepOfRecipe = (step) =>
                                                     
             </div>
             <div class="col-sm-5">
-                <img class="img-step-recipe" src="${step.imageUrl}" alt="image" />
+                <img class="img-step-recipe" src="${step.imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
             </div>
         </div>
     </dd>`;
@@ -61,7 +61,7 @@ const createSingleRelatedRecipe = (recipe) =>
     `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
-            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image"></a>
+            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -86,7 +86,7 @@ const createSingleRecipeDetailPageElement = (recipe) =>
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
             <div class="thumb" >
                 <a href="/recipe/${recipe.id}">
-                    <img src="${recipe.imageCover}" alt="thumbnail" />
+                    <img src="${recipe.imageCover}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
                 </a>
             </div>
             <div class="detail">
@@ -99,7 +99,7 @@ const createSingleRecipeDetailElement = (recipe) =>
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="thumb">
             <a href="/recipe/${recipe.id}">
-                <img src="${recipe.imageCover}" alt="thumbnail" />
+                <img src="${recipe.imageCover}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
             </a>
         </div>
         <div class="detail">
@@ -154,7 +154,7 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">About Chef</h3>
     <div class="listing">
         <div class="image">
             <div class="image-inner">
-                <a href="#"><img src="${chef.avatarImageUrl}" alt="chef"/></a>
+                <a href="#"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
             </div>
         </div>
         <div class="detail">
@@ -480,7 +480,7 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
 const createReplyView = (replyUser, cmtId, recipeId) => `<ul class="reply-${replyUser.username}">
                 <li>
                     <div class="avatar">
-                        <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar"/></a>
+                        <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                     <div class="comment">
                         <h5><a href="#">${replyUser.username}</a></h5>

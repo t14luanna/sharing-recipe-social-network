@@ -22,7 +22,6 @@ const callFollowingUserApi = async (userName) => {
             $('#count-friends').html(data.length);
             $('.unfollow-btn').on('click', function () {
                 var followingUserId = $(this).children('input').val();
-                console.log(followingUserId);
                 unfollowUser(userName, followingUserId);
             });
         }
@@ -77,7 +76,7 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                                 <li>
                                                                     <a href="#" title="Unfollow" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
                                                                         <input type="hidden" value="${followingUser.id}">
-                                                                        <i class="fa fa-user-plus"></i>
+                                                                        <i class="fa fa-user-times"></i>
                                                                     </a>
                                                                 </li>
                                                                 

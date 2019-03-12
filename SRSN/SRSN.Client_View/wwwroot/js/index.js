@@ -5,7 +5,7 @@ const createSingleRecipeElement = (singeRecipe) =>
     `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${singeRecipe.id},'${singeRecipe.recipeName}', '${singeRecipe.imageCover}',
                                                                                         '${new Date(singeRecipe.createTime).getDay() + "/" + new Date(singeRecipe.createTime).getMonth() + "/" + new Date(singeRecipe.createTime).getFullYear()}')">
         <div class="recipe-image">
-            <a href="/recipe/${singeRecipe.id}"><img src="${singeRecipe.imageCover}" alt="image" /></a>
+            <a href="/recipe/${singeRecipe.id}"><img src="${singeRecipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -35,7 +35,7 @@ const createSingleLatestRecipeElement = (recipe) =>
     `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
-            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
+            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -59,7 +59,7 @@ const createSingleRandomRecipeElement = (recipe) =>
     `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                     <div class="recipe-image">
-                                        <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
+                                        <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                                     </div>
                                     <div class="outer-detail">
                                         <div class="detail">
@@ -78,7 +78,7 @@ const createSingleRecipeWidgetElement = (recipe) =>
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                             <div class="thumb">
                                                 <a href="/recipe/${recipe.id}">
-                                                    <img src="${recipe.imageCover}" alt="thumbnail" />
+                                                    <img src="${recipe.imageCover}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
                                                 </a>
                                             </div>
                                             <div class="detail">
@@ -104,7 +104,7 @@ const createSingleBanner = (recipe) =>
                             <a class="read-more-bordered" href="/recipe/${recipe.id}">Read More</a>
                         </div>`;
 const createSingleRecipeOfDay = (recipe) =>
-    `<img src="${recipe.imageCover}" alt="Recipe of the day" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+    `<img src="${recipe.imageCover}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="Recipe of the day" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                             <div class="recipe-contents-outer">
                                 <div class="recipe-contents text-center">

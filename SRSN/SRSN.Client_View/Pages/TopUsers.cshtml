@@ -33,12 +33,13 @@
 @section Scripts {
 
     <script src="~/js/getTopTen.js"></script>
-   
+    
     <script type="text/javascript">
         const changeHeadername = async () => {
             var someText = "Top thành viên";
             $('.main-heading h1').append(document.createTextNode(someText));
         };
+        
         (async () => {
             await changeHeadername();
         })();

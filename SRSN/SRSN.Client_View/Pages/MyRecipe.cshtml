@@ -64,6 +64,7 @@
 
     <!-- ==== Custom Stylesheet ==== -->
     <link rel="stylesheet" href="~/recipepress/css/custom.css">
+    <link rel="stylesheet" href="~/recipepress/css/rankuser.css">
 </head>
 
 <body>
@@ -91,53 +92,15 @@
                                 <nav class="nav-collapse">
                                     <ul class="main-menu left">
                                         <li>
-                                            <a href="index.html">Home</a>
-                                            <ul>
-                                                <li>
-                                                    <a href="variation1.html">variation one</a>
-                                                </li>
-                                                <li>
-                                                    <a href="variation2.html">variation two</a>
-                                                </li>
-                                                <li>
-                                                    <a href="variation3.html">variation three</a>
-                                                </li>
-                                                <li>
-                                                    <a href="variation4.html">variation four</a>
-                                                </li>
-                                                <li>
-                                                    <a href="variation5.html">variation five</a>
-                                                </li>
-                                                <li>
-                                                    <a href="variation6.html">variation six</a>
-                                                </li>
-                                            </ul>
+                                            <a href="/index">Trang chủ</a>
                                         </li>
                                         <li>
-                                            <a href="recipe-listing.html">Recent Recipes</a>
-                                            <ul>
-                                                <li>
-                                                    <a href="recipe-listing.html">recipe listing list view</a>
-                                                </li>
-                                                <li>
-                                                    <a href="recipe-listing-grid.html">recipe listing grid view</a>
-                                                </li>
-                                            </ul>
+                                            <a href="/recipe">Công thức</a>
                                         </li>
                                         <li>
-                                            <a href="#">Recipe Detail</a>
-                                            <ul>
-                                                <li>
-                                                    <a href="recipe-detail.html">recipe detail version 1</a>
-                                                </li>
-                                                <li>
-                                                    <a href="recipe-detail2.html">recipe detail version 2</a>
-                                                </li>
-                                            </ul>
+                                            <a href="/newsfeed">Cộng đồng</a>
                                         </li>
-                                        <li>
-                                            <a href="our-chefs.html">Chefs</a>
-                                        </li>
+                                        <li><a href="/topUsers">Top Thành viên</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -146,32 +109,36 @@
                         <div class="col-md-2">
                             <div class="logo-wrapper">
                                 <a href="#">
-                                    <img src="images/logo.png" alt="logo" />
+                                    <img src="/recipepress/images/logo.png" alt="logo" />
                                 </a>
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="right-nav">
-                                <div class="wrapper-links">
+                                <div class="wrapper-links header-profile-right">
                                     <ul class="header-social-icons">
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-facebook"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-twitter"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-google-plus"></i>
-                                            </a>
-                                        </li>
+                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
                                     </ul>
-                                    <span class="sign-in-buttons">
-                                        <a class="login" href="member-profile.html">Tài khoản của tôi</a>
+                                    <nav class="nav-collapse header-social-icons" id="noti-message-icon" style="display:none">
+                                        <ul>
+                                            <li>
+                                                <a href="#"><i class="fa fa-bell"></i></a>
+                                                <ul id="list-notification"></ul>
+                                            </li>
+                                            <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
+                                        </ul>
+                                    </nav>
+                                    <span class="sign-in-buttons authorized-group" style="display: none;" id="user">
+                                        <a class="information" href="/account/information" id="authorized-group-username">Username</a>
+                                    </span>
+                                    <span class="sign-in-buttons authorized-group" id="logoutBtn">
+                                        <a class="login" href="">Logout</a>
+                                    </span>
+                                    <span class="sign-in-buttons unauthorized-group">
+                                        <a class="login" href="/login">Login</a>
+                                        <a class="register" href="/register">Register</a>
                                     </span>
                                 </div>
                                 <nav class="nav-collapse">
@@ -376,6 +343,7 @@
     <script src="~/recipepress/js/custom.js"></script>
     @*<script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>*@
     <script src="~/recipepress/js/plugins.min.js"></script>
+    <script src="~/js/site.js"></script>
 
     <!-- ==== Color Switcher Plugin ==== -->
     <script src="~/recipepress/js/color-switcher.min.js"></script>
@@ -390,7 +358,7 @@
 
 </html>
 
-<script type="text/javascript" src="~/js/recipe.js"></script>
+
 <script type="text/javascript">
 
     // fetch and render element to html
