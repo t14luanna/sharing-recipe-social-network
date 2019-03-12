@@ -1,9 +1,13 @@
-﻿$('.add-button.add-steps').on("click", function (event) {
+﻿const apikey = 'AJQOnJX4sQs2oOshsbuO2z';
+
+const client = filestack.init(apikey);
+
+$('.add-recipe-steps').on("click", function (event) {
     event.preventDefault();
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields">' +
         ' <span class="handler-list"><i class="fa fa-arrows"></i></span>' +
-        '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>' +
+        '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10" required>    </textarea>' +
         ' <span class="del-list"><i class="fa fa-trash"></i></span>' +
         '</div><div class="image-fields">' +
         '<input type = "file" name = "stepsImage" />' +
@@ -16,16 +20,16 @@
     bindMajesticItem();
 });
 
-$('.add-button.add-ing').on("click", function (event) {
+$('.add-ingredient').on("click", function (event) {
 
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' +
         '<i class="fa fa-arrows"></i></span >' +
         '<input class="ingredient-quantity" type="number" step="1"' +
-        'name="ingredientsQuantity" id="ingredientsQuantity" />' +
+        'name="ingredientsQuantity" id="ingredientsQuantity" required/>' + 
         '<select class="ingredient-weight" name="ingredientsWeight">' +
         '<option value="1" selected>g</option><option value="1000">kg</option></select>' +
-        '<input class="ingredient-detail" type="text" name="ingredients" id="ingredients" />' +
+        '<input class="ingredient-detail" type="text" name="ingredients" id="ingredients" required />' +
         '<span class="del-list"><i class="fa fa-trash"></i></span></div >' +
         '</li>';
     $('.list-sortable.ingredients-list').append(newMajesticItem);
@@ -36,94 +40,47 @@ $('.add-button.add-ing').on("click", function (event) {
 });
 
 $('#submitBtn').on("click", async function (event) {
-    var avatar = $("input[name='avatarUpload']").val();
-    var title = $("input[name='title']").val();
-    var content = $("#recipe-content").val();
-    var serving = $("input[name='serving']").val();
-    var cooktime = $("input[name='cooktime']").val();
-    var level = $("input[name='level']").val();
-    var videoCode = $("input[name='videoCode']").val();
+    var results = getData();
+    if (!results.validation) {
+        return;
+    } else {
+        var data = results.data;
+        //data = await uploadImageSubmit(data);
 
-    var ingredientsQuantity = $("input[name='ingredientsQuantity']");
-    var ingredientsWeight = $("select[name='ingredientsWeight']");
-    var ingredientsName = $("input[name='ingredients']");
-    var ingredients = [];
-    $(ingredientsQuantity).each(i => {
-        ingredients.push({
-            IngredientName: $(ingredientsName[i]).val(),
-            Quantitative: $(ingredientsQuantity[i]).val() * $(ingredientsWeight[i]).children("option:selected").val()
+        var authorization = localStorage.getItem("authorization");
+        var token = (JSON.parse(authorization))["token"];
+        await fetch("https://localhost:44361/api/recipe/submit-recipe", {
+            method: "POST",
+            //body: JSON.stringify({ request: data }),
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).then( (res) => {
+            if (res.status === 200) {
+                swal({
+                    title: "",
+                    text: "Bạn đã chia sẻ công thức thành công",
+                    type: "success",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Xác nhận",
+                    closeOnConfirm: false
+                });
+                setTimeout(async function() {
+                    var data = (await res.json());
+                    var recipeId = data.recipeId;
+                    window.location.href = `/recipe/${recipeId}`
+                }, 1500);
+                
+
+                
+            }
         });
-    });
-
-    var stepDescription = $("textarea[name='stepsDes']");
-    var stepsImage = $("input[name='stepsImage']");
-    var steps = [];
-    $(stepDescription).each(i => {
-        steps.push({
-            Description: $(stepDescription[i]).val(),
-            ImageUrl: $(stepsImage[i]).val()
-        });
-    });
-
-    var categoriesItemList = $("input[name='categoryItem']:checked");
-    var categoriesItem = [];
-    $(categoriesItemList).each((i, item) => {
-        var categoryRecipeE = {
-            'categoryItemId': Number.parseInt($(item).val())
-        }
-        categoriesItem.push(categoryRecipeE);
-    });
-
-
-    var data = {
-        RecipeVM: {
-            ImageCover: avatar,
-            ContentRecipe: content,
-            RecipeName: title,
-            Serving: serving,
-            Cooktime: cooktime,
-            LevelRecipe: level,
-            VideoLink: videoCode
-        },
-        ListCategory: categoriesItem,
-        ListSORVM: steps,
-        ListIngredient: ingredients
-    };
-
-    console.log(data);
-    var authorization = localStorage.getItem("authorization");
-    var token = (JSON.parse(authorization))["token"];
-    var res = await fetch(`${BASE_API_URL}/api/recipe/submit-recipe`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${ token}`
-        }
-    });
-    if (res.status == 200) {
-        //đăng công thức thành công.
-        //them data vao firebase
-        var usernameLocal = window.localStorage.getItem("username");// người submit công thức
-
-        var resUserfollowing = await fetch(`https://localhost:44361/api/userfollowing/read-following-user?userName=${usernameLocal}`);
-        var listUserFollowingMe = await resUserfollowing.json();
-        for (var user of listUserFollowingMe) {
-            var myDataRef = firebase.database().ref(user.username);
-            myDataRef.push({
-                "username": usernameLocal, //người tạo ra notification
-                "content": "vừa đăng công thức mới: " + data[0].title,
-                "date": new Date().toLocaleString(),
-                "link": "/recipe/" + data.recipeId,
-                "isRead": "False"
-            });
-        }
-       
-
     }
-    var mains = await res.json();
-    console.log(mains);
+
 });
+
 function openTab(tab) {
     var i;
     var x = document.getElementsByClassName("city");
@@ -133,10 +90,10 @@ function openTab(tab) {
     document.getElementById(tab).style.display = "block";
 }
 
-const loadcategory = async () => {
-    var res = await fetch(`${BASE_API_URL}/api/category/read`);
+const loadCategory = async () => {
+    var res = await fetch("https://localhost:44361/api/category/read");
     var mains = await res.json();
-    $(mains).each((i, main) => {
+    $(mains).each((i,main) => {
         var div = document.createElement("div");
         div.setAttribute("class", "category-main row");
         var h3 = document.createElement("h3");
@@ -154,9 +111,124 @@ const loadcategory = async () => {
             itemDiv.innerHTML = itemElement;
             //$(itemDiv).on("click", (event) => { console.log(itemDiv); });
             div.append(itemDiv);
-        });
+        });     
         $('#phanloai').append(div);
     });
+}
+
+function getData() {
+    var validation;
+
+    // [Comment luu y ma so 01]
+    // Neu la upload file thi dung nen gom chung vao 1 request object json
+    // hay upload truoc roi dem duong link do gan vao muc nay
+    // neu chua lam thi co the implement sau
+    // nhung khong nen up file len
+    // Truong hop demo, se lay name lam du lieu luu tru
+    var avatar = $("input[name='avatarUpload']")[0].files[0];
+    validation = validationField('avatarUpload', avatar);
+    var avatarStr = avatar.name;
+    var title = $("input[name='title']").val();
+    validation = validationField('title', title);
+    var content = $("#recipe-content").val();
+    validation = validationField('content', content);
+    var serving = $("input[name='serving']").val();
+    var cooktime = $("input[name='cooktime']").val();
+    var level = $("input[name='level']").val();
+    var videoCode = $("input[name='videoCode']").val();
+
+    var ingredientsQuantity = $("input[name='ingredientsQuantity']");
+    var ingredientsWeight = $("select[name='ingredientsWeight']");
+    var ingredientsName = $("input[name='ingredients']");
+    var ingredients = [];
+    $(ingredientsQuantity).each(i => {
+        validation = validationField('ingredients', ingredientsName[i]);
+        ingredients.push({
+            IngredientName: $(ingredientsName[i]).val(),
+            Quantitative: $(ingredientsQuantity[i]).val() * $(ingredientsWeight[i]).children("option:selected").val()
+        });
+    });
+
+    var stepDescription = $("textarea[name='stepsDes']");
+    var stepsImage = $("input[name='stepsImage']");
+    var steps = [];
+    $(stepDescription).each(i => {
+        validation = validationField('stepsDes', stepDescription[i]);
+        steps.push({
+            Description: $(stepDescription[i]).val(),
+            // [Comment luu y ma so 01] chỗ này cũng tương tự, xem lại dùm
+            //ImageUrl: $(stepsImage[i])[0].files[0]
+            ImageUrl: $(stepsImage[i])[0].files[0].name
+        });
+    });
+
+    var categoriesItemList = $("input[name='categoryItem']:checked");
+    var categoriesItem = [];
+    $(categoriesItemList).each((i, item) => {
+        var categoryRecipeE = {
+            categoryItemId: Number.parseInt($(item).val())
+        }
+        categoriesItem.push(categoryRecipeE);
+    });
+
+
+    var data = {
+        recipeVM: {
+            ImageCover: avatarStr,
+            ContentRecipe: content,
+            RecipeName: title,
+            Serving: serving,
+            Cooktime: cooktime,
+            LevelRecipe: level,
+            VideoLink: videoCode,
+        },
+        listCategory: categoriesItem,
+        listSORVM: steps,
+        listIngredient: ingredients
+    };
+
+    return {
+        data : data,
+        validation : validation
+    };
+}
+
+function validationField(name, value) {
+    if (value === '') {
+        $('span[name=' + name + ']').attr('display', 'block');
+        return false;
+    } else {
+        $('span[name=' + name + ']').attr('display', 'none');
+        return true;
+    }
+}
+
+function uploadImageSubmit(data) {
+    return new Promise(async (resolve, reject) => {
+        await uploadFile(data.RecipeVM.ImageCover).then((res) => {
+            data.RecipeVM.ImageCover = res.url;
+        });
+
+        $(data.ListSORVM).each(async (i, step) => {
+            await uploadFile(step.ImageUrl).then((res) => {
+                data.ListSORVM[i].ImageUrl = res.url;
+            });
+        });
+
+        return resolve(data);
+    });
+}
+
+function uploadFile(file) {
+    return new Promise((resolve, reject) => {
+        client.upload(file)
+        .then(res => {
+            resolve(res);
+        })
+        .catch(err => {
+            reject(err);
+        });
+    })
 }
 
 const createSingleRecipeWidgetSubmitPage = (recipe) =>

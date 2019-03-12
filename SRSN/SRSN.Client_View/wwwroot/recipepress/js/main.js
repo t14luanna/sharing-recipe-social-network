@@ -376,20 +376,24 @@ Author URI  : https://themeforest.net/user/themelooks
         /* ------------------------------------------------------------------------- *
          * BANNER SECTION
          * ------------------------------------------------------------------------- */
-        var $bannerSlider = $('.banner--slider'),
-            bannerSliderFull = function (onresize) {
-                $bannerSlider.css('height', function (wn, bs) {
-                    wn = $wn.outerHeight() - $header.outerHeight(); // Window Height without Header
-                    bs = parseInt( bs, 10 ); // Banner Slider Height
+        try {
+            var $bannerSlider = $('.banner--slider'),
+                bannerSliderFull = function (onresize) {
+                    $bannerSlider.css('height', function (wn, bs) {
+                        wn = $wn.outerHeight() - $header.outerHeight(); // Window Height without Header
+                        bs = parseInt(bs, 10); // Banner Slider Height
 
-                    return wn > bs ? wn : bs;
-                });
+                        return wn > bs ? wn : bs;
+                    });
 
-                if (!onresize) $bannerSlider.owlCarousel('refresh');
-            };
+                    if (!onresize) $(bannerSlider).owlCarousel('refresh');
+                };
 
-        bannerSliderFull(0);
-        $wn.on('resize', bannerSliderFull);
+            bannerSliderFull(0);
+            $wn.on('resize', bannerSliderFull);
+        } catch (e) {
+
+        }
 
         /* ------------------------------------------------------------------------- *
          * COMING SOON SECTION

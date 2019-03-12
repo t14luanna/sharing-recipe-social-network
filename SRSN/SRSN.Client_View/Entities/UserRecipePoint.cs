@@ -9,7 +9,11 @@ namespace SRSN.Client_View.Entities
         public int RecipeId { get; set; }
         public int? TotalView { get; set; }
         public int? RatingRecipe { get; set; }
-        public int? Point { get; set; }
+        public double? Point { get; set; }
+        public bool? IsView { get; set; }
+        public bool? IsLike { get; set; }
+        public bool? IsShare { get; set; }
+        public double? CalculatedRating { get; set; }
 
         public virtual Recipe Recipe { get; set; }
         public virtual AspNetUsers User { get; set; }

@@ -100,3 +100,26 @@ input:checked + .slider:before {
 .category-item-name::after{
     background: none;
 }
+
+.add-recipe-steps, .add-ingredient {
+    float: right;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    width: 45px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 16px;
+    transition: 0.2s all ease-in-out;
+    cursor: pointer;
+    background: #6ebe3b;
+}
+
+.add-recipe-steps:hover, .add-ingredient:hover{
+    background: #000000;
+}
+
+.error{
+    color: red;
+    display: none;
+}
