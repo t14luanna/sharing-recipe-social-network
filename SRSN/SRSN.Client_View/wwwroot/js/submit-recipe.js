@@ -93,7 +93,7 @@ $('#submitBtn').on("click", async function (event) {
     console.log(data);
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
+    var res = await fetch(`${BASE_API_URL}/api/recipe/submit-recipe`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -101,6 +101,26 @@ $('#submitBtn').on("click", async function (event) {
             'Authorization': `Bearer ${ token}`
         }
     });
+    if (res.status == 200) {
+        //đăng công thức thành công.
+        //them data vao firebase
+        var usernameLocal = window.localStorage.getItem("username");// người submit công thức
+
+        var resUserfollowing = await fetch(`https://localhost:44361/api/userfollowing/read-following-user?userName=${usernameLocal}`);
+        var listUserFollowingMe = await resUserfollowing.json();
+        for (var user of listUserFollowingMe) {
+            var myDataRef = firebase.database().ref(user.username);
+            myDataRef.push({
+                "username": usernameLocal, //người tạo ra notification
+                "content": "vừa đăng công thức mới: " + data[0].title,
+                "date": new Date().toLocaleString(),
+                "link": "/recipe/" + data.recipeId,
+                "isRead": "False"
+            });
+        }
+       
+
+    }
     var mains = await res.json();
     console.log(mains);
 });
@@ -114,7 +134,7 @@ function openTab(tab) {
 }
 
 const loadcategory = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read");
+    var res = await fetch(`${BASE_API_URL}/api/category/read`);
     var mains = await res.json();
     $(mains).each((i, main) => {
         var div = document.createElement("div");
@@ -178,7 +198,7 @@ const createSingleCategoryItemSubmitPage = (item) =>
                                            `;
 
 const callLatestRecipeWidgetSubmitPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -190,7 +210,7 @@ const callLatestRecipeWidgetSubmitPageApi = async () => {
     }
 };
 const callListCategoryItemSubmitPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
+    var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
     var data = await res.json();
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
@@ -200,7 +220,7 @@ const callListCategoryItemSubmitPageApi = async () => {
     }
 };
 const callPopularSubmitPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {

@@ -228,3 +228,11 @@
 .submit-recipe > a{
     color: white !important
 }
+.newsfeeds-social-icons{
+    float: right;
+    margin-top: 10px;
+}
+.newsfeeds-social-icons a{
+    margin-right: 5px;
+    cursor: pointer
+}

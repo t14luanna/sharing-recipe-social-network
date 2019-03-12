@@ -37,7 +37,7 @@ const createSingleCategoryItemLoginPage = (item) =>
                                            `;
 
 const callLatestRecipeWidgetLoginPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -49,7 +49,7 @@ const callLatestRecipeWidgetLoginPageApi = async () => {
     }
 };
 const callListCategoryItemLoginPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
+    var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
     var data = await res.json();
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
@@ -59,7 +59,7 @@ const callListCategoryItemLoginPageApi = async () => {
     }
 };
 const callPopularLoginPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {

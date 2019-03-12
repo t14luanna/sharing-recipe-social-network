@@ -76,7 +76,7 @@ const callAccountInforApi = async (username) => {
     if (username == userNameLocalStorage) {
         var authorization = localStorage.getItem("authorization");
         var token = (JSON.parse(authorization))["token"];
-         res = await fetch("https://localhost:44361/api/account/read-userinfo", {
+        res = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const callAccountInforApi = async (username) => {
     $("#btnUpdateInfo").on("click", function (e) {
         $(this).attr("disabled", "disabled");
         e.preventDefault();
-        fetch("https://localhost:44361/api/account/update", {
+        fetch(`${BASE_API_URL}/api/account/update`, {
             method: 'PUT',
             body: JSON.stringify({
                 'firstName': $('#firstName').val(),
@@ -128,7 +128,7 @@ const callAccountInforApi = async (username) => {
     $("#btnUpdateHistory").on("click", function (e) {
         $(this).attr("disabled", "disabled");
         e.preventDefault();
-        fetch("https://localhost:44361/api/account/update", {
+        fetch(`${BASE_API_URL}/api/account/update`, {
             method: 'PUT',
             body: JSON.stringify({
                 'firstName': $('#hiddenFirstName').val(),
@@ -162,7 +162,7 @@ const callAccountInforApi = async (username) => {
     $("#btnUpdateContact").on("click", function (e) {
         $(this).attr("disabled", "disabled");
         e.preventDefault();
-        fetch("https://localhost:44361/api/account/update", {
+        fetch(`${BASE_API_URL}/api/account/update`, {
             method: 'PUT',
             body: JSON.stringify({
                 'firstName': $('#hiddenFirstName').val(),

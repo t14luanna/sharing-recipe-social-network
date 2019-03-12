@@ -17,7 +17,7 @@
                         </div>`;
 
 const callPopularCollectionPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/collection/read-top-collection");
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read-top-collection`);
     var data = await res.json();
    
     for (var item of data) {

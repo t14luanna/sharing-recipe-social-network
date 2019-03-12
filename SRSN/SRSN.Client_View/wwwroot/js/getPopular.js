@@ -110,7 +110,7 @@
             </div>`;
 
 const callAccountApi = async () => {
-    var response = await fetch("https://localhost:44361/api/account/get-popular");
+    var response = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/get-popular`);
     var data = await response.json();
     for (var item of data) {
         let element = readPopularUser(item);

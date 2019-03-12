@@ -18,7 +18,7 @@ $("#comment-form").submit(function (e) {
             $.map(formData, function (n, i) {
                 data[n['name']] = n['value'];
             });
-            fetch("https://localhost:44361/api/collection/create", {
+            fetch(`${BASE_API_URL}/api/collection/create`, {
                 method: 'POST', // or 'PUT'
                 body: JSON.stringify(data), // data can be `string` or {object}!
                 headers: {

@@ -120,7 +120,7 @@ const readTopUser = (account) =>
 
 //Get top ten user
 const callTopTenAccountApi = async () => {
-    var res = await fetch("https://localhost:44361/api/account/get-top-ten");
+    var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/get-top-ten`);
     var data = (await res.json());
     var count = 0;
     for (var item of data) {
@@ -131,7 +131,7 @@ const callTopTenAccountApi = async () => {
 
 //Get top user
 const callTopAccountApi = async () => {
-    var res = await fetch("https://localhost:44361/api/account/get-popular");
+    var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/get-popular`);
     var data = (await res.json());
     for (var item of data) {
         let element = readTopUser(item);

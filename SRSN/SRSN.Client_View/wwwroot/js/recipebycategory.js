@@ -30,7 +30,7 @@ const callRecipeByCategoryAPI = async () => {
 
     var url = window.location.href;
     var categoryName = url.split("=")[1];
-    var res = await fetch("https://localhost:44361/api/recipe/read-recipe-by-category?categoryName=" + categoryName);
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-recipe-by-category?categoryName=` + categoryName);
     var a = await res.json();
     var data = a.result;
     console.log('data: ' + data);

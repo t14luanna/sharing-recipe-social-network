@@ -34,7 +34,7 @@ namespace SRSN.DatabaseManager.Services
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.UserName}";
 
                     // apply automapper 
                     var ratingViewModel = this.EntityToVM(item);

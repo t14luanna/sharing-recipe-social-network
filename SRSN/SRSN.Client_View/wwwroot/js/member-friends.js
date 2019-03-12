@@ -2,7 +2,7 @@
 const callFollowingUserApi = async (userName) => {
 
     $('#pagination-container').pagination({
-        dataSource: "https://localhost:44361/api/userfollowing/read-following-user?userName=" + userName,
+        dataSource: `${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userName,
         locator: '',// array
         totalNumberLocator: function (response) {
             return response.length;
@@ -47,7 +47,7 @@ const callFollowingUserApi = async (userName) => {
 };
 
 const unfollowUser = async (userName, followingUserId) => {
-    var res = await fetch("https://localhost:44361/api/userfollowing/unfollow-user?userName=" + userName + "&userId=" + followingUserId);
+    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userId=" + followingUserId);
     var data = await res.json();
     location.reload();
 };

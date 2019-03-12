@@ -178,7 +178,7 @@ const RedirectAPI = async () => {
 
 //choxem khúc giao diện
 const callListCategoryItem = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
+    var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
     var data = await res.json();
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
@@ -188,7 +188,7 @@ const callListCategoryItem = async () => {
     }
 };
 const callRandomRecipeApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-random");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-random`);
     var data = await res.json();
     for (var item of data) {
         let element = createSingleRandomRecipeElement(item);
@@ -197,7 +197,7 @@ const callRandomRecipeApi = async () => {
 };
 
 const callLatestRecipeApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -216,7 +216,7 @@ const callLatestRecipeApi = async () => {
 };
 const callPopularRecipeBannerApi = async () => {
     try {
-        var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+        var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
         var data = await res.json();
         var count = 0;
         for (let item of data) {
@@ -246,7 +246,7 @@ const callPopularRecipeBannerApi = async () => {
 const getRecipeResult = (recipe) => `<div class="quick-search-item" onclick="bindingQuickSearchValue('${recipe.recipeName}')">${recipe.recipeName}</div>`
 const getUserName = (account) => `<div>${account.userName}</div>`
 const callPopularRecipeApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
     var list = await res.json();
     var count = 0;
     for (var item of list) {
@@ -261,7 +261,7 @@ const callPopularRecipeApi = async () => {
     }
 };
 const callPopularRecipeWidgetApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
     var list = await res.json();
     var count = 0;
     for (var item of list) {
@@ -273,7 +273,7 @@ const callPopularRecipeWidgetApi = async () => {
     }
 };
 const callLatestRecipeWidgetApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -292,7 +292,7 @@ const callSearchRecipeApi = async (searchVal) => {
         $("#custom-quick-result").css('display', 'none');
         return;
     }
-    var res = await fetch("https://localhost:44361/api/recipe/read-recipename" + (searchVal ? "?recipeName=" + searchVal : ""));
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-recipename` + (searchVal ? "?recipeName=" + searchVal : ""));
     var data = (await res.json()).result;
     if (data.length == 0) {
         $("#custom-quick-result div").remove();

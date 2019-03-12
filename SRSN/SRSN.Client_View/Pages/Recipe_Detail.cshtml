@@ -19,232 +19,235 @@
     <!-- ==== Custom Stylesheet ==== -->
     <link rel="stylesheet" href="/recipepress/css/custom.css">
 }
-    <div class="recipes-home-body inner-page">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-lg-9">
-                    <div class="recipe-set ">
-                        <div class="wrapper-detail-contents detail-2">
-                            <div class="single-recipe-detail" id="banner-recipe">
+<div class="recipes-home-body inner-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-lg-9">
+                <div class="recipe-set ">
+                    <div class="wrapper-detail-contents detail-2">
+                        <div class="single-recipe-detail" id="banner-recipe">
+                        </div>
+                        <div class="recipe-detail-body">
+                            <div id="content-recipe">
+                                <!--Content-->
                             </div>
-                            <div class="recipe-detail-body">
-                                <div id="content-recipe">
-                                    <!--Content-->
-                                </div>
-                                <br />
-                                <div class="ingredients-checkbox">
-                                    <div class="ingredients">
-                                        <h3>Nguyên liệu</h3>
+                            <br />
+                            <div class="ingredients-checkbox">
+                                <div class="ingredients">
+                                    <h3>Nguyên liệu</h3>
 
-                                        <ul id="list-of-ingredients"></ul>
-                                        <div class="col-md-12">
-                                            <a id="btn-suggest-ingredients" class="default-btn mid-button theme-color pull-right">Cửa hàng gần nhất</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="recipe-steps">
-                                    <h3 class="lined">Các bước thực hiện</h3>
-                                    <dl class="accordion clearfix" id="list-step-recipe"></dl>
-                                </div>
-                                <div class="separator-post"></div>
-                                <div class="tags-icons">
-                                    <div class="row">
-                                        <div class="col-sm-7">
-                                            <div class="details-tags">
-                                                <ul>
-                                                    <li><a href="#">garlic</a></li>
-                                                    <li><a href="#">pizza</a></li>
-                                                    <li><a href="#">potato</a></li>
-                                                    <li><a href="#">roasted</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <div class="details-social-icons">
-                                                <a href="#/" title="Like" class="like-button">
-                                                    <i class=" fa fa-2x fa-heart-o" onclick="toggleLikeButton(this)" id="like-heart"></i>
-                                                </a>
-                                                <a id="btn-share-recipe" title="Chia sẻ"><i class="fa fa-2x fa-share"></i></a>
-                                                <a id="btn-add-collection" title="Thêm vào BST"><i class="fa fa-2x fa-plus"></i></a>
-                                            </div>
-                                        </div>
+                                    <ul id="list-of-ingredients"></ul>
+                                    <div class="col-md-12">
+                                        <a id="btn-suggest-ingredients" class="default-btn mid-button theme-color pull-right">Cửa hàng gần nhất</a>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="about-chef"></div>
-
-                            <div class="related-recipes">
-                                <h3 class="lined">Related Recipes</h3>
-                                <div class="boxed-recipes text-center" id="list-related-recipe">
-
+                            <div class="recipe-steps">
+                                <h3 class="lined">Các bước thực hiện</h3>
+                                <dl class="accordion clearfix" id="list-step-recipe"></dl>
+                            </div>
+                            <div class="separator-post"></div>
+                            <div class="tags-icons">
+                                <div class="row">
+                                    <div class="col-sm-7">
+                                        <div class="details-tags">
+                                            <ul>
+                                                <li><a href="#">garlic</a></li>
+                                                <li><a href="#">pizza</a></li>
+                                                <li><a href="#">potato</a></li>
+                                                <li><a href="#">roasted</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="details-social-icons">
+                                            <a href="#" title="Like" class="like-button">
+                                                <i class=" fa fa-2x fa-heart-o" onclick="toggleLikeButton(this)" id="like-heart"></i>
+                                            </a>
+                                            <a id="btn-share-recipe" title="Chia sẻ"><i class="fa fa-2x fa-share"></i></a>
+                                            <a id="btn-add-collection" title="Thêm vào BST"><i class="fa fa-2x fa-plus"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="recipe-comments">
-                                <h3 class="lined">Comments (<span id="numOfComment"></span>)</h3>
-                                <ul id="list-rating-comment"></ul>
+                        <div class="about-chef"></div>
+
+                        <div class="related-recipes">
+                            <h3 class="lined">Related Recipes</h3>
+                            <div class="boxed-recipes text-center" id="list-related-recipe">
+
                             </div>
+                        </div>
 
-                            <div class="comment-form">
-                                <h3 class="lined">Leave Comment</h3>
+                        <div class="recipe-comments">
+                            <h3 class="lined">Comments (<span id="numOfComment"></span>)</h3>
+                            <ul id="list-rating-comment"></ul>
+                        </div>
 
-                                <div class="form-rating">
-                                    <p class="alert green alert-success">Đăng đánh giá thành công!<span class="close-alert"><i class="fa fa-close"></i></span></p>
-                                    <p class="alert red alert-comment"><span class="close-alert"><i class="fa fa-close"></i></span></p>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="col-md-3 rating-title">Đánh giá công thức</div>
-                                            <div class="col-md-8">
-                                                <fieldset class="rating-recipe">
-                                                    <input type="radio" id="star5" name="rating" value="5" /><label class="full" for="star5" title="Awesome - 5 stars"></label>
-                                                    <input type="radio" id="star4half" name="rating" value="4.5" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
-                                                    <input type="radio" id="star4" name="rating" value="4" /><label class="full" for="star4" title="Pretty good - 4 stars"></label>
-                                                    <input type="radio" id="star3half" name="rating" value="3.5" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label>
-                                                    <input type="radio" id="star3" name="rating" value="3" /><label class="full" for="star3" title="Meh - 3 stars"></label>
-                                                    <input type="radio" id="star2half" name="rating" value="2.5" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
-                                                    <input type="radio" id="star2" name="rating" value="2" /><label class="full" for="star2" title="Kinda bad - 2 stars"></label>
-                                                    <input type="radio" id="star1half" name="rating" value="1.5" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label>
-                                                    <input type="radio" id="star1" name="rating" value="1" /><label class="full" for="star1" title="Sucks big time - 1 star"></label>
-                                                    <input type="radio" id="starhalf" name="rating" value="0.5" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
-                                                </fieldset>
-                                            </div>
+                        <div class="comment-form">
+                            <h3 class="lined">Leave Comment</h3>
+
+                            <div class="form-rating">
+                                <p class="alert green alert-success">Đăng đánh giá thành công!<span class="close-alert"><i class="fa fa-close"></i></span></p>
+                                <p class="alert red alert-comment"><span class="close-alert"><i class="fa fa-close"></i></span></p>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-3 rating-title">Đánh giá công thức</div>
+                                        <div class="col-md-8">
+                                            <fieldset class="rating-recipe">
+                                                <input type="radio" id="star5" name="rating" value="5" /><label class="full" for="star5" title="Awesome - 5 stars"></label>
+                                                <input type="radio" id="star4half" name="rating" value="4.5" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
+                                                <input type="radio" id="star4" name="rating" value="4" /><label class="full" for="star4" title="Pretty good - 4 stars"></label>
+                                                <input type="radio" id="star3half" name="rating" value="3.5" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label>
+                                                <input type="radio" id="star3" name="rating" value="3" /><label class="full" for="star3" title="Meh - 3 stars"></label>
+                                                <input type="radio" id="star2half" name="rating" value="2.5" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
+                                                <input type="radio" id="star2" name="rating" value="2" /><label class="full" for="star2" title="Kinda bad - 2 stars"></label>
+                                                <input type="radio" id="star1half" name="rating" value="1.5" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label>
+                                                <input type="radio" id="star1" name="rating" value="1" /><label class="full" for="star1" title="Sucks big time - 1 star"></label>
+                                                <input type="radio" id="starhalf" name="rating" value="0.5" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
+                                            </fieldset>
                                         </div>
-                                        <div class="col-md-12">
-                                            <textarea name="comment" id="comment"
-                                                      placeholder="Bình luận:
+                                    </div>
+                                    <div class="col-md-12">
+                                        <textarea name="comment" id="comment"
+                                                  placeholder="Bình luận:
                                                   * Mẹo: Nội dung đánh giá phải mang tính chất khách quan, từ chia sẻ đánh giá của bạn sẽ giúp rất nhiều cho người dùng có quyết định lựa chọn đúng đắn."></textarea>
-                                        </div>
                                     </div>
-
-                                    <button class="submit-comment">Đánh giá</button>
                                 </div>
+
+                                <button class="submit-comment">Đánh giá</button>
                             </div>
-
-
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-3">
-                    <aside>
-                        <div class="side-bar">
-                            <!--recipes search widget-->
-                            <div class="widget recipe-search">
 
-                                <div class="category-list">
-                                    <!--<div class="list-inner">-->
-                                    <ul id="list-category-item-recipe-detail"></ul>
-                                    <!--</div>-->
-                                </div>
-                            </div>
-                            <!---recipes search widget ends-->
-                            <!--popular recipes widget-->
-                            <div class="widget latest-news-widget">
-                                <h2>popular recipes</h2>
-                                <ul id="popular-recipes-detail"></ul>
-                            </div>
-                            <!--popular recipes widget ends-->
-                            <div class="widget">
-                                <a href="#">
-                                    <img src="/recipepress/images/temp-images/add-side.jpg" alt="Add" />
-                                </a>
-                            </div>
-                            <!--latest news widget-->
-                            <div class="widget latest-news-widget">
-                                <h2>Latest Recipes</h2>
-                                <ul id="latest-recipe-detail"></ul>
-                            </div>
-                            <!--latest news widget ends-->
-                            <!--get social-->
-                            <div class="widget widget-get-social">
-                                <h2>get social</h2>
-                                <ul>
-                                    <li class="facebook">
-                                        <a href="#">
-                                            <i class="fa fa-facebook"></i>
-                                            <span class="count">23.5K</span>
-                                            <span class="count-type">Likes</span>
-                                        </a>
-                                    </li>
-                                    <li class="twitter">
-                                        <a href="#">
-                                            <i class="fa fa-twitter"></i>
-                                            <span class="count">23.5K</span>
-                                            <span class="count-type">Likes</span>
-                                        </a>
-                                    </li>
-                                    <li class="google-plus">
-                                        <a href="#">
-                                            <i class="fa fa-google-plus"></i>
-                                            <span class="count">23.5K</span>
-                                            <span class="count-type">Likes</span>
-                                        </a>
-                                    </li>
 
-                                </ul>
-                            </div>
-
-                            <!--get social ends-->
-                        </div>
-                    </aside>
-
-                </div>
-            </div>
-
-        </div>
-        <!-- The Modal -->
-        <div id="modal-suggest-ingredients" class="modal">
-            <!-- Modal content -->
-            <div class="row modal-content">
-                <div class="col-md-12 modal-header">
-                    <span id="close-modal-suggest" class="close">&times;</span>
-                </div>
-                <div class="col-md-12 modal-body">
-                    <div class="col-md-5">
-
-                        <div class="modal-component-1" id="modal-products">
-                            <div class="email-field box-search-ingre">
-                                <input onkeyup="filterIngredients()" id="filter-ingredient" type="text" placeholder="Tìm kiếm">
-                                <button><i class="fa fa-search"></i></button>
-                            </div>
-                            <ul id="modal-list-item" class="modal-list-product-item"></ul>
-                        </div>
-                    </div>
-                    <div class="col-md-7">
-                        <div class="modal-component-2">
-                            <div id="map"></div>
-                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-md-4 col-lg-3">
+                <aside>
+                    <div class="side-bar">
+                        <!--recipes search widget-->
+                        <div class="widget recipe-search">
 
-        </div>
-        <div id="modal-share-recipe" class="modal">
-            <!-- Modal content -->
-            <div class="row modal-content modal-share-content">
-                <div class="col-md-12 modal-header">
-                    <span id="close-share-recipe" class="close">&times;</span>
-                </div>
-                <div class="col-md-12 modal-body" id="modal-body-share-recipe">
-                </div>
+                            <div class="category-list">
+                                <!--<div class="list-inner">-->
+                                <ul id="list-category-item-recipe-detail"></ul>
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <!---recipes search widget ends-->
+                        <!--popular recipes widget-->
+                        <div class="widget latest-news-widget">
+                            <h2>popular recipes</h2>
+                            <ul id="popular-recipes-detail"></ul>
+                        </div>
+                        <!--popular recipes widget ends-->
+                        <div class="widget">
+                            <a href="#">
+                                <img src="/recipepress/images/temp-images/add-side.jpg" alt="Add" />
+                            </a>
+                        </div>
+                        <!--latest news widget-->
+                        <div class="widget latest-news-widget">
+                            <h2>Latest Recipes</h2>
+                            <ul id="latest-recipe-detail"></ul>
+                        </div>
+                        <!--latest news widget ends-->
+                        <!--get social-->
+                        <div class="widget widget-get-social">
+                            <h2>get social</h2>
+                            <ul>
+                                <li class="facebook">
+                                    <a href="#">
+                                        <i class="fa fa-facebook"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+                                <li class="twitter">
+                                    <a href="#">
+                                        <i class="fa fa-twitter"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+                                <li class="google-plus">
+                                    <a href="#">
+                                        <i class="fa fa-google-plus"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <!--get social ends-->
+                    </div>
+                </aside>
+
             </div>
-
         </div>
-        <div id="modal-add-collection" class="modal">
-            <!-- Modal content -->
-            <div class="row modal-content modal-share-content">
-                <div class="col-md-12 modal-header">
-                    <h4 class="title-modal-collection">Thêm vào bộ sưu tập<span id="close-add-collection" class="close">&times;</span></h4>
-                </div>
-                <div class="col-md-12 modal-body row gutter--15 AdjustRow" id="modal-body-add-collection">
-                </div>
-            </div>
 
-        </div>
     </div>
+    <!-- The Modal -->
+    <div id="modal-suggest-ingredients" class="modal">
+        <!-- Modal content -->
+        <div class="row modal-content">
+            <div class="col-md-12 modal-header">
+                <span id="close-modal-suggest" class="close">&times;</span>
+            </div>
+            <div class="col-md-12 modal-body">
+                <div class="col-md-5">
+
+                    <div class="modal-component-1" id="modal-products">
+                        <div class="email-field box-search-ingre">
+                            <input onkeyup="filterIngredients()" id="filter-ingredient" type="text" placeholder="Tìm kiếm">
+                            <button><i class="fa fa-search"></i></button>
+                        </div>
+                        <ul id="modal-list-item" class="modal-list-product-item"></ul>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="modal-component-2">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="modal-share-recipe" class="modal">
+        <!-- Modal content -->
+        <div class="row modal-content modal-share-content">
+            <div class="col-md-12 modal-header">
+                <span id="close-share-recipe" class="close">&times;</span>
+            </div>
+            <div class="col-md-12 modal-body" id="modal-body-share-recipe">
+            </div>
+        </div>
+
+    </div>
+    <div id="modal-add-collection" class="modal">
+        <!-- Modal content -->
+        <div class="row modal-content modal-share-content">
+            <div class="col-md-12 modal-header">
+                <h4 class="title-modal-collection">Thêm vào bộ sưu tập<span id="close-add-collection" class="close">&times;</span></h4>
+            </div>
+            <div class="col-md-12 modal-body row gutter--15 AdjustRow" id="modal-body-add-collection">
+            </div>
+        </div>
+
+    </div>
+</div>
 
 @section Scripts {
+
     <script src="~/js/recipeDetail.js"></script>
+   
+
     <script type="text/javascript" src="recipepress/js/plugins.min.js"></script>
     <script type="text/javascript" src="recipepress/js/color-switcher.min.js"></script>
     <script type="text/javascript" src="recipepress/js/main.js"></script>
@@ -339,7 +342,7 @@
             $("#modal-suggest-ingredients").css("display", "block")
 
         });
-        
+
         $("#close-modal-suggest").on("click", function (e) {
             $("#modal-suggest-ingredients").css("display", "none");
 
@@ -420,10 +423,22 @@
                 var data = await res.json();
                 if (data.isLike) {
                     x.classList.add("fa-heart");
+                    //them data vao firebase
+                    var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
+                    var usernameLocal = window.localStorage.getItem("username");//người đang like
+
+                    var myDataRef = firebase.database().ref(chefUsername);
+                    myDataRef.push({
+                        "username": usernameLocal,
+                        "content": "đã thích công thức của bạn.",
+                        "date": new Date().toLocaleString(),
+                        "link": "/recipe/" + recipeId,
+                        "isRead": "False"
+                    });
+
                 }
                 else {
                     x.classList.remove("fa-heart");
-
                 }
             } catch (e) {
                 alert("Like không thành công")

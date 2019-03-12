@@ -22,7 +22,7 @@
 const callRecipeByUserId = async () => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var userRes = await fetch("https://localhost:44361/api/account/read-userinfo", {
+    var userRes = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ const callRecipeByUserId = async () => {
     });
     var userData = await userRes.json();
     var userId = userData.id;
-    var res = await fetch("https://localhost:44361/api/recipe/read?userId=" + userId);
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read?userId=` + userId);
     var data = await res.json();
     var count = 0;
     for (var item of data) {

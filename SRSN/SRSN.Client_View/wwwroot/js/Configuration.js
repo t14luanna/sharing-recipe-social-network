@@ -1,4 +1,4 @@
-﻿var BASE_API_URL = "https://localhost:44361";
+﻿var BASE_API_URL = "https://192.168.0.112:45460";
 var RECIPE_API_URL = "api/recipe";
 var ACCOUNT_API_URL = "api/account";
 var CATEGORY_API_URL = "api/category";

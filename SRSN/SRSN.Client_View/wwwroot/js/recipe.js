@@ -142,7 +142,7 @@ const loadRecipeLocalStorage = async () => {
     }
 };
 const callListCategoryItemRecipePage = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
+    var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
     var data = await res.json();
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
@@ -152,7 +152,7 @@ const callListCategoryItemRecipePage = async () => {
     }
 };
 const callPopularRecipePageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {

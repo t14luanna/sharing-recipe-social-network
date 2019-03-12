@@ -17,6 +17,7 @@ namespace SRSN.DatabaseManager.Services
     {
         Task<ICollection<AccountViewModel>> getAllFollowingUser(UserManager<SRSNUser> userManager, int userid);
         Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
+        Task<ICollection<AccountViewModel>> getAllUserFollowingMe(UserManager<SRSNUser> userManager, int followingUserId);//get all user who is following me
     }
     public class UserFollowingService : BaseService<UserFollowing, AccountViewModel>, IUserFollowingService
     {
@@ -57,6 +58,24 @@ namespace SRSN.DatabaseManager.Services
             }
 
             return listItems;
+        }
+
+        public async Task<ICollection<AccountViewModel>> getAllUserFollowingMe(UserManager<SRSNUser> userManager, int followingUserId)
+        {
+            var listAccount = new List<AccountViewModel>();
+
+            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active='True' AND FollowingUserId=" + followingUserId).ToListAsync();
+
+            foreach (var item in listItems)
+            {
+                var user = await userManager.FindByIdAsync(item.FollowingUserId.ToString());
+                var userVM = new AccountViewModel();
+                mapper.Map(user, userVM);
+
+                listAccount.Add(userVM);
+            }
+
+            return listAccount;
         }
     }
 }

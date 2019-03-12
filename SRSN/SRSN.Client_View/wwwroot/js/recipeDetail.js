@@ -116,7 +116,7 @@ const createSingleRatingComment = (comment, commentReplyCount) =>
        
         <div class="avatar">
 
-            <a href="#"><img class="avatar-comment" src="${comment.avatarUrl}" alt="avatar" /></a>
+            <a href="#"><img class="avatar-comment" src="${comment.avatarUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" /></a>
         </div>
         <div class="comment">
             
@@ -269,12 +269,12 @@ const callReadRatingCommentApi = async (id) => {
         $("#list-rating-comment").append(element);
     }
     $("#numOfComment").append(count);
-}
+};
 const callCountCommentsApi = async (recipeId, recipeParentId) => {
     var countReply = await fetch(`${BASE_API_URL}/api/comment/get-count-reply-comment?recipeId=${recipeId}&recipeParentId=${recipeParentId}`);
     var dataCount = (await countReply.json());
     return dataCount;
-}
+};
 const callReadProductByIngredientNameApi = async () => {
     try {
         //var res = await fetch(`${BASE_API_URL}/${PRODUCT_API_URL}/read-by-ingredient-name?name=${name}`);
@@ -292,7 +292,7 @@ const callReadProductByIngredientNameApi = async () => {
     } catch (e) {
         console.log(e);
     }
-}
+};
 
 const getCheckedIngredient = async () => {
     try {
@@ -313,7 +313,7 @@ const getCheckedIngredient = async () => {
     } catch (e) {
         console.log(e);
     }
-}
+};
 const callStepOfRecipeApi = async (id) => {
 
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
@@ -341,7 +341,7 @@ const callIsLikeRecipe = async (recipeId) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        if (res.status != 404) {
+        if (res.status == 200) {
             $("#like-heart").removeClass("fa-heart");
             $("#like-heart").addClass("fa-heart");
         }
@@ -360,6 +360,8 @@ const callChefRecipeApi = async (id) => {
     var description = chef.description != null ? chef.description : "";
     chef.description = description;
     let chefView = createChefByRecipeId(chef);
+    var chefUsername = chef.username;
+    chefUsername = window.localStorage.setItem("chefusername", chefUsername);
     $(".about-chef").append(chefView);
 };
 const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
@@ -386,7 +388,7 @@ const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
 const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredientNames) => {
     setMapOnAll(null);
     var data = {
-        userLat: userLat ,
+        userLat: userLat,
         userLong: userLong,
         ingredientNames: ingredientNames
     };
@@ -427,7 +429,7 @@ function addInfoWindow(marker, message) {
     google.maps.event.addListener(marker, 'click', function () {
         infoWindow.open(map, marker);
     });
-}
+};
 const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
@@ -454,10 +456,25 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
             'Authorization': `Bearer ${token}`
         }
     });
-    if (res.status == 200) {
+    if (res.status == 200) {//successfully
         $(".alert-success").css("display", "block");
         $("textarea[name='comment']").val('');
         callReadRatingCommentApi(recipeId);
+
+        //them data vao firebase
+        var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
+        var usernameLocal = window.localStorage.getItem("username");//người đang comment
+
+        var myDataRef = firebase.database().ref(chefUsername);
+        myDataRef.push({
+            "username": usernameLocal,
+            "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
+            "date": new Date().toLocaleString(),
+            "link": "/recipe/" + data.recipeId,
+            "isRead": "False"
+        });
+
+
     }
 };
 const createReplyView = (replyUser, cmtId, recipeId) => `<ul class="reply-${replyUser.username}">
