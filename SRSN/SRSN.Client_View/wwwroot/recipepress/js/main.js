@@ -385,7 +385,7 @@ Author URI  : https://themeforest.net/user/themelooks
                     return wn > bs ? wn : bs;
                 });
 
-                if (!onresize) $bannerSlider.owlCarousel('refresh');
+                if (!onresize) $(bannerSlider).owlCarousel('refresh');
             };
 
         bannerSliderFull(0);

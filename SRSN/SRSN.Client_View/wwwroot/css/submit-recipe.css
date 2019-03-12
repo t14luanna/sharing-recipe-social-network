@@ -118,3 +118,8 @@ input:checked + .slider:before {
 .add-recipe-steps:hover, .add-ingredient:hover{
     background: #000000;
 }
+
+.error{
+    color: red;
+    display: none;
+}

@@ -40,22 +40,27 @@ $('.add-ingredient').on("click", function (event) {
 });
 
 $('#submitBtn').on("click", async function (event) {
-    var data = getData();
+    var results = getData();
+    if (results.validation) {
+        return;
+    } else {
+        var data = results.data;
+        //data = await uploadImageSubmit(data);
 
-    //data = await uploadImageSubmit(data);
+        var authorization = localStorage.getItem("authorization");
+        var token = (JSON.parse(authorization))["token"];
+        var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).then((res) => {
+            console.log(res);
+        });
+    }
 
-    var authorization = localStorage.getItem("authorization");
-    var token = (JSON.parse(authorization))["token"];
-    var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    }).then((res) => {
-        console.log(res);
-    });
 });
 
 function openTab(tab) {
@@ -94,9 +99,14 @@ const loadCategory = async () => {
 }
 
 function getData() {
+    var validation;
+
     var avatar = $("input[name='avatarUpload']")[0].files[0];
+    validation = validationField('avatarUpload', avatar);
     var title = $("input[name='title']").val();
+    validation = validationField('title', title);
     var content = $("#recipe-content").val();
+    validation = validationField('content', content);
     var serving = $("input[name='serving']").val();
     var cooktime = $("input[name='cooktime']").val();
     var level = $("input[name='level']").val();
@@ -107,6 +117,7 @@ function getData() {
     var ingredientsName = $("input[name='ingredients']");
     var ingredients = [];
     $(ingredientsQuantity).each(i => {
+        validation = validationField('ingredients', ingredientsName[i]);
         ingredients.push({
             IngredientName: $(ingredientsName[i]).val(),
             Quantitative: $(ingredientsQuantity[i]).val() * $(ingredientsWeight[i]).children("option:selected").val()
@@ -117,6 +128,7 @@ function getData() {
     var stepsImage = $("input[name='stepsImage']");
     var steps = [];
     $(stepDescription).each(i => {
+        validation = validationField('stepsDes', stepDescription[i]);
         steps.push({
             Description: $(stepDescription[i]).val(),
             ImageUrl: $(stepsImage[i])[0].files[0]
@@ -148,7 +160,20 @@ function getData() {
         }
     };
 
-    return data;
+    return {
+        data : data,
+        validation : validation
+    };
+}
+
+function validationField(name, value) {
+    if (value === '') {
+        $('span[name=' + name + ']').attr('display', 'block');
+        return false;
+    } else {
+        $('span[name=' + name + ']').attr('display', 'none');
+        return true;
+    }
 }
 
 function uploadImageSubmit(data) {
