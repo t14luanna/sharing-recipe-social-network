@@ -41,7 +41,7 @@ $('.add-ingredient').on("click", function (event) {
 
 $('#submitBtn').on("click", async function (event) {
     var results = getData();
-    if (results.validation) {
+    if (results.validation === false) {
         return;
     } else {
         var data = results.data;
@@ -99,7 +99,7 @@ const loadCategory = async () => {
 }
 
 function getData() {
-    var validation;
+    var validation = true;
 
     var avatar = $("input[name='avatarUpload']")[0].files[0];
     validation = validationField('avatarUpload', avatar);
