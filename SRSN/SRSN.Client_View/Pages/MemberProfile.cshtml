@@ -182,10 +182,10 @@
                                             <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
                                                 <li><a href="member-activity-personal.html">Dòng thời gian</a></li>
                                                 <li class="active"><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
-                                                <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi</a></li>
-                                                <li><a href="member-groups.html">Công thức của tôi</a></li>
+                                                <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
+                                                <li><a href="/account/my-recipe/@(RouteData.Values["userName"])">C.thức của tôi</a></li>
                                                 <li><a href="/account/collection/@(RouteData.Values["userName"])">Bộ sưu tập của tôi</a></li>
-                                                <li><a href="member-media-all.html">Quản lý nguyên liệu</a></li>
+                                                <li><a href="member-media-all.html">Q.lý nguyên liệu(56)</a></li>
                                             </ul>
                                         </div>
                                         <!-- Content Nav End -->
@@ -204,7 +204,7 @@
 
                                                 </div>
                                                 <div class="edit-profile" style="display: none">
-                                                    <button class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
+                                                    <button id="btnUpdateInfo" class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
                                                 </div>
                                             </div>
                                             <!-- Profile Item End -->
@@ -219,7 +219,7 @@
                                                 <div class="profile--info" id="user-description">
                                                 </div>
                                                 <div class="edit-profile" style="display: none">
-                                                    <button class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
+                                                    <button id="btnUpdateHistory" class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
                                                 </div>
                                             </div>
                                             <!-- Profile Item End -->
@@ -241,7 +241,7 @@
                                             </div>
                                             <!-- Profile Item End -->
                                             <div class="edit-profile"  style="display: none">
-                                                <button class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
+                                                <button id="btnUpdateContact" class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
                                             </div>
                                         </div>
 

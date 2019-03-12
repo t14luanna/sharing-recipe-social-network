@@ -1,6 +1,5 @@
 ﻿
 const callFollowingUserApi = async (userName) => {
-    
 
     $('#pagination-container').pagination({
         dataSource: "https://localhost:44361/api/userfollowing/read-following-user?userName=" + userName,
@@ -19,7 +18,13 @@ const callFollowingUserApi = async (userName) => {
             // template method of yourself
             var html = template(data, pagination);
             $('#list-following-user').html(html);
+            $('#list-following-user').css('height', '');
             $('#count-friends').html(data.length);
+            $('.unfollow-btn').on('click', function () {
+                var followingUserId = $(this).children('input').val();
+                console.log(followingUserId);
+                unfollowUser(userName, followingUserId);
+            });
         }
     });
     var template = function (data, pagination) {
@@ -39,6 +44,12 @@ const callFollowingUserApi = async (userName) => {
         }
         return s;
     };
+};
+
+const unfollowUser = async (userName, followingUserId) => {
+    var res = await fetch("https://localhost:44361/api/userfollowing/unfollow-user?userName=" + userName + "&userId=" + followingUserId);
+    var data = await res.json();
+    location.reload();
 };
 
 const createSingleFollowingUserElement = (followingUser) =>
@@ -64,7 +75,8 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#" title="Unfollow" class="btn-link" data-toggle="tooltip" data-placement="bottom">
+                                                                    <a href="#" title="Unfollow" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
+                                                                        <input type="hidden" value="${followingUser.id}">
                                                                         <i class="fa fa-user-plus"></i>
                                                                     </a>
                                                                 </li>

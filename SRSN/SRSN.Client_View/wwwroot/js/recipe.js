@@ -128,6 +128,8 @@ const createSingleRecentRecipe = (recipe) =>
                                     </li>
 
                                    `;
+
+
 const loadRecipeLocalStorage = async () => {
     if (localStorage.getItem('recentRecipe') == null) {
         $("#list-recent-recipe").html("Chưa có thông tin!");
@@ -162,5 +164,6 @@ const callPopularRecipePageApi = async () => {
         }
     }
 };
+
 
 

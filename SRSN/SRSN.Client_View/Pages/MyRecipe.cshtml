@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@page "/account/my-recipe/{username}"
+@model SRSN.Client_View.Pages.MyRecipeModel
+@{
+    Layout = null;
+    ViewData["Title"] = "MyRecipe"; 
+}
+
+<!DOCTYPE html>
 <html>
 
 <!-- Mirrored from templates.majesticthemes.com/recipepress/recipe-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:10:26 GMT -->
@@ -12,53 +19,51 @@
     <!--google fonts-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,500,600,700%7CRoboto:300,400,400i,500,700">
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'
-        rel='stylesheet' type='text/css'>
+          rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Karla:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <!--jquery ui stylesheet-->
-    <link rel="stylesheet" href="../../code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
 
     <!-- site favicon -->
-    <link rel="icon" href="images/favicon.png" />
+    <link rel="icon" href="recipepress/images/favicon.png" />
 
     <!--selectric stylesheet-->
-    <link rel="stylesheet" href="css/selectric.css" />
+    <link rel="stylesheet" href="~/recipepress/css/selectric.css" />
     <!--font awesome stylesheet-->
-    <link rel="stylesheet" href="css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/recipepress/css/font-awesome.min.css" />
     <!--swipe box stylesheet-->
-    <link rel="stylesheet" href="css/swipebox.css" />
+    <link rel="stylesheet" href="~/recipepress/css/swipebox.css" />
     <!-- mean menu stylesheet-->
-    <link rel="stylesheet" href="css/meanmenu.css" />
+    <link rel="stylesheet" href="~/recipepress/css/meanmenu.css" />
     <!--slick slider stylesheet-->
-    <link rel="stylesheet" href="css/slick.css" />
-    <link rel="stylesheet" href="css/slick-theme.css" />
+    <link rel="stylesheet" href="~/recipepress/css/slick.css" />
+    <link rel="stylesheet" href="~/recipepress/css/slick-theme.css" />
     <!--bootstrap stylesheets-->
-    <link rel="stylesheet" href="css/bootstrap.css" />
-    <link rel="stylesheet" href="css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="~/recipepress/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/recipepress/css/bootstrap-theme.css" />
     <!--animate stylesheet-->
-    <link rel="stylesheet" href="css/animate.css" />
+    <link rel="stylesheet" href="~/recipepress/css/animate.css" />
     <!--main stylesheet-->
-    <link rel="stylesheet" href="css/main.css" />
-    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="stylesheet" href="~/recipepress/css/main.css" />
+    <link rel="icon" href="~/recipepress/images/favicon.png" type="image/png">
 
     <!-- ==== Google Font ==== -->
-
-
     <!-- ==== Plugins Bundle ==== -->
-    <link rel="stylesheet" href="css/plugins.min.css">
+    <link rel="stylesheet" href="~/recipepress/css/plugins.min.css">
 
     <!-- ==== Main Stylesheet ==== -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="~/recipepress/css/style.css">
 
     <!-- ==== Responsive Stylesheet ==== -->
-    <link rel="stylesheet" href="css/responsive-style.css">
+    <link rel="stylesheet" href="~/recipepress/css/responsive-style.css">
 
     <!-- ==== Color Scheme Stylesheet ==== -->
-    <link rel="stylesheet" href="css/colors/color-1.css" id="changeColorScheme">
+    <link rel="stylesheet" href="~/recipepress/css/colors/color-1.css" id="changeColorScheme">
 
     <!-- ==== Custom Stylesheet ==== -->
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="~/recipepress/css/custom.css">
 </head>
 
 <body>
@@ -73,7 +78,6 @@
         </div>
     </div>
     <!--pre-loader ends-->
-
     <!--header-->
     <header>
         <div class="header header-var1 fade-load-down">
@@ -205,30 +209,12 @@
         <div class="container">
             <div class="row">
                 <div class="wrapper">
-                    <!-- Cover Header Start -->
                     <div class="cover--header pt--80 text-center" data-bg-img="img/cover-header-img/bg-01.jpg" data-overlay="0.6" data-overlay-color="white">
-                        <div class="container">
-                            <div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
-                                <img src="img/cover-header-img/avatar-01.jpg" alt="">
-                            </div>
+                        <div class="container" id="avatar-container">
 
-                            <div class="cover--user-name">
-                                <h2 class="h3 fw--600">Eileen K. Ruiz</h2>
-                            </div>
-
-                            <div class="cover--user-activity">
-                                <p>
-                                    <i class="fa mr--8 fa-clock-o"></i>Active 1 year 9 monts ago</p>
-                            </div>
-
-                            <div class="cover--user-desc fw--400 fs--18 fstyle--i text-darkest">
-                                <p>Hello everyone ! There are many variations of passages of Lorem Ipsum available, but the
-                                    majority have suffered alteration in some form, by injected humour.</p>
-                            </div>
                         </div>
                     </div>
                     <!-- Cover Header End -->
-
                     <!-- Page Wrapper Start -->
                     <section class="page--wrapper pt--80 pb--20">
                         <div class="container">
@@ -239,282 +225,21 @@
                                         <!-- Content Nav Start -->
                                         <div class="content--nav pb--30">
                                             <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
-                                                <li>
-                                                    <a href="member-activity-personal.html">Dòng thời gian</a>
-                                                </li>
-                                                <li>
-                                                    <a href="member-profile.html">Giới thiệu</a>
-                                                </li>
-                                                <li>
-                                                    <a href="member-friends.html">Bạn bè</a>
-                                                </li>
-                                                <li class="active">
-                                                    <a href="member-groups.html">Nhóm</a>
-                                                </li>
-                                                <li>
-                                                    <a href="member-media-all.html">Ảnh</a>
-                                                </li>
+                                                <li><a href="member-activity-personal.html">Dòng thời gian</a></li>
+                                                <li class="active"><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
+                                                <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
+                                                <li><a href="/account/my-recipe/@(RouteData.Values["userName"])">C.thức của tôi</a></li>
+                                                <li><a href="member-media-all.html">Q.lý nguyên liệu(56)</a></li>
                                             </ul>
                                         </div>
                                         <!-- Content Nav End -->
-
-                                        <!-- Filter Nav Start -->
-                                        <div class="filter--nav pb--30 clearfix">
-                                            <div class="filter--options float--right">
-                                                <label>
-                                                    <span class="fs--14 ff--primary fw--500 text-darker">Show By :</span>
-
-                                                    <select name="membersfilter" class="form-control form-sm" data-trigger="selectmenu">
-                                                        <option value="last-active" selected>Last Active</option>
-                                                        <option value="most-members">Most Members</option>
-                                                        <option value="newly-created">Newly Created</option>
-                                                        <option value="alphabetical">Alphabetical</option>
-                                                    </select>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <!-- Filter Nav End -->
-
                                         <!-- Box Items Start -->
                                         <div class="box--items">
-                                            <div class="row gutter--15 MasonryRow">
-                                                <div class="col-md-4 col-xs-6 col-xxs-12">
-                                                    <!-- Box Item Start -->
-                                                    <div class="box--item text-center">
-                                                        <a href="group-home.html" class="img" data-overlay="0.1">
-                                                            <img src="img/group-img/01.jpg" alt="">
-                                                        </a>
+                                            <div class="row gutter--15 MasonryRow" id="my-recipe-box">
 
-                                                        <div class="info">
-                                                            <div class="icon fs--18 text-lightest bg-primary">
-                                                                <i class="fa fa-plane"></i>
-                                                            </div>
-
-                                                            <div class="title">
-                                                                <h2 class="h6">
-                                                                    <a href="group-home.html">Travel ( Just Take A Tour )</a>
-                                                                </h2>
-                                                            </div>
-
-                                                            <div class="meta">
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-clock-o"></i>Active 8 days ago</p>
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-user-o"></i>Public Group / 2500 Members</p>
-                                                            </div>
-
-                                                            <div class="desc text-darker">
-                                                                <p>Lorem Ipsum is simply dummy text of the printing &amp; typesetting.</p>
-                                                            </div>
-
-                                                            <div class="action">
-                                                                <a href="group-home.html">Group Details
-                                                                    <i class="fa ml--10 fa-caret-right"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Box Item End -->
-                                                </div>
-
-                                                <div class="col-md-4 col-xs-6 col-xxs-12">
-                                                    <!-- Box Item Start -->
-                                                    <div class="box--item text-center">
-                                                        <a href="group-home.html" class="img" data-overlay="0.1">
-                                                            <img src="img/group-img/02.jpg" alt="">
-                                                        </a>
-
-                                                        <div class="info">
-                                                            <div class="icon fs--18 text-lightest bg-primary">
-                                                                <i class="fa fa-music"></i>
-                                                            </div>
-
-                                                            <div class="title">
-                                                                <h2 class="h6">
-                                                                    <a href="group-home.html">Music Lover ( Injoy Yourself )</a>
-                                                                </h2>
-                                                            </div>
-
-                                                            <div class="meta">
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-clock-o"></i>Active 8 days ago</p>
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-user-o"></i>Public Group / 2500 Members</p>
-                                                            </div>
-
-                                                            <div class="desc text-darker">
-                                                                <p>Lorem Ipsum is simply dummy text of the printing &amp; typesetting.</p>
-                                                            </div>
-
-                                                            <div class="action">
-                                                                <a href="group-home.html">Group Details
-                                                                    <i class="fa ml--10 fa-caret-right"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Box Item End -->
-                                                </div>
-
-                                                <div class="col-md-4 col-xs-6 col-xxs-12">
-                                                    <!-- Box Item Start -->
-                                                    <div class="box--item text-center">
-                                                        <a href="group-home.html" class="img" data-overlay="0.1">
-                                                            <img src="img/group-img/03.jpg" alt="">
-                                                        </a>
-
-                                                        <div class="info">
-                                                            <div class="icon fs--18 text-lightest bg-primary">
-                                                                <i class="fa fa-camera"></i>
-                                                            </div>
-
-                                                            <div class="title">
-                                                                <h2 class="h6">
-                                                                    <a href="group-home.html">Photography ( Memories )</a>
-                                                                </h2>
-                                                            </div>
-
-                                                            <div class="meta">
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-clock-o"></i>Active 8 days ago</p>
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-user-o"></i>Public Group / 2500 Members</p>
-                                                            </div>
-
-                                                            <div class="desc text-darker">
-                                                                <p>Lorem Ipsum is simply dummy text of the printing &amp; typesetting.</p>
-                                                            </div>
-
-                                                            <div class="action">
-                                                                <a href="group-home.html">Group Details
-                                                                    <i class="fa ml--10 fa-caret-right"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Box Item End -->
-                                                </div>
-
-                                                <div class="col-md-4 col-xs-6 col-xxs-12">
-                                                    <!-- Box Item Start -->
-                                                    <div class="box--item text-center">
-                                                        <a href="group-home.html" class="img" data-overlay="0.1">
-                                                            <img src="img/group-img/04.jpg" alt="">
-                                                        </a>
-
-                                                        <div class="info">
-                                                            <div class="icon fs--18 text-lightest bg-primary">
-                                                                <i class="fa fa-paw"></i>
-                                                            </div>
-
-                                                            <div class="title">
-                                                                <h2 class="h6">
-                                                                    <a href="group-home.html">Tasty Food Recipes</a>
-                                                                </h2>
-                                                            </div>
-
-                                                            <div class="meta">
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-clock-o"></i>Active 8 days ago</p>
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-user-o"></i>Public Group / 2500 Members</p>
-                                                            </div>
-
-                                                            <div class="desc text-darker">
-                                                                <p>Lorem Ipsum is simply dummy text of the printing &amp; typesetting.</p>
-                                                            </div>
-
-                                                            <div class="action">
-                                                                <a href="group-home.html">Group Details
-                                                                    <i class="fa ml--10 fa-caret-right"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Box Item End -->
-                                                </div>
-
-                                                <div class="col-md-4 col-xs-6 col-xxs-12">
-                                                    <!-- Box Item Start -->
-                                                    <div class="box--item text-center">
-                                                        <a href="group-home.html" class="img" data-overlay="0.1">
-                                                            <img src="img/group-img/05.jpg" alt="">
-                                                        </a>
-
-                                                        <div class="info">
-                                                            <div class="icon fs--18 text-lightest bg-primary">
-                                                                <i class="fa fa-laptop"></i>
-                                                            </div>
-
-                                                            <div class="title">
-                                                                <h2 class="h6">
-                                                                    <a href="group-home.html">Pet Care ( Passionately )</a>
-                                                                </h2>
-                                                            </div>
-
-                                                            <div class="meta">
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-clock-o"></i>Active 8 days ago</p>
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-user-o"></i>Public Group / 2500 Members</p>
-                                                            </div>
-
-                                                            <div class="desc text-darker">
-                                                                <p>Lorem Ipsum is simply dummy text of the printing &amp; typesetting.</p>
-                                                            </div>
-
-                                                            <div class="action">
-                                                                <a href="group-home.html">Group Details
-                                                                    <i class="fa ml--10 fa-caret-right"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Box Item End -->
-                                                </div>
-
-                                                <div class="col-md-4 col-xs-6 col-xxs-12">
-                                                    <!-- Box Item Start -->
-                                                    <div class="box--item text-center">
-                                                        <a href="group-home.html" class="img" data-overlay="0.1">
-                                                            <img src="img/group-img/06.jpg" alt="">
-                                                        </a>
-
-                                                        <div class="info">
-                                                            <div class="icon fs--18 text-lightest bg-primary">
-                                                                <i class="fa fa-cutlery"></i>
-                                                            </div>
-
-                                                            <div class="title">
-                                                                <h2 class="h6">
-                                                                    <a href="group-home.html">Technology</a>
-                                                                </h2>
-                                                            </div>
-
-                                                            <div class="meta">
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-clock-o"></i>Active 8 days ago</p>
-                                                                <p>
-                                                                    <i class="fa mr--8 fa-user-o"></i>Public Group / 2500 Members</p>
-                                                            </div>
-
-                                                            <div class="desc text-darker">
-                                                                <p>Lorem Ipsum is simply dummy text of the printing &amp; typesetting.</p>
-                                                            </div>
-
-                                                            <div class="action">
-                                                                <a href="group-home.html">Group Details
-                                                                    <i class="fa ml--10 fa-caret-right"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Box Item End -->
-                                                </div>
                                             </div>
                                         </div>
                                         <!-- Box Items End -->
-
                                         <!-- Page Count Start -->
                                         <div class="page--count pt--30">
                                             <label class="ff--primary fs--14 fw--500 text-darker">
@@ -535,7 +260,6 @@
                                     </div>
                                 </div>
                                 <!-- Main Content End -->
-
                                 <!-- Main Sidebar Start -->
                                 <div class="main--sidebar col-md-4 pb--60" data-trigger="stickyScroll">
                                     <!-- Widget Start -->
@@ -628,20 +352,20 @@
                                         <!-- Buddy Finder Widget End -->
                                     </div>
                                     <!-- Widget End -->
-
                                     <!-- Widget Start -->
                                     <div class="widget">
                                         <h2 class="h4 fw--700 widget--title">Notice</h2>
 
                                         <!-- Text Widget Start -->
                                         <div class="text--widget">
-                                            <p>There are many variations of passages of Lorem Ipsum available, but the majority
-                                                have suffered alteration in some look even slightly believable.</p>
+                                            <p>
+                                                There are many variations of passages of Lorem Ipsum available, but the majority
+                                                have suffered alteration in some look even slightly believable.
+                                            </p>
                                         </div>
                                         <!-- Text Widget End -->
                                     </div>
                                     <!-- Widget End -->
-
                                     <!-- Widget Start -->
                                     <div class="widget">
                                         <h2 class="h4 fw--700 widget--title">Forums</h2>
@@ -650,27 +374,32 @@
                                         <div class="links--widget">
                                             <ul class="nav">
                                                 <li>
-                                                    <a href="sub-forums.html">User Interface Design
+                                                    <a href="sub-forums.html">
+                                                        User Interface Design
                                                         <span>(12)</span>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="sub-forums.html">Front-End Engineering
+                                                    <a href="sub-forums.html">
+                                                        Front-End Engineering
                                                         <span>(07)</span>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="sub-forums.html">Web Development
+                                                    <a href="sub-forums.html">
+                                                        Web Development
                                                         <span>(37)</span>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="sub-forums.html">Social Media Marketing
+                                                    <a href="sub-forums.html">
+                                                        Social Media Marketing
                                                         <span>(13)</span>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="sub-forums.html">Content Marketing
+                                                    <a href="sub-forums.html">
+                                                        Content Marketing
                                                         <span>(28)</span>
                                                     </a>
                                                 </li>
@@ -679,7 +408,6 @@
                                         <!-- Links Widget End -->
                                     </div>
                                     <!-- Widget End -->
-
                                     <!-- Widget Start -->
                                     <div class="widget">
                                         <h2 class="h4 fw--700 widget--title">Archives</h2>
@@ -713,7 +441,6 @@
                                         <!-- Nav Widget End -->
                                     </div>
                                     <!-- Widget End -->
-
                                     <!-- Widget Start -->
                                     <div class="widget">
                                         <h2 class="h4 fw--700 widget--title">Advertisements</h2>
@@ -751,7 +478,7 @@
                     </a>
                     <p class="flipInX">
                         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                        <br/> magna aliquyam erat, with an extra ordinary design and quality development features in low
+                        <br /> magna aliquyam erat, with an extra ordinary design and quality development features in low
                     </p>
 
                 </div>
@@ -817,7 +544,8 @@
                     </div>
                 </div>
                 <div class="footer-copyright text-center flipInX">
-                    <p>&copy; Copyright 2015 All Rights Reserved by
+                    <p>
+                        &copy; Copyright 2015 All Rights Reserved by
                         <a href="#">Majestic Themes</a>
                     </p>
                 </div>
@@ -829,26 +557,44 @@
     </div>
     <!--footer ends-->
 
-    <script src="js/jquery-1.11.3.min.js"></script>
-    <script src="js/jquery-ui.js"></script>
-    <script src="js/slick.min.js"></script>
-    <script src="js/jquery.meanmenu.js"></script>
-    <script src="js/jquery.selectric.min.js"></script>
-    <script src="js/wow.js"></script>
-    <script src="js/jquery.form.js"></script>
-    <script src="js/jquery.validate.min.js"></script>
-    <script src="js/jquery.swipebox.js"></script>
-    <script src="js/custom.js"></script>
-    <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="js/plugins.min.js"></script>
+    <script src="~/js/member-profile.js"></script>
+    <script src="~/js/cover-header-profile.js"></script>
+    <script src="~/js/my-recipe.js"></script>
+    <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
+    <script src="~/recipepress/js/jquery-ui.js"></script>
+    <script src="~/recipepress/js/slick.min.js"></script>
+    <script src="~/recipepress/js/jquery.meanmenu.js"></script>
+    <script src="~/recipepress/js/jquery.selectric.min.js"></script>
+    <script src="~/recipepress/js/wow.js"></script>
+    <script src="~/recipepress/js/jquery.form.js"></script>
+    <script src="~/recipepress/js/jquery.validate.min.js"></script>
+    <script src="~/recipepress/js/jquery.swipebox.js"></script>
+    <script src="~/recipepress/js/custom.js"></script>
+    @*<script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>*@
+    <script src="~/recipepress/js/plugins.min.js"></script>
 
     <!-- ==== Color Switcher Plugin ==== -->
-    <script src="js/color-switcher.min.js"></script>
+    <script src="~/recipepress/js/color-switcher.min.js"></script>
 
     <!-- ==== Main Script ==== -->
-    <script src="js/main.js"></script>
+    <script src="~/recipepress/js/main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+    <script src="~/js/notification.js"></script>
 </body>
 
 <!-- Mirrored from templates.majesticthemes.com/recipepress/recipe-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:10:38 GMT -->
 
 </html>
+
+<script type="text/javascript" src="~/js/recipe.js"></script>
+<script type="text/javascript">
+
+    // fetch and render element to html
+
+    (async () => {
+        await callRecipeByUserId();
+        await loadAvatarContainer('@(RouteData.Values["userName"])');
+    })();
+
+</script>
+
