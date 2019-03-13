@@ -1,6 +1,6 @@
 ﻿const apikey = 'AJQOnJX4sQs2oOshsbuO2z';
 
-const client = filestack.init(apikey);
+//const client = filestack.init(apikey);
 
 $('.add-recipe-steps').on("click", function (event) {
     event.preventDefault();
@@ -41,24 +41,27 @@ $('.add-ingredient').on("click", function (event) {
 
 $('#submitBtn').on("click", async function (event) {
     var results = getData();
+    console.log(results.validation)
     if (results.validation === false) {
+        window.scrollTo(0, 400);
         return;
     } else {
-        var data = results.data;
-        //data = await uploadImageSubmit(data);
 
-        var authorization = localStorage.getItem("authorization");
-        var token = (JSON.parse(authorization))["token"];
-        var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        }).then((res) => {
-            console.log(res);
-        });
+        //var data = results.data;
+        ////data = await uploadImageSubmit(data);
+        //
+        //var authorization = localStorage.getItem("authorization");
+        //var token = (JSON.parse(authorization))["token"];
+        //var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
+        //    method: "POST",
+        //    body: JSON.stringify(data),
+        //    headers: {
+        //        'Content-Type': 'application/json',
+        //        'Authorization': `Bearer ${token}`
+        //    }
+        //}).then((res) => {
+        //    console.log(res);
+        //});
     }
 
 });
@@ -102,11 +105,11 @@ function getData() {
     var validation = true;
 
     var avatar = $("input[name='avatarUpload']")[0].files[0];
-    validation = validationField('avatarUpload', avatar);
-    var title = $("input[name='title']").val();
-    validation = validationField('title', title);
-    var content = $("#recipe-content").val();
-    validation = validationField('content', content);
+    validation = validationField('avatarUpload', avatar) && validation;
+    var title = $("input[name='title']").val().trim();
+    validation = validationField('title', title) && validation;
+    var content = $("#recipe-content").val().trim();
+    validation = validationField('content', content) && validation;
     var serving = $("input[name='serving']").val();
     var cooktime = $("input[name='cooktime']").val();
     var level = $("input[name='level']").val();
@@ -117,9 +120,9 @@ function getData() {
     var ingredientsName = $("input[name='ingredients']");
     var ingredients = [];
     $(ingredientsQuantity).each(i => {
-        validation = validationField('ingredients', ingredientsName[i]);
+        validation = validationField('ingredients', $(ingredientsName[i]).val().trim()) && validation;
         ingredients.push({
-            IngredientName: $(ingredientsName[i]).val(),
+            IngredientName: $(ingredientsName[i]).val().trim(),
             Quantitative: $(ingredientsQuantity[i]).val() * $(ingredientsWeight[i]).children("option:selected").val()
         });
     });
@@ -128,9 +131,9 @@ function getData() {
     var stepsImage = $("input[name='stepsImage']");
     var steps = [];
     $(stepDescription).each(i => {
-        validation = validationField('stepsDes', stepDescription[i]);
+        validation = validationField('stepsDes', $(stepDescription[i]).val().trim()) && validation;
         steps.push({
-            Description: $(stepDescription[i]).val(),
+            Description: $(stepDescription[i]).val().trim(),
             ImageUrl: $(stepsImage[i])[0].files[0]
         });
     });
@@ -167,11 +170,11 @@ function getData() {
 }
 
 function validationField(name, value) {
-    if (value === '') {
-        $('span[name=' + name + ']').attr('display', 'block');
+    if (value === '' || value === undefined) {
+        $('span[name=' + name + ']').css('display', 'block');
         return false;
     } else {
-        $('span[name=' + name + ']').attr('display', 'none');
+        $('span[name=' + name + ']').css('display', 'none');
         return true;
     }
 }
