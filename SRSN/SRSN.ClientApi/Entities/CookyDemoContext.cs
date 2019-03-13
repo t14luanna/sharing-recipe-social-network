@@ -28,13 +28,12 @@ namespace SRSN.ClientApi.Entities
         public virtual DbSet<CollectionPost> CollectionPost { get; set; }
         public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<CommentLike> CommentLike { get; set; }
-        public virtual DbSet<IngredientBrand> IngredientBrand { get; set; }
         public virtual DbSet<IngredientList> IngredientList { get; set; }
         public virtual DbSet<Ingredients> Ingredients { get; set; }
-        public virtual DbSet<LikePost> LikePost { get; set; }
         public virtual DbSet<Message> Message { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Post> Post { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<RatingRecipe> RatingRecipe { get; set; }
         public virtual DbSet<Recipe> Recipe { get; set; }
         public virtual DbSet<RecipeCategory> RecipeCategory { get; set; }
@@ -44,18 +43,23 @@ namespace SRSN.ClientApi.Entities
         public virtual DbSet<StoreBrand> StoreBrand { get; set; }
         public virtual DbSet<UserBlock> UserBlock { get; set; }
         public virtual DbSet<UserFollowing> UserFollowing { get; set; }
+        public virtual DbSet<UserReactionPost> UserReactionPost { get; set; }
+        public virtual DbSet<UserReactionRecipe> UserReactionRecipe { get; set; }
         public virtual DbSet<UserReportRecipe> UserReportRecipe { get; set; }
         public virtual DbSet<UserReportUser> UserReportUser { get; set; }
-        public virtual DbSet<UserViewRecipe> UserViewRecipe { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.2-servicing-10034");
 
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
@@ -224,21 +228,6 @@ namespace SRSN.ClientApi.Entities
                     .HasConstraintName("FK_Comment_Like_AspNetUsers");
             });
 
-            modelBuilder.Entity<IngredientBrand>(entity =>
-            {
-                entity.Property(e => e.ImageUrl).HasMaxLength(50);
-
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.IngredientBrand)
-                    .HasForeignKey(d => d.IngredientId)
-                    .HasConstraintName("FK_IngredientBrand_Ingredients");
-
-                entity.HasOne(d => d.Store)
-                    .WithMany(p => p.IngredientBrand)
-                    .HasForeignKey(d => d.StoreId)
-                    .HasConstraintName("FK_IngredientBrand_Store");
-            });
-
             modelBuilder.Entity<IngredientList>(entity =>
             {
                 entity.HasOne(d => d.Recipe)
@@ -254,33 +243,7 @@ namespace SRSN.ClientApi.Entities
 
             modelBuilder.Entity<Ingredients>(entity =>
             {
-                entity.Property(e => e.Name).HasMaxLength(50);
-
-                entity.Property(e => e.Price).HasMaxLength(50);
-
-                entity.HasOne(d => d.Brand)
-                    .WithMany(p => p.Ingredients)
-                    .HasForeignKey(d => d.BrandId)
-                    .HasConstraintName("FK_Ingredients_StoreBrand");
-            });
-
-            modelBuilder.Entity<LikePost>(entity =>
-            {
-                entity.ToTable("Like_Post");
-
-                entity.HasIndex(e => new { e.PostId, e.UserId })
-                    .HasName("UniqueKey_Like_Post")
-                    .IsUnique();
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.LikePost)
-                    .HasForeignKey(d => d.PostId)
-                    .HasConstraintName("FK_Like_Post_Post");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.LikePost)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Like_Post_AspNetUsers");
+                entity.Property(e => e.Id).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -331,6 +294,18 @@ namespace SRSN.ClientApi.Entities
                     .HasConstraintName("FK_Post_AspNetUsers");
             });
 
+            modelBuilder.Entity<Products>(entity =>
+            {
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.Price).HasMaxLength(50);
+
+                entity.HasOne(d => d.Brand)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(d => d.BrandId)
+                    .HasConstraintName("FK_Ingredients_StoreBrand");
+            });
+
             modelBuilder.Entity<RatingRecipe>(entity =>
             {
                 entity.Property(e => e.CreateTime)
@@ -356,11 +331,7 @@ namespace SRSN.ClientApi.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.RecipeName).HasMaxLength(50);
-
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.VideoLink).HasMaxLength(50);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Recipe)
@@ -394,6 +365,11 @@ namespace SRSN.ClientApi.Entities
                 entity.Property(e => e.IngredientName).HasMaxLength(100);
 
                 entity.Property(e => e.Quantitative).HasMaxLength(100);
+
+                entity.HasOne(d => d.Ingredient)
+                    .WithMany(p => p.RecipeIngredient)
+                    .HasForeignKey(d => d.IngredientId)
+                    .HasConstraintName("FK_Recipe_Ingredient_Ingredients");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeIngredient)
@@ -470,6 +446,51 @@ namespace SRSN.ClientApi.Entities
                     .HasConstraintName("FK_User_Following_AspNetUsers");
             });
 
+            modelBuilder.Entity<UserReactionPost>(entity =>
+            {
+                entity.ToTable("User_Reaction_Post");
+
+                entity.HasIndex(e => new { e.PostId, e.UserId })
+                    .HasName("UniqueKey_Like_Post")
+                    .IsUnique();
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.UserReactionPost)
+                    .HasForeignKey(d => d.PostId)
+                    .HasConstraintName("FK_Like_Post_Post");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserReactionPost)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_Like_Post_AspNetUsers");
+            });
+
+            modelBuilder.Entity<UserReactionRecipe>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RecipeId })
+                    .HasName("PK_User_Recipe_Point");
+
+                entity.ToTable("User_Reaction_Recipe");
+
+                entity.Property(e => e.IsLike).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.IsShare).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.IsView).HasDefaultValueSql("((0))");
+
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.UserReactionRecipe)
+                    .HasForeignKey(d => d.RecipeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Recipe_Point_Recipe");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserReactionRecipe)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Recipe_Point_AspNetUsers");
+            });
+
             modelBuilder.Entity<UserReportRecipe>(entity =>
             {
                 entity.ToTable("User_Report_Recipe");
@@ -502,25 +523,6 @@ namespace SRSN.ClientApi.Entities
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_Report_User_AspNetUsers");
-            });
-
-            modelBuilder.Entity<UserViewRecipe>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.RecipeId });
-
-                entity.ToTable("User_View_Recipe");
-
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.UserViewRecipe)
-                    .HasForeignKey(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_View_Recipe_Recipe");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserViewRecipe)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_View_Recipe_AspNetUsers");
             });
         }
     }

@@ -19,7 +19,7 @@ public class DBUtils {
      String sqlInstanceName = "SQLEXPRESS";
      String database = "CookyDemo";
      String userName = "sa";
-     String password = "123456789";
+     String password = "baongoc1997";
  
      return getConnection(hostName, sqlInstanceName, database,
              userName, password);

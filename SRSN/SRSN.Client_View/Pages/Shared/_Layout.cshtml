@@ -14,6 +14,7 @@
     <link href='https://fonts.googleapis.com/css?family=Karla:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <!--jquery ui stylesheet-->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
     <!-- site favicon -->
     <link rel="icon" href="/recipepress/images/favicon.png" />
@@ -38,6 +39,7 @@
     <link rel="stylesheet" href="/recipepress/css/main.css" />
     <link rel="stylesheet" href="~/css/daterangepicker.css" />
     <link rel="stylesheet" href="~/recipepress/css/custom.css" />
+
     @RenderSection("StyleOptional", required: false)
 
 </head>
@@ -83,7 +85,7 @@
 
                         <div class="col-md-2">
                             <div class="logo-wrapper">
-                                <a href="#"><img src="/recipepress/images/logo.png" alt="logo" /></a>
+                                <a href="/index"><img src="/recipepress/images/logo.png" alt="logo" /></a>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -93,8 +95,23 @@
                                         <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                                         <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                         <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+
                                     </ul>
+                                    <div class="noti-message-icon" style="display:none;">
+                                        <nav class="nav-collapse header-social-icons">
+                                            <ul>
+                                                <li>
+                                                    <a href="#"><i class="fa fa-bell" id="noti-color"></i></a>
+
+                                                    <ul id="list-notification"></ul>
+                                                </li>
+                                                <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+
                                     <span class="sign-in-buttons authorized-group" style="display: none;">
+
                                         <a class="information" href="/account/information" id="authorized-group-username">Username</a>
                                     </span>
                                     <span class="sign-in-buttons unauthorized-group">
@@ -108,7 +125,7 @@
                                             <a href="blog.html">Blog</a>
 
                                         </li>
-                                        <li><a href="elements.html">Bộ sưu tập</a></li>
+                                        <li><a href="/Collection">Bộ sưu tập</a></li>
                                         <li><a href="contact.html">Liên hệ</a></li>
                                         <li><a class="submit-recipe" href="/SubmitRecipe">Đăng công thức</a></li>
                                     </ul>
@@ -274,8 +291,8 @@
             </div>
         </div>
     </div>
-    <!--footer ends-->
 
+    <script src="~/js/Configuration.js"></script>
     <script src="/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="/recipepress/js/jquery-ui.js"></script>
     <script src="/recipepress/js/flexslider/jquery.flexslider-min.js"></script>
@@ -289,8 +306,13 @@
     <script src="~/js/moment.min.js"></script>
     <script src="/js/daterangepicker.min.js"></script>
     <script src="/recipepress/js/custom.js"></script>
-    <script src="/js/site.js"></script>
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+    <script src="~/js/notification.js"></script>
     @RenderSection("Scripts", required: false)
+
+    <script src="/js/site.js"></script>
 
 </body>
 <!-- Mirrored from templates.majesticthemes.com/recipepress/recipe-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:10:38 GMT -->

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -27,11 +28,13 @@ namespace SRSN.ClientApi.Controllers
         private IRecipeService recipeService;
         private UserManager<SRSNUser> userManager;
         private IDatabase redisDatabase;
-        public RecipeController(IRecipeService recipeService, UserManager<SRSNUser> userManager)
+        private IMapper mapper;
+        public RecipeController(IRecipeService recipeService, UserManager<SRSNUser> userManager, IMapper mapper)
         {
-            this.recipeService = recipeService ;
-            this.userManager = userManager ;
+            this.recipeService = recipeService;
+            this.userManager = userManager;
             this.redisDatabase = RedisUtil.Connection.GetDatabase();
+            this.mapper = mapper;
         }
 
         [HttpPost("create")]
@@ -97,13 +100,13 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-        
+
         [HttpGet("read-latest")]
         public async Task<ActionResult> ReadLatest()
         {
             try
             {
-                return Ok( await recipeService.GetLatestRecipes(this.userManager));
+                return Ok(await recipeService.GetLatestRecipes(this.userManager));
             }
             catch (Exception ex)
             {
@@ -115,7 +118,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(await recipeService.GetRelatedRecipe(userId ));
+                return Ok(await recipeService.GetRelatedRecipe(userId));
             }
             catch (Exception ex)
             {
@@ -123,11 +126,13 @@ namespace SRSN.ClientApi.Controllers
             }
         }
 
-        [HttpGet("read-recommend-recipes")]
-        public async Task<ActionResult> ReadRecommendRecipes([FromQuery]int userId)
+        [HttpGet("newsfeed")]
+        public async Task<ActionResult> ReadRecommendRecipes()
         {
             try
             {
+                ClaimsPrincipal claims = this.User;
+                var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var key = $"{userRecipeRecommendPrefix}{userId}";
                 var datas = await redisDatabase.SortedSetRangeByScoreWithScoresAsync(key);
                 var listRecipe = new List<RecipeViewModel>();
@@ -136,6 +141,9 @@ namespace SRSN.ClientApi.Controllers
                     int recipeId = 0;
                     int.TryParse(data.Element, out recipeId);
                     var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
+                    var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
+                    recipe.AccountVM = new AccountViewModel();
+                    mapper.Map(recipeUserID, recipe.AccountVM);
                     listRecipe.Add(recipe);
                 }
                 return Ok(listRecipe);
@@ -163,7 +171,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok( await recipeService.GetRandomRecipes(this.userManager));
+                return Ok(await recipeService.GetRandomRecipes(this.userManager));
             }
             catch (Exception ex)
             {
@@ -210,20 +218,21 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpPost("submit-recipe")]
-        public async Task<ActionResult> SubmitRecipe([FromBody]RecipeSubmitViewModel request)
+        public async Task<ActionResult> SubmitRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request)
         {
             try
             {
-                 ClaimsPrincipal claims = this.User;
+                ClaimsPrincipal claims = this.User;
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-                request.UserId = userId;
-                await recipeService.SubmitRecipeWithStepsAsync(request);
+                request.RecipeVM.UserId = userId;
+                await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.listIngredient, request.listCategory);
                 return Ok(new
                 {
                     status = true,
                     message = $"Ban da tao thanh cong Recipe"
                 });
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return Ok(new
                 {
@@ -232,6 +241,75 @@ namespace SRSN.ClientApi.Controllers
                     error = ex.ToString()
                 });
             }
+        }
+        [HttpGet("read-recipename")]
+        public async Task<ActionResult> ReadRecipeName([FromQuery]string recipeName)
+        {
+            try
+            {
+                return Ok(recipeService.GetRecipeNameLike(recipeName));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("read-recipename-page")]
+        public async Task<ActionResult> ReadRecipeNamePage([FromQuery]string recipeName)
+        {
+            try
+            {
+                return Ok(recipeService.GetRecipeName(recipeName));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("read-recipe-by-category")]
+        public async Task<ActionResult> ReadRecipeByCategory([FromQuery] string categoryName)
+        {
+            try
+            {
+                return Ok(recipeService.GetRecipeBaseOnCategory(categoryName));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("read-recipe-chef")]
+        public async Task<ActionResult> ReadChefByRecipeId(int recipeId)
+        {
+            try
+            {
+                var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
+                var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
+                recipe.AccountVM = new AccountViewModel();
+                mapper.Map(recipeUserID, recipe.AccountVM);
+                return Ok(recipe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPost("create-share-recipe")]
+        [Authorize]
+        public async Task<ActionResult> CreateShareRecipe([FromBody]RecipeViewModel request)
+        {
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            request.UserId = userId;
+            request.CreateTime = DateTime.Now;
+            await recipeService.CreateAsync(request);
+            return Ok(new
+            {
+                message = $"Ban da tao thanh cong Recipe co ten la: {request.Id}"
+            });
         }
     }
     #endregion

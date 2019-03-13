@@ -1,0 +1,112 @@
+﻿@page "/RecipeSearch/{searchValue}"
+@model RecipeModel
+@{
+    ViewData["Title"] = "RecipeSearch";
+    
+}
+
+
+<div class="recipes-home-body inner-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-lg-9">
+                <div class="recipe-set">
+                    <div class="listing-buttons">
+                        <span class="grid "><i class="fa fa-th-large"></i></span>
+                        <span class="list current"><i class="fa fa-bars"></i></span>
+                    </div>
+                    <h2>Latest Recipes</h2>
+
+                    <div class="recipe-listing listing-list" id="list-latest-recipe-page">
+                    </div>
+
+                    <div id="pagination-container" class="page-nav"></div>
+
+
+                    <div class="banner-header text-center">
+                        <a href="#">
+                            <img src="/recipepress/images/temp-images/header-banner.jpg" alt="banner">
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <aside>
+                    <div class="side-bar">
+                        <!--recipes search widget-->
+                        <div class="widget recipe-search">
+
+                            <div class="category-list">
+                                <ul id="list-category-item-recipe-page"></ul>
+                            </div>
+                        </div>
+                        <!--recipes search widget ends-->
+                        <!--recent recipes widget-->
+                        <div class="widget latest-news-widget">
+                            <h2>Recent Recipes</h2>
+                            <ul id="list-recent-recipe"></ul>
+                        </div>
+                        <!--popular recipes widget ends-->
+                        <div class="widget">
+                            <a href="#">
+                                <img src="~/recipepress/images/temp-images/add-side.jpg" alt="Add" />
+                            </a>
+                        </div>
+                        <!--popular recipe widget-->
+                        <div class="widget latest-news-widget">
+                            <h2 id="test">Popular recipe</h2>
+                            <ul id="list-popular-recipe-widget"></ul>
+                        </div>
+                        <!--latest news widget ends-->
+                        <!--get social-->
+                        <div class="widget widget-get-social">
+                            <h2>get social</h2>
+                            <ul>
+                                <li class="facebook">
+                                    <a href="#">
+                                        <i class="fa fa-facebook"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+                                <li class="twitter">
+                                    <a href="#">
+                                        <i class="fa fa-twitter"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+                                <li class="google-plus">
+                                    <a href="#">
+                                        <i class="fa fa-google-plus"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <!--get social ends-->
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript" src="~/js/SearchPageResult.js"></script>
+<script type="text/javascript">
+    const changeHeadername = async () => {
+        var someText = "Kết quả tìm kiếm";
+        $('.main-heading h1').append(document.createTextNode(someText));
+    };
+    (async () => {
+        await changeHeadername();
+        await callSearchResultAPI('@Html.Raw(RouteData.Values["searchValue"])');
+    })();
+</script>
+}
+

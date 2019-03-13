@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -105,6 +106,17 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(user, userVM);
             return Ok(userVM);
         }
+        [HttpGet("read-username-profile")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ReadByUserName(string userName)
+        {
+            var user = await userManager.FindByNameAsync(userName);
+            var userVM = new AccountViewModel();
+            mapper.Map(user, userVM);
+            return Ok(userVM);
+        }
+
+
         [HttpGet("get-top-ten")]
         [AllowAnonymous]
         public async Task<IEnumerable<AccountViewModel>> GetTopUser()
@@ -119,6 +131,7 @@ namespace SRSN.ClientApi.Controllers
             }
             return list;
         }
+        
         [HttpGet("get-popular")]
         [AllowAnonymous]
         public async Task<IEnumerable<AccountViewModel>> GetPopular()
@@ -144,6 +157,51 @@ namespace SRSN.ClientApi.Controllers
             }
             return list;
         }
+        [HttpGet("read-userinfo")]
+        public async Task<ActionResult> readUserFromToken()
+        {
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var user = await userManager.FindByIdAsync(userId);
+            var userVM = new AccountViewModel();
+            mapper.Map(user, userVM);
+            return Ok(userVM);
+
+        }
+        [HttpGet("read-username")]
+        public async Task<ActionResult<AccountViewModel>> findUsername(string username)
+        {
+            try
+            {
+                var list = new List<AccountViewModel>();
+
+                foreach (var u in userManager.Users.Where(u => u.UserName.Contains(username)).ToList().OrderByDescending(t => t.Id).Take(3))
+                {
+                    list.Add(new AccountViewModel()
+                    {
+                        Id = u.Id,
+                        Username = u.UserName,
+                        FirstName = u.FirstName,
+                        Address = u.Address,
+                        Birthdate = u.Birthdate,
+                        Email = u.Email,
+                        Gender = u.Gender,
+                        LastName = u.LastName,
+                        Phone = u.Phone,
+                        Point = u.Point,
+                        Description = u.Description,
+                        AvatarImageUrl = u.AvatarImageUrl
+                    });
+                }
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> UpdateProfile([FromBody] AccountEditViewModel data)
@@ -185,6 +243,8 @@ namespace SRSN.ClientApi.Controllers
                 });
             }
         }
+
+        
     }
 
 }

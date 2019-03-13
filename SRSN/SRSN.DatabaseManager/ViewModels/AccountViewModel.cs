@@ -42,5 +42,6 @@ namespace SRSN.DatabaseManager.ViewModels
         public int? Point { get; set; }
         public string Description { get; set; }
         public string AvatarImageUrl { get; set; }
+       
     }
 }

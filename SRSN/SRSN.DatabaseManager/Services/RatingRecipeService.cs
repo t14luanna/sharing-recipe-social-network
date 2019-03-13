@@ -29,13 +29,6 @@ namespace SRSN.DatabaseManager.Services
             try
             {
                 var list = new List<RatingRecipeViewModel>();
-
-                // hien tai o day dang dung trong 1 action cua service
-                // khong nen dung ham cua service de su dung nen dung Repository 
-                // o day la dbSet cua chinh ban than no
-                // 
-                // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
-                // 2. nen dung dbSet ( nghia la repository de ma query )
                 var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM RatingRecipe WHERE recipeId=" + recipeId + " ORDER BY CreateTime DESC").ToList();
                 foreach (var item in listItems)
                 {

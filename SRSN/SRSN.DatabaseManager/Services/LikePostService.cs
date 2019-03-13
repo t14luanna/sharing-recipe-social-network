@@ -9,13 +9,13 @@ using System.Text;
 
 namespace SRSN.DatabaseManager.Services
 {
-    public interface ILikePostService : IBaseService<LikePost, LikePostViewModel>
+    public interface IUserReactionPostService : IBaseService<UserReactionPost, UserReactionViewModel>
     {
 
     }
-    public class LikePostService : BaseService<LikePost, LikePostViewModel>, ILikePostService
+    public class UserReactionService : BaseService<UserReactionPost, UserReactionViewModel>, IUserReactionPostService
     {
-        public LikePostService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        public UserReactionService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
     }

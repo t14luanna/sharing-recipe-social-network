@@ -1,56 +1,69 @@
-﻿
-$('#pagination-container').pagination({
-    dataSource: 'https://localhost:44361/api/recipe/read-latest-page',
-    locator: '',// array
-    totalNumberLocator: function (response) {
-        return response.length;
-    },
-    //totalNumber: 40,
-    pageSize: 9,
-    ajax: {
-        beforeSend: function () {
-            $('#list-latest-recipe-page').html('Đang tải dữ liệu ...');
+﻿function saveToLocalStorage(idRe, nameRe, imageRe, dateRe) {
+    
+    if (typeof (Storage) !== "undefined") {
+        var recipe = {};
+        recipe.id = idRe;
+        recipe.name = nameRe;
+        recipe.image = imageRe;
+        recipe.date = dateRe;
+        if (localStorage.getItem('recentRecipe') == null) {
+            var arr = new Array(0);
+            arr.push(recipe);
+            var myJsonString = JSON.stringify(arr);
+            localStorage.setItem('recentRecipe', myJsonString);
+        } else {
+            var flag = false;
+            var array = JSON.parse(localStorage.getItem('recentRecipe'));
+            for (var i = 0; i < array.length; i++) {
+                if (array[i].id == idRe) {//neu co trong array thi ko them vao
+                    var recipeTmp = {};
+                    recipeTmp.id = array[i].id;
+                    recipeTmp.name = array[i].name;
+                    recipeTmp.image = array[i].image;
+                    recipeTmp.date = array[i].date;
+                    array.splice(i, 1); // xóa 1 phần tử từ vị trí i
+                    array.splice(0, 0, recipeTmp); // chèn recipeTmp vào vị trí 0
+                    
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag) {
+                array.splice(0, 0, recipe);// chèn recipe vào vị trí 0
+            }
+            if (array.length > 5) {
+                var n = array.length - 5;
+                array.splice(6,n ); // xóa n phần tử từ vị trí 6
+            }
+            var myJsonString = JSON.stringify(array);
+            localStorage.setItem('recentRecipe', myJsonString);
         }
-    },
-    callback: function (data, pagination) {
-        // template method of yourself
-        var html = template(data, pagination);
-        $('#list-latest-recipe-page').html(html);
+        
+    } else {
+        // Sorry! No Web Storage support..
     }
-})
-var template = function (data, pagination) {
-    var pageSize = pagination.pageSize;
-    var currentPageNumber = pagination.pageNumber - 1;
-    var s = "";
-    console.log(data);
-    console.log(pagination);
-    var count = 0;
-    while (count < pageSize) {
-        var i = currentPageNumber * pageSize + count;
-        if (i >= data.length) {
-            break;
-        }
-        s += createSingleLatestRecipeElementPage(data[i]);
-        count++;
-    }
-    return s;
-}
+        
+
+    
+};
 
 var createSingleLatestRecipeElementPage = (recipe) =>
-    `                            <div class="listing" itemid="${recipe.id}">
+    `                            <div class="listing" itemid="${recipe.id}" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                 <div class="image">
-                                    <a href="#">
+                                    <a href="/recipe/${recipe.id}">
                                         <img src="${recipe.imageCover}" alt="image"/>
                                     </a>
                                 </div>
                                 <div class="detail">
-                                    <h4><a href="/recipe/${recipe.id}">${recipe.recipeName}</a></h4>
+
+                                    <h4><a href="/recipe/${recipe.id}" > ${recipe.recipeName}</a></h4>
                                     <p>
                                         ${recipe.contentRecipe}
                                     </p>
                                     <div class="meta-listing">
                                         <ul class="post-meta">
-                                            <li class="author"><a href="#" >${recipe.fullName}</a></li>
+                                            <li class="author"><a href="#">${recipe.fullName}</a></li>
                                             <li class="calendar" id="createTime">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</li>
                                         </ul>
                                         <div class="rating-box">
@@ -65,7 +78,8 @@ var createSingleLatestRecipeElementPage = (recipe) =>
                             </div>`;
 const createSingleRecipeWidgetPageElement = (recipe) =>
     ` <li>
-                                        <div class="thumb">
+                                        <div class="thumb" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                             <a href="/recipe/${recipe.id}">
                                                 <img src="${recipe.imageCover}" alt="thumbnail" />
                                             </a>
@@ -99,6 +113,32 @@ const createSingleCategoryItemRecipePage = (item) =>
                                                 </div>
                                             </li>
                                            `;
+const createSingleRecentRecipe = (recipe) =>
+    ` <li>
+                                        <div class="thumb" onclick="saveToLocalStorage(${recipe.id},'${recipe.name}', '${recipe.image}',
+                                                                                        '${recipe.date}')">
+                                            <a href="/recipe/${recipe.id}">
+                                                <img src="${recipe.image}" alt="thumbnail" />
+                                            </a>
+                                        </div>
+                                        <div class="detail">
+                                            <a href="/recipe/${recipe.id}">${recipe.name}</a>
+                                            <span class="post-date">${recipe.date}</span>
+                                        </div>
+                                    </li>
+
+                                   `;
+const loadRecipeLocalStorage = async () => {
+    if (localStorage.getItem('recentRecipe') == null) {
+        $("#list-recent-recipe").html("Chưa có thông tin!");
+    } else {
+        var array = JSON.parse(localStorage.getItem('recentRecipe'));
+        for (var i = 0; i < array.length; i++) {
+            var element = createSingleRecentRecipe(array[i]);
+            $("#list-recent-recipe").append(element);
+        }
+    }
+};
 const callListCategoryItemRecipePage = async () => {
     var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
     var data = await res.json();
@@ -115,7 +155,7 @@ const callPopularRecipePageApi = async () => {
     var count = 0;
     for (var item of data) {
         count++;
-        let element = createSingleRecipeWidgetPageElement(item);
+        var element = createSingleRecipeWidgetPageElement(item);
         $("#list-popular-recipe-widget").append(element);
         if (count >= 5) {
             break;
@@ -123,22 +163,4 @@ const callPopularRecipePageApi = async () => {
     }
 };
 
-const saveRecentRecipeLocalStorage = async () => {
-    // Local Storage Creation Steps:
-    // 1. Create Local Storage Object:
-    var storage = document.localStorage;
-    // 2. Config Key
-    var key = 'recently_viewed_recipe';
-    // 3. Prepare value
-    var recentlyViewedRecipe = {
-        'id': 1,
-        'imageCover': 'Nghia',
-    };
-
-    
-    var recentRecipe = { 'id': "1", 'imageCover': "nghia", 'recipeName': "đâs", 'createTime': "đâs" };
-    // Put the object into storage
-    localStorage.setItem(key, JSON.stringify(recentRecipe));
-    
-}
 

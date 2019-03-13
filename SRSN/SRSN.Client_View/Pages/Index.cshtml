@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="logo-wrapper">
-                                <a href="#"><img src="/recipepress/images/logo.png" alt="logo" /></a>
+                                <a href="/index"><img src="/recipepress/images/logo.png" alt="logo" /></a>
                             </div>
                         </div>
                         <div class="col-md-8">
@@ -73,8 +73,20 @@
                                                 <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                                 <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                                <li style="display: none" class="noti-message-icon">
+                                                    <nav class="nav-collapse header-social-icons">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="#"><i class="fa fa-bell"></i></a>
+                                                                <ul id="list-notification"></ul>
+                                                            </li>
+                                                            <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
+                                                        </ul>
+                                                    </nav>
+                                                </li>
                                             </ul>
-                                            <span class="sign-in-buttons authorized-group" style="display: none;">
+
+                                            <span class="sign-in-buttons authorized-group" style="display: none;" id="user">
                                                 <a class="information" href="/account/information" id="authorized-group-username">Username</a>
                                             </span>
                                             <span class="sign-in-buttons unauthorized-group">
@@ -116,7 +128,7 @@
                                 <a href="blog.html">Blog</a>
 
                             </li>
-                            <li><a href="elements.html">Bộ sưu tập</a></li>
+                            <li><a href="/Collection">Bộ sưu tập</a></li>
                             <li><a href="contact.html">Liên hệ</a></li>
                             <li class="submit-recipe"><a href="/SubmitRecipe">Đăng công thức</a></li>
                         </ul>
@@ -124,6 +136,8 @@
                 </div>
             </div>
             <!-- nav ends-->
+        </div>
+        <div id="messgesDiv" style="width:500px">
         </div>
     </header>
     <!--header ends-->
@@ -157,70 +171,24 @@
         </div>
     </section>
     <!--slider main ends-->
-    <div class="advance-search search-main open">
+    <div class="advance-search">
         <!--advance search form-->
         <div class="container">
             <div class="wrapper-search">
                 <div class="container-tags">
                     <span class="tag">
-                        <span class="tag-inner">Find Recipes <i class="fa fa-angle-down"></i></span>
+                        <span class="tag-inner">Tìm kiếm<i class="fa fa-angle-down"></i></span>
                     </span>
                 </div>
                 <div class="outer-advance-search">
-                    <form action="#" id="advance-search">
+                    <form id="advance-search">
                         <fieldset>
-                            <div class="inner-advance-search">
-                                <div class="form-field">
-                                    <label for="ingredient">ingredient</label>
-                                    <select name="ingredient" id="ingredient" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Ingredient</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
+                            <div class="inner-advance-search" style="width: 50%">
+                                <div id="custom-advance-search" class="form-field">
+                                    <input id="custom-input-search" style="outline: none; border: 1px solid grey; font-size: 2rem; padding: 0px 10px; border-radius: 5px; " type="text" value="" />
+                                    <div id="custom-quick-result"></div>
                                 </div>
-                                <div class="form-field">
-                                    <label for="course">course</label>
-                                    <select name="course" id="course" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Course</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
-                                </div>
-                                <div class="form-field">
-                                    <label for="cuisine">cuisine</label>
-                                    <select name="cuisine" id="cuisine" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Cuisine</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
-                                </div>
-                                <div class="form-field">
-                                    <label for="time">Cooking Time</label>
-                                    <select name="time" id="time" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Cooking Time</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
-                                </div>
-                                <div class="form-field">
-                                    <label for="calories">calories</label>
-                                    <select name="calories" id="calories" class="advance-selectable">
-                                        <option value="ing1" selected="selected">Any Calories</option>
-                                        <option value="ing2">Butter</option>
-                                        <option value="ing3">Cheese</option>
-                                        <option value="ing4">Cream</option>
-                                        <option value="ing5">Yeast</option>
-                                    </select>
-                                </div>
-                                <button type="submit"><i class="fa fa-search"></i></button>
+                                <button id="searchBtn" style="width: 100px; border-radius: 5px; height: 40px" type="submit"><i class="fa fa-search"></i></button>
                             </div>
                         </fieldset>
                     </form>
@@ -282,9 +250,7 @@
                                     </div>
                                     <div class="category-list">
                                         <!--<div class="list-inner">-->
-                                        <ul id="list-category-item">
-                                           
-                                        </ul>
+                                        <ul id="list-category-item"></ul>
                                         <!--</div>-->
                                     </div>
                                 </div>
@@ -395,36 +361,85 @@
             </div>
         </div>
     </div>
+
     <!--footer ends-->
+
 
 </body>
 <!-- Mirrored from templates.majesticthemes.com/recipepress/v6.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:13:42 GMT -->
 </html>
 
+<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+
+<script src="~/js/notification.js"></script>
+<script src="/recipepress/js/jquery-1.11.3.min.js"></script>
+<script src="/recipepress/js/jquery-ui.js"></script>
+<script src="/recipepress/js/slick.min.js"></script>
+<script src="/recipepress/js/jquery.meanmenu.js"></script>
+<script src="/recipepress/js/jquery.selectric.min.js"></script>
+<script src="/recipepress/js/wow.js"></script>
+<script src="/recipepress/js/jquery.form.js"></script>
+<script src="/recipepress/js/jquery.validate.min.js"></script>
+<script src="/recipepress/js/jquery.swipebox.js"></script>
+<script src="/recipepress/js/custom.js"></script>
+<script src="~/js/Configuration.js"></script>
+
+<script src="~/js/index.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/recipe.js"></script>
+<script src="~/js/SearchPageResult.js"></script>
+<script type="text/javascript">
+
+    // fetch and render element to html
+    (async () => {
+        await callPopularRecipeBannerApi();
+        await callPopularRecipeWidgetApi();
+        await callPopularRecipeApi();
+        await callLatestRecipeApi();
+        await callLatestRecipeWidgetApi();
+        await callRandomRecipeApi();
+        await callListCategoryItem();
+        await attachInputSearchCallback();
+        await RedirectAPI();
+
+    })();
+
+</script>
+<script>
+    $("#searchBtn").on("click", function (e) {
+        e.preventDefault();
+        var searchValue = $('#custom-input-search').val();
+        fetch(`https://localhost:44361/api/recipe/read-recipename?recipeName=${searchValue}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(response => {
+                localStorage.setItem("recipeName", $('searchString').val());
+                var searchValue = $('#custom-input-search').val();
+                var searchValueParam = encodeURIComponent(searchValue);
+                window.location.href = (`/RecipeSearch/${searchValueParam}`);
+                //if (win) {
+                //    //Browser has allowed it to be opened
+                //    win.focus();
+                //} else {
+                //    //Browser has blocked it
+                //    alert('Please allow popups for this website');
+                //}
+                ////window.location.pathname = '/SearchRecipe';
+                console.log(response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
 
 
-    <script src="/recipepress/js/jquery-1.11.3.min.js"></script>
-    <script src="/recipepress/js/jquery-ui.js"></script>
-    <script src="/recipepress/js/slick.min.js"></script>
-    <script src="/recipepress/js/jquery.meanmenu.js"></script>
-    <script src="/recipepress/js/jquery.selectric.min.js"></script>
-    <script src="/recipepress/js/wow.js"></script>
-    <script src="/recipepress/js/jquery.form.js"></script>
-    <script src="/recipepress/js/jquery.validate.min.js"></script>
-    <script src="/recipepress/js/jquery.swipebox.js"></script>
-    <script src="/recipepress/js/custom.js"></script>
-    <script src="~/js/index.js"></script>
-    <script src="~/js/site.js"></script>
+</script>
 
-    <script type="text/javascript">
-        // fetch and render element to html
-        (async () => {
-            await callPopularRecipeBannerApi();
-            await callPopularRecipeWidgetApi();
-            await callPopularRecipeApi();
-            await callLatestRecipeApi();
-            await callLatestRecipeWidgetApi();
-            await callRandomRecipeApi();
-            await callListCategoryItem();
-        })();
-    </script>
+<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+
+

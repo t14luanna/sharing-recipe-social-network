@@ -5,8 +5,13 @@ namespace SRSN.DatabaseManager.Entities
 {
     public partial class RatingRecipe
     {
+        public RatingRecipe()
+        {
+            Comment = new HashSet<Comment>();
+        }
+
         public int Id { get; set; }
-        public int? Star { get; set; }
+        public double? Star { get; set; }
         public int? UserId { get; set; }
         public int? RecipeId { get; set; }
         public string ImageUrl { get; set; }
@@ -15,5 +20,6 @@ namespace SRSN.DatabaseManager.Entities
 
         public virtual Recipe Recipe { get; set; }
         public virtual AspNetUsers User { get; set; }
+        public virtual ICollection<Comment> Comment { get; set; }
     }
 }

@@ -345,7 +345,7 @@
     /* advance search toggle
      /*-----------------------------------------------------------------------------------*/
 
-    $('.advance-search .tag-inner').on("click",function(){
+    $('.advance-search .tag-inner').on("click", function () {
         if ($(".advance-search").hasClass("open")){
             $(".advance-search").removeClass("open");
             $(".outer-advance-search").slideUp();
@@ -354,8 +354,6 @@
             $(".advance-search").addClass("open");
             $(".outer-advance-search").slideDown();
         }
-
-
     });
 
     /*-----------------------------------------------------------------------------------*/

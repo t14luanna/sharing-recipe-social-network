@@ -1,8 +1,11 @@
 ﻿
+const createSingleNotificationElement = (name) =>
+    `<li ><a href="#">${name}</a></li>`;
 const createSingleRecipeElement = (singeRecipe) =>
-    `<div class="recipe-single animated wow flipInY">
+    `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${singeRecipe.id},'${singeRecipe.recipeName}', '${singeRecipe.imageCover}',
+                                                                                        '${new Date(singeRecipe.createTime).getDay() + "/" + new Date(singeRecipe.createTime).getMonth() + "/" + new Date(singeRecipe.createTime).getFullYear()}')">
         <div class="recipe-image">
-            <a href="#"><img src="${singeRecipe.imageCover}" alt="image" /></a>
+            <a href="/recipe/${singeRecipe.id}"><img src="${singeRecipe.imageCover}" alt="image" /></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -29,9 +32,10 @@ const createSingleRecipeElement = (singeRecipe) =>
         </div>
     </div>`;
 const createSingleLatestRecipeElement = (recipe) =>
-    `<div class="recipe-single animated wow flipInY">
+    `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
-            <a href="#"><img src="${recipe.imageCover}" alt="image" /></a>
+            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -52,14 +56,15 @@ const createSingleLatestRecipeElement = (recipe) =>
         </div>
     </div>`;
 const createSingleRandomRecipeElement = (recipe) =>
-    `<div class="recipe-single animated wow flipInY">
+    `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                     <div class="recipe-image">
                                         <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
                                     </div>
                                     <div class="outer-detail">
                                         <div class="detail">
                                             <h3>
-                                                <a href="#">
+                                                <a href="/recipe/${recipe.id}">
                                                    ${recipe.recipeName}
                                                 </a>
                                             </h3>
@@ -69,19 +74,21 @@ const createSingleRandomRecipeElement = (recipe) =>
                                     </div>
       </div>`;
 const createSingleRecipeWidgetElement = (recipe) =>
-    `<li>
+    `<li onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                             <div class="thumb">
                                                 <a href="/recipe/${recipe.id}">
                                                     <img src="${recipe.imageCover}" alt="thumbnail" />
                                                 </a>
                                             </div>
                                             <div class="detail">
-                                                <a href="#">${recipe.recipeName}</a>
+                                                <a href="/recipe/${recipe.id}">${recipe.recipeName}</a>
                                                 <span class="post-date">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</span>
                                             </div>
                                         </li>`;
 const createSingleBanner = (recipe) =>
-    `<div class="slide-detail-inner">
+    `<div class="slide-detail-inner" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                             <h2><a href="/recipe/${recipe.id}">${recipe.recipeName}</a></h2>
                             <div class="short-separator"></div>
                             <div class="rating-box">
@@ -94,26 +101,27 @@ const createSingleBanner = (recipe) =>
                             <p>
                                ${recipe.contentRecipe}
                             </p>
-                            <a class="read-more-bordered" href="recipe-detail.html">Read More</a>
+                            <a class="read-more-bordered" href="/recipe/${recipe.id}">Read More</a>
                         </div>`;
 const createSingleRecipeOfDay = (recipe) =>
-    `<img src="${recipe.imageCover}" alt="Recipe of the day">
+    `<img src="${recipe.imageCover}" alt="Recipe of the day" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                             <div class="recipe-contents-outer">
                                 <div class="recipe-contents text-center">
                                     <div class="recipe-content-inner">
                                         <span class="tag">Recipe of the Day</span>
-                                        <h2><a href="#">${recipe.recipeName}</a></h2>
+                                        <h2><a href="/recipe/${recipe.id}">${recipe.recipeName}</a></h2>
                                         <div class="short-separator"></div>
                                         <p>
                                             ${recipe.contentRecipe}
                                         </p>
-                                        <a href="#" class="read-more">Read More</a>
+                                        <a href="/recipe/${recipe.id}" class="read-more">Read More</a>
                                     </div>
                                 </div>
                             </div>`;
 const createSingleCategoryItem = (item) =>
     ` <li>
-                                                <a href="#">${item.categoryItemName}</a>
+                                                <a href="#" class="text">${item.categoryItemName}</a>
                                                 <div class="list-icons">
                                                     <svg version="1.1" class="icon-container" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                                          width="42px" height="42px" viewBox="0 0 42 42" enable-background="new 0 0 42 42" xml:space="preserve">
@@ -133,6 +141,42 @@ const createSingleCategoryItem = (item) =>
                                                 </div>
                                             </li>
                                            `;
+
+const RedirectAPI = async () => {
+    $(".text").on("click", function (e) {
+        e.preventDefault();
+        var categoryName = $(this).text();
+        console.log(categoryName);
+        fetch("https://localhost:44361/api/recipe/read-recipe-by-category?categoryName=" + categoryName,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            })
+            .then(res => res.json())
+            .then(response => {
+                
+                var win = window.open('/RecipeByCategory?categoryName=' + categoryName);
+                if (win) {
+                    //Browser has allowed it to be opened
+                    win.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                }
+                //window.location.pathname = '/SearchRecipe';
+                console.log(response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+};
+    
+
+
+//choxem khúc giao diện
 const callListCategoryItem = async () => {
     var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
     var data = await res.json();
@@ -171,30 +215,36 @@ const callLatestRecipeApi = async () => {
     }
 };
 const callPopularRecipeBannerApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
-    var data = await res.json();
-    var count = 0;
-    for (let item of data) {
-        count++;
-        switch (count) {
-            case 1:
-                var element = createSingleBanner(item);
-                $("#single-banner1").append(element);
+    try {
+        var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+        var data = await res.json();
+        var count = 0;
+        for (let item of data) {
+            count++;
+            switch (count) {
+                case 1:
+                    var element = createSingleBanner(item);
+                    $("#single-banner1").append(element);
+                    break;
+                case 2:
+                    var element = createSingleBanner(item);
+                    $("#single-banner2").append(element);
+                    break;
+                case 3:
+                    var element = createSingleBanner(item);
+                    $("#single-banner3").append(element);
+                    break;
+            }
+            if (count == 3) {
                 break;
-            case 2:
-                var element = createSingleBanner(item);
-                $("#single-banner2").append(element);
-                break;
-            case 3:
-                var element = createSingleBanner(item);
-                $("#single-banner3").append(element);
-                break;
+            }
         }
-        if (count == 3) {
-            break;
-        }
+    } catch (e) {
+        console.log(e);
     }
 };
+const getRecipeResult = (recipe) => `<div class="quick-search-item" onclick="bindingQuickSearchValue('${recipe.recipeName}')">${recipe.recipeName}</div>`
+const getUserName = (account) => `<div>${account.userName}</div>`
 const callPopularRecipeApi = async () => {
     var res = await fetch("https://localhost:44361/api/recipe/read-popular");
     var list = await res.json();
@@ -235,7 +285,62 @@ const callLatestRecipeWidgetApi = async () => {
     }
 };
 
-
-function fileStack() {
-
+//Gọi API search Recipe
+const callSearchRecipeApi = async (searchVal) => {
+    if (!searchVal) {
+        $("#custom-quick-result div").remove();
+        $("#custom-quick-result").css('display', 'none');
+        return;
+    }
+    var res = await fetch("https://localhost:44361/api/recipe/read-recipename" + (searchVal ? "?recipeName=" + searchVal : ""));
+    var data = (await res.json()).result;
+    if (data.length == 0) {
+        $("#custom-quick-result div").remove();
+        $("#custom-quick-result").css('display', 'none');
+        return;
+    }
+    $("#custom-quick-result div").remove();
+    $("#custom-quick-result").css('display', 'none');
+    for (var item of data) {
+        let element = getRecipeResult(item);
+        $("#custom-quick-result").append(element);
+    }
+    $('#custom-quick-result').css('display', 'flex');
 }
+
+var bindingQuickSearchValue = function (quickSearchValue) {
+    $("#custom-input-search").val(quickSearchValue);
+
+    $("#custom-quick-result div").remove();
+    $("#custom-quick-result").css('display', 'none');
+};
+
+const attachInputSearchCallback = () => {
+    $('#custom-input-search').on("keyup", function () {
+        var searchVal = $("#custom-input-search").val();
+        callSearchRecipeApi(searchVal);
+    })
+
+    //$("#custom-input-search").on("focus", function () {
+    //    var searchVal = $("#custom-input-search").val();
+    //    if (searchVal) {
+    //        callSearchRecipeApi(searchVal);
+    //    } else {
+    //        return;
+    //    }
+    //})
+
+    $(document).on("click", function (e) {
+        if (e.target.className != "quick-search-item" && e.target.id != "custom-input-search") {
+            $("#custom-quick-result div").remove();
+            $("#custom-quick-result").css('display', 'none');
+        }
+    });
+
+    //$("#custom-input-search").on("blur", function () {
+    //    $("#custom-quick-result div").remove();
+    //    $("#custom-quick-result").css('display', 'none');
+    //})
+}
+
+

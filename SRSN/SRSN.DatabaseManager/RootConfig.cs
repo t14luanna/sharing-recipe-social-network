@@ -21,7 +21,8 @@ namespace SRSN.DatabaseManager
         public static void Entry(IServiceCollection services, IConfiguration configuration)
         {
             // cau hinh db context
-            services.AddDbContext<CookyDemoContext>(builder => {
+            services.AddDbContext<CookyDemoContext>(builder =>
+            {
                 builder.UseSqlServer(configuration.GetConnectionString("DbConnectionString"));
             });
             services.AddDbContext<SRSNIdentityDbContext>(builder =>
@@ -51,27 +52,31 @@ namespace SRSN.DatabaseManager
                     ValidateAudience = false
                 };
             });
-           
-            services.AddScoped(typeof(IdentityDbContext<SRSNUser, IdentityRole<int>,int>), typeof(SRSNIdentityDbContext));
+
+            services.AddScoped(typeof(IdentityDbContext<SRSNUser, IdentityRole<int>, int>), typeof(SRSNIdentityDbContext));
             services.AddScoped(typeof(SRSNUserManager));
             services.AddScoped(typeof(DbContext), typeof(CookyDemoContext));
-            
+
             // cau hinh Services
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRecipeService), typeof(RecipeService));
             services.AddScoped(typeof(ICollectionService), typeof(CollectionService));
             services.AddScoped(typeof(IStepsOfRecipeService), typeof(StepsOfRecipeService));
             services.AddScoped(typeof(IUserBlockService), typeof(UserBlockService));
-            services.AddScoped(typeof(ILikePostService), typeof(LikePostService));
+            services.AddScoped(typeof(IUserReactionPostService), typeof(UserReactionService));
             services.AddScoped(typeof(ICommentService), typeof(CommentService));
             services.AddScoped(typeof(IRatingRecipeService), typeof(RatingRecipeService));
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));
             services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
             services.AddScoped(typeof(IIngredientsService), typeof(IngredientsService));
             services.AddScoped(typeof(IPostService), typeof(PostService));
+            services.AddScoped(typeof(IProductService), typeof(ProductService));
+            services.AddScoped(typeof(IUserFollowingService), typeof(UserFollowingService));
+            services.AddScoped(typeof(IUserReactionRecipeService), typeof(UserReactionRecipeService));
 
             // cau hinh AutoMapper
-            var mapperConfig = new MapperConfiguration(mc => {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
                 mc.CreateMissingTypeMaps = true;
 
                 // chung ta se cau hinh ignore tai day
@@ -86,8 +91,8 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<Collection, CollectionViewModel>();
 
                 mc.CreateMap<AccountEditViewModel, SRSNUser>()
-                    .ForMember(x => x.AccessFailedCount, y=> y.Ignore())
-                    .ForMember(x => x.ConcurrencyStamp, y=> y.Ignore())
+                    .ForMember(x => x.AccessFailedCount, y => y.Ignore())
+                    .ForMember(x => x.ConcurrencyStamp, y => y.Ignore())
                     .ForMember(x => x.EmailConfirmed, y => y.Ignore())
                     .ForMember(x => x.LockoutEnabled, y => y.Ignore())
                     .ForMember(x => x.LockoutEnd, y => y.Ignore())
@@ -107,7 +112,7 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<UserBlockViewModel, UserBlock>()
                    .ForMember(x => x.BlockedUser, y => y.Ignore())
                    .ForMember(x => x.User, y => y.Ignore());
-                mc.CreateMap<LikePostViewModel, LikePost>()
+                mc.CreateMap<UserReactionViewModel, UserReactionPost>()
                   .ForMember(x => x.User, y => y.Ignore())
                   .ForMember(x => x.Post, y => y.Ignore());
                 mc.CreateMap<RecipeIngredientViewModel, RecipeIngredient>()
@@ -130,15 +135,26 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<Notification, NotificationViewModel>();
 
                 mc.CreateMap<CategoryViewModel, CategoryMain>();
-                mc.CreateMap<CategoryMain , CategoryViewModel>();
+                mc.CreateMap<CategoryMain, CategoryViewModel>();
 
                 mc.CreateMap<PostViewModel, Post>();
                 mc.CreateMap<Post, PostViewModel>();
 
+                mc.CreateMap<AccountViewModel, UserFollowing>();
+                mc.CreateMap<UserFollowing, AccountViewModel>();
+
                 mc.CreateMap<CategoryItemViewModel, StepsOfRecipe>();
                 mc.CreateMap<StepsOfRecipe, CategoryItemViewModel>();
 
+                mc.CreateMap<ProductViewModel, Products>()
+                    .ForMember(x => x.Brand, y => y.Ignore());
+                mc.CreateMap<Products, ProductViewModel>();
 
+                mc.CreateMap<UserReactionRecipe, UserReactionRecipeViewModel>();
+                mc.CreateMap<UserReactionRecipeViewModel, UserReactionRecipe>()
+                    .ForMember(x => x.RatingRecipe, y => y.Ignore())
+                    .ForMember(x => x.Recipe, y => y.Ignore())
+                    .ForMember(x => x.User, y => y.Ignore());
             });
             var mapper = mapperConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);

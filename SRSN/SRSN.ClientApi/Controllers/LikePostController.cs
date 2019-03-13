@@ -17,19 +17,20 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class LikePostController : ControllerBase
     {
-        private ILikePostService likePostService;
-        public LikePostController(ILikePostService likePostService)
+        private IUserReactionPostService likePostService;
+        public LikePostController(IUserReactionPostService likePostService)
         {
             this.likePostService = likePostService;
         }
 
+        
+
         [HttpPost("like")]
         [Authorize]
-        public async Task<ActionResult> LikePost([FromBody]LikePostViewModel likePostViewModel)
+        public async Task<ActionResult> LikePost([FromBody]UserReactionViewModel likePostViewModel)
         {
             try
             {
-
                 var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
                 likePostViewModel.UserId = int.Parse(userId);
                 var existedUser = await likePostService.FirstOrDefaultAsync(p => p.PostId == likePostViewModel.PostId && p.UserId == likePostViewModel.UserId);
@@ -54,7 +55,7 @@ namespace SRSN.ClientApi.Controllers
         }
         [HttpDelete("unlike")]
         [Authorize]
-        public async Task<ActionResult> UnLikePost([FromBody]LikePostViewModel likePostViewModel)
+        public async Task<ActionResult> UnLikePost([FromBody]UserReactionViewModel likePostViewModel)
         {
             try
             {

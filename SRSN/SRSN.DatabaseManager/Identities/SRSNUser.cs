@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using SRSN.DatabaseManager.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -24,10 +25,8 @@ namespace SRSN.DatabaseManager.Identities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? Point { get; set; }
-
         // them o day ne
         public string AvatarImageUrl { get; set; }
-
         /// <summary>
         /// Cai ham nay co the tao ra cho controller 1 cai accesstoken de ho tra ve cho nguopi dung
         /// </summary>
@@ -75,4 +74,6 @@ namespace SRSN.DatabaseManager.Identities
             };
         }
     }
+
+    
 }

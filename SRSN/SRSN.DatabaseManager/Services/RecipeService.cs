@@ -9,9 +9,11 @@ using SRSN.Service.Repositories;
 using SRSN.Service.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace SRSN.DatabaseManager.Services
 {
@@ -31,12 +33,14 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<RecipeViewModel>> GetRandomRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> GetRecipeWithID(UserManager<SRSNUser> userManager, int recipeId);
         Task<ICollection<RecipeViewModel>> GetRelatedRecipe(int userId);
-       ICollection<RecipeViewModel> GetPopularRecipes();
-       ICollection<RecipeViewModel> GetLastestRecipes();
-        Task SubmitRecipeWithStepsAsync(RecipeSubmitViewModel recipeVM);
+        ICollection<RecipeViewModel> GetPopularRecipes();
+        ICollection<RecipeViewModel> GetLastestRecipes();
+        Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName);
+        Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
+        Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(string categoryName);
     }
-    
-    
+
+
     public class RecipeService : BaseService<Recipe, RecipeViewModel>, IRecipeService
     {
 
@@ -162,7 +166,7 @@ namespace SRSN.DatabaseManager.Services
                     }
                     if (ingredientRepo.Count() > 0)
                     {
-                        recipe.listIngredient =await ingredient.ProjectTo<RecipeIngredientViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                        recipe.listIngredient = await ingredient.ProjectTo<RecipeIngredientViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
                     }
 
                 }
@@ -186,7 +190,7 @@ namespace SRSN.DatabaseManager.Services
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 13 * FROM Recipe WHERE Active = 'True'  ORDER BY EvRating DESC, ViewQuantity DESC").Where(a => a.Active == true).Take(13).ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 13 * FROM Recipe WHERE Active = 'True' AND ReferencedRecipeId IS NULL  ORDER BY EvRating DESC, ViewQuantity DESC").ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
@@ -221,7 +225,7 @@ namespace SRSN.DatabaseManager.Services
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 11 * FROM RECIPE WHERE Active='1' ORDER BY CreateTime DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 11 * FROM RECIPE WHERE Active='1' AND ReferencedRecipeId IS NULL ORDER BY CreateTime DESC").ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
@@ -236,7 +240,7 @@ namespace SRSN.DatabaseManager.Services
 
                 }
                 return list;
-                
+
             }
             catch (Exception ex)
             {
@@ -255,7 +259,7 @@ namespace SRSN.DatabaseManager.Services
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 1000 * FROM RECIPE WHERE Active='1' ORDER BY CreateTime DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 1000 * FROM RECIPE WHERE Active='1'AND ReferencedRecipeId IS NULL ORDER BY CreateTime DESC").ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
@@ -270,7 +274,7 @@ namespace SRSN.DatabaseManager.Services
 
                 }
                 return list;
-       
+
 
             }
             catch (Exception ex)
@@ -338,7 +342,7 @@ namespace SRSN.DatabaseManager.Services
             {
                 var list = new List<RecipeViewModel>();
 
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("Select top 6 * from Recipe order by NEWID()").Where(a => a.Active == true).ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("Select top 6 * from Recipe order by NEWID()").Where(a => a.Active == true && a.ReferencedRecipeId == null).ToList();
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
@@ -371,7 +375,7 @@ namespace SRSN.DatabaseManager.Services
                     var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
-                    
+
                     recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
 
@@ -384,19 +388,19 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetRelatedRecipe( int userId)
+        public async Task<ICollection<RecipeViewModel>> GetRelatedRecipe(int userId)
         {
             try
             {
                 var list = new List<RecipeViewModel>();
 
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT top 3 * FROM Recipe WHERE UserId=" + userId + " and Active='1' order by NEWID()").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT top 3 * FROM Recipe WHERE UserId=" + userId + " and Active='1'  AND ReferencedRecipeId IS NULL  order by NEWID()").ToList();
                 foreach (var item in listItems)
                 {
 
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
-                    
+
                     list.Add(recipeViewModel);
 
                 }
@@ -425,32 +429,32 @@ namespace SRSN.DatabaseManager.Services
                     var recipeEntity = this.VMToEntity(recipeVM);
                     recipeEntity.CreateTime = DateTime.Now;
                     recipeEntity.Active = true;
-                     this.selfDbSet.Add(recipeEntity);
+                    this.selfDbSet.Add(recipeEntity);
                     // Buoc nay cap nhat len db that de recipeEntity co duoc Id ( vi la id tu tang )
-                     this.unitOfWork.Commit();
+                    this.unitOfWork.Commit();
                     // duyet het list step of recipes de add tung phan tu vao dbcontext
                     foreach (var sorVM in listSORVM)
                     {
                         var sorEntity = this.VMToEntity<StepsOfRecipe, StepsOfRecipeViewModel>(sorVM);
                         // dung dung step recipe repository de create va dung quen cap nhat Recipe Id cho Entity
                         sorEntity.RecipeId = recipeEntity.Id;
-                         stepRecipeDbSet.Add(sorEntity);
+                        stepRecipeDbSet.Add(sorEntity);
                         // cap nhat lai dbcontext, moi duoc add list step of recipe len db
-                         this.unitOfWork.Commit();
+                        this.unitOfWork.Commit();
                     }
                     foreach (var ingredient in listIngredient)
                     {
                         var ingredientEntity = this.VMToEntity<RecipeIngredient, RecipeIngredientViewModel>(ingredient);
                         ingredientEntity.RecipeId = recipeEntity.Id;
-                         recipeIngredientDBSet.AddAsync(ingredientEntity);
-                         this.unitOfWork.Commit();
+                        recipeIngredientDBSet.AddAsync(ingredientEntity);
+                        this.unitOfWork.Commit();
                     }
                     foreach (var category in listCategory)
                     {
                         var categoryEntity = this.VMToEntity<RecipeCategory, RecipeCategoryViewModel>(category);
                         categoryEntity.RecipeId = recipeEntity.Id;
-                         recipeCategoryDBSet.AddAsync(categoryEntity);
-                         this.unitOfWork.Commit();
+                        recipeCategoryDBSet.AddAsync(categoryEntity);
+                        this.unitOfWork.Commit();
                     }
                     transaction.Commit();
                 }
@@ -463,59 +467,82 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-        public async Task SubmitRecipeWithStepsAsync(RecipeSubmitViewModel recipeVM)
+        public async Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName)
         {
-            // lay ra repository cua stepRecipeDbSet
-            var stepRecipeDbSet = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
-            var recipeIngredientDBSet = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
-            var recipeCategoryDBSet = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
-            // O day chung ta can phai dung  Transaction vi phai tao Recipe truoc sau do moi tao step recipe 
-            // => neu 1 trong cac buoc tren chet thi minh se rollback
-            using (var transaction = await this.unitOfWork.GetDbTransactionAsync())
+            try
             {
-                try
+                var list = new List<RecipeViewModel>();
+
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT top 3 * FROM Recipe WHERE RecipeName LIKE N'%" + recipeName + "%' order by Id DESC").ToList();
+                foreach (var item in listItems)
                 {
-                    // Bien doi recipeVM => recipeEntity
-                    //var recipeEntity = this.VMToEntity(recipeVM);
-                    //recipeEntity.CreateTime = DateTime.Now;
-                    //recipeEntity.Active = true;
-                    //await this.selfDbSet.AddAsync(recipeEntity);
-                    //// Buoc nay cap nhat len db that de recipeEntity co duoc Id ( vi la id tu tang )
-                    //await this.unitOfWork.CommitAsync();
-                    // duyet het list step of recipes de add tung phan tu vao dbcontext
-                    //foreach (var sorVM in listSORVM)
-                    //{
-                    //    var sorEntity = this.VMToEntity<StepsOfRecipe, StepsOfRecipeViewModel>(sorVM);
-                    //    // dung dung step recipe repository de create va dung quen cap nhat Recipe Id cho Entity
-                    //    sorEntity.RecipeId = recipeEntity.Id;
-                    //    await stepRecipeDbSet.AddAsync(sorEntity);
-                    //    // cap nhat lai dbcontext, moi duoc add list step of recipe len db
-                    //    await this.unitOfWork.CommitAsync();
-                    //}
-                    //foreach (var ingredient in listIngredient)
-                    //{
-                    //    var ingredientEntity = this.VMToEntity<RecipeIngredient, RecipeIngredientViewModel>(ingredient);
-                    //    ingredientEntity.RecipeId = recipeEntity.Id;
-                    //    await recipeIngredientDBSet.AddAsync(ingredientEntity);
-                    //    await this.unitOfWork.CommitAsync();
-                    //}
-                    //foreach (var category in listCategory)
-                    //{
-                    //    var categoryEntity = this.VMToEntity<RecipeCategory, RecipeCategoryViewModel>(category);
-                    //    categoryEntity.RecipeId = recipeEntity.Id;
-                    //    await recipeCategoryDBSet.AddAsync(categoryEntity);
-                    //    await this.unitOfWork.CommitAsync();
-                    //}
-                    transaction.Commit();
+                    //apply automapper
+                    var recipeViewModel = this.EntityToVM(item);
+
+                    list.Add(recipeViewModel);
+
                 }
-                catch (Exception ex)
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE N'%" + recipeName + "%' order by Id DESC").ToList();
+                foreach (var item in listItems)
                 {
-                    // neu bi loi thi rollback va throw cho phia ngoai controller catch
-                    transaction.Rollback();
-                    throw ex;
+                    //apply automapper
+                    var recipeViewModel = this.EntityToVM(item);
+
+                    list.Add(recipeViewModel);
+
                 }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(string categoryName)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+                System.Diagnostics.Debug.WriteLine("chipcaber: " + categoryName);
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("Select Recipe.* FROM Recipe " +
+                    "INNER JOIN Recipe_Category ON Recipe.Id = Recipe_Category.RecipeId " +
+                    "INNER JOIN CategoryItem ON Recipe_Category.CategoryItemId = CategoryItem.Id " +
+                    "WHERE CategoryItem.CategoryItemName=N'" + categoryName + "'").ToList();
+
+                
+                foreach (var item in listItems)
+                {
+                    var recipeViewModel = this.EntityToVM(item);
+
+                    list.Add(recipeViewModel);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }
-
 }
+
+
+
+
+
+

@@ -18,7 +18,7 @@ namespace SRSN.UserBehavior
         private static string redisRecommenderItemBased = "RCS_Recipe_";
         private static string redisRecommenderUserBased = "RCS_User_";
 
-        private UserRecipePoint[] data;
+        private UserReactionRecipe[] data;
         private Matrix<double> normalizedMatrix;
         private Matrix<double> similarityMatrix;
 
@@ -31,7 +31,7 @@ namespace SRSN.UserBehavior
         private int numberOfUsers;
         private int numberOfItems;
 
-        public CollaborativeFiltering(UserRecipePoint[] data, int k, bool isUucf)
+        public CollaborativeFiltering(UserReactionRecipe[] data, int k, bool isUucf)
         {
             this.data = data;
             this.users = data.Select(x => x.UserId).ToArray();
@@ -43,7 +43,7 @@ namespace SRSN.UserBehavior
         }
         public void Normalize()
         {
-            UserRecipePoint[] tempData = new UserRecipePoint[this.data.Count()];
+            UserReactionRecipe[] tempData = new UserReactionRecipe[this.data.Count()];
             this.data.CopyTo(tempData, 0);
             var mu = np.zeros(numberOfUsers);
 
@@ -54,7 +54,7 @@ namespace SRSN.UserBehavior
                     var userId = userIndex + 1;
                     int ids = this.users.FirstOrDefault(x => x == userId);
                     var dataWithIds = this.data.Where(x => x.UserId == ids);
-                    int[] rating_ids = dataWithIds.Select(x => x.RatingRecipe.Value).ToArray();
+                    double[] rating_ids = dataWithIds.Select(x => x.CalculatedRating.Value).ToArray();
                     double m = 0;
                     if (rating_ids.Length > 0)
                     {
@@ -63,7 +63,7 @@ namespace SRSN.UserBehavior
                     mu[userIndex] = m;
                     foreach (var uir in tempData.Where(x => x.UserId == ids))
                     {
-                        double doubleRating = (double)uir.RatingRecipe;
+                        double doubleRating = (double)uir.CalculatedRating;
                         doubleRating = doubleRating - (double)mu[userIndex];
                         uir.Point = doubleRating;
                     }
@@ -76,7 +76,7 @@ namespace SRSN.UserBehavior
                     var itemId = itemIndex + 1;
                     int ids = this.items.FirstOrDefault(x => x == itemId);
                     var dataWithIds = this.data.Where(x => x.RecipeId == ids);
-                    int[] rating_ids = dataWithIds.Select(x => x.RatingRecipe.Value).ToArray();
+                    double[] rating_ids = dataWithIds.Select(x => x.CalculatedRating.Value).ToArray();
                     double m = 0;
                     if (rating_ids.Length > 0)
                     {
@@ -86,7 +86,7 @@ namespace SRSN.UserBehavior
 
                     foreach (var uir in tempData.Where(x => x.RecipeId == ids))
                     {
-                        double doubleRating = (double)uir.RatingRecipe;
+                        double doubleRating = (double)uir.CalculatedRating;
                         doubleRating = doubleRating - (double)mu[itemIndex];
                         uir.Point = doubleRating;
                     }

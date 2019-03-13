@@ -25,8 +25,37 @@ namespace SRSN.ClientApi.Controllers
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.ratingRecipeService = ratingRecipeService ?? throw new ArgumentNullException(nameof(ratingRecipeService));
         }
+        [HttpPost("like")]
+        [Authorize]
+        public async Task<ActionResult> LikePost([FromBody]UserReactionViewModel likePostViewModel)
+        {
+            try
+            {
+                var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
+                likePostViewModel.UserId = int.Parse(userId);
+                //var existedUser = await likePostService.FirstOrDefaultAsync(p => p.PostId == likePostViewModel.PostId && p.UserId == likePostViewModel.UserId);
+                //if (existedUser.Id != 0)
+                //{
+                //    return Ok(new
+                //    {
+                //        status = 5,
+                //        message = "Ban like khong thanh cong vi Duplicate"
+                //    });
+                //}
 
-        [HttpPost("createRating")]
+                //await likePostService.CreateAsync(likePostViewModel);
+                return Ok(new
+                {
+                    message = "Bạn đã LIKE thanh cong"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost("create-rating")]
         [Authorize]
         public async Task<ActionResult> CreateRating([FromBody]RatingRecipeViewModel request)
         {
