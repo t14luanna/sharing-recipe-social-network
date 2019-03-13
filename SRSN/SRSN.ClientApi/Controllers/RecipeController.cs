@@ -220,13 +220,14 @@ namespace SRSN.ClientApi.Controllers
                 await recipeService.SubmitRecipeWithStepsAsync(request);
                 return Ok(new
                 {
+                    status = true,
                     message = $"Ban da tao thanh cong Recipe"
                 });
             } catch(Exception ex)
             {
                 return Ok(new
                 {
-                    success = false,
+                    status = false,
                     message = $"Ban tao recipe that bai",
                     error = ex.ToString()
                 });

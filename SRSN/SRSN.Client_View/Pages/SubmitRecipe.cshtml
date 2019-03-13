@@ -25,32 +25,32 @@
                     <div class="tab-content">
                         <div id="congthuc" class="tab-pane fade in active">
                             <div class="submit-recipe-form">
-                                <label for="upload-image">Ảnh đại diện cho món ăn</label>
+                                <label for="upload-image">Ảnh đại diện cho món ăn*</label>
                                 <span class="error" name="avatarUpload">*Hình đại diện không được để trống</span>
-                                <input type="file" name="avatarUpload" id="upload-image" required/>
+                                <input type="file" name="avatarUpload" id="upload-image" required />
                                 <span class="error" name="title">*Tiêu đề không được để trống</span>
-                                <input type="text" name="title" id="title" placeholder="Nhập tên công thức" required/>
+                                <input type="text" name="title" id="title" placeholder="Nhập tên công thức*" required />
                                 <br />
                                 <span class="error" name="content">*Nội dung không được để trống</span>
-                                <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức"required></textarea>
-                                <input type="number" name="serving" placeholder="Serving" value="1" required/>
-                                <input type="number" name="cooktime" placeholder="Cook time" value="1" required/>
-                                <input type="number" name="level" placeholder="Level" value="1" required/>
+                                <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức*" required></textarea>
+                                <input type="number" name="serving" placeholder="Serving" value="1" required />
+                                <input type="number" name="cooktime" placeholder="Cook time" value="1" required />
+                                <input type="number" name="level" placeholder="Level" value="1" required />
                                 <fieldset class="ingredient-set">
                                     <label for="ingredients">Nguyên liệu</label> </br>
                                     <span class="error" name="ingredients">*Nguyên liệu không được để trống</span>
                                     <ul class="list-sortable ingredients-list">
-                                        <li>    
+                                        <li>
                                             <div class="add-fields">
                                                 <span class="ingredient-handler-list handler-list">
                                                     <i class="fa fa-arrows"></i>
                                                 </span>
-                                                <input class="ingredient-quantity" type="number" step="1" name="ingredientsQuantity" value="1" required/>
+                                                <input class="ingredient-quantity" type="number" step="1" name="ingredientsQuantity" value="1" required />
                                                 <select class="ingredient-weight" name="ingredientsWeight">
                                                     <option value="1" selected>g</option>
                                                     <option value="1000">kg</option>
                                                 </select>
-                                                <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" required/>
+                                                <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" required />
                                                 <span class="del-list">
                                                     <i class="fa fa-trash"></i>
                                                 </span>
@@ -76,7 +76,7 @@
                                                 </span>
                                             </div>
                                             <div class="image-fields">
-                                                <input type="file" name="stepsImage" required/>
+                                                <input type="file" name="stepsImage" required />
                                             </div>
                                         </li>
                                     </ul>
@@ -373,5 +373,6 @@
     <script type="text/javascript" src="recipepress/js/main.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script src="~/js/submit-recipe.js"></script>
 }

@@ -44,24 +44,40 @@ $('#submitBtn').on("click", async function (event) {
     console.log(results.validation)
     if (results.validation === false) {
         window.scrollTo(0, 400);
+        Swal.fire({
+            type: 'error',
+            title: 'Thông báo',
+            text: 'Các nội dung không được để trống!',
+        });
         return;
     } else {
-
-        //var data = results.data;
-        ////data = await uploadImageSubmit(data);
-        //
-        //var authorization = localStorage.getItem("authorization");
-        //var token = (JSON.parse(authorization))["token"];
-        //var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
-        //    method: "POST",
-        //    body: JSON.stringify(data),
-        //    headers: {
-        //        'Content-Type': 'application/json',
-        //        'Authorization': `Bearer ${token}`
-        //    }
-        //}).then((res) => {
-        //    console.log(res);
-        //});
+        var data = results.data;
+        data = await uploadImageSubmit(data);
+        
+        var authorization = localStorage.getItem("authorization");
+        var token = (JSON.parse(authorization))["token"];
+        var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).then((res) => {
+            if (res.status) {
+                Swal.fire(
+                    'Thông báo',
+                    'Công thức ' + data.RecipeVM.RecipeName + ' đã được tạo thành công',
+                    'success'
+                );
+            } else {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Thông báo',
+                    text: 'Công thức tạo thất bại!',
+                });
+            }
+        });        
     }
 
 });
