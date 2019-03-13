@@ -222,8 +222,62 @@
 .nav-collapse ul li{
     margin-left: 0px!important
 }
+.fa-bell, .fa-envelope {
+    color: black !important
+}
+.submit-recipe > a{
+    color: white !important
+}
+.newsfeeds-social-icons{
+    float: right;
+    margin-top: 10px;
+}
+.newsfeeds-social-icons a{
+    margin-right: 5px;
+    cursor: pointer
+}
+.custom-grid{
+    margin: 0px!important
+}
+.custom-listing {
+    width: 262.725px !important;
+    height: 350.725px !important;
+}
+.custome-image-listing {
+    width: 262.725px !important;
+    height: 206.775px;
+}
+.custom-grid  h4{
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+}
+
+#loading-box {
+    display: none;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+}
+
+    #loading-box .gif {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        background-color: rgba(0,0,0,0.3) !important;
+    }
+.custom-label-submit {
+    padding-left: 0px!important
+}
+.input-video{
+    margin-top: 30px;
+}
 .header-var2.ext-var4 nav ul > li a{
-    color: black!important
+    color: black
 }
 .icon-delete {
     font-size: 20px;

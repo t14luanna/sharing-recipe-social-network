@@ -3,124 +3,106 @@
     ViewData["Title"] = "SubmitRecipe";
 }
 
-
-<meta charset="utf-8">
-@*<meta http-equiv="X-UA-Compatible" content="IE=edge">*@
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Food & Health</title>
-<!--google fonts-->
-<link rel="stylesheet" href="~/css/submit-recipe.css" />
-<link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'
-      rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Karla:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-<!--jquery ui stylesheet-->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<!-- site favicon -->
-<link rel="icon" href="~/recipepress/images/favicon.png" />
-<!--selectric stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/selectric.css" />
-<!--font awesome stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/font-awesome.min.css" />
-<!--swipe box stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/swipebox.css" />
-<!-- mean menu stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/meanmenu.css" />
-<!--slick slider stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/slick.css" />
-<link rel="stylesheet" href="~/recipepress/css/slick-theme.css" />
-<!--bootstrap stylesheets-->
-<link rel="stylesheet" href="~/recipepress/css/bootstrap.css" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="~/recipepress/css/bootstrap-theme.css" />
-<!--animate stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/animate.css" />
-<!--main stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/main.css" />
+@section StyleOptional{
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/submit-recipe.css" />
+}
 
 <div class="recipes-home-body inner-page">
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-lg-9">
                 <div class="recipe-set submit-recipe-set">
-                    <h2>Submit Recipe</h2>
-                    <p>
-                        Food Recipe theme include a Recipe Submit Template. It allow users to submit a recipe with featured
-                        image and related details. A user should be logged in to submit a recipe.
-                    </p>
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#congthuc">Công Thức</a></li>
-                        <li><a data-toggle="tab" href="#phanloai">Phân Loại</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="congthuc" class="tab-pane fade in active">
-                            <div class="submit-recipe-form">
-                                <label for="upload-image">Ảnh đại diện cho món ăn</label>
-                                <input type="file" name="avatarUpload" id="upload-image" />
-                                <input type="text" name="title" id="title" placeholder="Nhập tên công thức" />
-                                <br />
-                                <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức"></textarea>
-                                <input type="number" name="serving" placeholder="Serving" />
-                                <input type="number" name="cooktime" placeholder="Cook time" />
-                                <input type="number" name="level" placeholder="Level" />
-                                <fieldset class="ingredient-set">
-                                    <label for="ingredients">Nguyên liệu</label>
-                                    <ul class="list-sortable ingredients-list">
-                                        <li>
-                                            <div class="add-fields">
-                                                <span class="ingredient-handler-list handler-list">
-                                                    <i class="fa fa-arrows"></i>
-                                                </span>
-                                                <input class="ingredient-quantity" type="number" step="1" name="ingredientsQuantity" />
-                                                <select class="ingredient-weight" name="ingredientsWeight">
-                                                    <option value="1" selected>g</option>
-                                                    <option value="1000">kg</option>
-                                                </select>
-                                                <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" />
-                                                <span class="del-list">
-                                                    <i class="fa fa-trash"></i>
-                                                </span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <span class="add-button add-ing">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                </fieldset>
-                                <fieldset class="ingredient-set">
-                                    <label for="steps">Steps</label>
-                                    <ul class="list-sortable steps">
-                                        <li>
-                                            <div class="add-fields">
-                                                <span class="handler-list">
-                                                    <i class="fa fa-arrows"></i>
-                                                </span>
-                                                <textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>
-                                                <span class="del-list">
-                                                    <i class="fa fa-trash"></i>
-                                                </span>
-                                            </div>
-                                            <div class="image-fields">
-                                                <input type="file" name="stepsImage" />
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <span class="add-button add-steps">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                </fieldset>
-                                <input type="text" name="videoCode" placeholder="Video Code" />
-                                <div class="text-center">
-                                    <button type="submit" id="submitBtn" class="recipe-submit-btn">Submit Your Recipe</button>
-                                </div>
+                    <h2>Đăng công thức</h2>
+                    <div class="tab-container tab-shortcode">
+                        <ul class="clearfix list-nav">
+                            <li class="active" id="congthucBtn"><a href="#">Công thức</a></li>
+                            <li id="phanloaiBtn"><a href="#">Phân loại</a></li>
+                        </ul>
+                        <div class="tabs-container">
+                            <div class="tab-content" id="congthuc" style="display: block;">
+                                <div class="submit-recipe-form">
+                                    <label for="upload-image">Ảnh đại diện cho món ăn*</label>
+                                    <span class="error" name="avatarUpload">*Hình đại diện không được để trống</span>
+                                    <div class="form-group col-sm-12">
+                                        <div class="img-picker" style="display:none"></div>
+                                    </div>
+                                    <input type="file" name="avatarUpload" id="upload-image" required />
+                                    <span class="error" name="title">*Tiêu đề không được để trống</span>
+                                    <input type="text" name="title" id="title" placeholder="Nhập tên công thức*" required />
+                                    <br />
+                                    <span class="error" name="content">*Nội dung không được để trống</span>
+                                    <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức*" required></textarea>
+                                    <label class="col-md-3 custom-label-submit">Số khẩu phần ăn*</label>
+                                    <input type="number" name="serving" placeholder="Serving" value="1" required />
+                                    </br>
+                                    <label class="col-md-3 custom-label-submit">Thời gian nấu (phút)*</label>
+                                    <input type="number" name="cooktime" placeholder="Cook time" value="1" required />
+                                    </br>
+                                    <div class="form-group">
+                                        <label class="col-md-3 custom-label-submit">Độ khó*</label>
+                                        <select name="level" class="form-control">
+                                            <option value="1">Dễ</option>
+                                            <option value="2">Trung bình</option>
+                                            <option value="3">Khó</option>
+                                        </select>
+                                    </div>
+                                    @*<input type="number"  placeholder="Level" value="1" required />*@
+                                    <fieldset class="ingredient-set">
+                                        <label for="ingredients">Nguyên liệu</label> </br>
+                                        <span class="error" name="ingredients">*Nguyên liệu không được để trống</span>
+                                        <ul class="list-sortable ingredients-list">
+                                            <li>
+                                                <div class="add-fields">
+                                                    <span class="ingredient-handler-list handler-list">
+                                                        <i class="fa fa-arrows"></i>
+                                                    </span>
+                                                    <input class="ingredient-weight" type="text" name="ingredientsWeight" placeholder="1g, 1kg, 1 thìa ..." />
+                                                    <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" placeholder="Muối, Đường, thịt gà ..." />
+                                                    <span class="del-list">
+                                                        <i class="fa fa-trash"></i>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span class="add-ingredient">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                    </fieldset>
+                                    <fieldset class="ingredient-set">
+                                        <label for="steps">Steps</label> </br>
+                                        <span class="error" name="stepsDes">*Các bước không được để trống</span>
+                                        <ul class="list-sortable steps">
+                                            <li>
+                                                <div class="add-fields">
+                                                    <span class="handler-list">
+                                                        <i class="fa fa-arrows"></i>
+                                                    </span>
+                                                    <textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>
+                                                    <span class="del-list">
+                                                        <i class="fa fa-trash"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="image-fields">
+                                                    <input type="file" name="stepsImage" required />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span class="add-recipe-steps">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                    </fieldset>
+                                    <input type="text" name="videoCode" placeholder="Video Code" class="input-video"/>
+                                    <div class="text-center">
+                                        <button type="button" id="nextBtn" class="recipe-submit-btn">Bước tiếp theo</button>
+                                    </div>
 
+                                </div>
+                            </div>
+                            <div class="tab-content" id="phanloai" style="display: none;">
                             </div>
                         </div>
-                        <div id="phanloai" class="tab-pane fade">
-                        </div>
                     </div>
-
                 </div>
             </div>
             <div class="col-md-4 col-lg-3">
@@ -281,41 +263,78 @@
 </div>
 <!--footer ends-->
 
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script type="text/javascript" src="recipepress/js/main.js"></script>
+    <script type="text/javascript" src="~/recipepress/js/custom.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-<script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="~/js/submit-recipe.js"></script>
-
-<script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
-<script src="~/js/recipe.js"></script>
-<script src="~/recipepress/js/jquery-ui.js"></script>
-
-<script src="~/recipepress/js/slick.min.js"></script>
-<script src="~/recipepress/js/jquery.meanmenu.js"></script>
-<script src="~/recipepress/js/jquery.selectric.min.js"></script>
-<script src="~/recipepress/js/wow.js"></script>
-<script src="~/recipepress/js/jquery.form.js"></script>
-<script src="~/recipepress/js/jquery.validate.min.js"></script>
-<script src="~/recipepress/js/jquery.swipebox.js"></script>
-<script src="~/recipepress/js/custom.js"></script>
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
-@section Scripts
-    {
-
+    <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+    <script src="~/js/submit-recipe.js"></script>
     <script type="text/javascript">
+
         const changeHeadername = async () => {
-            var someText = "Đăng Công thức";
+            var someText = "Đăng công thức";
             $('.main-heading h1').append(document.createTextNode(someText));
         };
         (async () => {
             await changeHeadername();
-            await loadcategory();
-            await callLatestRecipeWidgetSubmitPageApi();
-            await callListCategoryItemSubmitPageApi();
-            await callPopularSubmitPageApi();
-        })();
+            await loadCategory();
+            $('#submitBtn').on("click", async function (event) {
+                $("#loading-box").show();
+                var results = getData();
+                console.log(results.validation)
+                if (results.validation === false) {
+                    window.scrollTo(0, 400);
+                    $("#congthucBtn").click();
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Thông báo',
+                        text: 'Các nội dung không được để trống!',
+                    });
+                    $("#loading-box").hide();
 
+                    return;
+                } else {
+                    var data = results.data;
+                    data = await uploadImageSubmit(data);
+                   
+                    var authorization = localStorage.getItem("authorization");
+                    var token = (JSON.parse(authorization))["token"];
+                    await fetch("https://localhost:44361/api/recipe/submit-recipe", {
+                        method: "POST",
+                        //body: JSON.stringify({ request: data }),
+                        body: JSON.stringify(data),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    .then((res) => {
+                        $("#loading-box").hide();
+                        if (res.status === 200) {
+                            swal({
+                                title: "",
+                                text: "Bạn đã chia sẻ công thức thành công",
+                                type: "success",
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Xác nhận",
+                                closeOnConfirm: false
+                            });
+                            setTimeout(async function () {
+                                var data = (await res.json());
+                                var recipeId = data.recipeId;
+                                window.location.href = `/recipe/${recipeId}`
+                            }, 1500);
+                        }
+                    })
+                    .catch(function (e) {
+                        $("#loading-box").hide();
+                    });
+                }
+
+            });
+        })();
     </script>
 }
-

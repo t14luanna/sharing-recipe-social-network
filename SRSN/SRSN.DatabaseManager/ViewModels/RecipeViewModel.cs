@@ -8,8 +8,8 @@ namespace SRSN.DatabaseManager.ViewModels
     {
         public RecipeViewModel RecipeVM { get; set; }
         public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
-        public List<RecipeIngredientViewModel> listIngredient { get; set; }
-        public List<RecipeCategoryViewModel> listCategory { get; set; }
+        public List<RecipeIngredientViewModel> ListIngredient { get; set; }
+        public List<RecipeCategoryViewModel> ListCategory { get; set; }
     }
 
     public class RequestSubmitRecipeModel

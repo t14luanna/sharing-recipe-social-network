@@ -111,12 +111,13 @@
         $("#login-form").on("submit", async function (e)
         {
             e.preventDefault();
+            
             //var formData = $('#login-form').serializeArray();
             //var data = {};
             //$.map(formData, function (n, i) {
             //    data[n['name']] = n['value'];
             //});
-            fetch("https://localhost:44361/api/account/login", {
+            fetch(`${BASE_API_URL}/api/account/login`, {
                 method: 'POST', // or 'PUT'
                 body: JSON.stringify({
                     'usernameVM': $('#usernameVM').val(),

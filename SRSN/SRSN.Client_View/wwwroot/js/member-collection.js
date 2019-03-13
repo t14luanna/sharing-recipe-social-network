@@ -19,7 +19,7 @@ $("#comment-form").submit(function (e) {
             $.map(formData, function (n, i) {
                 data[n['name']] = n['value'];
             });
-            fetch("https://localhost:44361/api/collection/create", {
+            fetch(`${BASE_API_URL}/api/collection/create`, {
                 method: 'POST', // or 'PUT'
                 body: JSON.stringify(data), // data can be `string` or {object}!
                 headers: {
@@ -83,10 +83,10 @@ const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-
                                                     </div>
                                                     </div>
                                                 </div>`;
-const callReadCollectionApi = async () => {
+const callReadCollectionApi = async (userName) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read`, {
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read-by-userName?userName=${userName}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',

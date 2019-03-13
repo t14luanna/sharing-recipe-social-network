@@ -10,7 +10,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
             <div class="recipe-slider">
                 <div class="slider-detail2">
                     <div>
-                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
+                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                 </div>
 
@@ -22,7 +22,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
             <ul class="recipe-specs-2">
                 <li><span>Khẩu phần : </span>${recipe.serving}</li>
                 <li><span>Thời gian nấu : </span>${recipe.cookTime}</li>
-                <li><span>Độ khó : </span>${recipe.levelRecipe}</li>
+                <li><span>Độ khó : </span>${RECIPE_LEVEL_ENUM[recipe.levelRecipe]}</li>
             </ul>
         </div>
         <a href="${recipe.videoLink}" class="swipebox slider-video-button">Watch Video</a>
@@ -52,7 +52,7 @@ const createSingleStepOfRecipe = (step) =>
                                                     
             </div>
             <div class="col-sm-5">
-                <img class="img-step-recipe" src="${step.imageUrl}" alt="image" />
+                <img class="img-step-recipe" src="${step.imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
             </div>
         </div>
     </dd>`;
@@ -61,7 +61,7 @@ const createSingleRelatedRecipe = (recipe) =>
     `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
-            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image"></a>
+            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -86,7 +86,7 @@ const createSingleRecipeDetailPageElement = (recipe) =>
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
             <div class="thumb" >
                 <a href="/recipe/${recipe.id}">
-                    <img src="${recipe.imageCover}" alt="thumbnail" />
+                    <img src="${recipe.imageCover}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
                 </a>
             </div>
             <div class="detail">
@@ -99,7 +99,7 @@ const createSingleRecipeDetailElement = (recipe) =>
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="thumb">
             <a href="/recipe/${recipe.id}">
-                <img src="${recipe.imageCover}" alt="thumbnail" />
+                <img src="${recipe.imageCover}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
             </a>
         </div>
         <div class="detail">
@@ -116,7 +116,7 @@ const createSingleRatingComment = (comment, commentReplyCount) =>
        
         <div class="avatar">
 
-            <a href="#"><img class="avatar-comment" src="${comment.avatarUrl}" alt="avatar" /></a>
+            <a href="#"><img class="avatar-comment" src="${comment.avatarUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" /></a>
         </div>
         <div class="comment">
             
@@ -163,7 +163,7 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">About Chef</h3>
     <div class="listing">
         <div class="image">
             <div class="image-inner">
-                <a href="#"><img src="${chef.avatarImageUrl}" alt="chef"/></a>
+                <a href="#"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
             </div>
         </div>
         <div class="detail">
@@ -364,7 +364,7 @@ const callIsLikeRecipe = async (recipeId) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        if (res.status != 404) {
+        if (res.status == 200) {
             $("#like-heart").removeClass("fa-heart");
             $("#like-heart").addClass("fa-heart");
         }
@@ -388,6 +388,7 @@ const callChefRecipeApi = async (id) => {
     $(".about-chef").append(chefView);
 };
 const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
+    setMapOnAll(null);
 
     var res = await fetch(`${BASE_API_URL}/api/product/read-nearby-store?userLat=${userLat}&userLong=${userLong}&ingredientName=${ingredientName}`);
     var data = (await res.json());
@@ -401,12 +402,14 @@ const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
             }
         });
         var itemName = item.name + " (" + item.address + " )";
+        marker.setAnimation(google.maps.Animation.BOUNCE);
         addInfoWindow(marker, itemName);
         marker.setMap(map);
+        markers.push(marker);
     }
 };
 const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredientNames) => {
-
+    setMapOnAll(null);
     var data = {
         userLat: userLat,
         userLong: userLong,
@@ -420,17 +423,24 @@ const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredie
         }
     });
     var dataPos = await res.json();
+    setMapOnAll(null);
     for (var item of dataPos) {
         var itemLatLng = { lat: item.lat, lng: item.long };
         var marker = new google.maps.Marker({
             position: itemLatLng,
             icon: {
-                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                scaledSize: new google.maps.Size(35, 35),
             }
         });
         var itemName = item.name + " (" + item.address + " )";
+
+        marker.setAnimation(google.maps.Animation.BOUNCE);
         addInfoWindow(marker, itemName);
         marker.setMap(map);
+        markers.push(marker);
+
+        
     }
 };
 function addInfoWindow(marker, message) {
@@ -502,7 +512,7 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
 const createReplyView = (replyUser, cmtId, recipeId) => `<ul class="reply-${replyUser.username}">
                 <li>
                     <div class="avatar">
-                        <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar"/></a>
+                        <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                     <div class="comment">
                         <h5><a href="#">${replyUser.username}</a></h5>
@@ -545,7 +555,7 @@ const openReplyView = async (cmtId, recipeId) => {
 const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied replied-${parentId}">
                 <li>
                     <div class="avatar">
-                        <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}" alt="avatar"/></a>
+                        <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="avatar"/></a>
                     </div>
                     <div class="comment">
 
@@ -831,3 +841,9 @@ const callCreateAddCollectionApi = async (collectionId, recipeId) => {
         swal("", "Công thức này đã tồn tại trong bộ sưu tập", "error")
     }
 };
+var markers = [];
+function setMapOnAll(map) {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+    }
+}

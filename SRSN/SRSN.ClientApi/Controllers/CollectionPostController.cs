@@ -40,5 +40,18 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("get-recipes")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetRecipeByCollectionId( int collectionId)
+        {
+            try
+            {
+                return Ok (await collectionPostService.GetRecipeByCollectionId(this.userManager, collectionId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

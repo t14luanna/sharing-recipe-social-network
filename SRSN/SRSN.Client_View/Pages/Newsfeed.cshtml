@@ -35,10 +35,7 @@
                                     <!-- Activity List Start -->
                                     <div class="activity--list">
                                         <!-- Activity Items Start -->
-                                        <ul class="activity--items nav">
-                                            
-                                            
-                                        </ul>
+                                        <ul class="activity--items nav"></ul>
                                         <!-- Activity Items End -->
                                     </div>
                                     <!-- Activity List End -->
@@ -230,11 +227,25 @@
         </div>
     </div>
 </div>
+<div class="modal-share-post modal">
+    <!-- Modal content -->
+    <div class="row modal-content modal-share-content">
+        <div class="col-md-12 modal-header">
+            <span class="close-share-recipe close">&times;</span>
+        </div>
+        <div class="col-md-12 modal-body modal-body-share-post">
+        </div>
+    </div>
+
+</div>
 @section Scripts {
-    <script type="text/javascript" src="recipepress/js/plugins.min.js"></script>
-    <script type="text/javascript" src="recipepress/js/color-switcher.min.js"></script>
-    <script type="text/javascript" src="recipepress/js/main.js"></script>
+
+    <script type="text/javascript" src="/recipepress/js/plugins.min.js"></script>
     <script type="text/javascript" src="~/js/newsfeed.js"></script>
+    <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
+    <script type="text/javascript" src="/recipepress/js/main.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript">
         const changeHeadername = async () => {
             var someText = "Cộng đồng";
@@ -243,7 +254,24 @@
         (async () => {
             await changeHeadername();
             await callNewsfeedPageApi();
+            $(".btn-share-post").on("click", function (e) {
+                var currentTarget = e.currentTarget;
+                var recipeId = currentTarget.getAttribute("data-recipe-id");
+                callShareRecipeModalApi(recipeId);
+                $(".modal-share-post").css("display", "block");
+
+            });
+            $(".close-share-recipe").on("click", function (e) {
+                $(".modal-share-post").css("display", "none")
+
+            });
         })();
+
+        window.onclick = function (event) {
+            if (event.target.id == "modal-share-post") {
+                $(".modal-share-post").css("display", "none");
+            }
+        }
     </script>
 }
 

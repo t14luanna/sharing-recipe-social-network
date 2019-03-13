@@ -3,6 +3,7 @@ var RECIPE_API_URL = "api/recipe";
 var ACCOUNT_API_URL = "api/account";
 var CATEGORY_API_URL = "api/category";
 var COLLECTION_API_URL = "api/collection";
+var COLLECTION_POST_API_URL = "api/collectionpost";
 var COMMENT_API_URL = "api/comment";
 var INGREDIENTS_API_URL = "api/ingredients";
 var LIKE_POST_API_URL = "api/likepost";
@@ -17,3 +18,4 @@ var USER_BLOCK_API_URL = "api/userblock";
 var USER_FOLLOWING_API_URL = "api/userfollowing";
 var USER_REACTION_RECIPE_API_URL = "api/userreactionrecipe";
 
+var RECIPE_LEVEL_ENUM = ["", "Dễ", "Trung bình", "Khó"];

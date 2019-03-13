@@ -60,12 +60,18 @@ namespace SRSN.ClientApi.Controllers
             });
         }
 
-        [HttpGet("read")]
+        [HttpGet("read-by-Id")]
         [AllowAnonymous]
-        public ActionResult ReadByUserId()
+        public async Task<ActionResult> ReadByCollectionId(int collectionId)
         {
-            var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
-            return Ok(collectionService.Get(u => u.UserId == int.Parse(userId) && u.Active == true));
+            try
+            {
+                return Ok(await collectionService.GetCollectionById(this.userManager, collectionId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet("read-top-collection")]
         [AllowAnonymous]
@@ -88,6 +94,39 @@ namespace SRSN.ClientApi.Controllers
             {
                 message = $"Ban da sua thanh cong Bo Suu Tap:{request.CollectionName} "
             });
+        }
+        [HttpGet("read-by-userName")]
+        [AllowAnonymous]
+        public ActionResult ReadByUserName(string userName)
+        {
+            ClaimsPrincipal claims = this.User;
+            var userTokenName = claims.FindFirst(ClaimTypes.Name).Value;
+            if (userTokenName.Equals(userName))
+            {
+                var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
+                return Ok(collectionService.Get(u => u.UserId == int.Parse(userId) && u.Active == true));
+            }
+            else
+            {
+                var user = this.userManager.FindByNameAsync(userName).Result;
+                return Ok(collectionService.Get(u => u.UserId == user.Id && u.Active == true));
+            }
+        }
+        [HttpGet("read")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ReadByToken()
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var userTokenName = claims.FindFirst(ClaimTypes.Name).Value;
+                var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
+                return Ok(collectionService.Get(u => u.UserId == int.Parse(userId) && u.Active == true));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
     }
 }
