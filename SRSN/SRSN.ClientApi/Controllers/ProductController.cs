@@ -45,6 +45,25 @@ namespace SRSN.ClientApi.Controllers
                 return Ok(new List<ProductViewModel>());
             }
         }
+        [HttpPost("read-list-ingredient-nearby-store")]
+        public ActionResult ReadListIngredientNearByStore([FromBody] ReadNearbyStoreRequestParams req)
+        {
+            try
+            {
+                var listStore = productService.GetListStoreByProductID(req.IngredientNames.ToList(), req.UserLat, req.UserLong);
+                return Ok(listStore);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new List<ProductViewModel>());
+            }
+        }
+        public class ReadNearbyStoreRequestParams
+        {
+            public List<string> IngredientNames { get; set; }
+            public double UserLat { get; set; }
+            public double UserLong { get; set; }
+        }
     }
 
 }

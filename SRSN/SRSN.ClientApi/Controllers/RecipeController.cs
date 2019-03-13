@@ -44,7 +44,7 @@ namespace SRSN.ClientApi.Controllers
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.RecipeVM.UserId = userId;
-            await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.listIngredient, request.listCategory);
+            await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
             return Ok(new
             {
                 message = $"Ban da tao thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
@@ -210,13 +210,19 @@ namespace SRSN.ClientApi.Controllers
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.RecipeVM.UserId = userId;
-            await recipeService.UpdateRecipe(request.RecipeVM, request.ListSORVM, request.listIngredient, request.listCategory);
+            await recipeService.UpdateRecipe(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
             return Ok(new
             {
                 message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
             });
         }
 
+        /// <summary>
+        /// Api useless and duplicate with Create
+        /// Should merge
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("submit-recipe")]
         public async Task<ActionResult> SubmitRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request)
         {
@@ -225,23 +231,23 @@ namespace SRSN.ClientApi.Controllers
                 ClaimsPrincipal claims = this.User;
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 request.RecipeVM.UserId = userId;
-                await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.listIngredient, request.listCategory);
+                var recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
                 return Ok(new
                 {
-                    status = true,
-                    message = $"Ban da tao thanh cong Recipe"
+                    recipeId = recipeId,
+                    message = $"Ban da tao thanh cong Recipe",
                 });
             }
             catch (Exception ex)
             {
                 return Ok(new
                 {
-                    status = false,
                     message = $"Ban tao recipe that bai",
                     error = ex.ToString()
                 });
             }
         }
+
         [HttpGet("read-recipename")]
         public async Task<ActionResult> ReadRecipeName([FromQuery]string recipeName)
         {

@@ -172,7 +172,7 @@
                     data[n['name']] = n['value'];
                 });
 
-                fetch("https://localhost:44361/api/account/register", {
+                fetch(`${BASE_API_URL}/api/account/register`, {
                     method: 'POST', // or 'PUT'
                     body: JSON.stringify(data), // data can be `string` or {object}!
                     headers: {
@@ -275,7 +275,7 @@
                                                `;
 
         const callLatestRecipeWidgetRegisterPageApi = async () => {
-            var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+            var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest`);
             var data = await res.json();
             var count = 0;
             for (var item of data) {
@@ -287,7 +287,7 @@
             }
         };
         const callListCategoryItemRegisterPageApi = async () => {
-            var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
+            var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
             var data = await res.json();
             for (var item of data) {
                 for (var cateItem of item.listCategoryItem) {
@@ -297,7 +297,7 @@
             }
         };
         const callPopularRegisterPageApi = async () => {
-            var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+            var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
             var data = await res.json();
             var count = 0;
             for (var item of data) {

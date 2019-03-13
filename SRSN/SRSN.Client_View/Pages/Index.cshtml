@@ -77,7 +77,17 @@
                                                     <nav class="nav-collapse header-social-icons">
                                                         <ul>
                                                             <li>
-                                                                <a href="#"><i class="fa fa-bell"></i></a>
+                                                                <a href="#" onclick="changeStatusNoti()">
+                                                                    <i class="fa fa-bell"></i>
+                                                                    <span style="
+                                                                          position: absolute;
+                                                                          top: 5px;
+                                                                          right: -4px;
+                                                                          padding: 0px 5px;
+                                                                          border-radius: 50%;
+                                                                          background-color: red;
+                                                                          color: white; font-size: 12px" id="number-of-notification"></span>
+                                                                </a>
                                                                 <ul id="list-notification"></ul>
                                                             </li>
                                                             <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
@@ -89,9 +99,12 @@
                                             <span class="sign-in-buttons authorized-group" style="display: none;" id="user">
                                                 <a class="information" href="/account/information" id="authorized-group-username">Username</a>
                                             </span>
+                                            <span class="sign-in-buttons authorized-group" id="logoutBtn">
+                                                <a class="login" href="">Logout</a>
+                                            </span>
                                             <span class="sign-in-buttons unauthorized-group">
-                                                <a class="login" href="/login">Login</a>
-                                                <a class="register" href="/register">Register</a>
+                                                    <a class="login" href="/login">Login</a>
+                                                    <a class="register" href="/register">Register</a>
                                             </span>
                                         </div>
                                     </div>

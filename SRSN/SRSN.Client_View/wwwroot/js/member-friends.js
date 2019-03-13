@@ -1,9 +1,8 @@
 ﻿
 const callFollowingUserApi = async (userName) => {
-    
 
     $('#pagination-container').pagination({
-        dataSource: "https://localhost:44361/api/userfollowing/read-following-user?userName=" + userName,
+        dataSource: `${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userName,
         locator: '',// array
         totalNumberLocator: function (response) {
             return response.length;
@@ -19,7 +18,12 @@ const callFollowingUserApi = async (userName) => {
             // template method of yourself
             var html = template(data, pagination);
             $('#list-following-user').html(html);
+            $('#list-following-user').css('height', '');
             $('#count-friends').html(data.length);
+            $('.unfollow-btn').on('click', function () {
+                var followingUserId = $(this).children('input').val();
+                unfollowUser(userName, followingUserId);
+            });
         }
     });
     var template = function (data, pagination) {
@@ -39,6 +43,12 @@ const callFollowingUserApi = async (userName) => {
         }
         return s;
     };
+};
+
+const unfollowUser = async (userName, followingUserId) => {
+    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userId=" + followingUserId);
+    var data = await res.json();
+    location.reload();
 };
 
 const createSingleFollowingUserElement = (followingUser) =>
@@ -64,8 +74,9 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#" title="Unfollow" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                                                                        <i class="fa fa-user-plus"></i>
+                                                                    <a href="#" title="Unfollow" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
+                                                                        <input type="hidden" value="${followingUser.id}">
+                                                                        <i class="fa fa-user-times"></i>
                                                                     </a>
                                                                 </li>
                                                                 
@@ -74,6 +85,7 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                     </div>
                                                     <!-- Member Item End -->
                                                 </div>`;
+
 //const callFollowingUserApi = async (userName) => {
 //    var res = await fetch(`https://localhost:44361/api/userfollowing/read-following-user?userName=${userName}`);
 //    var data = await res.json();

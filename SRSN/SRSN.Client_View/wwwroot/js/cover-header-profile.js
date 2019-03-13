@@ -42,7 +42,7 @@ const loadAvatarContainer = async (username) => {
     if (username == userNameLocalStorage) {
         var authorization = localStorage.getItem("authorization");
         var token = (JSON.parse(authorization))["token"];
-        res = await fetch("https://localhost:44361/api/account/read-userinfo", {
+        res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

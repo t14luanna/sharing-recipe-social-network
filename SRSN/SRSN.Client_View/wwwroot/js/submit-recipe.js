@@ -23,11 +23,9 @@ $('.add-ingredient').on("click", function (event) {
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' +
         '<i class="fa fa-arrows"></i></span >' +
-        '<input class="ingredient-quantity" type="number" step="1" value="1"' +
-        'name="ingredientsQuantity" id="ingredientsQuantity" />' +
-        '<select class="ingredient-weight" name="ingredientsWeight">' +
-        '<option value="1" selected>g</option><option value="1000">kg</option></select>' +
-        '<input class="ingredient-detail" type="text" name="ingredients" id="ingredients" />' +
+        '<input class="ingredient-weight" type="text" name="ingredientsWeight" placeholder="1g, 1kg, 1 thìa ..."/>' +
+        '<input class="ingredient-detail" type = "text" name = "ingredients" id = "ingredients" ' +
+        'placeholder = "Muối, Đường, thịt gà ..." /> ' +
         '<span class="del-list"><i class="fa fa-trash"></i></span></div >' +
         '</li>';
     $('.list-sortable.ingredients-list').append(newMajesticItem);
@@ -35,50 +33,6 @@ $('.add-ingredient').on("click", function (event) {
     bindMajesticItem();
 
     event.preventDefault();
-});
-
-$('#submitBtn').on("click", async function (event) {
-    var results = getData();
-    console.log(results.validation)
-    if (results.validation === false) {
-        window.scrollTo(0, 400);
-        Swal.fire({
-            type: 'error',
-            title: 'Thông báo',
-            text: 'Các nội dung không được để trống!',
-        });
-        return;
-    } else {
-        var data = results.data;
-        data = await uploadImageSubmit(data);
-        
-        console.log(data);
-        var authorization = localStorage.getItem("authorization");
-        var token = (JSON.parse(authorization))["token"];
-        var res = await fetch("https://localhost:44361/api/recipe/submit-recipe", {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        }).then((res) => {
-            if (res.status) {
-                Swal.fire(
-                    'Thông báo',
-                    'Công thức ' + data.RecipeVM.RecipeName + ' đã được tạo thành công',
-                    'success'
-                );
-            } else {
-                Swal.fire({
-                    type: 'error',
-                    title: 'Thông báo',
-                    text: 'Công thức tạo thất bại!',
-                });
-            }
-        });        
-    }
-
 });
 
 function openTab(tab) {
@@ -122,6 +76,12 @@ async function loadCategory() {
 function getData() {
     var validation = true;
 
+    // [Comment luu y ma so 01]
+    // Neu la upload file thi dung nen gom chung vao 1 request object json
+    // hay upload truoc roi dem duong link do gan vao muc nay
+    // neu chua lam thi co the implement sau
+    // nhung khong nen up file len
+    // Truong hop demo, se lay name lam du lieu luu tru
     var avatar = $("input[name='avatarUpload']")[0].files[0];
     validation = validationField('avatarUpload', avatar) && validation;
     var title = $("input[name='title']").val().trim();
@@ -132,16 +92,16 @@ function getData() {
     var cooktime = $("input[name='cooktime']").val();
     var level = $("input[name='level']").val();
     var videoCode = $("input[name='videoCode']").val();
-
-    var ingredientsQuantity = $("input[name='ingredientsQuantity']");
-    var ingredientsWeight = $("select[name='ingredientsWeight']");
+    
+    var ingredientsWeight = $("input[name='ingredientsWeight']");
     var ingredientsName = $("input[name='ingredients']");
     var ingredients = [];
-    $(ingredientsQuantity).each(i => {
+    $(ingredientsName).each(i => {
         validation = validationField('ingredients', $(ingredientsName[i]).val().trim()) && validation;
+        validation = validationField('ingredients', $(ingredientsWeight[i]).val().trim()) && validation;
         ingredients.push({
             IngredientName: $(ingredientsName[i]).val().trim(),
-            Quantitative: $(ingredientsQuantity[i]).val() * $(ingredientsWeight[i]).children("option:selected").val()
+            Quantitative: $(ingredientsWeight[i]).val()
         });
     });
 
@@ -167,7 +127,7 @@ function getData() {
 
 
     var data = {
-        RecipeVM: {
+        recipeVM: {
             ImageCover: avatar,
             ContentRecipe: content,
             RecipeName: title,
@@ -199,8 +159,8 @@ function validationField(name, value) {
 
 function uploadImageSubmit(data) {
     return new Promise(async (resolve, reject) => {
-        await uploadFile(data.RecipeVM.ImageCover).then((res) => {
-            data.RecipeVM.ImageCover = res.url;
+        await uploadFile(data.recipeVM.ImageCover).then((res) => {
+            data.recipeVM.ImageCover = res.url;
         });
 
         $(data.ListSORVM).each(async (i, step) => {
@@ -244,8 +204,27 @@ const loadcategory = async () => {
             //$(itemDiv).on("click", (event) => { console.log(itemDiv); });
             div.append(itemDiv);
         });
-        $('#phanloai').append(div);
+
+        $(data.ListSORVM).each(async (i, step) => {
+            await uploadFile(step.ImageUrl).then((res) => {
+                data.ListSORVM[i].ImageUrl = res.url;
+            });
+        });
+
+        return resolve(data);
     });
+}
+
+function uploadFile(file) {
+    return new Promise((resolve, reject) => {
+        client.upload(file)
+        .then(res => {
+            resolve(res);
+        })
+        .catch(err => {
+            reject(err);
+        });
+    })
 }
 
 const createSingleRecipeWidgetSubmitPage = (recipe) =>
@@ -287,7 +266,7 @@ const createSingleCategoryItemSubmitPage = (item) =>
                                            `;
 
 const callLatestRecipeWidgetSubmitPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -299,7 +278,7 @@ const callLatestRecipeWidgetSubmitPageApi = async () => {
     }
 };
 const callListCategoryItemSubmitPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
+    var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
     var data = await res.json();
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
@@ -309,7 +288,7 @@ const callListCategoryItemSubmitPageApi = async () => {
     }
 };
 const callPopularSubmitPageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -345,3 +324,75 @@ $tabsNavLis.on('click', function (e) {
     $this.parent().next().children('.tab-content').stop(true, true).hide().eq(idx).fadeIn();
     e.preventDefault();
 });
+
+//Image Picker
+(function ($) {
+
+    $.fn.imagePicker = function (options) {
+
+        // Define plugin options
+        var settings = $.extend({
+            // Input name attribute
+            name: "",
+            // Classes for styling the input
+            class: "form-control btn btn-default btn-block",
+            // Icon which displays in center of input
+            icon: "glyphicon glyphicon-plus"
+        }, options);
+
+        // Create an input inside each matched element
+        return this.each(function () {
+            $(this).html(create_btn(this, settings));
+        });
+
+    };
+
+    // Private function for creating the input element
+    function create_btn(that, settings) {
+        // The input icon element
+        var picker_btn_icon = $('<i class="' + settings.icon + '"></i>');
+
+        // The actual element displayed
+        var picker_btn = $('<div class="' + settings.class + ' img-upload-btn"></div>')
+            .append(picker_btn_icon)
+        var picker_btn_input = $("input[name='avatarUpload']")
+        // File load listener
+        picker_btn_input.change(function () {
+            if ($(this).prop('files')[0]) {
+                // Use FileReader to get file
+                var reader = new FileReader();
+
+                // Create a preview once image has loaded
+                reader.onload = function (e) {
+                    var preview = create_preview(that, e.target.result, settings);
+                    $(that).html(preview);
+                }
+
+                // Load image
+                reader.readAsDataURL(picker_btn_input.prop('files')[0]);
+                $(that).css('display', 'block');
+            }
+        });
+
+        return picker_btn
+    };
+
+    // Private function for creating a preview element
+    function create_preview(that, src, settings) {
+
+        // The preview image
+        var picker_preview_image = $('<img src="' + src + '" class="img-responsive img-rounded" />');
+
+        // The preview element
+        var picker_preview = $('<div class="text-center"></div>')
+            .append(picker_preview_image)
+
+        return picker_preview;
+    };
+
+}(jQuery));
+
+$(document).ready(function () {
+    $('.img-picker').imagePicker({ name: 'images' });
+})
+//----

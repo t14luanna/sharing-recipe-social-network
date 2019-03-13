@@ -106,6 +106,7 @@
                                 </nav>
                             </div>
                         </div>
+                        </div>
 
                         <div class="col-md-2">
                             <div class="logo-wrapper">
@@ -123,14 +124,28 @@
                                     <nav class="nav-collapse header-social-icons" id="noti-message-icon" style="display:none">
                                         <ul>
                                             <li>
-                                                <a href="#"><i class="fa fa-bell"></i></a>
+                                                <a href="#" onclick="changeStatusNoti()">
+                                                    <i class="fa fa-bell"></i>
+                                                    <span style="
+                                                          position: absolute;
+                                                          top: 5px;
+                                                          right: -4px;
+                                                          padding: 0px 5px;
+                                                          border-radius: 50%;
+                                                          background-color: red;
+                                                          color: white; font-size: 12px" id="number-of-notification"></span>
+                                                </a>
                                                 <ul id="list-notification"></ul>
                                             </li>
-                                            <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
+                                            <li><a href="forums.html"><i class="fa fa-envelope"></i>
+                                                </a></li>
                                         </ul>
                                     </nav>
                                     <span class="sign-in-buttons authorized-group" style="display: none;" id="user">
                                         <a class="information" href="/account/information" id="authorized-group-username">Username</a>
+                                    </span>
+                                    <span class="sign-in-buttons authorized-group" id="logoutBtn">
+                                        <a class="login" href="">Logout</a>
                                     </span>
                                     <span class="sign-in-buttons unauthorized-group">
                                         <a class="login" href="/login">Login</a>
@@ -182,7 +197,7 @@
                                                 <li><a href="member-activity-personal.html">Dòng thời gian</a></li>
                                                 <li><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
                                                 <li class="active"><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
-                                                <li><a href="member-groups.html">Công thức của tôi(1110)</a></li>
+                                                <li><a href="/account/my-recipe/@(RouteData.Values["userName"])">Công thức của tôi</a></li>
                                                 <li><a href="member-media-all.html">Quản lý nguyên liệu(56)</a></li>
                                             </ul>
                                         </div>

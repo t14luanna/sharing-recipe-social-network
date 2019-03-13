@@ -52,7 +52,7 @@ var createSingleLatestRecipeElementPage = (recipe) =>
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                 <div class="image">
                                     <a href="/recipe/${recipe.id}">
-                                        <img src="${recipe.imageCover}" alt="image"/>
+                                        <img src="${recipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
                                     </a>
                                 </div>
                                 <div class="detail">
@@ -81,7 +81,7 @@ const createSingleRecipeWidgetPageElement = (recipe) =>
                                         <div class="thumb" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                             <a href="/recipe/${recipe.id}">
-                                                <img src="${recipe.imageCover}" alt="thumbnail" />
+                                                <img src="${recipe.imageCover}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
                                             </a>
                                         </div>
                                         <div class="detail">
@@ -118,7 +118,7 @@ const createSingleRecentRecipe = (recipe) =>
                                         <div class="thumb" onclick="saveToLocalStorage(${recipe.id},'${recipe.name}', '${recipe.image}',
                                                                                         '${recipe.date}')">
                                             <a href="/recipe/${recipe.id}">
-                                                <img src="${recipe.image}" alt="thumbnail" />
+                                                <img src="${recipe.image}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
                                             </a>
                                         </div>
                                         <div class="detail">
@@ -128,6 +128,8 @@ const createSingleRecentRecipe = (recipe) =>
                                     </li>
 
                                    `;
+
+
 const loadRecipeLocalStorage = async () => {
     if (localStorage.getItem('recentRecipe') == null) {
         $("#list-recent-recipe").html("Chưa có thông tin!");
@@ -140,7 +142,7 @@ const loadRecipeLocalStorage = async () => {
     }
 };
 const callListCategoryItemRecipePage = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
+    var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
     var data = await res.json();
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
@@ -150,7 +152,7 @@ const callListCategoryItemRecipePage = async () => {
     }
 };
 const callPopularRecipePageApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -162,5 +164,6 @@ const callPopularRecipePageApi = async () => {
         }
     }
 };
+
 
 

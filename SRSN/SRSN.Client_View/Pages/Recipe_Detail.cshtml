@@ -61,11 +61,11 @@
                                     </div>
                                     <div class="col-sm-5">
                                         <div class="details-social-icons">
-                                            <a href="#/" title="Like" class="like-button">
+                                            <a href="#" title="Like" class="like-button">
                                                 <i class=" fa fa-2x fa-heart-o" onclick="toggleLikeButton(this)" id="like-heart"></i>
                                             </a>
                                             <a id="btn-share-recipe" title="Chia sẻ"><i class="fa fa-2x fa-share"></i></a>
-                                            <a href="#/" title="Thêm vào BST"><i class="fa fa-2x fa-plus"></i></a>
+                                            <a id="btn-add-collection" title="Thêm vào BST"><i class="fa fa-2x fa-plus"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -230,10 +230,24 @@
         </div>
 
     </div>
+    <div id="modal-add-collection" class="modal">
+        <!-- Modal content -->
+        <div class="row modal-content modal-share-content">
+            <div class="col-md-12 modal-header">
+                <h4 class="title-modal-collection">Thêm vào bộ sưu tập<span id="close-add-collection" class="close">&times;</span></h4>
+            </div>
+            <div class="col-md-12 modal-body row gutter--15 AdjustRow" id="modal-body-add-collection">
+            </div>
+        </div>
+
+    </div>
 </div>
 
 @section Scripts {
+
     <script src="~/js/recipeDetail.js"></script>
+   
+
     <script type="text/javascript" src="recipepress/js/plugins.min.js"></script>
     <script type="text/javascript" src="recipepress/js/color-switcher.min.js"></script>
     <script type="text/javascript" src="recipepress/js/main.js"></script>
@@ -260,7 +274,6 @@
                     };
                     marker.setPosition(pos);
                     marker.setMap(map);
-                    marker.setAnimation(google.maps.Animation.BOUNCE);
                     infoWindow.setPosition(pos);
                     infoWindow.setContent('Vị trí của bạn');
                     infoWindow.open(map, marker);
@@ -316,10 +329,20 @@
         })();
 
         $("#btn-suggest-ingredients").on("click", function (e) {
-            callReadProductByIngredientNameApi();
+            if ($("input[name=ingredient]:checked").length > 0) {
+                getCheckedIngredient();
+                let listCheckedIngres = [];
+                $("input[name=ingredient]:checked").each(function () {
+                    listCheckedIngres.push(this.value.split("-")[1]);
+                });
+                callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
+            } else {
+                callReadProductByIngredientNameApi();
+            }
             $("#modal-suggest-ingredients").css("display", "block")
 
         });
+
         $("#close-modal-suggest").on("click", function (e) {
             $("#modal-suggest-ingredients").css("display", "none");
 
@@ -333,6 +356,15 @@
             $("#modal-share-recipe").css("display", "none")
 
         });
+        $("#btn-add-collection").on("click", function (e) {
+            callReadCollectionModalApi();
+             $("#modal-add-collection").css("display", "block")
+
+        });
+        $("#close-add-collection").on("click", function (e) {
+            $("#modal-add-collection").css("display", "none")
+
+        });
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
             if (event.target.id == "modal-suggest-ingredients") {
@@ -340,6 +372,9 @@
             }
             if (event.target.id == "modal-share-recipe") {
                 $("#modal-share-recipe").css("display", "none");
+            }
+            if (event.target.id == "modal-add-collection") {
+                $("#modal-add-collection").css("display", "none");
             }
             if (event.target.className == 'modal-product-item') {
                 var current = event.target;
@@ -388,10 +423,22 @@
                 var data = await res.json();
                 if (data.isLike) {
                     x.classList.add("fa-heart");
+                    //them data vao firebase
+                    var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
+                    var usernameLocal = window.localStorage.getItem("username");//người đang like
+
+                    var myDataRef = firebase.database().ref(chefUsername);
+                    myDataRef.push({
+                        "username": usernameLocal,
+                        "content": "đã thích công thức của bạn.",
+                        "date": new Date().toLocaleString(),
+                        "link": "/recipe/" + recipeId,
+                        "isRead": "False"
+                    });
+
                 }
                 else {
                     x.classList.remove("fa-heart");
-
                 }
             } catch (e) {
                 alert("Like không thành công")

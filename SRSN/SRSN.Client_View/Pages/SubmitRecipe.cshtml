@@ -3,41 +3,10 @@
     ViewData["Title"] = "SubmitRecipe";
 }
 
-
-<meta charset="utf-8">
-@*<meta http-equiv="X-UA-Compatible" content="IE=edge">*@
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Food & Health</title>
-<!--google fonts-->
-<link rel="stylesheet" href="~/css/submit-recipe.css" />
-<link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'
-      rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Karla:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-<!--jquery ui stylesheet-->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<!-- site favicon -->
-<link rel="icon" href="~/recipepress/images/favicon.png" />
-<!--selectric stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/selectric.css" />
-<!--font awesome stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/font-awesome.min.css" />
-<!--swipe box stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/swipebox.css" />
-<!-- mean menu stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/meanmenu.css" />
-<!--slick slider stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/slick.css" />
-<link rel="stylesheet" href="~/recipepress/css/slick-theme.css" />
-<!--bootstrap stylesheets-->
-<link rel="stylesheet" href="~/recipepress/css/bootstrap.css" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="~/recipepress/css/bootstrap-theme.css" />
-<!--animate stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/animate.css" />
-<!--main stylesheet-->
-<link rel="stylesheet" href="~/recipepress/css/main.css" />
+@section StyleOptional{
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/submit-recipe.css" />
+}
 
 <div class="recipes-home-body inner-page">
     <div class="container">
@@ -59,12 +28,16 @@
                                 <div class="submit-recipe-form">
                                     <label for="upload-image">Ảnh đại diện cho món ăn*</label>
                                     <span class="error" name="avatarUpload">*Hình đại diện không được để trống</span>
+                                    <div class="form-group col-sm-12">
+                                        <div class="img-picker" style="display:none"></div>
+                                    </div>
                                     <input type="file" name="avatarUpload" id="upload-image" required />
                                     <span class="error" name="title">*Tiêu đề không được để trống</span>
                                     <input type="text" name="title" id="title" placeholder="Nhập tên công thức*" required />
                                     <br />
                                     <span class="error" name="content">*Nội dung không được để trống</span>
                                     <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức*" required></textarea>
+                                    <label>Số người dùng, thời gian nấu và độ khó*</label></br>
                                     <input type="number" name="serving" placeholder="Serving" value="1" required />
                                     <input type="number" name="cooktime" placeholder="Cook time" value="1" required />
                                     <input type="number" name="level" placeholder="Level" value="1" required />
@@ -77,12 +50,8 @@
                                                     <span class="ingredient-handler-list handler-list">
                                                         <i class="fa fa-arrows"></i>
                                                     </span>
-                                                    <input class="ingredient-quantity" type="number" step="1" name="ingredientsQuantity" value="1" required />
-                                                    <select class="ingredient-weight" name="ingredientsWeight">
-                                                        <option value="1" selected>g</option>
-                                                        <option value="1000">kg</option>
-                                                    </select>
-                                                    <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" required />
+                                                    <input class="ingredient-weight" type="text" name="ingredientsWeight" placeholder="1g, 1kg, 1 thìa ..." />
+                                                    <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" placeholder="Muối, Đường, thịt gà ..." />
                                                     <span class="del-list">
                                                         <i class="fa fa-trash"></i>
                                                     </span>
@@ -287,42 +256,68 @@
 </div>
 <!--footer ends-->
 
-<script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-<script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script type="text/javascript" src="recipepress/js/main.js"></script>
+    <script type="text/javascript" src="~/recipepress/js/custom.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-
-<script type="text/javascript" src="~/js/submit-recipe.js"></script>
-
-<script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
-<script src="~/js/recipe.js"></script>
-<script src="~/recipepress/js/jquery-ui.js"></script>
-
-<script src="~/recipepress/js/slick.min.js"></script>
-<script src="~/recipepress/js/jquery.meanmenu.js"></script>
-<script src="~/recipepress/js/jquery.selectric.min.js"></script>
-<script src="~/recipepress/js/wow.js"></script>
-<script src="~/recipepress/js/jquery.form.js"></script>
-<script src="~/recipepress/js/jquery.validate.min.js"></script>
-<script src="~/recipepress/js/jquery.swipebox.js"></script>
-<script src="~/recipepress/js/custom.js"></script>
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
-@section Scripts
-    {
-
+    <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+    <script src="~/js/submit-recipe.js"></script>
     <script type="text/javascript">
-        const changeHeadername = async () => {
-            var someText = "Đăng Công thức";
-            $('.main-heading h1').append(document.createTextNode(someText));
-        };
         (async () => {
-            await changeHeadername();
             await loadCategory();
-            await callLatestRecipeWidgetSubmitPageApi();
-            await callListCategoryItemSubmitPageApi();
-            await callPopularSubmitPageApi();
+            $('#submitBtn').on("click", async function (event) {
+                var results = getData();
+                console.log(results.validation)
+                if (results.validation === false) {
+                    window.scrollTo(0, 400);
+                    $("#congthucBtn").click();
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Thông báo',
+                        text: 'Các nội dung không được để trống!',
+                    });
+                    return;
+                } else {
+                    var data = results.data;
+                    data = await uploadImageSubmit(data);
+
+                    console.log(data);
+                    var authorization = localStorage.getItem("authorization");
+                    var token = (JSON.parse(authorization))["token"];
+                    await fetch("https://localhost:44361/api/recipe/submit-recipe", {
+                        method: "POST",
+                        //body: JSON.stringify({ request: data }),
+                        body: JSON.stringify(data),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }).then((res) => {
+                        if (res.status === 200) {
+                            swal({
+                                title: "",
+                                text: "Bạn đã chia sẻ công thức thành công",
+                                type: "success",
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Xác nhận",
+                                closeOnConfirm: false
+                            });
+                            setTimeout(async function () {
+                                var data = (await res.json());
+                                var recipeId = data.recipeId;
+                                window.location.href = `/recipe/${recipeId}`
+                            }, 1500);
+
+
+
+                        }
+                    });
+                }
+
+            });
         })();
     </script>
 }

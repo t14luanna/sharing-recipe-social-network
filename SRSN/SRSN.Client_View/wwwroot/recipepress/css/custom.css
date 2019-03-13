@@ -207,3 +207,32 @@
 .upload-collection-image{
     margin-top: 10px;
 }
+#btn-add-collection, #btn-suggest-ingredients {
+    cursor: pointer
+}
+.title-modal-collection{
+    text-align: center;
+    color: white
+}
+.collection-modal-item{
+    margin-bottom: 10px;
+    padding: 5px 0px;
+    border-radius: 10px
+}
+.nav-collapse ul li{
+    margin-left: 0px!important
+}
+.fa-bell, .fa-envelope {
+    color: black !important
+}
+.submit-recipe > a{
+    color: white !important
+}
+.newsfeeds-social-icons{
+    float: right;
+    margin-top: 10px;
+}
+.newsfeeds-social-icons a{
+    margin-right: 5px;
+    cursor: pointer
+}

@@ -1,4 +1,4 @@
-﻿var listIngredient;
+﻿var listIngredient, recipeMainId;
 const createSingleBannerRecipeDetail = (recipe) =>
     `<div class="wrapper-recipe-heading">
         <div class="heading">
@@ -10,7 +10,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
             <div class="recipe-slider">
                 <div class="slider-detail2">
                     <div>
-                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" /></a>
+                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                 </div>
 
@@ -52,7 +52,7 @@ const createSingleStepOfRecipe = (step) =>
                                                     
             </div>
             <div class="col-sm-5">
-                <img class="img-step-recipe" src="${step.imageUrl}" alt="image" />
+                <img class="img-step-recipe" src="${step.imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
             </div>
         </div>
     </dd>`;
@@ -61,7 +61,7 @@ const createSingleRelatedRecipe = (recipe) =>
     `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
-            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image"></a>
+            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -86,7 +86,7 @@ const createSingleRecipeDetailPageElement = (recipe) =>
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
             <div class="thumb" >
                 <a href="/recipe/${recipe.id}">
-                    <img src="${recipe.imageCover}" alt="thumbnail" />
+                    <img src="${recipe.imageCover}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
                 </a>
             </div>
             <div class="detail">
@@ -99,7 +99,7 @@ const createSingleRecipeDetailElement = (recipe) =>
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="thumb">
             <a href="/recipe/${recipe.id}">
-                <img src="${recipe.imageCover}" alt="thumbnail" />
+                <img src="${recipe.imageCover}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
             </a>
         </div>
         <div class="detail">
@@ -109,13 +109,14 @@ const createSingleRecipeDetailElement = (recipe) =>
     </li>`;
 const createProductItemElement = (product) =>
     `<li class="modal-product-item" data-product-id="${product.id}" data-product-name="${product.ingredientName}">${product.ingredientName}</li>`;
-
+const createCheckedItemElement = (product) =>
+    `<li class="modal-product-item" data-product-id="${product}" data-product-name="${product}">${product}</li>`;
 const createSingleRatingComment = (comment, commentReplyCount) =>
     `<li data-user-id="${comment.id}" name="main-comment">
        
         <div class="avatar">
 
-            <a href="#"><img class="avatar-comment" src="${comment.avatarUrl}" alt="avatar" /></a>
+            <a href="#"><img class="avatar-comment" src="${comment.avatarUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" /></a>
         </div>
         <div class="comment">
             
@@ -153,7 +154,7 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">About Chef</h3>
     <div class="listing">
         <div class="image">
             <div class="image-inner">
-                <a href="#"><img src="${chef.avatarImageUrl}" alt="chef"/></a>
+                <a href="#"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
             </div>
         </div>
         <div class="detail">
@@ -171,7 +172,7 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">About Chef</h3>
                 </div>
             </div>
             <p>
-               ${ chef.description }
+               ${ chef.description}
             </p>
             <a href="#" class="read-more-angle">Read More</a>
         </div>
@@ -182,7 +183,7 @@ const callListCategoryItemDetailPage = async () => {
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
             let element = createSingleCategoryItemDetailPage(cateItem);
-            $("#list-category-item-recipe-detail").append(element); 
+            $("#list-category-item-recipe-detail").append(element);
         }
     }
 };
@@ -225,6 +226,7 @@ const callRelatedRecipeApi = async (id) => {
 
 
 const callIngrdientsOfRecipeApi = async (id) => {
+    recipeMainId = id;
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
     var data = (await res.json());
     for (var item of data) {
@@ -267,12 +269,12 @@ const callReadRatingCommentApi = async (id) => {
         $("#list-rating-comment").append(element);
     }
     $("#numOfComment").append(count);
-}
+};
 const callCountCommentsApi = async (recipeId, recipeParentId) => {
     var countReply = await fetch(`${BASE_API_URL}/api/comment/get-count-reply-comment?recipeId=${recipeId}&recipeParentId=${recipeParentId}`);
     var dataCount = (await countReply.json());
     return dataCount;
-}
+};
 const callReadProductByIngredientNameApi = async () => {
     try {
         //var res = await fetch(`${BASE_API_URL}/${PRODUCT_API_URL}/read-by-ingredient-name?name=${name}`);
@@ -290,9 +292,28 @@ const callReadProductByIngredientNameApi = async () => {
     } catch (e) {
         console.log(e);
     }
-}
+};
 
+const getCheckedIngredient = async () => {
+    try {
+        var itemIngre = $(`.modal-product-item`);
+        if (itemIngre[0]) {
 
+            itemIngre.remove();
+
+        }
+        let listCheckedIngredient = [];
+        $("input[name=ingredient]:checked").each(function () {
+            listCheckedIngredient.push(this.value.split("-")[1]);
+        });
+        for (var item of listCheckedIngredient) {
+            var element = createCheckedItemElement(item);
+            $(".modal-list-product-item").append(element);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+};
 const callStepOfRecipeApi = async (id) => {
 
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
@@ -320,8 +341,7 @@ const callIsLikeRecipe = async (recipeId) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        if (res.status != 404)
-        {
+        if (res.status == 200) {
             $("#like-heart").removeClass("fa-heart");
             $("#like-heart").addClass("fa-heart");
         }
@@ -329,7 +349,7 @@ const callIsLikeRecipe = async (recipeId) => {
         $("#like-heart").removeClass("fa-heart");
         console.log("Is not liked")
     }
-    
+
 };
 
 const callChefRecipeApi = async (id) => {
@@ -340,9 +360,12 @@ const callChefRecipeApi = async (id) => {
     var description = chef.description != null ? chef.description : "";
     chef.description = description;
     let chefView = createChefByRecipeId(chef);
+    var chefUsername = chef.username;
+    chefUsername = window.localStorage.setItem("chefusername", chefUsername);
     $(".about-chef").append(chefView);
 };
 const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
+    setMapOnAll(null);
 
     var res = await fetch(`${BASE_API_URL}/api/product/read-nearby-store?userLat=${userLat}&userLong=${userLong}&ingredientName=${ingredientName}`);
     var data = (await res.json());
@@ -355,12 +378,48 @@ const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
                 url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
             }
         });
-        var itemName = item.name + " (" + item.address + " )" ;
+        var itemName = item.name + " (" + item.address + " )";
+        marker.setAnimation(google.maps.Animation.BOUNCE);
         addInfoWindow(marker, itemName);
         marker.setMap(map);
+        markers.push(marker);
     }
 };
+const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredientNames) => {
+    setMapOnAll(null);
+    var data = {
+        userLat: userLat,
+        userLong: userLong,
+        ingredientNames: ingredientNames
+    };
+    var res = await fetch(`${BASE_API_URL}/api/product/read-list-ingredient-nearby-store`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+    var dataPos = await res.json();
+    setMapOnAll(null);
+    for (var item of dataPos) {
+        var itemLatLng = { lat: item.lat, lng: item.long };
+        var marker = new google.maps.Marker({
+            position: itemLatLng,
+            icon: {
+                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                scaledSize: new google.maps.Size(35, 35),
+            }
+        });
+        var itemName = item.name + " (" + item.address + " )";
 
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        addInfoWindow(marker, itemName);
+        marker.setMap(map);
+        markers.push(marker);
+
+        
+    }
+};
 function addInfoWindow(marker, message) {
 
     var infoWindow = new google.maps.InfoWindow({
@@ -370,7 +429,7 @@ function addInfoWindow(marker, message) {
     google.maps.event.addListener(marker, 'click', function () {
         infoWindow.open(map, marker);
     });
-}
+};
 const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
@@ -397,16 +456,31 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
             'Authorization': `Bearer ${token}`
         }
     });
-    if (res.status == 200) {
+    if (res.status == 200) {//successfully
         $(".alert-success").css("display", "block");
         $("textarea[name='comment']").val('');
         callReadRatingCommentApi(recipeId);
+
+        //them data vao firebase
+        var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
+        var usernameLocal = window.localStorage.getItem("username");//người đang comment
+
+        var myDataRef = firebase.database().ref(chefUsername);
+        myDataRef.push({
+            "username": usernameLocal,
+            "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
+            "date": new Date().toLocaleString(),
+            "link": "/recipe/" + data.recipeId,
+            "isRead": "False"
+        });
+
+
     }
 };
 const createReplyView = (replyUser, cmtId, recipeId) => `<ul class="reply-${replyUser.username}">
                 <li>
                     <div class="avatar">
-                        <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar"/></a>
+                        <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                     <div class="comment">
                         <h5><a href="#">${replyUser.username}</a></h5>
@@ -436,13 +510,13 @@ const openReplyView = async (cmtId, recipeId) => {
     });
     var data = await res.json();
     var elements = $(`.reply-${data.username}`);
-    
+
     if (elements[0]) {
 
         elements.remove();
 
     }
-    
+
     let chefView = createReplyView(data, cmtId, recipeId);
     $(`li[data-user-id=${cmtId}]`).append(chefView);
 };
@@ -500,7 +574,7 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
             await openReplyView(commentParentId, recipeId);
         }
     }
-    
+
 };
 
 const createShareRecipeModal = (recipe, dataUser) => `<div class="activity--list">
@@ -592,3 +666,71 @@ const callCreateShareRecipeModalApi = async (id) => {
         swal("", "Bạn đã chia sẻ công thức thành công", "success")
     }
 };
+const createCollectionItemModal = (collection) => `<div class="col-md-3 col-xs-6 col-xxs-12 collection-modal-item" onclick="callCreateAddCollectionApi(${collection.id}, ${recipeMainId})">
+                                                        <div class="member--item online  collection-modal-item">
+                                                        <div class="img-recipe-avatar">
+                                                            <a class="btn-link">
+                                                                <img src="${collection.coverImage}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="name">
+                                                            <h3 class="h6 fs--12">
+                                                                <a href="member-activity-personal.html" class="btn-link">${collection.collectionName}</a>
+                                                            </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>`;
+const callReadCollectionModalApi = async () => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var elements = $(`.collection-modal-item`);
+
+    if (elements[0]) {
+
+        elements.remove();
+
+    }
+    var data = await res.json();
+    for (var item of data) {
+        var content = createCollectionItemModal(item);
+        $("#modal-body-add-collection").append(content);
+    }
+};
+const callCreateAddCollectionApi = async (collectionId, recipeId) => {
+    var data = {
+        collectionId: collectionId,
+        recipePostId: recipeId,
+    };
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var res = await fetch(`${BASE_API_URL}/api/collectionPost/create`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (res.status == 200) {
+        $("#modal-add-collection").css("display", "none");
+        swal("", "Bạn đã thêm vào bộ sưu tập thành công", "success")
+    };
+    if (res.status == 400) {
+        $("#modal-add-collection").css("display", "none");
+        swal("", "Công thức này đã tồn tại trong bộ sưu tập", "error")
+    }
+};
+var markers = [];
+function setMapOnAll(map) {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+    }
+}

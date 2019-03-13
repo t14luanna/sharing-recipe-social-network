@@ -5,7 +5,7 @@ const createSingleRecipeElement = (singeRecipe) =>
     `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${singeRecipe.id},'${singeRecipe.recipeName}', '${singeRecipe.imageCover}',
                                                                                         '${new Date(singeRecipe.createTime).getDay() + "/" + new Date(singeRecipe.createTime).getMonth() + "/" + new Date(singeRecipe.createTime).getFullYear()}')">
         <div class="recipe-image">
-            <a href="/recipe/${singeRecipe.id}"><img src="${singeRecipe.imageCover}" alt="image" /></a>
+            <a href="/recipe/${singeRecipe.id}"><img src="${singeRecipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -35,7 +35,7 @@ const createSingleLatestRecipeElement = (recipe) =>
     `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
-            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
+            <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
         </div>
         <div class="outer-detail">
             <div class="detail">
@@ -59,7 +59,7 @@ const createSingleRandomRecipeElement = (recipe) =>
     `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                     <div class="recipe-image">
-                                        <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" /></a>
+                                        <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                                     </div>
                                     <div class="outer-detail">
                                         <div class="detail">
@@ -78,7 +78,7 @@ const createSingleRecipeWidgetElement = (recipe) =>
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                             <div class="thumb">
                                                 <a href="/recipe/${recipe.id}">
-                                                    <img src="${recipe.imageCover}" alt="thumbnail" />
+                                                    <img src="${recipe.imageCover}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
                                                 </a>
                                             </div>
                                             <div class="detail">
@@ -104,7 +104,7 @@ const createSingleBanner = (recipe) =>
                             <a class="read-more-bordered" href="/recipe/${recipe.id}">Read More</a>
                         </div>`;
 const createSingleRecipeOfDay = (recipe) =>
-    `<img src="${recipe.imageCover}" alt="Recipe of the day" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+    `<img src="${recipe.imageCover}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="Recipe of the day" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                             <div class="recipe-contents-outer">
                                 <div class="recipe-contents text-center">
@@ -178,7 +178,7 @@ const RedirectAPI = async () => {
 
 //choxem khúc giao diện
 const callListCategoryItem = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read-categoryitem?categoryMainId=1");
+    var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
     var data = await res.json();
     for (var item of data) {
         for (var cateItem of item.listCategoryItem) {
@@ -188,7 +188,7 @@ const callListCategoryItem = async () => {
     }
 };
 const callRandomRecipeApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-random");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-random`);
     var data = await res.json();
     for (var item of data) {
         let element = createSingleRandomRecipeElement(item);
@@ -197,7 +197,7 @@ const callRandomRecipeApi = async () => {
 };
 
 const callLatestRecipeApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -216,7 +216,7 @@ const callLatestRecipeApi = async () => {
 };
 const callPopularRecipeBannerApi = async () => {
     try {
-        var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+        var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
         var data = await res.json();
         var count = 0;
         for (let item of data) {
@@ -246,7 +246,7 @@ const callPopularRecipeBannerApi = async () => {
 const getRecipeResult = (recipe) => `<div class="quick-search-item" onclick="bindingQuickSearchValue('${recipe.recipeName}')">${recipe.recipeName}</div>`
 const getUserName = (account) => `<div>${account.userName}</div>`
 const callPopularRecipeApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
     var list = await res.json();
     var count = 0;
     for (var item of list) {
@@ -261,7 +261,7 @@ const callPopularRecipeApi = async () => {
     }
 };
 const callPopularRecipeWidgetApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-popular");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
     var list = await res.json();
     var count = 0;
     for (var item of list) {
@@ -273,7 +273,7 @@ const callPopularRecipeWidgetApi = async () => {
     }
 };
 const callLatestRecipeWidgetApi = async () => {
-    var res = await fetch("https://localhost:44361/api/recipe/read-latest");
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest`);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -292,7 +292,7 @@ const callSearchRecipeApi = async (searchVal) => {
         $("#custom-quick-result").css('display', 'none');
         return;
     }
-    var res = await fetch("https://localhost:44361/api/recipe/read-recipename" + (searchVal ? "?recipeName=" + searchVal : ""));
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-recipename` + (searchVal ? "?recipeName=" + searchVal : ""));
     var data = (await res.json()).result;
     if (data.length == 0) {
         $("#custom-quick-result div").remove();
@@ -342,5 +342,3 @@ const attachInputSearchCallback = () => {
     //    $("#custom-quick-result").css('display', 'none');
     //})
 }
-
-

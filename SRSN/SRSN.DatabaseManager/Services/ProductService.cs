@@ -16,6 +16,7 @@ namespace SRSN.DatabaseManager.Services
     public interface IProductService : IBaseService<Products, ProductViewModel>
     {
         ICollection<StoreViewModel> GetListStoreByProductID(string ingredientName, double userLat, double userLong);
+        ICollection<StoreViewModel> GetListStoreByProductID(List<string> ingredientNames, double userLat, double userLong);
     }
     public class ProductService : BaseService<Products, ProductViewModel>, IProductService
     {
@@ -37,6 +38,49 @@ namespace SRSN.DatabaseManager.Services
                                         .ToList();
 
             var listStoreVM = new   List<StoreViewModel>();
+            foreach (var productBrandId in productBrandIdList)
+            {
+                var storeRepo = this.unitOfWork.GetDbContext().Set<Store>();
+                var store = storeRepo.AsNoTracking().Where(x => x.BrandId == productBrandId).ProjectTo<StoreViewModel>(this.mapper.ConfigurationProvider).ToList();
+                foreach (var item in store)
+                {
+                    if (item.Lat.HasValue && item.Long.HasValue)
+                    {
+                        var sCoord = new GeoCoordinate(item.Lat.Value, item.Long.Value);
+                        var eCoord = new GeoCoordinate(userLat, userLong);
+                        var distance = sCoord.GetDistanceTo(eCoord) / 1000;
+                        if (distance < 1)
+                        {
+                            listStoreVM.Add(item);
+                        }
+                    }
+                }
+            }
+            return listStoreVM;
+        }
+
+        public ICollection<StoreViewModel> GetListStoreByProductID(List<string> ingredientNames, double userLat, double userLong)
+        {
+            var brandIds = this.unitOfWork.GetDbContext().Set<StoreBrand>().ToList().Select(x=>x.Id);
+            var productBrandIdList = new List<int>();
+            foreach (var brandId in brandIds)
+            {
+                var isGoodThing = true;
+                foreach (var ingredientName in ingredientNames)
+                {
+                    if(!(this.Get(x => x.BrandId == brandId && (string.IsNullOrEmpty(x.Name) ? "NULL" : x.Name).Contains(ingredientName, StringComparison.CurrentCultureIgnoreCase)).Count() > 0))
+                    {
+                        isGoodThing = false;
+                        break;
+                    }
+                }
+                if(isGoodThing)
+                {
+                    productBrandIdList.Add(brandId);
+                }
+            }
+
+            var listStoreVM = new List<StoreViewModel>();
             foreach (var productBrandId in productBrandIdList)
             {
                 var storeRepo = this.unitOfWork.GetDbContext().Set<Store>();

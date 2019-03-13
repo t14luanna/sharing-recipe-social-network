@@ -36,5 +36,51 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("unfollow-user")]
+        public async Task<ActionResult> UnfollowUser(String userName, int userFollowingId)
+        {
+            try
+            {
+                var user = await userManager.FindByNameAsync(userName);
+                return Ok(await userFollowingService.unfollowFollowingUser(userManager, user.Id, userFollowingId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("follow-user")]
+        public async Task<ActionResult> FollowUser(String userName, int userFollowingId)
+        {
+            try
+            {
+                var user = await userManager.FindByNameAsync(userName);
+                return Ok(new
+                {
+                    data = await userFollowingService.followUser(userManager, user.Id, userFollowingId),
+                    success = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        [HttpGet("read-user-following-me")]
+        public async Task<ActionResult> ReadUserFollowingMe(string userName)
+        {
+            try
+            {
+                var user = await userManager.FindByNameAsync(userName);
+                int followingUserId = user.Id;
+                return Ok(await userFollowingService.getAllUserFollowingMe(userManager, followingUserId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
