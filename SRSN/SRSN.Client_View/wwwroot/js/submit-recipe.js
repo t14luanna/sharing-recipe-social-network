@@ -1,4 +1,4 @@
-﻿const apikey = 'AJQOnJX4sQs2oOshsbuO2z';
+﻿const apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
 
 const client = filestack.init(apikey);
 $('.add-recipe-steps').on("click", function (event) {

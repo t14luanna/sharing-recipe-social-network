@@ -276,3 +276,38 @@
 .input-video{
     margin-top: 30px;
 }
+.header-var2.ext-var4 nav ul > li a{
+    color: black
+}
+.icon-delete {
+    font-size: 20px;
+    margin-left: 90%;
+    color: black;
+    float: right;
+    position: inherit;
+}
+.icon-delete:hover{
+    color: red;
+    cursor: pointer
+}
+.dropdown-custom {
+    float: right;
+    cursor: pointer;
+    font-size: 25px;
+    margin-left: 20px;
+    position: absolute !important;
+    right: 25px;
+}
+.dropdown-menu-custom {
+    margin-left: 0px !important;
+}
+.dropdown-custom:hover {
+    color: black;
+}
+.dropdown-menu-custom li {
+    margin-bottom: 0px !important;
+    margin-top: 0px !important
+}
+.dropdown-menu-custom li a:hover {
+    margin-left: 0px!important
+}
