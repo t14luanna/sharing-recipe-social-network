@@ -1,8 +1,7 @@
 ﻿const apikey = 'AJQOnJX4sQs2oOshsbuO2z';
 
 const client = filestack.init(apikey);
-
-﻿$('.add-button.add-steps').on("click", function (event) {
+$('.add-recipe-steps').on("click", function (event) {
     event.preventDefault();
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields">' +
@@ -19,13 +18,12 @@ const client = filestack.init(apikey);
     $('.list-sortable.steps').children("li").slideDown();
     bindMajesticItem();
 });
-
-$('.add-button.add-ing').on("click", function (event) {
+$('.add-ingredient').on("click", function (event) {
 
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' +
         '<i class="fa fa-arrows"></i></span >' +
-        '<input class="ingredient-quantity" type="number" step="1"' +
+        '<input class="ingredient-quantity" type="number" step="1" value="1"' +
         'name="ingredientsQuantity" id="ingredientsQuantity" />' +
         '<select class="ingredient-weight" name="ingredientsWeight">' +
         '<option value="1" selected>g</option><option value="1000">kg</option></select>' +
@@ -92,10 +90,10 @@ function openTab(tab) {
     document.getElementById(tab).style.display = "block";
 }
 
-const loadCategory = async () => {
+async function loadCategory() {
     var res = await fetch("https://localhost:44361/api/category/read");
     var mains = await res.json();
-    $(mains).each((i,main) => {
+    $(mains).each((i, main) => {
         var div = document.createElement("div");
         div.setAttribute("class", "category-main row");
         var h3 = document.createElement("h3");
@@ -113,10 +111,13 @@ const loadCategory = async () => {
             itemDiv.innerHTML = itemElement;
             //$(itemDiv).on("click", (event) => { console.log(itemDiv); });
             div.append(itemDiv);
-        });     
+        });
         $('#phanloai').append(div);
     });
-}
+    $('#phanloai')[0].innerHTML += '<div class="text-center">' +
+        '<button type = "submit" id = "submitBtn" class="recipe-submit-btn" > Submit Your Recipe</button >' +
+    '</div >';
+};
 
 function getData() {
     var validation = true;
@@ -320,3 +321,27 @@ const callPopularSubmitPageApi = async () => {
         }
     }
 };
+
+$("#nextBtn").on('click', function (e) {
+    $("#phanloaiBtn").click();
+    window.scrollTo(0, 400);
+});
+
+var $tabsNav = $('.list-nav'),
+    $tabsNavLis = $tabsNav.children('li');
+
+$tabsNav.each(function () {
+    var $this = $(this);
+    $this.next().children('.tab-content').stop(true, true).hide()
+        .first().show();
+    $this.children('li').first().addClass('active').stop(true, true).show();
+});
+
+$tabsNavLis.on('click', function (e) {
+    var $this = $(this);
+    $this.siblings().removeClass('active').end()
+        .addClass('active');
+    var idx = $this.parent().children().index($this);
+    $this.parent().next().children('.tab-content').stop(true, true).hide().eq(idx).fadeIn();
+    e.preventDefault();
+});

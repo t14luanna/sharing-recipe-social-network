@@ -28,8 +28,8 @@
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 30px;
+    height: 14px;
 }
 
     .switch input {
@@ -50,30 +50,30 @@
     transition: .4s;
 }
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 10px;
+    width: 10px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
 
 input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #6ebe3b;
 }
 
 input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #6ebe3b;
 }
 
 input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
 }
 
 /* Rounded sliders */
@@ -101,7 +101,7 @@ input:checked + .slider:before {
     background: none;
 }
 
-.add-recipe-steps, .add-ingredient {
+.add-recipe-steps , .add-ingredient {
     float: right;
     display: inline-block;
     height: 40px;
@@ -122,4 +122,46 @@ input:checked + .slider:before {
 .error{
     color: red;
     display: none;
+}
+
+.list-sortable li {
+    background: none!important;
+    width: 100%!important;
+    display: block!important;
+}
+
+.tab-container.tab-shortcode ul li.active {
+    background: #6ebe3b!important;
+}
+
+.tab-container.tab-shortcode ul li:hover {
+    background: #6ebe3b!important;
+}
+
+.tab-container ul li {
+    transition: 0.2s all ease-in-out;
+    cursor: pointer;
+    display: inline-block;
+    background: #e6e0dd;
+    border-right: 1px solid #f2eeec;
+    text-align: center;
+    padding-top: 9px;
+    padding-bottom: 9px;
+}
+
+.list-nav li{
+    width: 50%!important;
+}
+
+.recipe-submit-btn {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 16px;
+    background: #6ebe3b;
+    color: #ffffff;
+    border: none;
+    padding: 10px 25px;
+    margin-top: 40px;
+    transition: 0.2s all ease-in-out;
 }

@@ -49,83 +49,84 @@
                         Food Recipe theme include a Recipe Submit Template. It allow users to submit a recipe with featured
                         image and related details. A user should be logged in to submit a recipe.
                     </p>
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#congthuc">Công Thức</a></li>
-                        <li><a data-toggle="tab" href="#phanloai">Phân Loại</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="congthuc" class="tab-pane fade in active">
-                            <div class="submit-recipe-form">
-                                <label for="upload-image">Ảnh đại diện cho món ăn*</label>
-                                <span class="error" name="avatarUpload">*Hình đại diện không được để trống</span>
-                                <input type="file" name="avatarUpload" id="upload-image" required />
-                                <span class="error" name="title">*Tiêu đề không được để trống</span>
-                                <input type="text" name="title" id="title" placeholder="Nhập tên công thức*" required />
-                                <br />
-                                <span class="error" name="content">*Nội dung không được để trống</span>
-                                <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức*" required></textarea>
-                                <input type="number" name="serving" placeholder="Serving" value="1" required />
-                                <input type="number" name="cooktime" placeholder="Cook time" value="1" required />
-                                <input type="number" name="level" placeholder="Level" value="1" required />
-                                <fieldset class="ingredient-set">
-                                    <label for="ingredients">Nguyên liệu</label> </br>
-                                    <span class="error" name="ingredients">*Nguyên liệu không được để trống</span>
-                                    <ul class="list-sortable ingredients-list">
-                                        <li>
-                                            <div class="add-fields">
-                                                <span class="ingredient-handler-list handler-list">
-                                                    <i class="fa fa-arrows"></i>
-                                                </span>
-                                                <input class="ingredient-quantity" type="number" step="1" name="ingredientsQuantity" value="1" required />
-                                                <select class="ingredient-weight" name="ingredientsWeight">
-                                                    <option value="1" selected>g</option>
-                                                    <option value="1000">kg</option>
-                                                </select>
-                                                <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" required />
-                                                <span class="del-list">
-                                                    <i class="fa fa-trash"></i>
-                                                </span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <span class="add-button add-ing">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                </fieldset>
-                                <fieldset class="ingredient-set">
-                                    <label for="steps">Steps</label> </br>
-                                    <span class="error" name="stepsDes">*Các bước không được để trống</span>
-                                    <ul class="list-sortable steps">
-                                        <li>
-                                            <div class="add-fields">
-                                                <span class="handler-list">
-                                                    <i class="fa fa-arrows"></i>
-                                                </span>
-                                                <textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>
-                                                <span class="del-list">
-                                                    <i class="fa fa-trash"></i>
-                                                </span>
-                                            </div>
-                                            <div class="image-fields">
-                                                <input type="file" name="stepsImage" required />
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <span class="add-button add-steps">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                </fieldset>
-                                <input type="text" name="videoCode" placeholder="Video Code" />
-                                <div class="text-center">
-                                    <button type="submit" id="submitBtn" class="recipe-submit-btn">Submit Your Recipe</button>
-                                </div>
+                    <div class="tab-container tab-shortcode">
+                        <ul class="clearfix list-nav">
+                            <li class="active" id="congthucBtn"><a href="#">Công thức</a></li>
+                            <li id="phanloaiBtn"><a href="#">Phân loại</a></li>
+                        </ul>
+                        <div class="tabs-container">
+                            <div class="tab-content" id="congthuc" style="display: block;">
+                                <div class="submit-recipe-form">
+                                    <label for="upload-image">Ảnh đại diện cho món ăn*</label>
+                                    <span class="error" name="avatarUpload">*Hình đại diện không được để trống</span>
+                                    <input type="file" name="avatarUpload" id="upload-image" required />
+                                    <span class="error" name="title">*Tiêu đề không được để trống</span>
+                                    <input type="text" name="title" id="title" placeholder="Nhập tên công thức*" required />
+                                    <br />
+                                    <span class="error" name="content">*Nội dung không được để trống</span>
+                                    <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức*" required></textarea>
+                                    <input type="number" name="serving" placeholder="Serving" value="1" required />
+                                    <input type="number" name="cooktime" placeholder="Cook time" value="1" required />
+                                    <input type="number" name="level" placeholder="Level" value="1" required />
+                                    <fieldset class="ingredient-set">
+                                        <label for="ingredients">Nguyên liệu</label> </br>
+                                        <span class="error" name="ingredients">*Nguyên liệu không được để trống</span>
+                                        <ul class="list-sortable ingredients-list">
+                                            <li>
+                                                <div class="add-fields">
+                                                    <span class="ingredient-handler-list handler-list">
+                                                        <i class="fa fa-arrows"></i>
+                                                    </span>
+                                                    <input class="ingredient-quantity" type="number" step="1" name="ingredientsQuantity" value="1" required />
+                                                    <select class="ingredient-weight" name="ingredientsWeight">
+                                                        <option value="1" selected>g</option>
+                                                        <option value="1000">kg</option>
+                                                    </select>
+                                                    <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" required />
+                                                    <span class="del-list">
+                                                        <i class="fa fa-trash"></i>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span class="add-ingredient">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                    </fieldset>
+                                    <fieldset class="ingredient-set">
+                                        <label for="steps">Steps</label> </br>
+                                        <span class="error" name="stepsDes">*Các bước không được để trống</span>
+                                        <ul class="list-sortable steps">
+                                            <li>
+                                                <div class="add-fields">
+                                                    <span class="handler-list">
+                                                        <i class="fa fa-arrows"></i>
+                                                    </span>
+                                                    <textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>
+                                                    <span class="del-list">
+                                                        <i class="fa fa-trash"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="image-fields">
+                                                    <input type="file" name="stepsImage" required />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span class="add-recipe-steps">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                    </fieldset>
+                                    <input type="text" name="videoCode" placeholder="Video Code" />
+                                    <div class="text-center">
+                                        <button type="button" id="nextBtn" class="recipe-submit-btn">Bước tiếp theo</button>
+                                    </div>
 
+                                </div>
+                            </div>
+                            <div class="tab-content" id="phanloai" style="display: none;">
                             </div>
                         </div>
-                        <div id="phanloai" class="tab-pane fade">
-                        </div>
                     </div>
-
                 </div>
             </div>
             <div class="col-md-4 col-lg-3">
@@ -318,10 +319,10 @@
         };
         (async () => {
             await changeHeadername();
-            //await loadcategory();
-            //await callLatestRecipeWidgetSubmitPageApi();
-            //await callListCategoryItemSubmitPageApi();
-            //await callPopularSubmitPageApi();
+            await loadCategory();
+            await callLatestRecipeWidgetSubmitPageApi();
+            await callListCategoryItemSubmitPageApi();
+            await callPopularSubmitPageApi();
         })();
     </script>
 }
