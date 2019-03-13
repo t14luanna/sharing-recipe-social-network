@@ -549,7 +549,12 @@ const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied
                     </div>
                     <div class="comment">
 
-<i class="fa fa-close icon-delete" onclick="deactivateComment(comment)" ></i>
+                    <div class="dropdown fa fa-ellipsis-v dropdown-custom">
+                        <ul class="dropdown-menu dropdown-menu-custom">
+                          <li class="comment-owner-${replyComment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${replyComment.id})">Xóa</a></li>
+                          <li><a href="#">Báo cáo</a></li>
+                        </ul>
+                      </div>
                         <h5><a href="#">${replyComment.fullName}</a></h5><span class="time">${replyComment.createTime}</span>
 
                         <p>${replyComment.commentContent}</p>
@@ -572,7 +577,19 @@ const callGetReplyComtApi = async (parentId, recipeId) => {
 
         $(`li[data-user-id=${parentId}]`).append(itemReply);
     }
-
+    //tim user dựa theo userid để biết comment của ai, thì người đó có thể xóa comment
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var user = await resUser.json();
+    var userId = user.id;
+    $(`.comment-owner-${userId}`).css("display", "block");
 };
 
 const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
