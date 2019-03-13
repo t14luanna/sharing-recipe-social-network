@@ -90,7 +90,7 @@ function getData() {
     validation = validationField('content', content) && validation;
     var serving = $("input[name='serving']").val();
     var cooktime = $("input[name='cooktime']").val();
-    var level = $("input[name='level']").val();
+    var level = $("select[name='level']").val();
     var videoCode = $("input[name='videoCode']").val();
     
     var ingredientsWeight = $("input[name='ingredientsWeight']");
@@ -136,9 +136,9 @@ function getData() {
             LevelRecipe: level,
             VideoLink: videoCode
         },
-        ListCategory: categoriesItem,
-        ListSORVM: steps,
-        ListIngredient: ingredients
+        listCategory: categoriesItem,
+        listSORVM: steps,
+        listIngredient: ingredients
     };
 
     return {
@@ -163,11 +163,12 @@ function uploadImageSubmit(data) {
             data.recipeVM.ImageCover = res.url;
         });
 
-        $(data.ListSORVM).each(async (i, step) => {
-            await uploadFile(step.ImageUrl).then((res) => {
-                data.ListSORVM[i].ImageUrl = res.url;
+        for (let sorvm of data.listSORVM) {
+            await uploadFile(sorvm.ImageUrl).then((res) => {
+                sorvm.ImageUrl = res.url;
             });
-        });
+        }
+
 
         return resolve(data);
     });

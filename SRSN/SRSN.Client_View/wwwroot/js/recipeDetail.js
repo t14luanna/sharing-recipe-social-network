@@ -22,7 +22,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
             <ul class="recipe-specs-2">
                 <li><span>Khẩu phần : </span>${recipe.serving}</li>
                 <li><span>Thời gian nấu : </span>${recipe.cookTime}</li>
-                <li><span>Độ khó : </span>${recipe.levelRecipe}</li>
+                <li><span>Độ khó : </span>${RECIPE_LEVEL_ENUM[recipe.levelRecipe]}</li>
             </ul>
         </div>
         <a href="${recipe.videoLink}" class="swipebox slider-video-button">Watch Video</a>

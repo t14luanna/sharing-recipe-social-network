@@ -13,11 +13,7 @@
         <div class="row">
             <div class="col-md-8 col-lg-9">
                 <div class="recipe-set submit-recipe-set">
-                    <h2>Submit Recipe</h2>
-                    <p>
-                        Food Recipe theme include a Recipe Submit Template. It allow users to submit a recipe with featured
-                        image and related details. A user should be logged in to submit a recipe.
-                    </p>
+                    <h2>Đăng công thức</h2>
                     <div class="tab-container tab-shortcode">
                         <ul class="clearfix list-nav">
                             <li class="active" id="congthucBtn"><a href="#">Công thức</a></li>
@@ -37,10 +33,21 @@
                                     <br />
                                     <span class="error" name="content">*Nội dung không được để trống</span>
                                     <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức*" required></textarea>
-                                    <label>Số người dùng, thời gian nấu và độ khó*</label></br>
+                                    <label class="col-md-3 custom-label-submit">Số khẩu phần ăn*</label>
                                     <input type="number" name="serving" placeholder="Serving" value="1" required />
+                                    </br>
+                                    <label class="col-md-3 custom-label-submit">Thời gian nấu (phút)*</label>
                                     <input type="number" name="cooktime" placeholder="Cook time" value="1" required />
-                                    <input type="number" name="level" placeholder="Level" value="1" required />
+                                    </br>
+                                    <div class="form-group">
+                                        <label class="col-md-3 custom-label-submit">Độ khó*</label>
+                                        <select name="level" class="form-control">
+                                            <option value="1">Dễ</option>
+                                            <option value="2">Trung bình</option>
+                                            <option value="3">Khó</option>
+                                        </select>
+                                    </div>
+                                    @*<input type="number"  placeholder="Level" value="1" required />*@
                                     <fieldset class="ingredient-set">
                                         <label for="ingredients">Nguyên liệu</label> </br>
                                         <span class="error" name="ingredients">*Nguyên liệu không được để trống</span>
@@ -85,7 +92,7 @@
                                             <i class="fa fa-plus"></i>
                                         </span>
                                     </fieldset>
-                                    <input type="text" name="videoCode" placeholder="Video Code" />
+                                    <input type="text" name="videoCode" placeholder="Video Code" class="input-video"/>
                                     <div class="text-center">
                                         <button type="button" id="nextBtn" class="recipe-submit-btn">Bước tiếp theo</button>
                                     </div>
@@ -266,9 +273,16 @@
     <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
     <script src="~/js/submit-recipe.js"></script>
     <script type="text/javascript">
+
+        const changeHeadername = async () => {
+            var someText = "Đăng công thức";
+            $('.main-heading h1').append(document.createTextNode(someText));
+        };
         (async () => {
+            await changeHeadername();
             await loadCategory();
             $('#submitBtn').on("click", async function (event) {
+                $("#loading-box").show();
                 var results = getData();
                 console.log(results.validation)
                 if (results.validation === false) {
@@ -279,12 +293,13 @@
                         title: 'Thông báo',
                         text: 'Các nội dung không được để trống!',
                     });
+                    $("#loading-box").hide();
+
                     return;
                 } else {
                     var data = results.data;
                     data = await uploadImageSubmit(data);
-
-                    console.log(data);
+                   
                     var authorization = localStorage.getItem("authorization");
                     var token = (JSON.parse(authorization))["token"];
                     await fetch("https://localhost:44361/api/recipe/submit-recipe", {
@@ -295,7 +310,9 @@
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
                         }
-                    }).then((res) => {
+                    })
+                    .then((res) => {
+                        $("#loading-box").hide();
                         if (res.status === 200) {
                             swal({
                                 title: "",
@@ -310,10 +327,10 @@
                                 var recipeId = data.recipeId;
                                 window.location.href = `/recipe/${recipeId}`
                             }, 1500);
-
-
-
                         }
+                    })
+                    .catch(function (e) {
+                        $("#loading-box").hide();
                     });
                 }
 
