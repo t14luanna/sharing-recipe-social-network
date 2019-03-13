@@ -344,7 +344,7 @@
     (async () => {
         await callAccountInforApi('@(RouteData.Values["userName"])');
         await loadAvatarContainer('@(RouteData.Values["userName"])');
-        await callReadCollectionApi();
+        await callReadCollectionApi('@(RouteData.Values["userName"])');
     })();
 
 </script>

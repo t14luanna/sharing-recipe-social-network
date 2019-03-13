@@ -18,10 +18,11 @@ namespace SRSN.DatabaseManager.Services
     {
         Task<CollectionViewModel> DeactiveAsync(int id);
         Task<ICollection<CollectionViewModel>> GetTopCollection(UserManager<SRSNUser> userManager);
+        Task<CollectionViewModel> GetCollectionById(UserManager<SRSNUser> userManager, int collectionId);
     }
-    public class CollectionService : BaseService<Collection,CollectionViewModel>, ICollectionService 
+    public class CollectionService : BaseService<Collection, CollectionViewModel>, ICollectionService
     {
-        public CollectionService(IUnitOfWork unitOfWork, IMapper mapper):base (unitOfWork, mapper)
+        public CollectionService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
         public async Task<CollectionViewModel> DeactiveAsync(int id)
@@ -35,6 +36,25 @@ namespace SRSN.DatabaseManager.Services
 
         }
 
+        public async Task<CollectionViewModel> GetCollectionById(UserManager<SRSNUser> userManager, int collectionId)
+        {
+            try
+            {
+                var collection = this.selfDbSet.AsNoTracking().Where(p => p.Active == true && p.Id == collectionId).FirstOrDefault();
+                // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
+                var currentUser = userManager.FindByIdAsync(collection.UserId.ToString()).Result;
+                var fullName = $"{currentUser.UserName}";
+                var collectionViewModel = this.EntityToVM(collection);
+                collectionViewModel.FullName = fullName;
+
+                return collectionViewModel;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public async Task<ICollection<CollectionViewModel>> GetTopCollection(UserManager<SRSNUser> userManager)
         {
             try

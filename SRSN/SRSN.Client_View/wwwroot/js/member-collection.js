@@ -79,10 +79,10 @@ const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-
                                                         </div>
                                                     </div>
                                                 </div>`;
-const callReadCollectionApi = async () => {
+const callReadCollectionApi = async (userName) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read`, {
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read-by-userName?userName=${userName}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',

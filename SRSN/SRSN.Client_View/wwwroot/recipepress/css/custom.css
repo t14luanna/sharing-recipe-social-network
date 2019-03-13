@@ -236,3 +236,20 @@
     margin-right: 5px;
     cursor: pointer
 }
+.custom-grid{
+    margin: 0px!important
+}
+.custom-listing {
+    width: 262.725px !important;
+    height: 350.725px !important;
+}
+.custome-image-listing {
+    width: 262.725px !important;
+    height: 206.775px;
+}
+.custom-grid  h4{
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+}

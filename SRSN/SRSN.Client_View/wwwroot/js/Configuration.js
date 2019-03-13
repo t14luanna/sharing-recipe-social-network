@@ -3,6 +3,7 @@ var RECIPE_API_URL = "api/recipe";
 var ACCOUNT_API_URL = "api/account";
 var CATEGORY_API_URL = "api/category";
 var COLLECTION_API_URL = "api/collection";
+var COLLECTION_POST_API_URL = "api/collectionpost";
 var COMMENT_API_URL = "api/comment";
 var INGREDIENTS_API_URL = "api/ingredients";
 var LIKE_POST_API_URL = "api/likepost";

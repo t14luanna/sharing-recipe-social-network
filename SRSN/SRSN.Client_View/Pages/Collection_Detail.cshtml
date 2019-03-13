@@ -181,13 +181,7 @@
                                         </div>
                                         <!-- Filter Nav End -->
                                         <!-- Member Items Start -->
-                                        <div class="member--items">
-                                            <div class="row gutter--15 AdjustRow main-contain-collection">
-
-                                                <!-- Member Item Start -->
-                                                <!-- Member Item End -->
-
-                                            </div>
+                                        <div class="recipe-listing listing-grid">
                                         </div>
                                     </div>
 
@@ -320,8 +314,10 @@
 <script type="text/javascript">
     (async () => {
         var dataAccount = await callReadUserByTokerApi();
-        await callAccountInforApi(dataAccount.username);
-        await loadAvatarContainer(dataAccount.username);
+        //await callAccountInforApi(dataAccount.username);
+        //await loadAvatarContainer(dataAccount.username);
+        await callReadCollectionIdApi(@(RouteData.Values["collection_id"]));
+        await callRecipeByCollectionIdApi(@(RouteData.Values["collection_id"]));
     })();
     
 </script>

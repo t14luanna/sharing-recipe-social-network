@@ -523,7 +523,7 @@ const openReplyView = async (cmtId, recipeId) => {
 const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied replied-${parentId}">
                 <li>
                     <div class="avatar">
-                        <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}" alt="avatar"/></a>
+                        <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="avatar"/></a>
                     </div>
                     <div class="comment">
                         <h5><a href="#">${replyComment.fullName}</a></h5><span class="time">${replyComment.createTime}</span>
