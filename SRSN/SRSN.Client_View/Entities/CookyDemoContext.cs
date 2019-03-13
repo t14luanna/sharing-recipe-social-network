@@ -52,14 +52,13 @@ namespace SRSN.Client_View.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=123;Trusted_Connection=False;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.2-servicing-10034");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
 
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
@@ -471,12 +470,6 @@ namespace SRSN.Client_View.Entities
                     .HasName("PK_User_Recipe_Point");
 
                 entity.ToTable("User_Reaction_Recipe");
-
-                entity.Property(e => e.IsLike).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.IsShare).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.IsView).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.IsLike).HasDefaultValueSql("((0))");
 

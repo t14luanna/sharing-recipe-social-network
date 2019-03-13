@@ -242,7 +242,6 @@ namespace SRSN.ClientApi.Controllers
             {
                 return Ok(new
                 {
-                    success = false,
                     message = $"Ban tao recipe that bai",
                     error = ex.ToString()
                 });
