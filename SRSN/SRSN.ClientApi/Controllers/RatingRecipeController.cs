@@ -109,5 +109,10 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("get-ratingrecipe-by-id")]
+        public ActionResult GetUsernameParentComment(int commentParentId)
+        {
+            return Ok(ratingRecipeService.Get(p => p.Id == commentParentId));
+        }
     }
 }

@@ -3,6 +3,7 @@ var client = filestack.init(apikey);
 //var onProgress = (evt) => {
 //    document.getElementById('progress').innerHTML = `${evt.totalPercent}%`;
 //};
+
 $("#comment-form").submit(function (e) {
     e.preventDefault();
     const token = {};
@@ -50,8 +51,10 @@ $('#upload-image').on("change", function (e) {
     }
 });
 
-const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-xxs-12"  onclick="window.location='/account/collection-detail/${collection.id}'">
+const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-xxs-12"  >
                                                         <div class="member--item online  collection-item">
+                                                            <i class="fa fa-close icon-delete-collection" onclick="deactivateMemberCollection(${collection.id})"></i>
+                                                        <div onclick="window.location='/account/collection-detail/${collection.id}'">
                                                         <div class="img-recipe-avatar">
                                                             <a class="btn-link">
                                                                 <img src="${collection.coverImage}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
@@ -78,6 +81,7 @@ const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-
                                                             </ul>
                                                         </div>
                                                     </div>
+                                                    </div>
                                                 </div>`;
 const callReadCollectionApi = async () => {
     var authorization = localStorage.getItem("authorization");
@@ -102,3 +106,22 @@ const callReadCollectionApi = async () => {
         $(".main-contain-collection").append(content);
     }
 };
+
+//function deactivateMemberCollection(collectionId) {
+//    var data = {
+//        Id: collectionId
+//    };
+//    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}`, {
+//        method: "DELETE",
+//        body: JSON.stringify(data),
+//        headers: {
+//            'Content-Type': 'application/json',
+//            'Authorization': `Bearer ${token}`
+//        }
+//    });
+//    if (res.status == 200) {
+//        //deactivate thành công
+//        alert("xóa thành công");
+
+//    }
+//}

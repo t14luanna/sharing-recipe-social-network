@@ -122,7 +122,16 @@ const createSingleRatingComment = (comment, commentReplyCount) =>
             
 <h5><a href="#">${comment.fullName}</a></h5>
             <span class="time">${comment.createTime}</span>
-            <span class="rating-figure comment-rating-star">${comment.star} / 5 <i class="fa fa-star" aria-hidden="true"></i></span>
+<div class="dropdown fa fa-ellipsis-v dropdown-custom">
+    <ul class="dropdown-menu dropdown-menu-custom">
+      <li class="comment-owner-${comment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${comment.id})">Xóa</a></li>
+      <li><a href="#">Báo cáo</a></li>
+    </ul>
+  </div>
+                    <span class="rating-figure comment-rating-star">4.5 / 5 <i class="fa fa-star" aria-hidden="true"></i>
+                    </span>
+           
+            </span>
             <p>
                 ${comment.contentRating}
             </p>
@@ -255,6 +264,19 @@ const callRecipeDetailApi = async (id) => {
     callReadRatingCommentApi(id);
 };
 const callReadRatingCommentApi = async (id) => {
+    //tim user dựa theo userid để biết comment của ai, thì người đó có thể xóa comment
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var user = await resUser.json();
+    var userId = user.id;
+    //
     var res = await fetch(`${BASE_API_URL}/api/RatingRecipe/read-rating?recipeId=${id}`);
     var data = (await res.json());
     var count = 0;
@@ -269,6 +291,7 @@ const callReadRatingCommentApi = async (id) => {
         $("#list-rating-comment").append(element);
     }
     $("#numOfComment").append(count);
+    $(`.comment-owner-${userId}`).css("display", "block");
 };
 const callCountCommentsApi = async (recipeId, recipeParentId) => {
     var countReply = await fetch(`${BASE_API_URL}/api/comment/get-count-reply-comment?recipeId=${recipeId}&recipeParentId=${recipeParentId}`);
@@ -456,14 +479,23 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
         var usernameLocal = window.localStorage.getItem("username");//người đang comment
 
         var myDataRef = firebase.database().ref(chefUsername);
-        myDataRef.push({
+        var uid = myDataRef.push({
+            "uid" : "",
             "username": usernameLocal,
             "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
             "date": new Date().toLocaleString(),
             "link": "/recipe/" + data.recipeId,
             "isRead": "False"
         });
-
+        let dbRef = firebase.database().ref("/" + chefUsername + "/");
+        //update unique key on firebase
+        dbRef.on("value", function (snapshot) {
+            snapshot.forEach(function (child) {
+                child.ref.update({
+                    uid: uid.key
+                });
+            });
+        });
 
     }
 };
@@ -516,7 +548,10 @@ const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied
                         <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}" alt="avatar"/></a>
                     </div>
                     <div class="comment">
+
+<i class="fa fa-close icon-delete" onclick="deactivateComment(comment)" ></i>
                         <h5><a href="#">${replyComment.fullName}</a></h5><span class="time">${replyComment.createTime}</span>
+
                         <p>${replyComment.commentContent}</p>
                     </div>
                 </li>
@@ -562,6 +597,67 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
             var dataCount = (await callCountCommentsApi(recipeId, commentParentId));
             $(`a[id="comment-link-${commentParentId}"]`).html(`Bình luận (${dataCount})`);
             await openReplyView(commentParentId, recipeId);
+
+
+            //thong bao cho người chủ sở hữu recipe
+            var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
+            var usernameLocal = window.localStorage.getItem("username");//người đang comment
+            if (chefUsername == usernameLocal) {
+                //do nothing
+            } else {
+                var myDataRef = firebase.database().ref(chefUsername);
+                var uid = myDataRef.push({
+                    "uid" : "",
+                    "username": usernameLocal,
+                    "content": "đã bình luận về bài viết của bạn.",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.recipeId,
+                    "isRead": "False"
+                });
+                //update uid
+                let dbRef = firebase.database().ref("/" + chefUsername + "/");
+                //update unique key on firebase
+                dbRef.on("value", function (snapshot) {
+                    snapshot.forEach(function (child) {
+                        child.ref.update({
+                            uid: uid.key
+                        });
+                    });
+                });
+            }
+           
+
+
+            // thong bao cho nguoi chủ comment
+            var ratingRecipeRes = await fetch(`${BASE_API_URL}/${RATING_RECIPE_API_URL}/get-ratingrecipe-by-id?commentParentId=${commentParentId}`);
+            var userRes = await ratingRecipeRes.json();
+            var userId = userRes[0].userId;
+            var user = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
+            var userParentCommentRes = await user.json();
+            var userParentComment = userParentCommentRes.username;//chủ comment
+            var usernameLocal = window.localStorage.getItem("username");//người đang trả lời comment
+            if (usernameLocal == userParentComment) {
+                // do nothing
+            } else {
+                var myDataRef = firebase.database().ref(userParentComment);
+                myDataRef.push({
+                    "uid" : "",
+                    "username": usernameLocal,
+                    "content": "đã trả lời bình luận của bạn.",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.recipeId,
+                    "isRead": "False"
+                });
+                let dbRef = firebase.database().ref("/" + userParentComment + "/");
+                //update unique key on firebase
+                dbRef.on("value", function (snapshot) {
+                    snapshot.forEach(function (child) {
+                        child.ref.update({
+                            uid: uid.key
+                        });
+                    });
+                });
+            }
         }
     }
 
