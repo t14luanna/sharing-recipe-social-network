@@ -47,7 +47,7 @@ namespace SRSN.ClientApi.Controllers
             await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
             return Ok(new
             {
-                message = $"Ban da tao thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
+                message = $"Ban da tao thanh cong Công thức co ten la: {request.RecipeVM.RecipeName}"
             });
         }
         [HttpDelete("delete")]
@@ -75,12 +75,12 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet("read-ingredients")]
-        public async Task<ActionResult> ReadIngredients(int recipeId)
+        [HttpGet("read-recipe")]
+        public async Task<ActionResult> ReadRecipe(int recipeId)
         {
             try
             {
-                return Ok(await recipeService.GetAllIngredientByRecipeId(recipeId));
+                return Ok(await recipeService.GetRecipeById(recipeId));
             }
             catch (Exception ex)
             {

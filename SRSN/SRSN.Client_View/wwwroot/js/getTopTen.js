@@ -142,6 +142,7 @@ const callTopTenAccountApi = async () => {
     $('.follow-btn').click((e) => {
         e.preventDefault();
         var followingUserId = $(".follow-btn > input").val();
+        alert(followingUserId);
         var userName = localStorage.getItem('username');
         followUser(userName, followingUserId);
     });

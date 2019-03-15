@@ -47,13 +47,18 @@ const callRecipeByCollectionIdApi = async (collectionId) => {
             'Authorization': `Bearer ${token}`
         }
     });
+    $(".delete-button").append(deleteButton(collectionId));
     var data = await res.json();
     for (var item of data) {
         var element = createSinglerRecipes(item);
         $(".listing-grid").append(element);
     }
 };
-const createSinglerRecipes = (recipe) =>`<div class="listing custom-listing">
+const deleteButton = (collectionID) =>
+    `<button class="delete-collection-button" onclick="deleteCollectionById(${collectionID})"><i class="fa fa-close"></i> Xóa Bộ Sưu Tập</button>
+                                            <div class="filter--options float--right">
+                                            </div>`;
+const createSinglerRecipes = (recipe) => `<div class="listing custom-listing" style="margin-left: 10px;" id="${recipe.collectionId}${recipe.recipePostId}">
     <div class="image">
         <a href="/recipe/${recipe.recipePostId}">
             <img src="${recipe.imageCover}" alt="image" class="custome-image-listing"/>
@@ -66,6 +71,41 @@ const createSinglerRecipes = (recipe) =>`<div class="listing custom-listing">
             <ul class="post-meta">
                 <li class="author"><a href="#">${recipe.authorName}</a></li>
             </ul>
+            <i class="fa fa-trash icon-delete" onclick="deleteRecipeInMyCollection(${recipe.collectionId},${recipe.recipePostId})"></i>
         </div>
     </div>
-</div>`
+    
+</div>`;
+async function deleteCollectionById(collectionId) {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var data = {
+        Id: collectionId
+    };
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/delete`, {
+        method: "DELETE",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    
+    if (res.status == 200) {//delete successfully
+        alert("Bạn đã xóa thành công Bộ sưu tập!!");
+        window.location.replace(`/account/collection/${window.localStorage.getItem("username")}`);
+    } else {
+        alert("Không thể xóa Bộ Sưu Tập. Vui lòng thử lại!!!");
+    }
+};
+async function deleteRecipeInMyCollection(collectionId, recipePostId ) {
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_POST_API_URL}/delete-recipepost?collectionId=${collectionId}&recipePostId=${recipePostId}`);
+
+    if (res.status == 200) {//delete successfully
+        alert("Bạn đã xóa thành công công thức này!");
+        $(`#${collectionId}${recipePostId}`).remove();
+        //window.location.reload();
+    } else {
+        alert("Không thể xóa công thức này. Vui lòng thử lại!!!");
+    }
+};

@@ -92,7 +92,7 @@
                                             <i class="fa fa-plus"></i>
                                         </span>
                                     </fieldset>
-                                    <input type="text" name="videoCode" placeholder="Video Code" class="input-video"/>
+                                    <input type="text" name="videoCode" placeholder="Video Code" class="input-video" />
                                     <div class="text-center">
                                         <button type="button" id="nextBtn" class="recipe-submit-btn">Bước tiếp theo</button>
                                     </div>
@@ -272,6 +272,10 @@
 
     <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
     <script src="~/js/submit-recipe.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+    <script src="~/js/notification.js"></script>
+
     <script type="text/javascript">
 
         const changeHeadername = async () => {
@@ -299,7 +303,7 @@
                 } else {
                     var data = results.data;
                     data = await uploadImageSubmit(data);
-                   
+                    var recipeId;
                     var authorization = localStorage.getItem("authorization");
                     var token = (JSON.parse(authorization))["token"];
                     await fetch("https://localhost:44361/api/recipe/submit-recipe", {
@@ -311,27 +315,55 @@
                             'Authorization': `Bearer ${token}`
                         }
                     })
-                    .then((res) => {
-                        $("#loading-box").hide();
-                        if (res.status === 200) {
-                            swal({
-                                title: "",
-                                text: "Bạn đã chia sẻ công thức thành công",
-                                type: "success",
-                                confirmButtonColor: "#DD6B55",
-                                confirmButtonText: "Xác nhận",
-                                closeOnConfirm: false
-                            });
-                            setTimeout(async function () {
-                                var data = (await res.json());
-                                var recipeId = data.recipeId;
-                                window.location.href = `/recipe/${recipeId}`
-                            }, 1500);
-                        }
-                    })
-                    .catch(function (e) {
-                        $("#loading-box").hide();
-                    });
+                        .then((res) => {
+                            $("#loading-box").hide();
+                            if (res.status === 200) {
+                                swal({
+                                    title: "",
+                                    text: "Bạn đã chia sẻ công thức thành công",
+                                    type: "success",
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Xác nhận",
+                                    closeOnConfirm: false
+                                });
+                                setTimeout(async function () {
+                                    var data = (await res.json());
+                                    recipeId = data.recipeId;
+                                    window.location.href = `/recipe/${recipeId}`
+                                }, 1500);
+
+                                //add data to firebase to notification with users who are following me
+                                //them data vao firebase
+                                var usernameLocal = window.localStorage.getItem("username");//người đang comment
+                                var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
+                                var dataUser = userRes.json();
+                                for (var user of dataUser) {
+                                    var followingMe = window.localStorage.getItem(user.username);//user is following me
+
+                                    var myDataRef = firebase.database().ref(followingMe);
+                                    var uid = myDataRef.push({
+                                        "uid": "",
+                                        "username": usernameLocal,
+                                        "content": "đã chia sẽ công thức mới",
+                                        "date": new Date().toLocaleString(),
+                                        "link": "/recipe/" + recipeId,
+                                        "isRead": "False"
+                                    });
+                                    let dbRef = firebase.database().ref("/" + chefUsername + "/");
+                                    //update unique key on firebase
+                                    dbRef.on("value", function (snapshot) {
+                                        snapshot.forEach(function (child) {
+                                            child.ref.update({
+                                                uid: uid.key
+                                            });
+                                        });
+                                    });
+                                }
+                            }
+                        })
+                        .catch(function (e) {
+                            $("#loading-box").hide();
+                        });
                 }
 
             });

@@ -16,6 +16,7 @@ namespace SRSN.ClientApi.Entities
         public bool? Active { get; set; }
         public int? SaveCount { get; set; }
         public string CoverImage { get; set; }
+        public int? RecipeCount { get; set; }
 
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }

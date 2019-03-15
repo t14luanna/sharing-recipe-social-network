@@ -89,12 +89,12 @@ namespace SRSN.DatabaseManager.Services
         public async Task<ICollection<AccountViewModel>> getAllUserFollowingMe(UserManager<SRSNUser> userManager, int followingUserId)
         {
             var listAccount = new List<AccountViewModel>();
-
+             
             var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active='True' AND FollowingUserId=" + followingUserId).ToListAsync();
 
             foreach (var item in listItems)
             {
-                var user = await userManager.FindByIdAsync(item.FollowingUserId.ToString());
+                var user = await userManager.FindByIdAsync(item.UserId.ToString());
                 var userVM = new AccountViewModel();
                 mapper.Map(user, userVM);
 

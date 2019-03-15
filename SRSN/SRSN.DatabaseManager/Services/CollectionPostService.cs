@@ -16,6 +16,7 @@ namespace SRSN.DatabaseManager.Services
 {
     public interface ICollectionPostService : IBaseService<CollectionPost, CollectionPostViewModel>
     {
+        Task DeactiveAsync(int collectionid, int recipePostId);
         Task<ICollection<CollectionPostViewModel>> GetRecipeByCollectionId(UserManager<SRSNUser> userManager, int collectionId);
     }
     public class CollectionPostService : BaseService<CollectionPost, CollectionPostViewModel>, ICollectionPostService
@@ -24,13 +25,22 @@ namespace SRSN.DatabaseManager.Services
         {
         }
 
+        public async Task DeactiveAsync(int collectionid, int recipePostId)
+        {
+            var trueEntity = selfDbSet.Where(q => q.CollectionId == collectionid && q.RecipePostId == recipePostId).FirstOrDefault();
+            trueEntity.IsActive = false;
+            this.selfDbSet.Update(trueEntity);
+
+            await unitOfWork.CommitAsync();
+        }
+
         public async Task<ICollection<CollectionPostViewModel>> GetRecipeByCollectionId(UserManager<SRSNUser> userManager, int collectionId)
         {
             try
             {
                 var list = new List<CollectionPostViewModel>();
                 var recipeRepo = this.unitOfWork.GetDbContext().Set<Recipe>();
-                var recipesList = await this.Get(p => p.CollectionId == collectionId).ToListAsync();
+                var recipesList = await this.Get(p => p.CollectionId == collectionId && p.IsActive == true).ToListAsync();
                 foreach (var recipe in recipesList)
                 {
                     var recipeItem = this.unitOfWork.GetDbContext().Set<Recipe>().Where(x => x.Id == recipe.RecipePostId).FirstOrDefault();

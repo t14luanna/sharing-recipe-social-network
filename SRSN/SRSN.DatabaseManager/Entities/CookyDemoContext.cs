@@ -52,6 +52,8 @@ namespace SRSN.DatabaseManager.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=12345678;Trusted_Connection=False;");
             }
         }
 
@@ -175,7 +177,9 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.ToTable("Collection_Post");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                //entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.IsActive).HasColumnName("isActive");
 
                 entity.HasOne(d => d.Collection)
                     .WithMany(p => p.CollectionPost)

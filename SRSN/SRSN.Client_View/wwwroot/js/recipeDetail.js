@@ -124,7 +124,7 @@ const createSingleRatingComment = (comment, commentReplyCount) =>
             <span class="time">${comment.createTime}</span>
 <div class="dropdown fa fa-ellipsis-v dropdown-custom">
     <ul class="dropdown-menu dropdown-menu-custom">
-      <li class="comment-owner-${comment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${comment.id})">Xóa</a></li>
+      <li class="comment-owner-${comment.userId}" style="display: none"><a href="#">Xóa</a></li>
       <li><a href="#">Báo cáo</a></li>
     </ul>
   </div>
@@ -135,7 +135,7 @@ const createSingleRatingComment = (comment, commentReplyCount) =>
             <p>
                 ${comment.contentRating}
             </p>
-                <a href="#/" id="comment-link-${comment.id}" onclick="openReplyView(${comment.id}, ${comment.recipeId})" class="reply-button">Bình luận (${commentReplyCount})</a>                        
+                <a href="#/" id="comment-link-${comment.id}" onclick="openReplyView(${comment.id}, ${comment.recipeId})" class="reply-button">Bình luận (<span id="countComment">${commentReplyCount}</span>)</a>                        
         </div>
     </li>`;
 const createSingleCategoryItemDetailPage = (item) =>
@@ -236,7 +236,7 @@ const callRelatedRecipeApi = async (id) => {
 
 const callIngrdientsOfRecipeApi = async (id) => {
     recipeMainId = id;
-    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe?recipeId=${id}`);
     var data = (await res.json());
     for (var item of data) {
         listIngredient = item.listIngredient;
@@ -244,9 +244,15 @@ const callIngrdientsOfRecipeApi = async (id) => {
             var ingredient = createSingleIngredientOfRecipe(ingredients);
             $("#list-of-ingredients").append(ingredient);
         }
+        for (var cateItem of item.listCategory) {
+            var cateItemElement = createCateItemTags(cateItem);
+            $("#list-category-item-tags").append(cateItemElement);
+        }
 
     }
 };
+const createCateItemTags = (tag) =>
+    `<li><a href="#">${tag.categoryItemName}</a></li>`;
 const callRecipeDetailApi = async (id) => {
     callIngrdientsOfRecipeApi(id);
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${id}`);
@@ -339,7 +345,7 @@ const getCheckedIngredient = async () => {
 };
 const callStepOfRecipeApi = async (id) => {
 
-    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-ingredients?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe?recipeId=${id}`);
     var data = (await res.json());
     var count = 0;
     for (var item of data) {
@@ -552,7 +558,7 @@ const openReplyView = async (cmtId, recipeId) => {
     let chefView = createReplyView(data, cmtId, recipeId);
     $(`li[data-user-id=${cmtId}]`).append(chefView);
 };
-const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied replied-${parentId}">
+const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied replied-${parentId}" id="reply-${replyComment.id}">
                 <li>
                     <div class="avatar">
                         <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="avatar"/></a>
@@ -561,7 +567,7 @@ const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied
 
                     <div class="dropdown fa fa-ellipsis-v dropdown-custom">
                         <ul class="dropdown-menu dropdown-menu-custom">
-                          <li class="comment-owner-${replyComment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${replyComment.id})">Xóa</a></li>
+                          <li class="comment-owner-${replyComment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${replyComment.id},${replyComment.recipeId}, ${parentId});">Xóa</a></li>
                           <li><a href="#">Báo cáo</a></li>
                         </ul>
                       </div>
@@ -845,5 +851,24 @@ var markers = [];
 function setMapOnAll(map) {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(map);
+    }
+};
+async function deactivateComment(cmtId, recipeId, commentParentId) {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var cmtRes = await fetch(`${BASE_API_URL}/${COMMENT_API_URL}/deactivateComment?Id=${cmtId}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (cmtRes.status == 200) {//successfully
+        alert("Xóa bình luận thành công!");
+        var dataCount = (await callCountCommentsApi(recipeId, commentParentId));
+        $(`a[id="comment-link-${commentParentId}"]`).html(`Bình luận (${dataCount})`);
+        $(`#reply-${cmtId}`).remove();
+    } else {
+        alert("Không thể xóa bình luận, vui lòng thử lại!!!");
     }
 }

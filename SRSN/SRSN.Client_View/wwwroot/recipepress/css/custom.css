@@ -160,9 +160,11 @@
         color: #d3344c;
     }
 }
-.boxed-recipes .recipe-image{
-    height:206px!important;
+
+.boxed-recipes .recipe-image {
+    height: 206px !important;
 }
+
 .modal .modal-content {
     overflow: hidden;
 }
@@ -173,13 +175,16 @@
     -o-animation: glowing 1500ms infinite;
     animation: glowing 1500ms infinite;
 }
-.modal-share-content{
-    width: 50%!important;
+
+.modal-share-content {
+    width: 50% !important;
 }
+
 #btn-share-recipe {
     margin-top: 10px
 }
-.textarea-caption{
+
+.textarea-caption {
     width: 100%;
     border: navajowhite;
     resize: none;
@@ -188,66 +193,84 @@
     font-size: 18px;
     overflow-y: hidden
 }
-#btn-share-recipe{
+
+#btn-share-recipe {
     cursor: pointer
 }
-.img-recipe-avatar a{
-    width:150px;
+
+.img-recipe-avatar a {
+    width: 150px;
     height: 150px;
 }
+
 .img-recipe-avatar img {
     width: 100%;
     height: 100%;
     border-radius: 15px;
 }
+
 .collection-item .btn-link {
     font-size: 18px;
     margin-top: 10px;
 }
-.upload-collection-image{
+
+.upload-collection-image {
     margin-top: 10px;
 }
+
 #btn-add-collection, #btn-suggest-ingredients {
     cursor: pointer
 }
-.title-modal-collection{
+
+.title-modal-collection {
     text-align: center;
     color: white
 }
-.collection-modal-item{
+
+.collection-modal-item {
     margin-bottom: 10px;
     padding: 5px 0px;
     border-radius: 10px
 }
-.nav-collapse ul li{
-    margin-left: 0px!important
+
+.nav-collapse ul li {
+    margin-left: 0px !important
 }
+
 .fa-bell, .fa-envelope {
     color: black !important
 }
-.submit-recipe > a{
+
+.submit-recipe > a {
     color: white !important
 }
-.newsfeeds-social-icons{
+
+.newsfeeds-social-icons {
     float: right;
     margin-top: 10px;
 }
-.newsfeeds-social-icons a{
-    margin-right: 5px;
-    cursor: pointer
+
+    .newsfeeds-social-icons a {
+        margin-right: 5px;
+        cursor: pointer
+    }
+
+.custom-grid {
+    margin: 0px !important
 }
-.custom-grid{
-    margin: 0px!important
-}
+
 .custom-listing {
     width: 262.725px !important;
     height: 350.725px !important;
+    /*margin-left: 20px;*/
 }
+
 .custome-image-listing {
     width: 262.725px !important;
     height: 206.775px;
 }
-.custom-grid  h4{
+
+.custom-grid h4 {
     white-space: nowrap;
     overflow: hidden;
     display: inline-block;
@@ -260,7 +283,6 @@
     height: 100%;
     margin: 0;
     padding: 0;
-
 }
 
     #loading-box .gif {
@@ -270,26 +292,31 @@
         z-index: 2;
         background-color: rgba(0,0,0,0.3) !important;
     }
+
 .custom-label-submit {
-    padding-left: 0px!important
+    padding-left: 0px !important
 }
-.input-video{
+
+.input-video {
     margin-top: 30px;
 }
-.header-var2.ext-var4 nav ul > li a{
+
+.header-var2.ext-var4 nav ul > li a {
     color: black
 }
+
 .icon-delete {
+    text-align: right;
     font-size: 20px;
-    margin-left: 90%;
-    color: black;
-    float: right;
-    position: inherit;
+    width: 0%;
+    margin-left: 95%;
 }
-.icon-delete:hover{
+
+.icon-delete:hover {
     color: red;
     cursor: pointer
 }
+
 .dropdown-custom {
     float: right;
     cursor: pointer;
@@ -298,16 +325,35 @@
     position: absolute !important;
     right: 25px;
 }
+
 .dropdown-menu-custom {
     margin-left: 0px !important;
 }
+
 .dropdown-custom:hover {
     color: black;
 }
+
 .dropdown-menu-custom li {
     margin-bottom: 0px !important;
     margin-top: 0px !important
 }
-.dropdown-menu-custom li a:hover {
-    margin-left: 0px!important
+
+    .dropdown-menu-custom li a:hover {
+        margin-left: 0px !important
+    }
+
+.delete-collection-button {
+    right: 0%;
+    float: right;
+    background-color: white;
+    color: black;
+    font-size: 15px;
+    border-radius: 90px;
+    border-color: RGB(110,190,59)
+}
+.delete-collection-button:hover{
+    background-color: green;
+    color:white;
+    border-color: white;
 }
