@@ -73,6 +73,8 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(IProductService), typeof(ProductService));
             services.AddScoped(typeof(IUserFollowingService), typeof(UserFollowingService));
             services.AddScoped(typeof(IUserReactionRecipeService), typeof(UserReactionRecipeService));
+            services.AddScoped(typeof(IUserReportRecipeService), typeof(UserReportRecipeService));
+            services.AddScoped(typeof(IUserReportUserService), typeof(UserReportUserService));
 
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc =>
@@ -155,6 +157,12 @@ namespace SRSN.DatabaseManager
                     .ForMember(x => x.RatingRecipe, y => y.Ignore())
                     .ForMember(x => x.Recipe, y => y.Ignore())
                     .ForMember(x => x.User, y => y.Ignore());
+
+                mc.CreateMap<UserReportRecipe, UserReportRecipeViewModel>();
+                mc.CreateMap<UserReportRecipeViewModel, UserReportRecipe>();
+
+                mc.CreateMap<UserReportUser, UserReportUserViewModel>();
+                mc.CreateMap<UserReportUserViewModel, UserReportUser>();
             });
             var mapper = mapperConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);

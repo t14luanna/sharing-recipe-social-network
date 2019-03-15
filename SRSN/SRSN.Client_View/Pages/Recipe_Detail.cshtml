@@ -103,9 +103,19 @@
                                 </div>
 
                                 <button class="submit-comment">Đánh giá</button>
+                                <div class="dropdown" style="display: inline-block;">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="margin-bottom: 5px;">
+                                        ...
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Report this recipe</a></li>
+                                        <li><a href="#">Nothing</a></li>
+                                        <li><a href="#">Nothing</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-
+                        
 
                     </div>
                 </div>
@@ -358,6 +368,9 @@
             callCreateRatingRecipeApi(@(RouteData.Values["recipe_id"]), star, comment);
 
         });
+        $(".other").on("click", function () {
+
+        });
         async function toggleLikeButton(x) {
             try {
                 var token = JSON.parse(localStorage.getItem('authorization')).token;
@@ -382,10 +395,16 @@
 
             }
         }
+
+        
     </script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo&callback=initMap">
     </script>
 }
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
 <script src="~/js/recipe.js"></script>
+<script src="~/js/user-report.js"></script>

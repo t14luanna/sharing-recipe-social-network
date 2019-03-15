@@ -8,6 +8,6 @@
     "\\SRSN\\SRSN.DatabaseManager\\Services",
     "\\SRSN\\SRSN.DatabaseManager\\ViewModels"
   ],
-  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\Services\\RecipeService.cs",
+  "SelectedNode": "\\SRSN\\SRSN.DatabaseManager\\Services\\UserReactionRecipeService.cs",
   "PreviewInSolutionExplorer": false
 }

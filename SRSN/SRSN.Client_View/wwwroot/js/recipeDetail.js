@@ -378,6 +378,8 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
         callReadRatingCommentApi(recipeId);
     }
 };
+
+
 const createReplyView = (replyUser) => `<ul>
                 <li>
                     <div class="avatar">
