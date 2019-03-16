@@ -3,12 +3,15 @@
 @{
     ViewData["Title"] = "Newsfeed";
 }
-
-@section StyleOptional{
-    <link rel="stylesheet" href="recipepress/css/plugins.min.css">
+@section PrefixStyleOptional
+{
 
     <!-- ==== Main Stylesheet ==== -->
     <link rel="stylesheet" href="recipepress/css/style.css">
+}
+@section StyleOptional{
+    <link rel="stylesheet" href="recipepress/css/plugins.min.css">
+
 
     <!-- ==== Responsive Stylesheet ==== -->
     <link rel="stylesheet" href="recipepress/css/responsive-style.css">
@@ -51,7 +54,7 @@
                             </div>
                             <!-- Main Content End -->
                             <!-- Main Sidebar Start -->
-                            <div class="main--sidebar col-md-4 pb--60" >
+                            <div class="main--sidebar col-md-4 pb--60">
                                 <!-- Widget Start -->
                                 <div class="widget main-content-custom">
                                     <h2 class="h4 fw--700 widget--title">Find A Buddy</h2>
@@ -265,7 +268,7 @@
                 $(".modal-share-post").css("display", "none")
 
             });
-           
+
         })();
 
         window.onclick = function (event) {
@@ -273,7 +276,7 @@
                 $(".modal-share-post").css("display", "none");
             }
         }
-        
+
     </script>
 }
 

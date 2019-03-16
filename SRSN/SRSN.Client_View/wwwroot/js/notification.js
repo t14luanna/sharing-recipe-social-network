@@ -1,13 +1,4 @@
-﻿//Initialize Firebase
-//var config = {
-//    apiKey: "AIzaSyAD2Vqg-rHzg9WJee0Yh0VGH_i_5BQT61E",
-//    authDomain: "srsnproject.firebaseapp.com",
-//    databaseURL: "https://srsnproject.firebaseio.com",
-//    projectId: "srsnproject",
-//    storageBucket: "srsnproject.appspot.com",
-//    messagingSenderId: "237911674213"
-//};
-//firebase.initializeApp(config);
+﻿
 
 ////ko dùng dc token vì mõi lần đăng nhập thì sẽ tạo ra 1 token mới khác với token cũ mặc dù cùng 1 userid, vậy vậy dùng username lun
 //var authorization = localStorage.getItem("authorization");
@@ -16,8 +7,8 @@ var countNoti = 0;
 var listNotification = [];
 var usernameLocal = window.localStorage.getItem("username");//username của mõi người đều khác nhau, nó là unique key, nên dùng username lưu ở fire. và nó sẽ ko thay đổi sau mõi lần đăng nhập
 if (usernameLocal != null) {
-    
-    var myDataRef = firebase.database().ref(usernameLocal);
+
+    var myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
     myDataRef.on('child_changed', function (snapshot) {//Handle child data change
 
         var link = "";
@@ -153,7 +144,7 @@ function changeStatusNoti() {
     });
     $("#number-of-notification").text("");
 }
-const createSingleNoti = (noti) =>
+var createSingleNoti = (noti) =>
     `<li><a href="${noti.link}"><b>${noti.username}</b> ${noti.content}</a></li>`;
 function displayNotifi() {
     $(`#list-notification`).text("");//xóa cái củ, để vào cái mới

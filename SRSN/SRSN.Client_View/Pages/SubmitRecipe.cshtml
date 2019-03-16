@@ -232,7 +232,7 @@
                             'Authorization': `Bearer ${token}`
                         }
                     })
-                        .then((res) => {
+                        .then(async (res) => {
                             $("#loading-box").hide();
                             if (res.status === 200) {
                                 swal({

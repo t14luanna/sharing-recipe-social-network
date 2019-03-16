@@ -320,7 +320,7 @@
 .dropdown-custom {
     float: right;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 20px;
     margin-left: 20px;
     position: absolute !important;
     right: 25px;
@@ -398,4 +398,10 @@ a{
 }
 #list-category-item-tags li a:hover{
     color: white!important
+}
+#cColorSwitcher{
+    display: none
+}
+.comment-rating-star, .dropdown-custom{
+    display: inline-block;
 }

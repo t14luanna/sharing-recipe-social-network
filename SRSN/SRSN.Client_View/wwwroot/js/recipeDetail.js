@@ -131,14 +131,16 @@ const createSingleRatingComment2 = (comment, commentReplyCount) =>
         <div class="comment">
             <h5><a href="#">${comment.fullName}</a></h5>
             <span class="time">${comment.ratingTime}</span>
-            <div class="dropdown fa fa-ellipsis-v dropdown-custom">
-                <ul class="dropdown-menu dropdown-menu-custom">
-                    <li class="comment-owner-${comment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${comment.id})">Xóa</a></li>
-                    <li><a href="#">Báo cáo</a></li>
-                </ul>
-            </div>
+            
             <span class="rating-figure comment-rating-star">${comment.ratingRecipe} / 5 <i class="fa fa-star" aria-hidden="true"></i></span>
-            </span>
+            <div class="dropdown  dropdown-custom">
+                <span class="fa fa-ellipsis-v dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"></span>
+                    <ul class="dropdown-menu dropdown-menu-custom"  role="menu" aria-labelledby="menu1">
+                        <li class="comment-owner-${comment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${comment.id})">Xóa</a></li>
+                        <li><a href="#">Báo cáo</a></li>
+                    </ul>
+            </div>
+            
             <p>
                 ${comment.ratingContent}
             </p>
