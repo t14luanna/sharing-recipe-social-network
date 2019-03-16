@@ -53,5 +53,19 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("delete-recipepost")]
+      
+        public async Task<ActionResult> DeativateRecipePost(int collectionId, int recipePostId )
+        {
+            try
+            {
+                await collectionPostService.DeactiveAsync(collectionId, recipePostId);
+                return Ok(new { message = "Bạn đã xóa thàng công công thức nấu ăn!"});
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

@@ -82,14 +82,14 @@ namespace SRSN.ClientApi.Controllers
         [HttpGet("getCommentByPost")]
         public ActionResult GetAllCommentByPostId(int postId)
         {
-            return Ok(commentService.Get(p => p.PostId == postId));
+            return Ok(commentService.Get(p => p.PostId == postId && p.Active == true));
          }
 
         [HttpGet("get-all")]
         public ActionResult GetAll()
         {
             return Ok(new {
-                request = commentService.Get()
+                request = commentService.Get(p => p.Active == true)
             });
         }
         [HttpGet("get-comment-by-parent-comment")]
@@ -107,7 +107,7 @@ namespace SRSN.ClientApi.Controllers
         [HttpGet("get-count-reply-comment")]
         public ActionResult GetCountReplyComment(int recipeId, int recipeParentId)
         {
-            return Ok(commentService.Get(p => p.RecipeId == recipeId && p.RecipeCommentParentId == recipeParentId).Count());
+            return Ok(commentService.Get(p => p.RecipeId == recipeId && p.RecipeCommentParentId == recipeParentId && p.Active == true).Count());
         }
         
     }

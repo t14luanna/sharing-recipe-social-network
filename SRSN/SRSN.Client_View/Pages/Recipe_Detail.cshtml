@@ -52,11 +52,8 @@
                                 <div class="row">
                                     <div class="col-sm-7">
                                         <div class="details-tags">
-                                            <ul>
-                                                <li><a href="#">garlic</a></li>
-                                                <li><a href="#">pizza</a></li>
-                                                <li><a href="#">potato</a></li>
-                                                <li><a href="#">roasted</a></li>
+                                            <ul id="list-category-item-tags">
+                                               
                                             </ul>
                                         </div>
                                     </div>
@@ -248,11 +245,10 @@
 @section Scripts {
 
     <script src="~/js/recipeDetail.js"></script>
-
-
     <script type="text/javascript" src="recipepress/js/plugins.min.js"></script>
     <script type="text/javascript" src="recipepress/js/color-switcher.min.js"></script>
     <script type="text/javascript" src="recipepress/js/main.js"></script>
+    <script type="text/javascript" src="~/js/Configuration.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript">
         // fetch and render element to html
@@ -262,9 +258,7 @@
         };
         var map, infoWindow, pos, marker;
         async function initMap() {
-            debugger;
             var userAddress = (JSON.parse(window.localStorage.getItem("authorization"))).userAddress;
-            debugger;
             var res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${userAddress}&key=${GOOGLE_API_KEY}`);
             var data = await res.json();
             console.log(data);

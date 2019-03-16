@@ -53,7 +53,20 @@ namespace SRSN.ClientApi.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    if(existingUserReaction.RatingRecipe == null)
+                    {
+                        existingUserReaction.RatingRecipe = request.RatingRecipe.Value;
+                        existingUserReaction.RatingContent = request.RatingContent;
+                        existingUserReaction.RatingTime = request.RatingTime;
+                        await selfService.UpdateAsync(existingUserReaction);
+                    }
+                    else
+                    {
+                        return BadRequest(new
+                        {
+                            message = "Rating recipe exception"
+                        });
+                    }
                 }
                 return Ok(new
                 {

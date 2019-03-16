@@ -16,7 +16,7 @@ namespace SRSN.DatabaseManager.Services
 {
     public interface ICollectionService : IBaseService<Collection, CollectionViewModel>
     {
-        Task<CollectionViewModel> DeactiveAsync(int id);
+        Task<CollectionViewModel> DeactiveAsync(int id); 
         Task<ICollection<CollectionViewModel>> GetTopCollection(UserManager<SRSNUser> userManager);
         Task<CollectionViewModel> GetCollectionById(UserManager<SRSNUser> userManager, int collectionId);
     }

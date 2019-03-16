@@ -38,7 +38,7 @@ namespace SRSN.DatabaseManager.Services
             try
             {
                 var list = new List<CommentViewModel>();
-                var listItems = this.selfDbSet.AsNoTracking().Where(p => p.RecipeId == recipeId && p.RecipeCommentParentId == recipeParentId).ToList();
+                var listItems = this.selfDbSet.AsNoTracking().Where(p => p.RecipeId == recipeId && p.RecipeCommentParentId == recipeParentId && p.Active == true).ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
@@ -64,7 +64,7 @@ namespace SRSN.DatabaseManager.Services
 
         public IQueryable<object> GetAllCommentByPostId(int postId)
         {
-            var post = this.unitOfWork.GetDbContext().Set<Comment>().Where(x => x.PostId == postId);
+            var post = this.unitOfWork.GetDbContext().Set<Comment>().Where(x => x.PostId == postId && x.Active == true);
             return post;
         }
     }

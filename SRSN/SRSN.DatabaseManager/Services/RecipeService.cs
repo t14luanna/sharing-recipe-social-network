@@ -37,7 +37,7 @@ namespace SRSN.DatabaseManager.Services
         Task DeActiveRecipe(int id);
         Task UpdateRecipe(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId);
-        Task<ICollection<RecipeViewModel>> GetAllIngredientByRecipeId(int recipeId);
+        Task<ICollection<RecipeViewModel>> GetRecipeById(int recipeId);
         Task<ICollection<RecipeViewModel>> GetPopularRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> GetLatestRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> Get1000LatestRecipes(UserManager<SRSNUser> userManager);
@@ -141,7 +141,7 @@ namespace SRSN.DatabaseManager.Services
                 var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
                 var ingredientRepo = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
                 var categoryRepo = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
-                var recipes = await this.Get(p => p.UserId == userId).ToListAsync();
+                var recipes = await this.Get(p => p.UserId == userId && p.Active == true).ToListAsync();
                 foreach (var recipe in recipes)
                 {
                     var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
@@ -168,19 +168,22 @@ namespace SRSN.DatabaseManager.Services
                 throw ex;
             }
         }
-        public async Task<ICollection<RecipeViewModel>> GetAllIngredientByRecipeId(int recipeId)
+        public async Task<ICollection<RecipeViewModel>> GetRecipeById(int recipeId)
         {
             // lay ra step of recipe repository
             try
             {
                 var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
+                var recipeCategoryRepo = this.unitOfWork.GetDbContext().Set<RecipeCategory>();//lấy danh sach id
+                var categoryItemRepo = this.unitOfWork.GetDbContext().Set<CategoryItem>();
                 var ingredientRepo = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
                 var recipes = await this.Get(p => p.Id == recipeId).ToListAsync();
 
                 foreach (var recipe in recipes)
                 {
                     var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipeId);
-                    var ingredient = ingredientRepo.AsNoTracking().Where(p => p.RecipeId == recipeId);
+                    var ingredients = ingredientRepo.AsNoTracking().Where(p => p.RecipeId == recipeId);
+                    var recipeCategoryIds = recipeCategoryRepo.AsNoTracking().Where(p => p.RecipeId == recipeId);//list cate item id trong recipe_category table
 
                     if (stepOfRecipeRepo.Count() > 0)
                     {
@@ -188,7 +191,16 @@ namespace SRSN.DatabaseManager.Services
                     }
                     if (ingredientRepo.Count() > 0)
                     {
-                        recipe.listIngredient = await ingredient.ProjectTo<RecipeIngredientViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                        recipe.listIngredient = await ingredients.ProjectTo<RecipeIngredientViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                    }
+                    if (categoryItemRepo.Count() > 0)
+                    {
+                        recipe.listCategory = await recipeCategoryIds.ProjectTo<RecipeCategoryViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                        foreach (var cateItem in recipe.listCategory)
+                        {
+                            var cateItemName = categoryItemRepo.AsNoTracking().Where(p => p.Id == cateItem.CategoryItemId).ProjectTo<CategoryItemViewModel>(this.mapper.ConfigurationProvider).FirstOrDefault().CategoryItemName;
+                            cateItem.CategoryItemName = cateItemName;
+                        }
                     }
 
                 }
@@ -400,6 +412,7 @@ namespace SRSN.DatabaseManager.Services
 
                     recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
+
 
                 }
                 return list;

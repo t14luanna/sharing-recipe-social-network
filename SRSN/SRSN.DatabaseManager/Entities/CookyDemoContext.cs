@@ -177,6 +177,10 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.ToTable("Collection_Post");
 
+                //entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.IsActive).HasColumnName("isActive");
+
                 entity.HasOne(d => d.Collection)
                     .WithMany(p => p.CollectionPost)
                     .HasForeignKey(d => d.CollectionId)
