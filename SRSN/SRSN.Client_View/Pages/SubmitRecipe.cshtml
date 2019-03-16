@@ -188,11 +188,10 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
-    <script src="~/js/submit-recipe.js"></script>
-
+    <script src="~/js/Configuration.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
     <script src="~/js/notification.js"></script>
-
+    <script src="~/js/submit-recipe.js"></script>
     <script type="text/javascript">
 
         const changeHeadername = async () => {
@@ -266,14 +265,12 @@
                                         "link": "/recipe/" + recipeId,
                                         "isRead": "False"
                                     });
-                                    let dbRef = firebase.database().ref("/" + chefUsername + "/");
+                                    var dbRef = firebase.database().ref('/' + chefUsername + "/" + uid);
+
+                                    //let dbRef = firebase.database().ref("/" + chefUsername + "/");
                                     //update unique key on firebase
-                                    dbRef.on("value", function (snapshot) {
-                                        snapshot.forEach(function (child) {
-                                            child.ref.update({
-                                                uid: uid.key
-                                            });
-                                        });
+                                    dbRef.update({
+                                        "uid": uid
                                     });
                                 }
                             }
