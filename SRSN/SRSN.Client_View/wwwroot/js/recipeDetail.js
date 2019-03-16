@@ -262,7 +262,7 @@ const createCateItemTags = (tag) =>
     `<li><a href="#">${tag.categoryItemName}</a></li>`;
 
 const callRecipeDetailApi = async (id) => {
-    debugger;
+    
     callIngrdientsOfRecipeApi(id);
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${id}`);
     var data = (await res.json());
@@ -540,7 +540,7 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
         var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
         var usernameLocal = window.localStorage.getItem("username");//người đang comment
 
-        var myDataRef = firebase.database().ref(chefUsername);
+        var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
         var uid = myDataRef.push({
             "uid": "",
             "username": usernameLocal,
@@ -549,7 +549,7 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
             "link": "/recipe/" + data.recipeId,
             "isRead": "False"
         });
-        let dbRef = firebase.database().ref("/" + chefUsername + "/");
+        let dbRef = SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/");
         //update unique key on firebase
         dbRef.on("value", function (snapshot) {
             snapshot.forEach(function (child) {
@@ -599,11 +599,8 @@ const openReplyView = async (cmtId, recipeId) => {
     var elements = $(`.reply-${data.username}`);
 
     if (elements[0]) {
-
         elements.remove();
-
     }
-
     let chefView = createReplyView(data, cmtId, recipeId);
     $(`li[data-user-id=${cmtId}]`).append(chefView);
 };
@@ -616,7 +613,7 @@ const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied
 
                     <div class="dropdown fa fa-ellipsis-v dropdown-custom">
                         <ul class="dropdown-menu dropdown-menu-custom">
-                          <li class="comment-owner-${replyComment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${replyComment.id},${replyComment.recipeId}, ${parentId});">Xóa</a></li>
+                          <li class="comment-owner-${replyComment.userId}"><a href="#" onclick="deactivateComment(${replyComment.id},${replyComment.recipeId}, ${parentId});">Xóa</a></li>
                           <li><a href="#">Báo cáo</a></li>
                         </ul>
                       </div>
@@ -657,7 +654,13 @@ const callGetReplyComtApi = async (parentId, recipeId) => {
     $(`.comment-owner-${userId}`).css("display", "block");
 };
 
+//This function to handle create reply comment
+// to specify comment
+// params:
+//    + recipeId: Recipe Id
+//    + commentParentId: Speicify comment id
 const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
+    // get 
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var comment = $(`textarea[name="reply-${commentParentId}"]`).val();
@@ -667,6 +670,7 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
             commentContent: comment,
             recipeCommentParentID: commentParentId
         };
+        // call api to create comment
         var res = await fetch(`${BASE_API_URL}/api/comment/createComment`, {
             method: "POST",
             body: JSON.stringify(data),
@@ -675,11 +679,15 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
                 'Authorization': `Bearer ${token}`
             }
         });
+        // if api resposne 200 ok
         if (res.status == 200) {
+            // Begin render comment link from dataCount
+            // get dataCount from server
             var dataCount = (await callCountCommentsApi(recipeId, commentParentId));
+            // use datacount to render html comment href
             $(`a[id="comment-link-${commentParentId}"]`).html(`Bình luận (${dataCount})`);
             await openReplyView(commentParentId, recipeId);
-
+            // End render comment link from dataCount
 
             //thong bao cho người chủ sở hữu recipe
             var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
@@ -687,33 +695,51 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
             if (chefUsername == usernameLocal) {
                 //do nothing
             } else {
-                var myDataRef = firebase.database().ref(chefUsername);
-                var uid = myDataRef.push({
-                    "uid": "",
-                    "username": usernameLocal,
-                    "content": "đã bình luận về bài viết của bạn.",
-                    "date": new Date().toLocaleString(),
-                    "link": "/recipe/" + data.recipeId,
-                    "isRead": "False"
-                });
-                //update uid
-                let dbRef = firebase.database().ref("/" + chefUsername + "/");
-                //update unique key on firebase
-                dbRef.on("value", function (snapshot) {
-                    snapshot.forEach(function (child) {
-                        child.ref.update({
-                            uid: uid.key
-                        });
+                try {
+                    console.log("Starting firebase")
+                    var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+                    var uid = myDataRef.push({
+                        "uid": "",
+                        "username": usernameLocal,
+                        "content": "đã bình luận về bài viết của bạn.",
+                        "date": new Date().toLocaleString(),
+                        "link": "/recipe/" + data.recipeId,
+                        "isRead": "False"
                     });
-                });
+                    //update uid
+                    let dbRef = SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/");
+                    //update unique key on firebase
+                    dbRef.on("value", function (snapshot) {
+                        
+                        console.log(snapshot);
+                        //snapshot.forEach(function (child) {
+                        //    child.ref.update({
+                        //        uid: uid.key
+                        //    });
+                        //});
+                    });
+                } catch (e) {
+                    console.error("Exception create rely comment: ", e);
+                }
             }
 
-
-
             // thong bao cho nguoi chủ comment
-            var ratingRecipeRes = await fetch(`${BASE_API_URL}/${RATING_RECIPE_API_URL}/get-ratingrecipe-by-id?commentParentId=${commentParentId}`);
-            var userRes = await ratingRecipeRes.json();
+            notifyDependencyCommentedUser(commentParentId);
+        }
+    }
+
+};
+
+const notifyDependencyCommentedUser = async function (commentParentId) {
+
+    try {
+        // thong bao cho nguoi chủ comment
+        
+        var ratingRecipeRes = await fetch(`${BASE_API_URL}/${RATING_RECIPE_API_URL}/get-ratingrecipe-by-id?commentParentId=${commentParentId}`);
+        var userRes = await ratingRecipeRes.json();
+        if (userRes.length) {
             var userId = userRes[0].userId;
+            
             var user = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
             var userParentCommentRes = await user.json();
             var userParentComment = userParentCommentRes.username;//chủ comment
@@ -721,29 +747,32 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
             if (usernameLocal == userParentComment) {
                 // do nothing
             } else {
-                var myDataRef = firebase.database().ref(userParentComment);
-                myDataRef.push({
-                    "uid": "",
-                    "username": usernameLocal,
-                    "content": "đã trả lời bình luận của bạn.",
-                    "date": new Date().toLocaleString(),
-                    "link": "/recipe/" + data.recipeId,
-                    "isRead": "False"
-                });
-                let dbRef = firebase.database().ref("/" + userParentComment + "/");
-                //update unique key on firebase
-                dbRef.on("value", function (snapshot) {
-                    snapshot.forEach(function (child) {
-                        child.ref.update({
-                            uid: uid.key
-                        });
-                    });
-                });
+                //var myDataRef = SRSN.FIREBASE_DATABASE.ref(userParentComment);
+                //myDataRef.push({
+                //    "uid": "",
+                //    "username": usernameLocal,
+                //    "content": "đã trả lời bình luận của bạn.",
+                //    "date": new Date().toLocaleString(),
+                //    "link": "/recipe/" + data.recipeId,
+                //    "isRead": "False"
+                //});
+                //let dbRef = SRSN.FIREBASE_DATABASE.ref("/" + userParentComment + "/");
+                ////update unique key on firebase
+                //dbRef.on("value", function (snapshot) {
+                //    snapshot.forEach(function (child) {
+                //        child.ref.update({
+                //            uid: uid.key
+                //        });
+                //    });
+                //});
             }
         }
+        return;
+    } catch (e) {
+        console.error("Exception notifyDependencyComments: ", e);
+        return;
     }
-
-};
+}
 
 const createShareRecipeModal = (recipe, dataUser) => `<div class="activity--list">
                     <ul class="activity--items nav">

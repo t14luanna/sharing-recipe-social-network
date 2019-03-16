@@ -1,13 +1,13 @@
 ﻿//Initialize Firebase
-var config = {
-    apiKey: "AIzaSyAD2Vqg-rHzg9WJee0Yh0VGH_i_5BQT61E",
-    authDomain: "srsnproject.firebaseapp.com",
-    databaseURL: "https://srsnproject.firebaseio.com",
-    projectId: "srsnproject",
-    storageBucket: "srsnproject.appspot.com",
-    messagingSenderId: "237911674213"
-};
-firebase.initializeApp(config);
+//var config = {
+//    apiKey: "AIzaSyAD2Vqg-rHzg9WJee0Yh0VGH_i_5BQT61E",
+//    authDomain: "srsnproject.firebaseapp.com",
+//    databaseURL: "https://srsnproject.firebaseio.com",
+//    projectId: "srsnproject",
+//    storageBucket: "srsnproject.appspot.com",
+//    messagingSenderId: "237911674213"
+//};
+//firebase.initializeApp(config);
 
 ////ko dùng dc token vì mõi lần đăng nhập thì sẽ tạo ra 1 token mới khác với token cũ mặc dù cùng 1 userid, vậy vậy dùng username lun
 //var authorization = localStorage.getItem("authorization");

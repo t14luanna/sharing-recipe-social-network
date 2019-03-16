@@ -74,6 +74,9 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(IUserFollowingService), typeof(UserFollowingService));
             services.AddScoped(typeof(IUserReactionRecipeService), typeof(UserReactionRecipeService));
             services.AddScoped(typeof(ICollectionPostService), typeof(CollectionPostService));
+            services.AddScoped(typeof(IUserReportRecipeService), typeof(UserReportRecipeService));
+            services.AddScoped(typeof(IUserReportUserService), typeof(UserReportUserService));
+
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc =>
             {
@@ -154,6 +157,12 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<UserReactionRecipeViewModel, UserReactionRecipe>()
                     .ForMember(x => x.Recipe, y => y.Ignore())
                     .ForMember(x => x.User, y => y.Ignore());
+
+                mc.CreateMap<UserReportRecipe, UserReportRecipeViewModel>();
+                mc.CreateMap<UserReportRecipeViewModel, UserReportRecipe>();
+
+                mc.CreateMap<UserReportUser, UserReportUserViewModel>();
+                mc.CreateMap<UserReportUserViewModel, UserReportUser>();
                 mc.CreateMap<CollectionPost, CollectionPostViewModel>();
                 mc.CreateMap<CollectionPostViewModel, CollectionPost>()
                     .ForMember(x => x.Collection, y => y.Ignore())

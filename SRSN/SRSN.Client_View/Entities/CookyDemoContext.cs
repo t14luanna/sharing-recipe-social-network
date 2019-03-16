@@ -158,6 +158,10 @@ namespace SRSN.Client_View.Entities
             {
                 entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.RecipeCount).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.SaveCount).HasDefaultValueSql("((0))");
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Collection)
                     .HasForeignKey(d => d.UserId)
@@ -197,12 +201,24 @@ namespace SRSN.Client_View.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.RecipeCommentParentId).HasColumnName("RecipeCommentParentID");
+
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Comment)
                     .HasForeignKey(d => d.PostId)
                     .HasConstraintName("FK_Comment_SharedPost");
+
+                entity.HasOne(d => d.RecipeCommentParent)
+                    .WithMany(p => p.Comment)
+                    .HasForeignKey(d => d.RecipeCommentParentId)
+                    .HasConstraintName("FK_Comment_RatingRecipe");
+
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.Comment)
+                    .HasForeignKey(d => d.RecipeId)
+                    .HasConstraintName("FK_Comment_Recipe");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Comment)

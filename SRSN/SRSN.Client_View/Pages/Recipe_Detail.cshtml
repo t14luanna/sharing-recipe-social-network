@@ -18,7 +18,7 @@
 
     <!-- ==== Custom Stylesheet ==== -->
     <link rel="stylesheet" href="/recipepress/css/custom.css">
-    
+
 }
 <div class="recipes-home-body inner-page">
     <div class="container">
@@ -52,9 +52,7 @@
                                 <div class="row">
                                     <div class="col-sm-7">
                                         <div class="details-tags">
-                                            <ul id="list-category-item-tags">
-                                               
-                                            </ul>
+                                            <ul id="list-category-item-tags"></ul>
                                         </div>
                                     </div>
                                     <div class="col-sm-5">
@@ -117,6 +115,16 @@
                                 </div>
 
                                 <button class="submit-comment">Đánh giá</button>
+                                <div class="dropdown" style="display: inline-block;">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="margin-bottom: 5px;">
+                                        ...
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Report this recipe</a></li>
+                                        <li><a href="#">Nothing</a></li>
+                                        <li><a href="#">Nothing</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
@@ -245,10 +253,9 @@
 @section Scripts {
 
     <script src="~/js/recipeDetail.js"></script>
-    <script type="text/javascript" src="recipepress/js/plugins.min.js"></script>
-    <script type="text/javascript" src="recipepress/js/color-switcher.min.js"></script>
-    <script type="text/javascript" src="recipepress/js/main.js"></script>
-    <script type="text/javascript" src="~/js/Configuration.js"></script>
+    <script type="text/javascript" src="/recipepress/js/plugins.min.js"></script>
+    <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
+    <script type="text/javascript" src="/recipepress/js/main.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript">
         // fetch and render element to html
@@ -317,13 +324,13 @@
 
             callListCategoryItemDetailPage();
             // Recipe slider variation two
-            $('.slider-detail2').slick({
-                autoplay: true,
-                infinite: true,
-                pauseOnHover: true,
-                prevArrow: $('.left-arrow'),
-                nextArrow: $('.right-arrow')
-            });
+            //$('.slider-detail2').slick({
+            //    autoplay: true,
+            //    infinite: true,
+            //    pauseOnHover: true,
+            //    prevArrow: $('.left-arrow'),
+            //    nextArrow: $('.right-arrow')
+            //});
             $('dl.accordion dt').on("click", function () {
                 $(this).siblings('dt').removeClass('current');
                 $(this).addClass('current').next('dd').stop(true, true).slideDown(500).siblings('dd').stop(true, true).slideUp(500);
@@ -380,7 +387,7 @@
                 $("#modal-add-collection").css("display", "none");
             }
             if (event.target.className == 'modal-product-item') {
-                
+
                 let listCheckedItem = [];
                 $("input[name=ingredient]:checked").each(function () {
                     listCheckedItem.push(this.value);
@@ -417,6 +424,9 @@
             var comment = $("textarea[name='comment']").val();
             callCreateRatingRecipe2Api(@(RouteData.Values["recipe_id"]), star, comment);
         });
+        $(".other").on("click", function () {
+
+        });
         async function toggleLikeButton(x) {
             try {
                 var token = JSON.parse(localStorage.getItem('authorization')).token;
@@ -435,7 +445,7 @@
                     var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
                     var usernameLocal = window.localStorage.getItem("username");//người đang like
 
-                    var myDataRef = firebase.database().ref(chefUsername);
+                    var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                     myDataRef.push({
                         "username": usernameLocal,
                         "content": "đã thích công thức của bạn.",
@@ -456,8 +466,8 @@
 
         callIsLikeRecipe(@(RouteData.Values["recipe_id"]));
 
-        var textarea = document.querySelector('.textarea-caption');
-        textarea.addEventListener('keydown', autosize);
+        //var textarea = document.querySelector('.textarea-caption');
+        //textarea.addEventListener('keydown', autosize);
 
         function autosize() {
             var el = this;
@@ -469,7 +479,7 @@
             }, 0);
         }
 
-      
+
 
     </script>
     <script async defer
@@ -495,6 +505,10 @@
         }
 
     </script>
+    <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
+    <script src="~/js/recipe.js"></script>
+    <script src="~/js/user-report.js"></script>
 }
-<script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
-<script src="~/js/recipe.js"></script>
+@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>*@

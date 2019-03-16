@@ -553,7 +553,6 @@ namespace SRSN.DatabaseManager.Services
             try
             {
                 var list = new List<RecipeViewModel>();
-                System.Diagnostics.Debug.WriteLine("chipcaber: " + categoryName);
                 var listItems = this.selfDbSet.AsNoTracking().FromSql("Select Recipe.* FROM Recipe " +
                     "INNER JOIN Recipe_Category ON Recipe.Id = Recipe_Category.RecipeId " +
                     "INNER JOIN CategoryItem ON Recipe_Category.CategoryItemId = CategoryItem.Id " +

@@ -393,3 +393,9 @@ input[name=ingredient] {
 .user-comment{
     border-radius: 50%
 }
+a{
+    color: black!important
+}
+#list-category-item-tags li a:hover{
+    color: white!important
+}

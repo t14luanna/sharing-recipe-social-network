@@ -19,5 +19,19 @@ var USER_FOLLOWING_API_URL = "api/userfollowing";
 var USER_REACTION_RECIPE_API_URL = "api/userreactionrecipe";
 
 var GOOGLE_API_KEY = "AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo";
-
 var RECIPE_LEVEL_ENUM = ["", "Dễ", "Trung bình", "Khó"];
+
+
+var _firebaseConfig = {
+    apiKey: "AIzaSyAD2Vqg-rHzg9WJee0Yh0VGH_i_5BQT61E",
+    authDomain: "srsnproject.firebaseapp.com",
+    databaseURL: "https://srsnproject.firebaseio.com",
+    projectId: "srsnproject",
+    storageBucket: "srsnproject.appspot.com",
+    messagingSenderId: "237911674213"
+};
+firebase.initializeApp(_firebaseConfig);
+
+window.SRSN = window.SRSN || {};
+SRSN.FIREBASE_DATABASE = SRSN.FIREBASE_DATABASE || {};
+SRSN.FIREBASE_DATABASE = firebase.database();
