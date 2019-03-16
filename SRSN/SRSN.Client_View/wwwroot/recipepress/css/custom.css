@@ -311,3 +311,36 @@
 .dropdown-menu-custom li a:hover {
     margin-left: 0px!important
 }
+input[name=ingredient]::after {
+    /*display: inline-block;*/
+    content: "";
+    background: #c8b8ad;
+    border-radius: 3px;
+    width: 15px;
+    height: 15px;
+    margin-right: 15px
+}
+input[name=ingredient] {
+    margin-right: 15px;
+    
+}
+.ingre-name-item{
+    cursor: pointer
+}
+.alert-success, .alert-comment {
+    padding: 10px;
+    display: block
+
+}
+#logoutBtn{
+    cursor: pointer
+}
+.comment-post-container{
+    margin-bottom: 0px!important
+}
+.main-content-custom{
+    background-color: white
+}
+.user-comment{
+    border-radius: 50%
+}

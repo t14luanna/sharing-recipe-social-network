@@ -21,7 +21,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
             </div>
             <ul class="recipe-specs-2">
                 <li><span>Khẩu phần : </span>${recipe.serving}</li>
-                <li><span>Thời gian nấu : </span>${recipe.cookTime}</li>
+                <li><span>Thời gian nấu : </span>${recipe.cookTime} phút</li>
                 <li><span>Độ khó : </span>${RECIPE_LEVEL_ENUM[recipe.levelRecipe]}</li>
             </ul>
         </div>
@@ -35,7 +35,7 @@ const createContentRecipe = (recipe) =>
 const createSingleIngredientOfRecipe = (ingredient) =>
     ` <li class="col-sm-3">
         <label>
-            <input type="checkbox" value="${ingredient.recipeId}-${ingredient.ingredientName}" name="ingredient"/>${ingredient.quantitative} ${ingredient.ingredientName}
+            <input type="checkbox" value="${ingredient.recipeId}-${ingredient.ingredientName}" name="ori-ingredient"/>${ingredient.quantitative} ${ingredient.ingredientName}
         </label>
     </li>`;
 const createNumSteps = (num) =>
@@ -107,33 +107,40 @@ const createSingleRecipeDetailElement = (recipe) =>
             <span class="post-date">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</span>
         </div>
     </li>`;
+//const createProductItemElement = (product) =>
+//    `<li class="modal-product-item" data-product-id="${product.id}" data-product-name="${product.ingredientName}">${product.ingredientName}</li>`;
 const createProductItemElement = (product) =>
-    `<li class="modal-product-item" data-product-id="${product.id}" data-product-name="${product.ingredientName}">${product.ingredientName}</li>`;
+    `<li class="col-sm-12 item-checked-ingre">
+        <label class="ingre-name-item">
+            <input type="checkbox" value="${product.ingredientName}" name="ingredient" class="modal-product-item" data-product-id="${product.id}" data-product-name="${product.ingredientName}">${product.ingredientName}
+        </label>
+    </li>`;
+//const createCheckedItemElement = (product) =>
+//    `<li class="modal-product-item" data-product-id="${product}" data-product-name="${product}">${product}</li>`;
 const createCheckedItemElement = (product) =>
-    `<li class="modal-product-item" data-product-id="${product}" data-product-name="${product}">${product}</li>`;
-const createSingleRatingComment = (comment, commentReplyCount) =>
+    `<li class="col-sm-12 item-checked-ingre">
+        <label class="ingre-name-item">
+            <input type="checkbox" value="${product}" name="ingredient" class="modal-product-item" data-product-id="${product}" data-product-name="${product}">${product}
+        </label>
+    </li>`;
+const createSingleRatingComment2 = (comment, commentReplyCount) =>
     `<li data-user-id="${comment.id}" name="main-comment">
-       
         <div class="avatar">
-
             <a href="#"><img class="avatar-comment" src="${comment.avatarUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" /></a>
         </div>
         <div class="comment">
-            
-<h5><a href="#">${comment.fullName}</a></h5>
-            <span class="time">${comment.createTime}</span>
-<div class="dropdown fa fa-ellipsis-v dropdown-custom">
-    <ul class="dropdown-menu dropdown-menu-custom">
-      <li class="comment-owner-${comment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${comment.id})">Xóa</a></li>
-      <li><a href="#">Báo cáo</a></li>
-    </ul>
-  </div>
-                    <span class="rating-figure comment-rating-star">4.5 / 5 <i class="fa fa-star" aria-hidden="true"></i>
-                    </span>
-           
+            <h5><a href="#">${comment.fullName}</a></h5>
+            <span class="time">${comment.ratingTime}</span>
+            <div class="dropdown fa fa-ellipsis-v dropdown-custom">
+                <ul class="dropdown-menu dropdown-menu-custom">
+                    <li class="comment-owner-${comment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${comment.id})">Xóa</a></li>
+                    <li><a href="#">Báo cáo</a></li>
+                </ul>
+            </div>
+            <span class="rating-figure comment-rating-star">${comment.ratingRecipe} / 5 <i class="fa fa-star" aria-hidden="true"></i></span>
             </span>
             <p>
-                ${comment.contentRating}
+                ${comment.ratingContent}
             </p>
                 <a href="#/" id="comment-link-${comment.id}" onclick="openReplyView(${comment.id}, ${comment.recipeId})" class="reply-button">Bình luận (${commentReplyCount})</a>                        
         </div>
@@ -265,6 +272,7 @@ const callRecipeDetailApi = async (id) => {
 };
 const callReadRatingCommentApi = async (id) => {
     //tim user dựa theo userid để biết comment của ai, thì người đó có thể xóa comment
+    
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
@@ -277,8 +285,8 @@ const callReadRatingCommentApi = async (id) => {
     var user = await resUser.json();
     var userId = user.id;
     //
-    var res = await fetch(`${BASE_API_URL}/api/RatingRecipe/read-rating?recipeId=${id}`);
-    var data = (await res.json());
+    var res = await fetch(`${BASE_API_URL}/${USER_REACTION_RECIPE_API_URL}/read-reactions?recipeId=${id}`);
+    var data = (await res.json()).data;
     var count = 0;
     for (var item of data) {
         var dataCount = (await callCountCommentsApi(id, item.id));
@@ -287,7 +295,7 @@ const callReadRatingCommentApi = async (id) => {
         var hr = date.getHours();
         var min = date.getMinutes();
         item.createTime = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
-        var element = createSingleRatingComment(item, dataCount)
+        var element = createSingleRatingComment2(item, dataCount)
         $("#list-rating-comment").append(element);
     }
     $("#numOfComment").append(count);
@@ -302,7 +310,7 @@ const callReadProductByIngredientNameApi = async () => {
     try {
         //var res = await fetch(`${BASE_API_URL}/${PRODUCT_API_URL}/read-by-ingredient-name?name=${name}`);
         //var data = (await res.json());
-        var itemIngre = $(`.modal-product-item`);
+        var itemIngre = $(`.item-checked-ingre`);
         if (itemIngre[0]) {
 
             itemIngre.remove();
@@ -319,14 +327,14 @@ const callReadProductByIngredientNameApi = async () => {
 
 const getCheckedIngredient = async () => {
     try {
-        var itemIngre = $(`.modal-product-item`);
+        var itemIngre = $(`.item-checked-ingre`);
         if (itemIngre[0]) {
 
             itemIngre.remove();
 
         }
         let listCheckedIngredient = [];
-        $("input[name=ingredient]:checked").each(function () {
+        $("input[name=ori-ingredient]:checked").each(function () {
             listCheckedIngredient.push(this.value.split("-")[1]);
         });
         for (var item of listCheckedIngredient) {
@@ -410,37 +418,51 @@ const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
 };
 const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredientNames) => {
     setMapOnAll(null);
-    var data = {
-        userLat: userLat,
-        userLong: userLong,
-        ingredientNames: ingredientNames
-    };
-    var res = await fetch(`${BASE_API_URL}/api/product/read-list-ingredient-nearby-store`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
-    var dataPos = await res.json();
-    setMapOnAll(null);
-    for (var item of dataPos) {
-        var itemLatLng = { lat: item.lat, lng: item.long };
-        var marker = new google.maps.Marker({
-            position: itemLatLng,
-            icon: {
-                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-                scaledSize: new google.maps.Size(35, 35),
+    for (var ingre of ingredientNames) {
+        $(`input[value='${ingre}']`).prop("checked", true);
+    }
+    var nostores = $(`.warning-no-stores`);
+    if (nostores[0]) {
+
+        nostores.remove();
+
+    }
+    if (ingredientNames.length > 0) {
+        var data = {
+            userLat: userLat,
+            userLong: userLong,
+            ingredientNames: ingredientNames
+        };
+        var res = await fetch(`${BASE_API_URL}/api/product/read-list-ingredient-nearby-store`, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
             }
         });
-        var itemName = item.name + " (" + item.address + " )";
+        var dataPos = await res.json();
+        setMapOnAll(null);
+        if (dataPos.length > 0) {
+            for (var item of dataPos) {
+                var itemLatLng = { lat: item.lat, lng: item.long };
+                var marker = new google.maps.Marker({
+                    position: itemLatLng,
+                    icon: {
+                        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                        scaledSize: new google.maps.Size(35, 35),
+                    }
+                });
+                var itemName = item.name + " (" + item.address + " )";
 
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        addInfoWindow(marker, itemName);
-        marker.setMap(map);
-        markers.push(marker);
-
-        
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                addInfoWindow(marker, itemName);
+                marker.setMap(map);
+                markers.push(marker);
+            }
+        } else {
+           
+            $(".box-search-ingre").append("<h6 class='warning-no-stores'>Không có cửa hàng gần bạn bán những sản phẩm này</h6>")
+        }
     }
 };
 function addInfoWindow(marker, message) {
@@ -453,25 +475,41 @@ function addInfoWindow(marker, message) {
         infoWindow.open(map, marker);
     });
 };
-const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
+const alertSucces = () =>
+    `<p class="alert green alert-success">Đăng đánh giá thành công!<span class="close-alert"><i class="fa fa-close"></i></span></p>`;
+const alertStarWarning = () =>
+    `<p class="alert red alert-comment">Bạn chưa chọn mức sao đánh giá (rating).<span class="close-alert"><i class="fa fa-close"></i></span></p>`;
+const alertRatedWarning = () =>
+    `<p class="alert red alert-comment">Bạn đã rating công thức này trước đây<span class="close-alert"><i class="fa fa-close"></i></span></p>`;
+const alertLoginWarning = () =>
+    `<p class="alert red alert-comment">Hãy đăng nhập để đánh giá bài viết<span class="close-alert"><i class="fa fa-close"></i></span></p>`;
+function removeAlert() {
+    var alertItem = $(`.alert`);
+    if (alertItem[0]) {
+
+        alertItem.remove();
+
+    }
+}
+const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     if (!star) {
-        $(".alert-comment").css("display", "block");
-        $(".alert-comment").html("Bạn chưa chọn mức sao đánh giá (rating)");
+        removeAlert();
+        $(".form-rating-recipe").append(alertStarWarning);
         return;
     }
     if (!token) {
-        $(".alert-comment").css("display", "block");
-        $(".alert-comment").html("Hãy đăng nhập để đánh giá bài viết");
+        removeAlert();
+        $(".form-rating-recipe").append(alertLoginWarning);
         return;
     }
     var data = {
         recipeId: recipeId,
-        contentRating: comment,
-        star: star
+        ratingContent: comment,
+        ratingRecipe: star
     };
-    var res = await fetch(`${BASE_API_URL}/api/ratingrecipe/create-rating`, {
+    var res = await fetch(`${BASE_API_URL}/${USER_REACTION_RECIPE_API_URL}/create-rating`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -480,8 +518,14 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
         }
     });
     if (res.status == 200) {//successfully
-        $(".alert-success").css("display", "block");
+        $(".form-rating-recipe").append(alertSucces);
         $("textarea[name='comment']").val('');
+        var itemIngre = $(`li[name=main-comment]`);
+        if (itemIngre[0]) {
+
+            itemIngre.remove();
+
+        }
         callReadRatingCommentApi(recipeId);
 
         //them data vao firebase
@@ -490,7 +534,7 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
 
         var myDataRef = firebase.database().ref(chefUsername);
         var uid = myDataRef.push({
-            "uid" : "",
+            "uid": "",
             "username": usernameLocal,
             "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
             "date": new Date().toLocaleString(),
@@ -506,7 +550,10 @@ const callCreateRatingRecipeApi = async (recipeId, star, comment) => {
                 });
             });
         });
-
+    } else if (res.status == 400) {
+        removeAlert();
+        $(".form-rating-recipe").append(alertRatedWarning);
+        return;
     }
 };
 const createReplyView = (replyUser, cmtId, recipeId) => `<ul class="reply-${replyUser.username}">
@@ -558,8 +605,6 @@ const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied
                         <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="avatar"/></a>
                     </div>
                     <div class="comment">
-
-<i class="fa fa-close icon-delete" onclick="deactivateComment(comment)" ></i>
                         <h5><a href="#">${replyComment.fullName}</a></h5><span class="time">${replyComment.createTime}</span>
 
                         <p>${replyComment.commentContent}</p>
@@ -830,3 +875,20 @@ function setMapOnAll(map) {
         markers[i].setMap(map);
     }
 }
+const callGetViewRecipe = async (recipeId) => {
+    try {
+        var authorization = localStorage.getItem("authorization");
+        var token = (JSON.parse(authorization))["token"];
+        var res = await fetch(`${BASE_API_URL}/api/UserReactionRecipe/view?recipeId=${recipeId}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+    } catch (e) {
+        console.log("Is not liked")
+    }
+
+};
+

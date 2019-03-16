@@ -64,7 +64,7 @@ var createSingleLatestRecipeElementPage = (recipe) =>
                                     <div class="meta-listing">
                                         <ul class="post-meta">
                                             <li class="author"><a href="#">${recipe.fullName}</a></li>
-                                            <li class="calendar" id="createTime">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</li>
+                                            <li class="calendar" id="createTime">${ new Date(recipe.createTime).getDate()}/${new Date(recipe.createTime).getMonth() + 1}/${new Date(recipe.createTime).getFullYear()}</li>
                                         </ul>
                                         <div class="rating-box">
                                             <span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="

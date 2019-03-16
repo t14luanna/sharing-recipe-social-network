@@ -243,6 +243,33 @@ namespace SRSN.ClientApi.Controllers
                 });
             }
         }
+
+        [HttpGet("reset-password")]
+        [Authorize]
+        public async Task<ActionResult> RegetPassword([FromBody]string username)
+        {
+            //ClaimsPrincipal claims = this.User;
+            //var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //var currentUser = await userManager.FindByIdAsync(userId);
+            //if(currentUser!= null) { }
+            ////var result = await userManager.ChangePasswordAsync(currentUser, data.CurrentPassword, data.NewPassword);
+            //if (result.Succeeded)
+            //{
+            //    return Ok(new
+            //    {
+            //        message = $"Ban da doi password thanh cong User co ten la: {currentUser.UserName}"
+            //    });
+            //}
+            //else
+            //{
+            //    return Ok(new
+            //    {
+            //        message = result.ToString()
+            //    });
+            //}
+            return Ok();
+        }
+
         [HttpGet("read-profile-token")]
         [AllowAnonymous]
         public async Task<ActionResult> ReadByToken()
@@ -253,8 +280,5 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(user, userVM);
             return Ok(userVM);
         }
-
-
     }
-
 }

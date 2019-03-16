@@ -311,6 +311,7 @@ namespace SRSN.ClientApi.Controllers
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.UserId = userId;
             request.CreateTime = DateTime.Now;
+            await recipeService.UpdateIsShareReaction(request.ReferencedRecipeId.Value, int.Parse(request.UserId));
             await recipeService.CreateAsync(request);
             return Ok(new
             {

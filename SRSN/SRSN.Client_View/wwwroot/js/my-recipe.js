@@ -26,7 +26,7 @@ const callRecipeByUserId = async () => {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}` 
         },
     });
     var userData = await userRes.json();

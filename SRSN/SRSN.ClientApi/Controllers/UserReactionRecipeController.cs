@@ -5,8 +5,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
+using SRSN.DatabaseManager.ViewModels;
 
 namespace SRSN.ClientApi.Controllers
 {
@@ -14,12 +18,108 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class UserReactionRecipeController : ControllerBase
     {
+        private UserManager<SRSNUser> userManager;
         private IUserReactionRecipeService selfService;
-        public UserReactionRecipeController(IUserReactionRecipeService selfService)
+
+        public UserReactionRecipeController(IUserReactionRecipeService selfService, UserManager<SRSNUser> userManager)
         {
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.selfService = selfService;
         }
+        [HttpPost("create-rating")]
+        [Authorize]
+        public async Task<ActionResult> CreateRating([FromBody]UserReactionRecipeViewModel request)
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                request.UserId = int.Parse(userId);
 
+                if (request.RatingRecipe == null || request.RatingRecipe == 0)
+                {
+                    return Ok(new
+                    {
+                        message = "Rating star please"
+                    });
+                }
+
+                var existingUserReaction = await selfService.FirstOrDefaultAsync(x => x.UserId == request.UserId && x.RecipeId == request.RecipeId);
+                request.RatingTime = DateTime.UtcNow.AddHours(7);
+                if (existingUserReaction == null)
+                {
+                    await selfService.UpdateRecipeRating(request.RecipeId, request.RatingRecipe.Value);
+                    await selfService.CreateAsync(request);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                return Ok(new
+                {
+                    message = "Rating recipe successfull"
+                });
+            } catch(Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message = "Rating recipe exception"
+                });
+            }
+        }
+        [HttpGet("read-reactions")]
+        public async Task<ActionResult> ReadReactions([FromQuery]int recipeId, [FromQuery]int limit = 100)
+        {
+            try
+            {
+                var userReactions = await selfService.Get(x => x.RecipeId == recipeId && x.RatingRecipe != null).Take(limit).ToListAsync();
+                userReactions.ForEach(x => 
+                {
+                    var currentUser = userManager.FindByIdAsync(x.UserId.ToString()).Result;
+                    x.FullName = currentUser.UserName;
+                    x.AvatarUrl = currentUser.AvatarImageUrl;
+                });
+                return Ok(new
+                {
+                    success = true,
+                    data = userReactions,
+                    message = "Read all successfull"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message = "Rating recipe exception"
+                });
+            }
+        }
+        [HttpPost("read-reaction")]
+        public async Task<ActionResult> ReadReaction([FromQuery]int recipeId)
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var userIdStr = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = int.Parse(userIdStr);
+
+                var existingUserReaction = await selfService.FirstOrDefaultAsync(x => x.UserId == userId && x.RecipeId == recipeId);
+
+                return Ok(new
+                {
+                    success = true,
+                    data = existingUserReaction,
+                    message = "Rating recipe successfull"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message = "Rating recipe exception"
+                });
+            }
+        }
         [HttpGet("like")]
         [Authorize]
         public async Task<ActionResult> LikeRecipe([FromQuery]int recipeId)
@@ -35,6 +135,30 @@ namespace SRSN.ClientApi.Controllers
                 {
                     return Ok(result);
                 } else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("view")]
+        public async Task<ActionResult> ViewRecipe([FromQuery]int recipeId)
+        {
+            try
+            {
+                // Lay ra user id tu Tokentry 
+
+                var userIdStr = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
+                var userId = int.Parse(userIdStr);
+                var result = await selfService.ViewRecipe(userId, recipeId);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else
                 {
                     return BadRequest();
                 }

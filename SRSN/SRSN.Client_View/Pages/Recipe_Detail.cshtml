@@ -91,8 +91,9 @@
                             <h3 class="lined">Leave Comment</h3>
 
                             <div class="form-rating">
-                                <p class="alert green alert-success">Đăng đánh giá thành công!<span class="close-alert"><i class="fa fa-close"></i></span></p>
-                                <p class="alert red alert-comment"><span class="close-alert"><i class="fa fa-close"></i></span></p>
+                                <div class="form-rating-recipe">
+
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="col-md-3 rating-title">Đánh giá công thức</div>
@@ -260,7 +261,13 @@
             $('.main-heading h1').append(document.createTextNode(someText));
         };
         var map, infoWindow, pos, marker;
-        function initMap() {
+        async function initMap() {
+            debugger;
+            var userAddress = (JSON.parse(window.localStorage.getItem("authorization"))).userAddress;
+            debugger;
+            var res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${userAddress}&key=${GOOGLE_API_KEY}`);
+            var data = await res.json();
+            console.log(data);
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 10.762622, lng: 106.660172 },
                 zoom: 15
@@ -330,10 +337,11 @@
         })();
 
         $("#btn-suggest-ingredients").on("click", function (e) {
-            if ($("input[name=ingredient]:checked").length > 0) {
+            setMapOnAll(null);
+            if ($("input[name=ori-ingredient]:checked").length > 0) {
                 getCheckedIngredient();
                 let listCheckedIngres = [];
-                $("input[name=ingredient]:checked").each(function () {
+                $("input[name=ori-ingredient]:checked").each(function () {
                     listCheckedIngres.push(this.value.split("-")[1]);
                 });
                 callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
@@ -378,9 +386,15 @@
                 $("#modal-add-collection").css("display", "none");
             }
             if (event.target.className == 'modal-product-item') {
-                var current = event.target;
-                var ingredientName = current.getAttribute('data-product-name');
-                callReadNearByStoresApi(pos.lat, pos.lng, ingredientName);
+                
+                let listCheckedItem = [];
+                $("input[name=ingredient]:checked").each(function () {
+                    listCheckedItem.push(this.value);
+                });
+                callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedItem);
+                //var current = event.target;
+                //var ingredientName = current.getAttribute('data-product-name');
+                //callReadNearByStoresApi(pos.lat, pos.lng, ingredientName);
             }
         }
 
@@ -407,14 +421,13 @@
         });
         $(".submit-comment").on("click", function () {
             var comment = $("textarea[name='comment']").val();
-            callCreateRatingRecipeApi(@(RouteData.Values["recipe_id"]), star, comment);
-
+            callCreateRatingRecipe2Api(@(RouteData.Values["recipe_id"]), star, comment);
         });
         async function toggleLikeButton(x) {
             try {
                 var token = JSON.parse(localStorage.getItem('authorization')).token;
                 var recipeId = @(RouteData.Values["recipe_id"]);
-                var res = await fetch(`https://localhost:44361/api/userreactionrecipe/like?recipeId=${recipeId}`, {
+                var res = await fetch(`${BASE_API_URL}/${USER_REACTION_RECIPE_API_URL}/like?recipeId=${recipeId}`, {
                     method: 'get',
                     headers: {
                         'Content-Type': 'application/json',
@@ -447,7 +460,7 @@
             }
         }
 
-        callIsLikeRecipe( @(RouteData.Values["recipe_id"]));
+        callIsLikeRecipe(@(RouteData.Values["recipe_id"]));
 
         var textarea = document.querySelector('.textarea-caption');
         textarea.addEventListener('keydown', autosize);
@@ -462,9 +475,31 @@
             }, 0);
         }
 
+      
+
     </script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo&callback=initMap">
+    </script>
+    <script type="text/javascript" async defer>
+          // This function will loop 30s if user browse enough 30s
+        // call api and let server take care about the user view behavior
+        var verifyUserInterestingCounter = 0;
+        var verifyUserInteresting = setInterval(function () {
+            ++verifyUserInterestingCounter;
+            console.log(`Verify at ${verifyUserInterestingCounter}`);
+            if (verifyUserInterestingCounter === 5) {
+                console.log(`Verify at Done`);
+                verifyUserInterestingCleaner();
+                var recipeId = @(RouteData.Values["recipe_id"]);
+                callGetViewRecipe(recipeId);
+            }
+
+        }, 1000);
+        var verifyUserInterestingCleaner = function () {
+            clearInterval(verifyUserInteresting);
+        }
+
     </script>
 }
 <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>

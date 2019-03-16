@@ -53,7 +53,7 @@ namespace SRSN.UserBehavior.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=12345678;Trusted_Connection=False;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
 
@@ -159,6 +159,10 @@ namespace SRSN.UserBehavior.Entities
             {
                 entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.RecipeCount).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.SaveCount).HasDefaultValueSql("((0))");
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Collection)
                     .HasForeignKey(d => d.UserId)
@@ -172,8 +176,6 @@ namespace SRSN.UserBehavior.Entities
                     .HasName("PK_Collection_Post_1");
 
                 entity.ToTable("Collection_Post");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.HasOne(d => d.Collection)
                     .WithMany(p => p.CollectionPost)
@@ -198,12 +200,24 @@ namespace SRSN.UserBehavior.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.RecipeCommentParentId).HasColumnName("RecipeCommentParentID");
+
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Comment)
                     .HasForeignKey(d => d.PostId)
                     .HasConstraintName("FK_Comment_SharedPost");
+
+                entity.HasOne(d => d.RecipeCommentParent)
+                    .WithMany(p => p.Comment)
+                    .HasForeignKey(d => d.RecipeCommentParentId)
+                    .HasConstraintName("FK_Comment_User_Reaction_Recipe");
+
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.Comment)
+                    .HasForeignKey(d => d.RecipeId)
+                    .HasConstraintName("FK_Comment_Recipe");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Comment)
@@ -331,11 +345,7 @@ namespace SRSN.UserBehavior.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.RecipeName).HasMaxLength(50);
-
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.VideoLink).HasMaxLength(50);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Recipe)
@@ -433,6 +443,9 @@ namespace SRSN.UserBehavior.Entities
 
             modelBuilder.Entity<UserFollowing>(entity =>
             {
+                entity.HasKey(e => new { e.UserId, e.FollowingUserId })
+                    .HasName("PK_User_Following_1");
+
                 entity.ToTable("User_Following");
 
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
@@ -471,9 +484,6 @@ namespace SRSN.UserBehavior.Entities
 
             modelBuilder.Entity<UserReactionRecipe>(entity =>
             {
-                entity.HasKey(e => new { e.UserId, e.RecipeId })
-                    .HasName("PK_User_Recipe_Point");
-
                 entity.ToTable("User_Reaction_Recipe");
 
                 entity.Property(e => e.IsLike).HasDefaultValueSql("((0))");
@@ -481,6 +491,8 @@ namespace SRSN.UserBehavior.Entities
                 entity.Property(e => e.IsShare).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.IsView).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RatingTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.UserReactionRecipe)

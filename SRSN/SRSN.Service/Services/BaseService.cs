@@ -41,12 +41,14 @@ namespace SRSN.Service.Services
         #region
         protected TEntity VMToEntity(TViewModel data)
         {
+            if(data == null) { return null; }
             var entity = new TEntity();
             var vm = mapper.Map<TViewModel, TEntity>(data, entity);
             return entity;
         }
         protected TViewModel EntityToVM(TEntity data)
         {
+            if(data == null) { return null; }
             var vm = new TViewModel();
             var entity = mapper.Map<TEntity, TViewModel>(data, vm);
             return vm;
@@ -55,6 +57,8 @@ namespace SRSN.Service.Services
         protected GEntity VMToEntity<GEntity, GViewModel>(GViewModel data)
             where GEntity : class, new()
         {
+            if (data == null) { return null; }
+
             var entity = new GEntity();
             var vm = mapper.Map<GViewModel, GEntity>(data, entity);
             return entity;
@@ -62,6 +66,8 @@ namespace SRSN.Service.Services
         protected GViewModel EntityToVM<GEntity, GViewModel>(GEntity data)
           where GViewModel : class, new()
         {
+            if (data == null) { return null; }
+
             var viewModel = new GViewModel();
             var vm = mapper.Map<GEntity, GViewModel>(data, viewModel);
             return viewModel;

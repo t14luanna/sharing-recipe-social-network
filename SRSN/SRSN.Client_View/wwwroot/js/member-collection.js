@@ -53,7 +53,6 @@ $('#upload-image').on("change", function (e) {
 
 const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-xxs-12"  >
                                                         <div class="member--item online  collection-item">
-                                                            <i class="fa fa-close icon-delete-collection" onclick="deactivateMemberCollection(${collection.id})"></i>
                                                         <div onclick="window.location='/account/collection-detail/${collection.id}'">
                                                         <div class="img-recipe-avatar">
                                                             <a class="btn-link">

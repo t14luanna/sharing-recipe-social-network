@@ -49,7 +49,7 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName);
         Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
         Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(string categoryName);
-
+        Task UpdateIsShareReaction(int recipeId, int userId);
         /// <summary>
         /// useless wil remove later
         /// </summary>
@@ -618,6 +618,30 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
+        public async Task UpdateIsShareReaction(int recipeId, int userId)
+        {
+            var recipeDbset = this.unitOfWork.GetDbContext().Set<UserReactionRecipe>();
+            var recipe = recipeDbset.Where(q => q.RecipeId == recipeId && q.UserId == userId).FirstOrDefault();
+            if(recipe == null)
+            {
+                var creatingUserReactionRecipeVM = new UserReactionRecipeViewModel()
+                {
+                    UserId = userId,
+                    RecipeId = recipeId,
+                    IsShare = true
+                };
+                var userReactionRecipe = this.VMToEntity<UserReactionRecipe, UserReactionRecipeViewModel>(creatingUserReactionRecipeVM);
+                await recipeDbset.AddAsync(userReactionRecipe);
+                await this.unitOfWork.CommitAsync();
+            }
+            else
+            {
+                recipe.IsShare = true;
+                recipeDbset.Update(recipe);
+                await this.unitOfWork.CommitAsync();
+            }
+            
+        }
     }
 }
 

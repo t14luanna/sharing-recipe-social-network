@@ -18,4 +18,6 @@ var USER_BLOCK_API_URL = "api/userblock";
 var USER_FOLLOWING_API_URL = "api/userfollowing";
 var USER_REACTION_RECIPE_API_URL = "api/userreactionrecipe";
 
+var GOOGLE_API_KEY = "AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo";
+
 var RECIPE_LEVEL_ENUM = ["", "Dễ", "Trung bình", "Khó"];

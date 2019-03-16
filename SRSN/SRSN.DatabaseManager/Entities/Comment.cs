@@ -24,7 +24,7 @@ namespace SRSN.DatabaseManager.Entities
 
         public virtual Post Post { get; set; }
         public virtual Recipe Recipe { get; set; }
-        public virtual RatingRecipe RecipeCommentParent { get; set; }
+        public virtual UserReactionRecipe RecipeCommentParent { get; set; }
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CommentLike> CommentLike { get; set; }
     }

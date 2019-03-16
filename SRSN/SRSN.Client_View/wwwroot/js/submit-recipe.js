@@ -34,7 +34,16 @@ $('.add-ingredient').on("click", function (event) {
 
     event.preventDefault();
 });
+function bindMajesticItem() {
 
+    /* Bind click event to remove detail icon button */
+
+    $('.del-list').on("click", function (event) {
+        event.preventDefault();
+        var $this = $(this);
+        $this.closest('li').slideUp(function () { $(this).remove(); });
+    });
+}
 function openTab(tab) {
     var i;
     var x = document.getElementsByClassName("city");

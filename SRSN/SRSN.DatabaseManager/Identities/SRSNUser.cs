@@ -69,6 +69,7 @@ namespace SRSN.DatabaseManager.Identities
             return new
             {
                 token = tokenString,
+                userAddress = user.Address,
                 validTo = token.ValidTo,
                 validFrom = token.ValidFrom
             };

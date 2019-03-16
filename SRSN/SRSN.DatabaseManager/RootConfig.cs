@@ -152,7 +152,6 @@ namespace SRSN.DatabaseManager
 
                 mc.CreateMap<UserReactionRecipe, UserReactionRecipeViewModel>();
                 mc.CreateMap<UserReactionRecipeViewModel, UserReactionRecipe>()
-                    .ForMember(x => x.RatingRecipe, y => y.Ignore())
                     .ForMember(x => x.Recipe, y => y.Ignore())
                     .ForMember(x => x.User, y => y.Ignore());
                 mc.CreateMap<CollectionPost, CollectionPostViewModel>();
