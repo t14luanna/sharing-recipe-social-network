@@ -46,7 +46,7 @@
 
                                 <!-- Load More Button Start -->
                                 <div class="load-more--btn pt--30 text-center">
-                                    <a href="#" class="btn btn-animate">
+                                    <a href="javascript:void()" onclick="getMoreNewFeeds()" class="btn btn-animate">
                                         <span>See More Activities<i class="fa ml--10 fa-caret-right"></i></span>
                                     </a>
                                 </div>
@@ -270,6 +270,13 @@
             });
 
         })();
+
+        var newsFeedGetMorePage = 0;
+        var newsFeedGetMoreLimit = 10;
+        function getMoreNewFeeds() {
+            debugger;
+            callNewsfeedPageApi(newsFeedGetMoreLimit, ++newsFeedGetMorePage);
+        };
 
         window.onclick = function (event) {
             if (event.target.id == "modal-share-post") {

@@ -213,5 +213,33 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("get-like-share-count")]
+        public async Task<ActionResult> GetLikeAndShareCount([FromQuery]int recipeId)
+        {
+            try
+            {
+                var like = await selfService.Get(x => x.RecipeId == recipeId && x.IsLike == true).ToListAsync();
+                var share = await selfService.Get(x => x.RecipeId == recipeId && x.IsShare == true).ToListAsync();
+                var comment = await selfService.CommentCount(recipeId);
+                if (like != null)
+                {
+                    return Ok(new
+                    {
+                        success = true,
+                        likeCount = like.Count(),
+                        shareCount = share.Count(),
+                        commentCount = comment
+                    });
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

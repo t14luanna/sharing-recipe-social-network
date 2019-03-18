@@ -109,6 +109,11 @@ namespace SRSN.ClientApi.Controllers
         {
             return Ok(commentService.Get(p => p.RecipeId == recipeId && p.RecipeCommentParentId == recipeParentId && p.Active == true).Count());
         }
-        
+
+        [HttpGet("get-comment-by-recipeId")]
+        public ActionResult GetAllCommentByRecipeId(int recipeId)
+        {
+            return Ok(commentService.GetAllCommentByRecipeId(this.userManager, recipeId));
+        }
     }
 }

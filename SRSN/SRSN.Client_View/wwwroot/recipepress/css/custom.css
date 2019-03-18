@@ -246,15 +246,23 @@
 }
 
 .newsfeeds-social-icons {
-    float: right;
-    margin-top: 10px;
+    display: inline-block;
+    width: 49%;
 }
 
     .newsfeeds-social-icons a {
+        float:right;
         margin-right: 5px;
         cursor: pointer
     }
-
+.details-social-icons {
+    margin-top: 20px;
+    display: inline-block;
+    width: 100%;
+}
+.newsfeeds-social-icons:nth-child(2){
+    float: right
+}
 .custom-grid {
     margin: 0px !important
 }
@@ -404,4 +412,196 @@ a{
 }
 .comment-rating-star, .dropdown-custom{
     display: inline-block;
+}
+.comment-newsfeeds{
+    padding: 0px!important
+}
+.acomment--item-newsfeed {
+    border: none;
+    padding-bottom: 5px;
+    padding-top: 10px;
+    border-bottom: 1px solid #eae6e4;
+    margin-top: 0px !important
+}
+.link--title p{
+    font-size: 20px;
+    font-weight: 600;
+}
+.activity--items > li + li{
+    margin-top: 15px;
+}
+.modal-body-share-post{
+    list-style-type: none
+}
+.activity--header p a {
+    color: #555;
+    font-weight: 700;
+}
+
+.activity--header .fa-smile-o {
+    color: #ec407a;
+}
+
+.activity--meta {
+    margin-top: 1px;
+}
+
+    .activity--meta .fa {
+        margin-left: 1px;
+    }
+
+.activity--avatar {
+    float: left;
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+    .activity--avatar:before {
+        content: " ";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #1da1f2;
+        opacity: 0.3;
+        z-index: -1;
+    }
+
+    .activity--avatar img {
+        display: block;
+        margin: 5px;
+        border-radius: 50%;
+    }
+
+.activity--info {
+    overflow: hidden;
+}
+
+.activity--items > li {
+    float: none;
+}
+
+    .activity--items > li + li {
+        margin-top: 30px;
+    }
+
+        .activity--items > li + li .activity--avatar {
+            margin-top: 24px;
+        }
+
+        .activity--items > li + li .activity--info {
+            padding-top: 24px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+.activity--content {
+    margin-top: 14px;
+}
+
+    .activity--content .img--embed {
+        max-width: 250px;
+    }
+
+    .activity--content .img--embed-full {
+        max-width: none;
+    }
+
+.activity--item .activity--content a {
+    color: #555;
+}
+
+.activity--item .activity--content .btn-link {
+    color: #1da1f2;
+    font-style: italic;
+}
+
+.activity--action {
+    margin-top: 6px;
+}
+.link--embed {
+    position: relative;
+    margin: 3px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    z-index: 0;
+}
+
+.link--url {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.link--video {
+    position: relative;
+    z-index: 0;
+}
+
+    .link--video:before {
+        content: "\f04b";
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        width: 55px;
+        margin: -27.5px auto 0;
+        padding-top: 2px;
+        padding-left: 4px;
+        color: #1da1f2;
+        background-color: #fff;
+        border-radius: 50%;
+        font-family: "FontAwesome" !important;
+        font-size: 18px;
+        line-height: 53px;
+        text-align: center;
+        z-index: 1;
+    }
+
+    .link--video:after {
+        content: " ";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 70px;
+        height: 70px;
+        margin: -35px auto 0;
+        background-color: #1da1f2;
+        border-radius: 50%;
+        opacity: 0.5;
+        z-index: 0;
+    }
+
+.link--info {
+    padding: 14px 20px 13px;
+}
+
+.link--desc {
+    margin-top: 7px;
+}
+
+.link--rel {
+    margin-top: 7px;
+}
+.reply-newsfeed-comment:before {
+    font-family: FontAwesome;
+    content: "\f100";
+    font-style: normal;
+    margin-right: 5px;
+}
+.reply-newsfeed-comment {
+    float: right;
+    font-family: 'Lora', serif !important;
+    font-style: italic;
 }

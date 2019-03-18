@@ -24,7 +24,7 @@ namespace SRSN.UserBehavior.CollaborativeFilteringCore
                 var sharePoint = (item.IsShare ?? false) ? 5 : 0;
                 var likePoint = (item.IsLike ?? false) ? 5 : 0;
                 var viewPoint = (item.IsView ?? false) ? 5 : 0;
-                var ratingPoint = item.RatingRecipe;
+                var ratingPoint = item.RatingRecipe == null ? 0 : item.RatingRecipe;
                 var calculatedRating = (((ratingPoint - baseRating) * (maxRating / (maxRating - baseRating))) + sharePoint + likePoint + viewPoint) / 4;
                 item.CalculatedRating = calculatedRating;
                 userRecipePointService.Update(item);

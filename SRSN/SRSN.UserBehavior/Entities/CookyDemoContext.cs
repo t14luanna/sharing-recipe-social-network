@@ -486,6 +486,8 @@ namespace SRSN.UserBehavior.Entities
             {
                 entity.ToTable("User_Reaction_Recipe");
 
+                entity.Property(e => e.CalculatedRating).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.IsLike).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.IsShare).HasDefaultValueSql("((0))");

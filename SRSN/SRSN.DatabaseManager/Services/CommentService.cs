@@ -17,6 +17,7 @@ namespace SRSN.DatabaseManager.Services
     {
         Task DeActiveComment(int id);
         Task<ICollection<CommentViewModel>> GetAllCommentByParentCommentId(UserManager<SRSNUser> userManager, int recipeId, int recipeParentId);
+        Task<ICollection<CommentViewModel>> GetAllCommentByRecipeId(UserManager<SRSNUser> userManager, int recipeId);
     }
 
     public class CommentService : BaseService<Comment, CommentViewModel>, ICommentService
@@ -66,6 +67,35 @@ namespace SRSN.DatabaseManager.Services
         {
             var post = this.unitOfWork.GetDbContext().Set<Comment>().Where(x => x.PostId == postId && x.Active == true);
             return post;
+        }
+
+        public async Task<ICollection<CommentViewModel>> GetAllCommentByRecipeId(UserManager<SRSNUser> userManager, int recipeId)
+        {
+            try
+            {
+                var list = new List<CommentViewModel>();
+                var listItems = this.selfDbSet.AsNoTracking().Where(p => p.RecipeId == recipeId && p.Active == true).ToList();
+                foreach (var item in listItems)
+                {
+                    // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.UserName}";
+
+                    // apply automapper 
+                    var commentViewModel = this.EntityToVM(item);
+                    // da co duoc du lieu cua entity trong view model cap nhat them vai field dac biet nhu la fullname chi viewmodel moi co
+                    commentViewModel.FullName = fullName;
+                    commentViewModel.AvatarUrl = currentUser.AvatarImageUrl;
+                    list.Add(commentViewModel);
+
+                }
+                return list;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

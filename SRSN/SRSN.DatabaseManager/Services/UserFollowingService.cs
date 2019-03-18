@@ -8,6 +8,7 @@ using SRSN.Service.Repositories;
 using SRSN.Service.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,8 @@ namespace SRSN.DatabaseManager.Services
 {
     public interface IUserFollowingService : IBaseService<UserFollowing, AccountViewModel>
     {
+        Task<ICollection<int>> GetAllFollowingUser(int userid);
+
         Task<ICollection<AccountViewModel>> getAllFollowingUser(UserManager<SRSNUser> userManager, int userid);
         Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
         Task<ICollection<AccountViewModel>> getAllUserFollowingMe(UserManager<SRSNUser> userManager, int followingUserId);//get all user who is following me
@@ -102,6 +105,13 @@ namespace SRSN.DatabaseManager.Services
             }
 
             return listAccount;
+        }
+
+        public async Task<ICollection<int>> GetAllFollowingUser(int userid)
+        {
+            var listItems = this.selfDbSet.AsNoTracking().Where(x => x.UserId == userid);
+            var listIds = await listItems.Select(x => x.FollowingUserId).ToListAsync();
+            return listIds;
         }
     }
 }

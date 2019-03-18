@@ -16,6 +16,7 @@ namespace SRSN.DatabaseManager.Services
     {
         Task<UserReactionRecipeViewModel> LikeRecipe(int userId, int recipeId);
         Task<UserReactionRecipeViewModel> ViewRecipe(int userId, int recipeId);
+        Task<int> CommentCount( int recipeId);
         Task UpdateRecipeRating(int recipeId, double ratingRecipe);
     }
     public class UserReactionRecipeService : BaseService<UserReactionRecipe, UserReactionRecipeViewModel>, IUserReactionRecipeService
@@ -127,6 +128,14 @@ namespace SRSN.DatabaseManager.Services
             recipeDbset.Update(recipe);
             await this.unitOfWork.CommitAsync();
 
+        }
+
+        public async Task<int> CommentCount(int recipeId)
+        {
+            var recipeDbset = this.unitOfWork.GetDbContext().Set<Comment>();
+            var recipe = await recipeDbset.FindAsync(recipeId);
+            var commentCount = recipeDbset.Where(p => p.RecipeId == recipeId).Count();
+            return commentCount;
         }
     }
 }

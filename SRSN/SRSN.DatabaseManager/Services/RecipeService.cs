@@ -50,16 +50,8 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
         Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(string categoryName);
         Task UpdateIsShareReaction(int recipeId, int userId);
-        /// <summary>
-        /// useless wil remove later
-        /// </summary>
-        /// <param name="recipeVM"></param>
-        /// <returns></returns>
-        /// <summary>
-        /// useless wil remove later
-        /// </summary>
-        /// <param name="recipeVM"></param>
-        /// <returns></returns>
+        
+
     }
 
 

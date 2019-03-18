@@ -26,12 +26,14 @@ namespace SRSN.ClientApi.Controllers
         private string userRecipeRecommendPrefix = "RCS_User_";
 
         private IRecipeService recipeService;
+        private IUserFollowingService userFollowingService;
         private UserManager<SRSNUser> userManager;
         private IDatabase redisDatabase;
         private IMapper mapper;
-        public RecipeController(IRecipeService recipeService, UserManager<SRSNUser> userManager, IMapper mapper)
+        public RecipeController(IRecipeService recipeService, IUserFollowingService userFollowingService, UserManager<SRSNUser> userManager, IMapper mapper)
         {
             this.recipeService = recipeService;
+            this.userFollowingService = userFollowingService;
             this.userManager = userManager;
             this.redisDatabase = RedisUtil.Connection.GetDatabase();
             this.mapper = mapper;
@@ -127,24 +129,66 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpGet("newsfeed")]
-        public async Task<ActionResult> ReadRecommendRecipes()
+        public async Task<ActionResult> ReadRecommendRecipes([FromQuery]int limit = 10, [FromQuery]int page = 0)
         {
             try
             {
                 ClaimsPrincipal claims = this.User;
-                var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var key = $"{userRecipeRecommendPrefix}{userId}";
+                var userIdStr = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = 0;
+                int.TryParse(userIdStr, out userId);
+
+                var key = $"{userRecipeRecommendPrefix}{userIdStr}";
+
+                // take limit from redis
                 var datas = await redisDatabase.SortedSetRangeByScoreWithScoresAsync(key);
-                var listRecipe = new List<RecipeViewModel>();
-                foreach (var data in datas)
+                var dataIds = datas.Select(x => 
                 {
                     int recipeId = 0;
-                    int.TryParse(data.Element, out recipeId);
-                    var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
-                    var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
-                    recipe.AccountVM = new AccountViewModel();
-                    mapper.Map(recipeUserID, recipe.AccountVM);
-                    listRecipe.Add(recipe);
+                    int.TryParse(x.Element, out recipeId);
+                    return recipeId;
+                });
+                // Get all user following ids
+                var listUserFollowingId = await userFollowingService.GetAllFollowingUser(userId);
+
+
+                dataIds = dataIds.Skip(page * limit).Take(limit).ToList();
+                var listRecipe = new List<RecipeViewModel>();
+                foreach (var recipeId in dataIds)
+                {
+                    var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true);
+                    if (recipe != null)
+                    {   
+                        if(listUserFollowingId.Contains(int.Parse(recipe.UserId)))
+                        {
+                            var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
+                            recipe.AccountVM = new AccountViewModel();
+                            mapper.Map(recipeUserID, recipe.AccountVM);
+                            listRecipe.Add(recipe);
+                        }
+                    }
+                }
+
+                if(listRecipe.Count < limit)
+                {
+                    var currentPage = (page) - (datas.Count() / limit);
+                    var numberOfLakeData = limit - listRecipe.Count;
+                    if((currentPage*limit) < 35)
+                    {
+                        var listItems = recipeService
+                            .Get(p => p.Active == true && !dataIds.Contains(p.Id) && p.ReferencedRecipeId == null)
+                            .OrderBy(p => p.EvRating)
+                            .Skip(currentPage * limit)
+                            .Take(numberOfLakeData);
+                        foreach (var item in listItems)
+                        {
+                            // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
+                            var currentUser = await userManager.FindByIdAsync(item.UserId.ToString());
+                            item.AccountVM = new AccountViewModel();
+                            mapper.Map(currentUser, item.AccountVM);
+                            listRecipe.Add(item);
+                        }
+                    }
                 }
                 return Ok(listRecipe);
             }

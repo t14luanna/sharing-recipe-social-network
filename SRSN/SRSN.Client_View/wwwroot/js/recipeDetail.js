@@ -554,11 +554,11 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
         let dbRef = SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/");
         //update unique key on firebase
         dbRef.on("value", function (snapshot) {
-            snapshot.forEach(function (child) {
-                child.ref.update({
-                    uid: uid.key
-                });
-            });
+            //snapshot.forEach(function (child) {
+            //    child.ref.update({
+            //        uid: uid.key
+            //    });
+            //});
         });
     } else if (res.status == 400) {
         removeAlert();
@@ -782,7 +782,7 @@ const createShareRecipeModal = (recipe, dataUser) => `<div class="activity--list
                             <div class="activity--item">
                                 <div class="activity--avatar">
                                     <a href="/MemberProfile">
-                                        <img src="${dataUser.avatarImageUrl}" alt="">
+                                        <img src="${dataUser.avatarImageUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                     </a>
                                 </div>
 
