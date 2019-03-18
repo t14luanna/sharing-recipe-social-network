@@ -507,13 +507,17 @@
 
                             var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                             myDataRef.push({
+                                "uid": "",
                                 "username": usernameLocal,
-                                "content": "đã thích công thức của bạn.",
+                                "content": "đã thích Công Thức của bạn.",
                                 "date": new Date().toLocaleString(),
-                                "link": "/recipe/" + recipeId,
+                                "link": "/recipe/" + data.recipeId,
                                 "isRead": "False"
                             });
-
+                            //update uid into firebase 
+                            SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
+                                uid: uid.key
+                            });
                         }
                         else {
                             x.classList.remove("fa-heart");
