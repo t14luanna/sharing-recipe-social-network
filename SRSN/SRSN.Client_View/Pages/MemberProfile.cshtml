@@ -61,6 +61,7 @@
     <!-- ==== Custom Stylesheet ==== -->
     <link rel="stylesheet" href="~/recipepress/css/custom.css">
     <link rel="stylesheet" href="~/recipepress/css/rankuser.css">
+    <link rel="stylesheet" href="~/css/daterangepicker.css" />
 </head>
 <body>
     <!--pre-loader-->
@@ -163,9 +164,17 @@
     </header>
     <!--header ends-->
 
-    <div class="recipes-home-body inner-page">
+    <div class="recipes-home-body inner-page profile-body-container">
+
         <div class="container">
             <div class="row">
+                <div class="dropdown col-md-offset-12">
+                    <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown">
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Report người dùng</a></li>
+                    </ul>
+                </div>
                 <div class="wrapper">
                     <div class="modal fade" id="myModal" role="dialog">
                         <div class="modal-dialog">
@@ -192,96 +201,141 @@
 
                         </div>
                     </div>
-                    <div class="cover--header pt--80 text-center" data-bg-img="img/cover-header-img/bg-01.jpg" data-overlay="0.6" data-overlay-color="white">
-                        <div class="container" id="avatar-container">
+                    <div class="cover--header pt--80 text-center" data-overlay="0.6" data-overlay-color="white">
 
-                        </div>
-                        <div class="dropdown" style="display: inline-block;">
-                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="margin-bottom: 5px;">
-                                ...
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="" data-toggle="modal" data-target="#myModal" href="">Report this recipe</a></li>
-                                <li><a href="#">Nothing</a></li>
-                                <li><a href="#">Nothing</a></li>
-                            </ul>
+                        <div class="container" id="avatar-container">
 
                         </div>
                         <!-- Modal -->
                         <!-- Cover Header End -->
                         <!-- Page Wrapper Start -->
-                        <section class="page--wrapper pt--80 pb--20">
-                            <div class="container">
-                                <div class="row">
-                                    <!-- Main Content Start -->
-                                    <div class="main--content col-md-12 pb--60" data-trigger="stickyScroll">
-                                        <div class="main--content-inner drop--shadow">
-                                            <!-- Content Nav Start -->
-                                            <div class="content--nav pb--30">
-                                                <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
-                                                    <li><a href="member-activity-personal.html">Dòng thời gian</a></li>
-                                                    <li class="active"><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
-                                                    <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
-                                                    <li><a href="/account/my-recipe/@(RouteData.Values["userName"])">C.thức của tôi</a></li>
-                                                    <li><a href="member-media-all.html">Q.lý nguyên liệu(56)</a></li>
-                                                </ul>
-                                            </div>
-                                            <!-- Content Nav End -->
-                                            <!-- Profile Details Start -->
-                                            <div class="profile--details fs--14">
-                                                <!-- Profile Item Start -->
 
-                                                <div class="profile--item">
-                                                    <div class="profile--heading">
-                                                        <h3 class="h4 fw--700">
-                                                            <span class="mr--4">Thông tin cá nhân</span>
-                                                            <i class="ml--10 text-primary"></i>
-                                                        </h3>
-                                                    </div>
-                                                    <div class="profile--info" id="personal-info">
+                    </div>
+                    <section class="page--wrapper pt--80 pb--20">
+                        <div class="container">
+                            <div class="row">
+                                <!-- Main Content Start -->
+                                <div class="main--content col-md-12 pb--60" data-trigger="stickyScroll">
+                                    <div class="main--content-inner drop--shadow">
+                                        <!-- Content Nav Start -->
+                                        <div class="content--nav pb--30">
+                                            <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
+                                                <li><a href="member-activity-personal.html">Dòng thời gian</a></li>
+                                                <li><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
+                                                <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
+                                                <li class="active"><a href="/account/my-recipe/@(RouteData.Values["userName"])">Công thức của tôi</a></li>
+                                                <li><a href="/account/collection/@(RouteData.Values["userName"])">Bộ sưu tập của tôi</a></li>
+                                                <li><a href="member-media-all.html">Quản lý nguyên liệu(56)</a></li>
+                                            </ul>
+                                        </div>
+                                        <!-- Content Nav End -->
+                                        <!-- Profile Details Start -->
+                                        <div class="profile--details fs--14">
+                                            <!-- Profile Item Start -->
 
-                                                    </div>
-                                                    <div class="edit-profile" style="display: none">
-                                                        <button id="btnUpdateInfo" class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
-                                                    </div>
+                                            <div class="profile--item">
+                                                <div class="profile--heading">
+                                                    <h3 class="h4 fw--700">
+                                                        <span class="mr--4">Thông tin cá nhân</span>
+                                                        <i class="ml--10 text-primary"></i>
+                                                    </h3>
                                                 </div>
-                                                <!-- Profile Item End -->
-                                                <!-- Profile Item Start -->
-                                                <div class="profile--item">
-                                                    <div class="profile--heading">
-                                                        <h3 class="h4 fw--700">
-                                                            <span class="mr--4">Tiểu sử</span>
-                                                            <i class="ml--10 text-primary"></i>
-                                                        </h3>
-                                                    </div>
-                                                    <div class="profile--info" id="user-description">
-                                                    </div>
-                                                    <div class="edit-profile" style="display: none">
-                                                        <button id="btnUpdateHistory" class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
-                                                    </div>
+                                                <div class="profile--info" id="personal-info">
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th class="fw--700 text-darkest">Tên</th>
+                                                                <td>
+                                                                    <input type="text" value="" class="read" id="firstName">
+                                                                    <input type="hidden" value="" class="read" id="hiddenFirstName">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="fw--700 text-darkest">Họ</th>
+                                                                <td>
+                                                                    <input type="text" value="" class="read" id="lastName">
+                                                                    <input type="hidden" value="" class="read" id="hiddenLastName">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="fw--700 text-darkest">Giới tính</th>
+                                                                <td>
+                                                                    <select id="gender" class="read">
+                                                                        <option value="1" data-value="1">Nam</option>
+                                                                        <option value="2" data-value="2">Nữ</option>
+                                                                        <option value="3" data-value="3">Khác</option>
+                                                                    </select>
+                                                                    <input type="hidden" value="" class="read" id="hiddenGender">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="fw--700 text-darkest">Ngày sinh</th>
+                                                                <td>
+                                                                    <input type="text" name="birthdateStr" id="birthdateStr" required />
+                                                                    <input type="hidden" name="birthdate" id="birthdate" />
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
-                                                <!-- Profile Item End -->
-                                                <!-- Profile Item Start -->
-                                                <!-- Profile Item End -->
-                                                <!-- Profile Item Start -->
-                                                <div class="profile--item">
-                                                    <div class="profile--heading">
-                                                        <h3 class="h4 fw--700">
-                                                            <span class="mr--4">Liên hệ</span>
-                                                            <i class="ml--10 text-primary"></i>
-                                                        </h3>
-                                                    </div>
-
-                                                    <div class="profile--info" id="user-contact">
-
-                                                    </div>
-
-                                                </div>
-                                                <!-- Profile Item End -->
                                                 <div class="edit-profile" style="display: none">
-                                                    <button id="btnUpdateContact" class="btn btn-primary" style="float: right"><span>Lưu thay đổi</span></button>
+                                                    <button id="btnUpdateInfo" class="btn btn-primary btn-update-info"><span>Lưu thay đổi</span></button>
                                                 </div>
                                             </div>
+                                            <!-- Profile Item End -->
+                                            <!-- Profile Item Start -->
+                                            <div class="profile--item">
+                                                <div class="profile--heading">
+                                                    <h3 class="h4 fw--700">
+                                                        <span class="mr--4">Tiểu sử</span>
+                                                        <i class="ml--10 text-primary"></i>
+                                                    </h3>
+                                                </div>
+                                                <div class="profile--info" id="user-description">
+                                                </div>
+                                                <div class="edit-profile" style="display: none">
+                                                    <button id="btnUpdateHistory" class="btn btn-primary btn-update-info"><span>Lưu thay đổi</span></button>
+                                                </div>
+                                            </div>
+                                            <!-- Profile Item End -->
+                                            <!-- Profile Item Start -->
+                                            <!-- Profile Item End -->
+                                            <!-- Profile Item Start -->
+                                            <div class="profile--item">
+                                                <div class="profile--heading">
+                                                    <h3 class="h4 fw--700">
+                                                        <span class="mr--4">Liên hệ</span>
+                                                        <i class="ml--10 text-primary"></i>
+                                                    </h3>
+                                                </div>
+
+                                                <div class="profile--info" id="user-contact">
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th class="fw--700 text-darkest">E-mail</th>
+                                                                <td>
+                                                                    <input type="text" class="read" id="email">
+                                                                    <input type="hidden" class="read" id="hiddenEmail">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="fw--700 text-darkest">Địa chỉ</th>
+                                                                <td>
+                                                                    <input type="text" class="read controls" id="txtAddress">
+                                                                    <input type="hidden" class="read" id="hiddenAddress">
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                            <!-- Profile Item End -->
+                                            <div class="edit-profile" style="display: none">
+                                                <button id="btnUpdateContact" class="btn btn-primary btn-update-info"><span>Lưu thay đổi</span></button>
+                                            </div>
+                                        </div>
 
 
                                         <!-- Profile Details End -->
@@ -294,69 +348,68 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!--footer-->
-    <div class="footer footer-variant-one footer-fluid">
-        <div class="container">
-            <div class="footer-inner">
-                <div class="text-center">
-                    <a class="logo-footer" href="index.html"><img src="/recipepress/images/logo2.png" alt="Logo" /></a>
-                    <p class="flipInX">
-                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                        <br />
-                        magna aliquyam erat, with an extra ordinary design and quality development features in low
-                    </p>
+        <!--footer-->
+        <div class="footer footer-variant-one footer-fluid">
+            <div class="container">
+                <div class="footer-inner">
+                    <div class="text-center">
+                        <a class="logo-footer" href="index.html"><img src="/recipepress/images/logo2.png" alt="Logo" /></a>
+                        <p class="flipInX">
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                            <br />
+                            magna aliquyam erat, with an extra ordinary design and quality development features in low
+                        </p>
 
-                </div>
+                    </div>
 
-                <div class="subs-social-options">
-                    <div class="row custom-row-footer">
-                        <div class="col-md-6 custom-col-options">
-                            <div class="left-side">
-                                <div class="widget widget-footer news-letter-signupflipInY">
-                                    <h2>Newsletter Signup</h2>
+                    <div class="subs-social-options">
+                        <div class="row custom-row-footer">
+                            <div class="col-md-6 custom-col-options">
+                                <div class="left-side">
+                                    <div class="widget widget-footer news-letter-signupflipInY">
+                                        <h2>Newsletter Signup</h2>
 
-                                    <form class="subs-form" action="#" method="post">
-                                        <div class="email-field">
-                                            <input type="email" name="email" placeholder="Enter you email address" />
-                                            <button><i class="fa fa-paper-plane-o"></i></button>
-                                        </div>
-                                    </form>
+                                        <form class="subs-form" action="#" method="post">
+                                            <div class="email-field">
+                                                <input type="email" name="email" placeholder="Enter you email address" />
+                                                <button><i class="fa fa-paper-plane-o"></i></button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
 
-                        </div>
-                        <div class="col-md-6">
-                            <div class="right-side">
-                                <div class="widget widget-footer social-icons">
-                                    <h2 class="fadeInRight">Get Social with Us</h2>
-                                    <ul>
-                                        <li class="bounceInRight"><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                        <li class="bounceInRight animation-delay100ms"><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                        <li class="bounceInRight animation-delay200ms"><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                                        <li class="bounceInRight animation-delay300ms"><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                        <li class="bounceInRight animation-delay400ms"><a href="#"><i class="fa fa-youtube-play"></i></a></li>
-                                        <li class="bounceInRight animation-delay500ms"><a href="#"><i class="fa fa-flickr"></i></a></li>
-                                    </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="right-side">
+                                    <div class="widget widget-footer social-icons">
+                                        <h2 class="fadeInRight">Get Social with Us</h2>
+                                        <ul>
+                                            <li class="bounceInRight"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                            <li class="bounceInRight animation-delay100ms"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                            <li class="bounceInRight animation-delay200ms"><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                            <li class="bounceInRight animation-delay300ms"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                            <li class="bounceInRight animation-delay400ms"><a href="#"><i class="fa fa-youtube-play"></i></a></li>
+                                            <li class="bounceInRight animation-delay500ms"><a href="#"><i class="fa fa-flickr"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="footer-copyright text-center flipInX">
-                    <p>&copy; Copyright 2015 All Rights Reserved by <a href="#">Majestic Themes</a></p>
-                </div>
-                <div class="corner-image fadeInRight">
-                    <img src="~/recipepress/images/footer-corner-image.jpg" alt="image" />
+                    <div class="footer-copyright text-center flipInX">
+                        <p>&copy; Copyright 2015 All Rights Reserved by <a href="#">Majestic Themes</a></p>
+                    </div>
+                    <div class="corner-image fadeInRight">
+                        <img src="~/recipepress/images/footer-corner-image.jpg" alt="image" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!--footer ends-->
+        <!--footer ends-->
 
-    <script src="~/js/member-profile.js"></script>
-    <script src="~/js/cover-header-profile.js"></script>
+    </div>
+
 
     <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="~/recipepress/js/jquery-ui.js"></script>
@@ -369,14 +422,14 @@
 
     <script src="~/recipepress/js/jquery.validate.min.js"></script>
     <script src="~/recipepress/js/jquery.swipebox.js"></script>
+
+
     <script src="~/recipepress/js/custom.js"></script>
     @*<script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>*@
-    <script src="~/recipepress/js/plugins.min.js"></script>
-    <script src="~/js/site.js"></script>
 
     <!-- ==== Color Switcher Plugin ==== -->
     <script src="~/recipepress/js/color-switcher.min.js"></script>
-
+    <script src="~/recipepress/js/plugins.min.js"></script>
 
     <!-- ==== Main Script ==== -->
     <script src="~/recipepress/js/main.js"></script>
@@ -385,15 +438,24 @@
     <script src="~/js/user-report.js"></script>
     <script src="~/js/Configuration.js"></script>
 
+    <script src="~/js/member-profile.js"></script>
+    <script src="~/js/cover-header-profile.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo&libraries=places&callback=initMap"
+            async defer></script>
+
+    <script src="~/js/moment.min.js"></script>
+    <script src="~/js/daterangepicker.min.js"></script>
+    <script type="text/javascript">
+    // fetch and render element to html
+        (async () => {
+            await callAccountInforApi('@(RouteData.Values["userName"])');
+            await loadAvatarContainer('@(RouteData.Values["userName"])');
+        })();
+
+    </script>
+
+    <script src="~/js/site.js"></script>
 </body>
 </html>
-
-<script type="text/javascript">
-    // fetch and render element to html
-
-    (async () => {
-        await callAccountInforApi('@(RouteData.Values["userName"])');
-        await loadAvatarContainer('@(RouteData.Values["userName"])');
-    })();
-
-</script>

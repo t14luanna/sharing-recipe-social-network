@@ -699,7 +699,7 @@ span.sign-in-buttons {
 
         span.sign-in-buttons a:hover {
             background: #000000;
-            color: #ffffff;
+            color: #ffffff!important;
         }
 
     span.sign-in-buttons .login {
@@ -6553,8 +6553,8 @@ div.widget-measurements {
 }
 
     .default-btn.theme-color {
-        background: #6ebe3b;
-        color: #ffffff;
+        background: #6ebe3b!important;
+        color: #ffffff!important;
     }
 
     .default-btn.theme-tag-color {

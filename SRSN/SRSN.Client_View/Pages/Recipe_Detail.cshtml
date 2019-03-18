@@ -234,11 +234,18 @@
                 <div class="col-md-5">
 
                     <div class="modal-component-1" id="modal-products">
-                        <div class="email-field box-search-ingre">
+                        <div class="email-field box-search-ingre col-md-6">
                             <input onkeyup="filterIngredients()" id="filter-ingredient" type="text" placeholder="Tìm kiếm">
                             <button><i class="fa fa-search"></i></button>
                         </div>
-                        <ul id="modal-list-item" class="modal-list-product-item"></ul>
+                        <div class="col-md-6 checkbox-position">
+                            <label>
+                                <input type="checkbox" name="currentPosition" /> Vị trí hiện tại của bạn
+                            </label>
+                        </div>
+                        <div class=" col-md-12 checked-ingre-box">
+                            <ul id="modal-list-item" class="modal-list-product-item"></ul>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-7">
@@ -287,12 +294,13 @@
                     var someText = "Công thức chi tiết";
                     $('.main-heading h1').append(document.createTextNode(someText));
                 };
-                var map, infoWindow, pos, marker;
+                var map, infoWindow, pos, indexPosition;
+                let listCheckedIngres = [];
                 async function initMap() {
                     var userAddress = (JSON.parse(window.localStorage.getItem("authorization"))).userAddress;
                     var res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${userAddress}&key=${GOOGLE_API_KEY}`);
                     var data = await res.json();
-                    console.log(data);
+                    indexPosition = data.results[0].geometry.location;
                     map = new google.maps.Map(document.getElementById('map'), {
                         center: { lat: 10.762622, lng: 106.660172 },
                         zoom: 15
@@ -305,19 +313,27 @@
                                 lat: position.coords.latitude,
                                 lng: position.coords.longitude
                             };
-                            marker.setPosition(pos);
-                            marker.setMap(map);
-                            infoWindow.setPosition(pos);
-                            infoWindow.setContent('Vị trí của bạn');
-                            infoWindow.open(map, marker);
-                            map.setCenter(pos);
                         }, function () {
                             handleLocationError(true, infoWindow, map.getCenter());
                         });
                     } else {
-                        // Browser doesn't support Geolocation
                         handleLocationError(false, infoWindow, map.getCenter());
                     }
+                    if ($("input[name='currentPosition']:checked").length > 0) {
+                        setPositionMap(pos);
+                    } else {
+                        if (indexPosition != null) {
+                            setPositionMap(indexPosition);
+                        }
+                    }
+                };
+                function setPositionMap(index) {
+                    marker.setPosition(index);
+                    marker.setMap(map);
+                    infoWindow.setPosition(index);
+                    infoWindow.setContent('Vị trí của bạn');
+                    infoWindow.open(map, marker);
+                    map.setCenter(index);
                 };
                 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                     infoWindow.setPosition(pos);
@@ -365,11 +381,16 @@
                     setMapOnAll(null);
                     if ($("input[name=ori-ingredient]:checked").length > 0) {
                         getCheckedIngredient();
-                        let listCheckedIngres = [];
+                        listCheckedIngres = [];
                         $("input[name=ori-ingredient]:checked").each(function () {
                             listCheckedIngres.push(this.value.split("-")[1]);
                         });
-                        callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
+                        if ($("input[name='currentPosition']:checked").length > 0) {
+                            callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
+                        }
+                        else {
+                            callReadListIngredientNearByStoresApi(indexPosition.lat, indexPosition.lng, listCheckedIngres);
+                        }
                     } else {
                         callReadProductByIngredientNameApi();
                     }
@@ -411,12 +432,16 @@
                         $("#modal-add-collection").css("display", "none");
                     }
                     if (event.target.className == 'modal-product-item') {
-
-                        let listCheckedItem = [];
+                        listCheckedIngres = [];
                         $("input[name=ingredient]:checked").each(function () {
-                            listCheckedItem.push(this.value);
+                            listCheckedIngres.push(this.value);
                         });
-                        callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedItem);
+                        if ($("input[name='currentPosition']:checked").length > 0) {
+                            callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
+                        }
+                        else {
+                            callReadListIngredientNearByStoresApi(indexPosition.lat, indexPosition.lng, listCheckedIngres);
+                        }
                         //var current = event.target;
                         //var ingredientName = current.getAttribute('data-product-name');
                         //callReadNearByStoresApi(pos.lat, pos.lng, ingredientName);
@@ -440,6 +465,17 @@
                     }
                 };
                 var star;
+                $("input[name='currentPosition']").on("click", function (e) {
+                    if ($("input[name='currentPosition']:checked").length > 0) {
+                        setPositionMap(pos);
+                        callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
+                    }
+                    else {
+                        setPositionMap(indexPosition);
+                        callReadListIngredientNearByStoresApi(indexPosition.lat, indexPosition.lng, listCheckedIngres);
+                    }
+                    
+                });
                 $("input[name='rating']").on("click", function (e) {
                     star = parseFloat(e.target.value);
 
@@ -516,7 +552,7 @@
                 var verifyUserInteresting = setInterval(function () {
                     ++verifyUserInterestingCounter;
                     console.log(`Verify at ${verifyUserInterestingCounter}`);
-                    if (verifyUserInterestingCounter === 5) {
+                    if (verifyUserInterestingCounter === 30) {
                         console.log(`Verify at Done`);
                         verifyUserInterestingCleaner();
                         var recipeId = @(RouteData.Values["recipe_id"]);

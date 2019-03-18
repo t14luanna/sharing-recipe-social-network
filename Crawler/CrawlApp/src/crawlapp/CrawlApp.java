@@ -78,9 +78,10 @@ public class CrawlApp {
     }
     
     public static void crawlAll(){
-        for (int i = 0; i < brands.size(); i++) {
-            crawlProduct(i);
+        for (int i = 1; i < brands.size(); i++) {
+            
             crawlStore(i);
+            crawlProduct(i);
         }
     }
 }

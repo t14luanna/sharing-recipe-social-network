@@ -19,7 +19,7 @@ const createPersonalInfoElement = (info) =>
                                                             <tr>
                                                                 <th class="fw--700 text-darkest">Giới tính</th>
                                                                 <td>
-                                                                    <select id="myselect" class="read">
+                                                                    <select id="gender" class="read">
                                                                         <option value="1" data-value="1">Nam</option>
                                                                         <option value="2" data-value="2">Nữ</option>
                                                                         <option value="3" data-value="3">Khác</option>
@@ -29,10 +29,9 @@ const createPersonalInfoElement = (info) =>
                                                             </tr>
                                                             <tr>
                                                                 <th class="fw--700 text-darkest">Ngày sinh</th>
-                                                                <td><input type="date" name="bday" value="${ new Date(info.createTime).getFullYear() + "-" +
-                                                                        new Date(info.createTime).getMonth() + "/" + new Date(info.createTime).getDay()}" class="read" id="birthdate">
-                                                                    <input type="date" value="${ new Date(info.createTime).getFullYear() + "-" +
-                                                                        new Date(info.createTime).getMonth() + "/" + new Date(info.createTime).getDay()}}" class="read" id="hiddenBirthdate" style="display:none;">
+                                                                <td>
+                                                                    <input type="text" name="birthdateStr" id="birthdateStr" required />
+                                                                    <input type="hidden" name="birthdate" id="birthdate" />
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -44,31 +43,23 @@ const createDescription = (des) =>
     `;
 const createContactInfo = (user) =>
     `<table class="table">
-                                                        <tbody>
-                                                            <tr>
-                                                                <th class="fw--700 text-darkest">Điện thoại</th>
-                                                                <td>
-                                                                    <input type="text" value="${user.phone}" style="width: 200px;" class="read" id="phone">
-                                                                    <input type="hidden" value="${user.phone}" style="width: 200px;" class="read" id="hiddenPhone">
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="fw--700 text-darkest">E-mail</th>
-                                                                <td>
-                                                                    <input type="text" value="${user.email}" style="width: 300px;" class="read" id="email">
-                                                                    <input type="hidden" value="${user.email}" style="width: 300px;" class="read" id="hiddenEmail">
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <th class="fw--700 text-darkest">Địa chỉ</th>
-                                                                <td>
-                                                                    <input type="text" value="${user.address}" style="width: 500px;" class="read" id="address">
-                                                                    <input type="hidden" value="${user.address}" style="width: 500px;" class="read" id="hiddenAddress">
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>`;
+        <tbody>
+            <tr>
+                <th class="fw--700 text-darkest">E-mail</th>
+                <td>
+                    <input type="text" value="${user.email}" class="read" id="email">
+                    <input type="hidden" value="${user.email}" class="read" id="hiddenEmail">
+                </td>
+            </tr>
+            <tr>
+                <th class="fw--700 text-darkest">Địa chỉ</th>
+                <td>
+                    <input type="text" value="${user.address}"  class="read" id="txtAddress">
+                    <input type="hidden" value="${user.address}"class="read" id="hiddenAddress">
+                </td>
+            </tr>
+        </tbody>
+    </table>`;
 const callAccountInforApi = async (username) => {
     var userNameLocalStorage = localStorage.getItem("username");
     var res;
@@ -91,15 +82,15 @@ const callAccountInforApi = async (username) => {
     }
 
     //Update profile user
-    $("#btnUpdateInfo").on("click", function (e) {
+    $("#btnUpdateInfo").on("click", async function (e) {
         $(this).attr("disabled", "disabled");
         e.preventDefault();
-        fetch(`${BASE_API_URL}/api/account/update`, {
+        var res = await fetch(`${BASE_API_URL}/api/account/update`, {
             method: 'PUT',
             body: JSON.stringify({
                 'firstName': $('#firstName').val(),
                 'lastName': $('#lastName').val(),
-                'gender': $('#myselect>option:selected').val(),
+                'gender': $('#gender>option:selected').val(),
                 'birthdate': $('#birthdate').val(),
                 'description': $('#hiddenDescription').val(),
                 'phone': $('#hiddenPhone').val(),
@@ -110,25 +101,24 @@ const callAccountInforApi = async (username) => {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Authorization': `Bearer ${token}`
             }
-        })
-            .then(res => res.json())
-            .then(response => {
-                if (response.message) {
-                    var username = localStorage.getItem("username");
-                    alert("Bạn đã update thành công Info của account " + username);
-                    window.location.href = '/';
-                }
+        });
+        if (res.status == 200) {
+            Swal.fire({
+                type: 'success',
+                title: 'Thông báo',
+                text: 'Cập nhật thông tin thành công!',
             })
-            .catch(error => {
-                $("#btnUpdateInfo").removeAttr("disabled");
-                console.error('Error: ', error);
-            });
+            setTimeout(async function () {
+                var username = localStorage.getItem("username");
+                window.location.href = `/account/information/${username}`
+            }, 1500);
+        }
     });
 
-    $("#btnUpdateHistory").on("click", function (e) {
+    $("#btnUpdateHistory").on("click", async function (e) {
         $(this).attr("disabled", "disabled");
         e.preventDefault();
-        fetch(`${BASE_API_URL}/api/account/update`, {
+        var res =  await fetch(`${BASE_API_URL}/api/account/update`, {
             method: 'PUT',
             body: JSON.stringify({
                 'firstName': $('#hiddenFirstName').val(),
@@ -144,25 +134,25 @@ const callAccountInforApi = async (username) => {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Authorization': `Bearer ${token}`
             }
-        })
-            .then(res => res.json())
-            .then(response => {
-                if (response.message) {
-                    var username = localStorage.getItem("username");
-                    alert("Bạn đã update thành công History của account " + username);
-                    window.location.href = '/';
-                }
+        });
+        var data = await res.json();
+        if (res.status == 200) {
+            Swal.fire({
+                type: 'success',
+                title: 'Thông báo',
+                text: 'Cập nhật thông tin thành công!',
             })
-            .catch(error => {
-                $("#btnUpdateHistory").removeAttr("disabled");
-                console.error('Error: ', error);
-            });
+            setTimeout(async function () {
+                var username = localStorage.getItem("username");
+                window.location.href = `/account/information/${username}`
+            }, 1500);
+        }
     });
 
-    $("#btnUpdateContact").on("click", function (e) {
+    $("#btnUpdateContact").on("click", async function (e) {
         $(this).attr("disabled", "disabled");
         e.preventDefault();
-        fetch(`${BASE_API_URL}/api/account/update`, {
+        var res = await fetch(`${BASE_API_URL}/api/account/update`, {
             method: 'PUT',
             body: JSON.stringify({
                 'firstName': $('#hiddenFirstName').val(),
@@ -172,39 +162,87 @@ const callAccountInforApi = async (username) => {
                 'description': $('#hiddenDescription').val(),
                 'phone': $('#phone').val(),
                 'email': $('#email').val(),
-                'address': $('#address').val()
+                'address': $('#txtAddress').val()
             }),
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Authorization': `Bearer ${token}`
             }
-        })
-            .then(res => res.json())
-            .then(response => {
-                if (response.message) {
-                    var username = localStorage.getItem("username");
-                    alert("Bạn đã update thành công Contact của account " + username);
-                    window.location.href = '/';
-                }
+        }); 
+        if (res.status == 200) {
+            Swal.fire({
+                type: 'success',
+                title: 'Thông báo',
+                text: 'Cập nhật thông tin thành công!',
             })
-            .catch(error => {
-                $("#btnUpdateContact").removeAttr("disabled");
-                console.error('Error: ', error);
-            });
+            setTimeout(async function () {
+                var username = localStorage.getItem("username");
+                window.location.href = `/account/information/${username}`
+            }, 1500);
+        }
     });
+    //var personalInfo = createPersonalInfoElement(data);
+    //$("#personal-info").append(personalInfo);
+    $("#firstName").val(data.firstName);
+    $("#hiddenFirstName").val(data.firstName);
+    $("#lastName").val(data.lastName);
+    $("#hiddenLastName").val(data.lastName);
+    $("#gender").val(data.gender);
+    $("#hiddenGender").val(data.gender);
 
-    
-    
-    var personalInfo = createPersonalInfoElement(data);
-    $("#personal-info").append(personalInfo);
+    var birthDateValue = new Date(data.birthdate);
+    $("#birthdateStr").val(birthDateValue.toLocaleDateString());
+    $("#birthdate").val(birthDateValue.toLocaleDateString());
 
-    var description = createDescription(data.description);
+    $('#birthdateStr').daterangepicker(
+        {
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 1901,
+            "locale": {
+                "format": "MM/DD/YYYY",
+                "separator": " - ",
+                "applyLabel": "Xác nhận",
+                "cancelLabel": "Hủy",
+                "fromLabel": "Từ",
+                "toLabel": "Đến",
+                "customRangeLabel": "Tùy chọn",
+                "daysOfWeek": [
+                    "Chủ nhật",
+                    "Thứ hai",
+                    "Thứ ba",
+                    "Thứ tư",
+                    "Thứ năm",
+                    "Thứ sáu",
+                    "Thứ bảy"
+                ],
+                "monthNames": [
+                    "Tháng 1",
+                    "Tháng 2",
+                    "Tháng 3",
+                    "Tháng 4",
+                    "Tháng 5",
+                    "Tháng 6",
+                    "Tháng 7",
+                    "Tháng 8",
+                    "Tháng 9",
+                    "Tháng 10",
+                    "Tháng 11",
+                    "Tháng 12"
+                ],
+                "firstDay": 1,
+            }
+        });
+    var descriptionText = data.description == null ? "" : data.description;
+    var description = createDescription(descriptionText);
     $("#user-description").append(description);
 
-    var contact = createContactInfo(data);
-    $("#user-contact").append(contact);
+    $("#email").val(data.email);
+    $("#hiddenEmail").val(data.email);
+    $("#txtAddress").val(data.address);
+    $("#hiddenAddress").val(data.address);
 
-    $("#myselect option[data-value='" + data.gender + "']").attr("selected", "selected");
+    $("#gender option[data-value='" + data.gender + "']").attr("selected", "selected");
     if (username == userNameLocalStorage) {//chinh chủ
         $(".edit-profile").css("display", "inline-table");
     } else {
@@ -214,3 +252,8 @@ const callAccountInforApi = async (username) => {
     }
 };
 
+function initMap() {
+    // Create the search box and link it to the UI element.
+    var input = document.getElementById('txtAddress');
+    var searchBox = new google.maps.places.SearchBox(input);
+};

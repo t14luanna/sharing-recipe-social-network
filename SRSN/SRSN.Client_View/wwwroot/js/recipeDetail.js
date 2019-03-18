@@ -471,7 +471,7 @@ const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredie
             }
         } else {
 
-            $(".box-search-ingre").append("<h6 class='warning-no-stores'>Không có cửa hàng gần bạn bán những sản phẩm này</h6>")
+            $(".checked-ingre-box").append("<h6 class='warning-no-stores'>Không có cửa hàng gần bạn bán những sản phẩm này</h6>")
         }
     }
 };

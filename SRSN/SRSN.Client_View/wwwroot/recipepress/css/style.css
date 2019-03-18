@@ -152,7 +152,7 @@ WE MAY RELEASE FUTURE UPDATES SO IT WILL OVERWRITE THIS FILE. IT'S BETTER AND SA
     1. GENERAL STYLES
 \*------------------------------------*/
 html, body {
-    height: 100%;
+    /*height: 100%;*/
 }
 
 body {
@@ -204,7 +204,7 @@ img,
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
     color: #333;
-    font-family: "Raleway", sans-serif;
+    font-family: 'Lora', serif;
 }
 
 h1, h2, h3, .h1, .h2, .h3 {
@@ -4937,10 +4937,10 @@ body.isScrolling #backToTop {
     margin-bottom: 22px;
 }
 
-.main--sidebar .links--widget {
-    font-family: "Raleway", sans-serif;
-    font-weight: 500;
-}
+    .main--sidebar .links--widget {
+        font-family: 'Lora', serif;
+        font-weight: 500;
+    }
 
 .main--sidebar .buddy-finder--widget {
     margin-bottom: 6px;
@@ -4951,7 +4951,7 @@ body.isScrolling #backToTop {
 }
 
 .main--sidebar .nav--widget {
-    font-family: "Raleway", sans-serif;
+    font-family: 'Lora', serif;
     font-weight: 500;
 }
 
