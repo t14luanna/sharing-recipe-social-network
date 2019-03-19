@@ -103,15 +103,51 @@ namespace SRSN.ClientApi.Controllers
             var userTokenName = claims.FindFirst(ClaimTypes.Name).Value;
             if (userTokenName.Equals(userName))
             {
+                var collectionReturnList = new List<CollectionViewModel>();
                 var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
-                return Ok(collectionService.Get(u => u.UserId == int.Parse(userId) && u.Active == true));
+                var collectionList = collectionService.Get(u => u.UserId == int.Parse(userId) && u.Active == true);
+                foreach ( var item in collectionList)
+                {
+                    if(item.CollectionRefId != null)
+                    {
+                        var itemCol = collectionService.Get(u => u.Id == item.CollectionRefId && u.Active == true).FirstOrDefault();
+                        collectionReturnList.Add(itemCol);
+                    }
+                    else
+                    {
+                        collectionReturnList.Add(item);
+                    }
+                    
+                }
+                return Ok(collectionReturnList);
             }
             else
             {
                 var user = this.userManager.FindByNameAsync(userName).Result;
-                return Ok(collectionService.Get(u => u.UserId == user.Id && u.Active == true));
+                var collectionList = collectionService.Get(u => u.UserId == user.Id && u.Active == true);
+                var collectionReturnList = new List<CollectionViewModel>();
+                foreach (var item in collectionList)
+                {
+                    if (item.CollectionRefId != null)
+                    {
+                        var itemCol = collectionService.Get(u => u.Id == item.CollectionRefId && u.Active == true).FirstOrDefault();
+                        collectionReturnList.Add(itemCol);
+                    }
+                    else
+                    {
+                        collectionReturnList.Add(item);
+                    }
+
+                }
+                return Ok(collectionReturnList);
             }
         }
+
+        private object List<T>()
+        {
+            throw new NotImplementedException();
+        }
+
         [HttpGet("read")]
         [AllowAnonymous]
         public async Task<ActionResult> ReadByToken()

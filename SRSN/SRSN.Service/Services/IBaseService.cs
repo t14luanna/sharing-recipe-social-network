@@ -13,7 +13,6 @@ namespace SRSN.Service.Services
     {
         IQueryable<TViewModel> Get();
         IQueryable<TViewModel> Get(Expression<Func<TEntity, bool>> predicate);
-
         Task<TViewModel> CreateAsync(TViewModel data);
         Task<TViewModel> UpdateAsync(TViewModel data);
         Task DeleteAsync(TViewModel data);

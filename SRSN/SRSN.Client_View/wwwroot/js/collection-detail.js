@@ -48,6 +48,7 @@ const callRecipeByCollectionIdApi = async (collectionId) => {
         }
     });
     $(".delete-button").append(deleteButton(collectionId));
+    $(".delete-button").append(addCollectionButton(collectionId));
     var data = await res.json();
     for (var item of data) {
         var element = createSinglerRecipes(item);
@@ -55,16 +56,16 @@ const callRecipeByCollectionIdApi = async (collectionId) => {
     }
 };
 const deleteButton = (collectionID) =>
-    `<button class="delete-collection-button" onclick="deleteCollectionById(${collectionID})"><i class="fa fa-close"></i> Xóa Bộ Sưu Tập</button>
-                                            <div class="filter--options float--right">
-                                            </div>`;
+    `<a href="#/" class="default-btn mid-button theme-tag-color" onclick="deleteCollectionById(${collectionID})">Xóa bộ sưu tập</a>`;
+const addCollectionButton = (collectionID) =>
+    `<a href="#/" class="default-btn mid-button theme-color" onclick="callAddCollectionApi(${collectionID})">Lưu bộ sưu tập</a>`;
 const createSinglerRecipes = (recipe) => `<div class="listing custom-listing" style="margin-left: 10px;" id="${recipe.collectionId}${recipe.recipePostId}">
     <div class="image">
         <a href="/recipe/${recipe.recipePostId}">
             <img src="${recipe.imageCover}" alt="image" class="custome-image-listing"/>
         </a>
     </div>
-    <div class="detail custom-grid">
+    <div class="detail custom-grid detail-collection-grid">
         <h4><a href="#">${recipe.recipeName}</a></h4>
         
         <div class="meta-listing">
@@ -107,5 +108,27 @@ async function deleteRecipeInMyCollection(collectionId, recipePostId ) {
         //window.location.reload();
     } else {
         alert("Không thể xóa công thức này. Vui lòng thử lại!!!");
+    }
+};
+const callAddCollectionApi = async (collectionId) => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var data = {
+        collectionRefId: collectionId
+    };
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/create`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (res.status == 200) {
+        Swal.fire({
+            type: 'success',
+            title: 'Thông báo',
+            text: 'Lưu bộ sưu tập thành công!',
+        })
     }
 };

@@ -1,46 +1,42 @@
-﻿
-
-const createPersonalInfoElement = (info) =>
+﻿const createPersonalInfoElement = (info) =>
     `<table class="table">
-                                                        <tbody>
-                                                            <tr>
-                                                                <th class="fw--700 text-darkest">Tên</th>
-                                                                <td><input type="text" value="${info.firstName}" class="read" id="firstName">
-                                                                    <input type="hidden" value="${info.firstName}" class="read" id="hiddenFirstName">
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="fw--700 text-darkest">Họ</th>
-                                                                <td>
-                                                                    <input type="text" value="${info.lastName}" class="read" id="lastName">
-                                                                    <input type="hidden" value="${info.lastName}" class="read" id="hiddenLastName">
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="fw--700 text-darkest">Giới tính</th>
-                                                                <td>
-                                                                    <select id="gender" class="read">
-                                                                        <option value="1" data-value="1">Nam</option>
-                                                                        <option value="2" data-value="2">Nữ</option>
-                                                                        <option value="3" data-value="3">Khác</option>
-                                                                    </select>
-                                                                    <input type="hidden" value="${info.gender}" class="read" id="hiddenGender">
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th class="fw--700 text-darkest">Ngày sinh</th>
-                                                                <td>
-                                                                    <input type="text" name="birthdateStr" id="birthdateStr" required />
-                                                                    <input type="hidden" name="birthdate" id="birthdate" />
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>`;
-
+        <tbody>
+            <tr>
+                <th class="fw--700 text-darkest">Tên</th>
+                <td><input type="text" value="${info.firstName}" class="read" id="firstName">
+                    <input type="hidden" value="${info.firstName}" class="read" id="hiddenFirstName">
+                </td>
+            </tr>
+            <tr>
+                <th class="fw--700 text-darkest">Họ</th>
+                <td>
+                    <input type="text" value="${info.lastName}" class="read" id="lastName">
+                    <input type="hidden" value="${info.lastName}" class="read" id="hiddenLastName">
+                </td>
+            </tr>
+            <tr>
+                <th class="fw--700 text-darkest">Giới tính</th>
+                <td>
+                    <select id="gender" class="read">
+                        <option value="1" data-value="1">Nam</option>
+                        <option value="2" data-value="2">Nữ</option>
+                        <option value="3" data-value="3">Khác</option>
+                    </select>
+                    <input type="hidden" value="${info.gender}" class="read" id="hiddenGender">
+                </td>
+            </tr>
+            <tr>
+                <th class="fw--700 text-darkest">Ngày sinh</th>
+                <td>
+                    <input type="text" name="birthdateStr" id="birthdateStr" required />
+                    <input type="hidden" name="birthdate" id="birthdate" />
+                </td>
+            </tr>
+        </tbody>
+    </table>`;
 const createDescription = (des) =>
     `<textarea name="Text1" cols="90" rows="5" class="read" id="description"> ${des}</textarea >
-     <textarea name="Text1" cols="90" rows="5" class="read" id="hiddenDescription" style="display:none;"> ${des}</textarea >
-    `;
+     <textarea name="Text1" cols="90" rows="5" class="read" id="hiddenDescription" style="display:none;"> ${des}</textarea >`;
 const createContactInfo = (user) =>
     `<table class="table">
         <tbody>

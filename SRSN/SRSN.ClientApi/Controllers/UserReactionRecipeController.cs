@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SRSN.DatabaseManager;
 using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
@@ -18,10 +19,10 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class UserReactionRecipeController : ControllerBase
     {
-        private UserManager<SRSNUser> userManager;
+        private SRSNUserManager userManager;
         private IUserReactionRecipeService selfService;
 
-        public UserReactionRecipeController(IUserReactionRecipeService selfService, UserManager<SRSNUser> userManager)
+        public UserReactionRecipeController(IUserReactionRecipeService selfService, SRSNUserManager userManager)
         {
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.selfService = selfService;
@@ -34,6 +35,7 @@ namespace SRSN.ClientApi.Controllers
             {
                 ClaimsPrincipal claims = this.User;
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var user = await this.userManager.FindByIdAsync(userId);
                 request.UserId = int.Parse(userId);
 
                 if (request.RatingRecipe == null || request.RatingRecipe == 0)
@@ -50,6 +52,7 @@ namespace SRSN.ClientApi.Controllers
                 {
                     await selfService.UpdateRecipeRating(request.RecipeId, request.RatingRecipe.Value);
                     await selfService.CreateAsync(request);
+                    
                 }
                 else
                 {
@@ -68,6 +71,12 @@ namespace SRSN.ClientApi.Controllers
                         });
                     }
                 }
+
+                if(!request.RatingContent.IsNullOrEmpty())
+                {
+                    var increasePointResult = userManager.IncreasePoint(user, (int)IncreasePointRuleEnum.RatingRecipeAndReview);
+                }
+
                 return Ok(new
                 {
                     message = "Rating recipe successfull"

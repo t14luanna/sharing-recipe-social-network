@@ -1,7 +1,22 @@
-﻿
+﻿const apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
+const client = filestack.init(apikey);
+function uploadFile(file) {
+    return new Promise((resolve, reject) => {
+        client.upload(file)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    })
+}
+
 const createAvatarContainer = (user) =>
-    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
-                                <img src="${user.avatarImageUrl}" alt=""/>
+    `<div class="cover--avatar online profile-pic" data-overlay="0.3" data-overlay-color="primary">
+        <input type="hidden" name="avatarUrl"/>
+                                <img class="" id="imgAvatar" src="${user.avatarImageUrl}" alt="" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
+<div class="edit"><a href="javascript:void()" onclick="document.getElementById('avatarPicker').click()"><i class="fa fa-pencil fa-lg"></i><input type="file" id="avatarPicker" onchange="avatarPickerChange(this)" style="display:none;" /></a></div>
                             </div>
 
                             <div class="cover--user-name">
@@ -30,7 +45,10 @@ const createAvatarContainer = (user) =>
                             </div>
                             <div class="cover--user-desc fw--400 fs--18 fstyle--i text-darkest">
                                 <p>${user.description}</p>
-                            </div>`;
+                            </div>
+ <div class="edit-avatar" style="display: none">
+                                                    <button id="btnUpdateAvatar" onclick="btnUpdateAvatar_Click(this)" class="btn btn-primary btn-update-info"><span>Lưu thay đổi</span></button>
+                                                </div>`;
 
 
 const loadAvatarContainer = async (username) => {
@@ -55,7 +73,7 @@ const loadAvatarContainer = async (username) => {
         data = await res.json();//do 2 cach trả về giá trị khác nhau, data[0] là vị trí đầu tiên trong chuổi json
         data = data[0];
     }
- 
+    data.description = data.description == null ? "" : data.description;
     var element = createAvatarContainer(data);
     $("#avatar-container").append(element);
 
@@ -86,8 +104,67 @@ const loadAvatarContainer = async (username) => {
         $("#rankchefee").attr("class", "chefee active");
         $("#rankmastee").attr("class", "mastee active");
         $(".headline").text("mastee").css("color","#ff0834");
-
     }
-
-   
 };
+
+function avatarPickerChange(elePicker) {
+    var elePreview = $("#imgAvatar");
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        elePreview.attr("src", e.target.result);
+        // if change src
+        // show btn Update AVtar Area
+        $(".edit-avatar").show(300);
+    };
+    if (elePicker.files.length > 0) {
+        reader.readAsDataURL(elePicker.files[0]);
+    }
+};
+
+async function btnUpdateAvatar_Click(btnUpdateAvatar) {
+    var srcValue = $("#imgAvatar").attr("src");
+    var avatarUrlFromFileStack = await uploadFile(srcValue);
+    console.log(avatarUrlFromFileStack);
+    $("input[name=avatarUrl]").val(avatarUrlFromFileStack.url);
+
+
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    res = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    });
+    data = await res.json();
+    var res = await fetch(`${BASE_API_URL}/api/account/update`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            'avatarImageUrl': $("input[name=avatarUrl]").val(),
+            'firstName': $('#firstName').val(),
+            'lastName': $('#lastName').val(),
+            'gender': $('#gender>option:selected').val(),
+            'birthdate': $('#birthdate').val(),
+            'description': $('#hiddenDescription').val(),
+            'phone': $('#hiddenPhone').val(),
+            'email': $('#hiddenEmail').val(),
+            'address': $('#hiddenAddress').val()
+        }),
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (res.status == 200) {
+        Swal.fire({
+            type: 'success',
+            title: 'Thông báo',
+            text: 'Cập nhật thông tin thành công!',
+        })
+        setTimeout(async function () {
+            var username = localStorage.getItem("username");
+            window.location.href = `/account/information/${username}`
+        }, 1500);
+    }
+}

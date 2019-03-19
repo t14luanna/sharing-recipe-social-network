@@ -432,18 +432,9 @@
             })
             .then(res => res.json())
             .then(response => {
-                localStorage.setItem("recipeName", $('searchString').val());
                 var searchValue = $('#custom-input-search').val();
                 var searchValueParam = encodeURIComponent(searchValue);
                 window.location.href = (`/RecipeSearch/${searchValueParam}`);
-                //if (win) {
-                //    //Browser has allowed it to be opened
-                //    win.focus();
-                //} else {
-                //    //Browser has blocked it
-                //    alert('Please allow popups for this website');
-                //}
-                ////window.location.pathname = '/SearchRecipe';
                 console.log(response);
             })
             .catch(error => {

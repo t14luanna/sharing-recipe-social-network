@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SRSN.DatabaseManager.Services;
 
 namespace SRSN.ClientApi.Controllers
@@ -13,7 +14,6 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-
         private ICategoryService categoryService;
         public CategoryController(ICategoryService categoryService)
         {

@@ -7,7 +7,6 @@ namespace SRSN.DatabaseManager.ViewModels
 {
     public class CollectionViewModel
     {
-        
         public int Id { get; set; }
         public string CollectionName { get; set; }
         public string UserId { get; set; }
@@ -16,5 +15,6 @@ namespace SRSN.DatabaseManager.ViewModels
         public string CoverImage { get; set; }
         public string FullName { get; set; }
         public int? RecipeCount { get; set; }
+        public int? CollectionRefId { get; set; }
     }
 }

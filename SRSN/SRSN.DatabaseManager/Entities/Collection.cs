@@ -17,6 +17,7 @@ namespace SRSN.DatabaseManager.Entities
         public int? SaveCount { get; set; }
         public string CoverImage { get; set; }
         public int? RecipeCount { get; set; }
+        public int? CollectionRefId { get; set; }
 
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }

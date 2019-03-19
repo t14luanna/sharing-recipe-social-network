@@ -1,5 +1,5 @@
-﻿var apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
-var client = filestack.init(apikey);
+﻿var apikeyFilestack = 'AHs8S0A0zQ0SNWqyiHT2qz';
+var clientFilestack = filestack.init(apikeyFilestack);
 //var onProgress = (evt) => {
 //    document.getElementById('progress').innerHTML = `${evt.totalPercent}%`;
 //};
@@ -10,7 +10,7 @@ $("#comment-form").submit(function (e) {
     var file = $('#fileUploadedPreview').attr('src');
     var authorization = localStorage.getItem("authorization");
     var tokenAuthorize = (JSON.parse(authorization))["token"];
-    client.upload(file, {}, {}, token)
+    clientFilestack.upload(file, {}, {}, token)
         .then(res => {
             $('#fileUploadedLink').val(res.url);
             $('#fileUploadedPreview').attr('src', res.url);

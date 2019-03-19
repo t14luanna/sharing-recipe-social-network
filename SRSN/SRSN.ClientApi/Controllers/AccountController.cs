@@ -54,6 +54,8 @@ namespace SRSN.ClientApi.Controllers
             if(result.Succeeded)
             {
                 var existedUser = await userManager.FindByNameAsync(user.UserName);
+                var addToRoleResult = await userManager.AddToRoleAsync(existedUser, "ActiveUser");
+
                 var token = await user.AuthorizeAsync(userManager, existedUser);
                 return Ok(new
                 {

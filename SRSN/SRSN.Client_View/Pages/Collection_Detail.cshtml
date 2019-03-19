@@ -168,19 +168,15 @@
                             <div class="row">
                                 <!-- Main Content Start -->
                                 <div class="main--content col-md-12 pb--60" data-trigger="stickyScroll">
-                                    <div class="main--content-inner drop--shadow recipe-listing">
-                                        <!-- Content Nav Start -->
-                                        <div class="content--nav pb--30">
-
-                                        </div>
+                                    <div class="main--content-inner drop--shadow recipe-listing col-md-12">
                                         <!-- Content Nav End -->
                                         <!-- Profile Details Start -->
-                                        <div class="filter--nav pb--50 clearfix delete-button">
-                                            
+                                        <div class="delete-button col-md-12">
+
                                         </div>
                                         <!-- Filter Nav End -->
                                         <!-- Member Items Start -->
-                                        <div class="recipe-listing listing-grid" style="float: left;">
+                                        <div class="recipe-listing listing-grid col-md-12" style="float: left;">
                                         </div>
                                     </div>
 
@@ -277,9 +273,6 @@
     </div>
     <!--footer ends-->
 
-    <script src="~/js/member-profile.js"></script>
-    <script src="~/js/cover-header-profile.js"></script>
-
     <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="~/recipepress/js/jquery-ui.js"></script>
     <script src="~/recipepress/js/slick.min.js"></script>
@@ -291,26 +284,32 @@
 
     <script src="~/recipepress/js/jquery.validate.min.js"></script>
     <script src="~/recipepress/js/jquery.swipebox.js"></script>
+
+
     <script src="~/recipepress/js/custom.js"></script>
     @*<script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>*@
-    <script src="~/recipepress/js/plugins.min.js"></script>
-    <script src="~/js/site.js"></script>
 
     <!-- ==== Color Switcher Plugin ==== -->
     <script src="~/recipepress/js/color-switcher.min.js"></script>
-
+    <script src="~/recipepress/js/plugins.min.js"></script>
 
     <!-- ==== Main Script ==== -->
-    <script src="~/js/Configuration.js"></script>
     <script src="~/recipepress/js/main.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+
+    <script src="~/js/Configuration.js"></script>
     <script src="~/js/notification.js"></script>
+    <script src="~/js/user-report.js"></script>
+
+    <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+    <script src="~/js/member-profile.js"></script>
+    <script src="~/js/cover-header-profile.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="~/js/moment.min.js"></script>
+    <script src="~/js/daterangepicker.min.js"></script>
     <script src="~/js/collection-detail.js"></script>
-
-</body>
-</html>
-
-<script type="text/javascript">
+    <script type="text/javascript">
     (async () => {
         var dataAccount = await callReadUserByTokerApi();
         //await callAccountInforApi(dataAccount.username);
@@ -318,7 +317,10 @@
         await callReadCollectionIdApi(@(RouteData.Values["collection_id"]));
         await callRecipeByCollectionIdApi(@(RouteData.Values["collection_id"]));
     })();
-    
-</script>
 
-<script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+    </script>
+    <script src="~/js/site.js"></script>
+</body>
+</html>
+
+

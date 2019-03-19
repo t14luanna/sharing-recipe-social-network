@@ -1,7 +1,7 @@
 ﻿const createRecipeByUserId = (recipe) =>
     `<div class="col-md-4 col-xs-6 col-xxs-12" id="${recipe.id}">
 <div class="box--item text-center" >
-<a href="group-home.html" class="img" data-overlay="0.1">
+<a href="group-home.html" class="img img-my-recipe" data-overlay="0.1">
                                                             <img src="${recipe.imageCover}" alt="">
                                                         </a>
                                                         <div class="info">
@@ -37,9 +37,11 @@ const callRecipeByUserId = async () => {
     var count = 0;
     for (var item of data) {
         count++;
-        var element = createRecipeByUserId(item);
-        $("#my-recipe-box").append(element);
-        $("#my-recipe-box").css('height', 'auto');
+        if (item.referencedRecipeId == null) {
+            var element = createRecipeByUserId(item);
+            $("#my-recipe-box").append(element);
+            $("#my-recipe-box").css('height', 'auto');
+        }
     }
 };
 async function deleteRecipeInMyRecipe(recipeId) {

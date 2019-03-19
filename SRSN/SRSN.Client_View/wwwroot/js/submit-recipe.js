@@ -12,8 +12,6 @@ $('.add-recipe-steps').on("click", function (event) {
         '<input type = "file" name = "stepsImage" />' +
         '</div >' +
         '</li>';
-
-
     $('.list-sortable.steps').append(newMajesticItem);
     $('.list-sortable.steps').children("li").slideDown();
     bindMajesticItem();

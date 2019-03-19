@@ -670,3 +670,40 @@ a{
 .daterangepicker .drp-calendar{
     max-width: 100%!important
 }
+.profile-pic:hover .edit {
+    display: block;
+}
+
+.edit {
+    width: 30px;
+    /* padding-top: 7px; */
+    /* padding-right: 7px; */
+    position: absolute;
+    right: 20%;
+    bottom: 0;
+    display: none;
+    border-radius: 50%;
+    background-color: #64ad36;
+    height: 30px;
+}
+
+.edit a {
+    color: #000;
+}
+.edit a i {
+    height: 30px;
+    line-height: 30px;
+}
+.detail-collection-grid {
+    padding: 10px 15px!important;
+
+}
+#pagination-container {
+    margin-top: 20px
+}
+.img-my-recipe{
+    height: 237px!important
+}
+.delete-button a{
+    float: right
+}

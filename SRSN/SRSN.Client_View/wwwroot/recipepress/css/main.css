@@ -6582,7 +6582,7 @@ div.widget-measurements {
     .default-btn.theme-tag-color:hover,
     .default-btn.light-color:hover {
         background: #000000;
-        color: #ffffff;
+        color: #ffffff!important;
     }
 
     .default-btn.theme-border {

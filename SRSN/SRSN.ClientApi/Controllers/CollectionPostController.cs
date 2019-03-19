@@ -30,6 +30,8 @@ namespace SRSN.ClientApi.Controllers
             try
             {
                 await collectionPostService.CreateAsync(request);
+
+
                 return Ok(new
                 {
                     message = $"Ban da tao thanh cong Bo Suu Tap co ten la: {request.CollectionId}"

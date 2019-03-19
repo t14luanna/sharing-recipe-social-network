@@ -52,7 +52,8 @@ namespace SRSN.Client_View.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=123;Trusted_Connection=False;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
 
@@ -176,7 +177,7 @@ namespace SRSN.Client_View.Entities
 
                 entity.ToTable("Collection_Post");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.Collection)
                     .WithMany(p => p.CollectionPost)
@@ -213,7 +214,7 @@ namespace SRSN.Client_View.Entities
                 entity.HasOne(d => d.RecipeCommentParent)
                     .WithMany(p => p.Comment)
                     .HasForeignKey(d => d.RecipeCommentParentId)
-                    .HasConstraintName("FK_Comment_RatingRecipe");
+                    .HasConstraintName("FK_Comment_User_Reaction_Recipe");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.Comment)
@@ -444,7 +445,12 @@ namespace SRSN.Client_View.Entities
 
             modelBuilder.Entity<UserFollowing>(entity =>
             {
+                entity.HasKey(e => new { e.UserId, e.FollowingUserId })
+                    .HasName("PK_User_Following_1");
+
                 entity.ToTable("User_Following");
+
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
@@ -482,16 +488,17 @@ namespace SRSN.Client_View.Entities
 
             modelBuilder.Entity<UserReactionRecipe>(entity =>
             {
-                entity.HasKey(e => new { e.UserId, e.RecipeId })
-                    .HasName("PK_User_Recipe_Point");
-
                 entity.ToTable("User_Reaction_Recipe");
+
+                entity.Property(e => e.CalculatedRating).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.IsLike).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.IsShare).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.IsView).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RatingTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.UserReactionRecipe)

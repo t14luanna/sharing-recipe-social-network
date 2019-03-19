@@ -27,13 +27,9 @@
                             </div>`;
 
 const callSearchResultAPI = async (searchValue) => {
-
-    //var url = window.location.href;
-    //var recipeName = url.split("=")[1];
     var res = await fetch(`https://localhost:44361/api/recipe/read-recipename-page?recipeName=${encodeURIComponent(searchValue)}`);
     var a = await res.json();
     var data = a.result;
-    var count = 0;
     for (var item of data) {
         console.log(item);
         count++;
