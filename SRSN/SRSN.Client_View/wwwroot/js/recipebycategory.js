@@ -30,11 +30,9 @@
 const callRecipeByCategoryAPI = async () => {
     var url = window.location.href;
     var categoryName = url.split("=")[1];
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read-recipe-by-category?categoryName=${categoryName}`);
-    var dataRes = await res.json();
-    var dataSrc = dataRes.result;
+
     $("#pagination-container").pagination({
-        dataSource: dataSrc,
+        dataSource: `${BASE_API_URL}/api/recipe/read-recipe-by-category?categoryName=${categoryName}`,
         locator: '',// array
         totalNumberLocator: function (response) {
             return response.length;

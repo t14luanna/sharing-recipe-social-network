@@ -253,7 +253,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetRecipeNameLike(recipeName));
+                return Ok(await recipeService.GetRecipeNameLike(recipeName));
             }
             catch (Exception ex)
             {
@@ -266,7 +266,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetRecipeName(recipeName));
+                return Ok(await recipeService.GetRecipeName(recipeName));
             }
             catch (Exception ex)
             {
@@ -279,7 +279,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetRecipeBaseOnCategory(userManager, categoryName));
+                return Ok( await recipeService.GetRecipeBaseOnCategory(userManager, categoryName));
             }
             catch (Exception ex)
             {
