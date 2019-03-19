@@ -43,6 +43,22 @@ const callRecipeByUserId = async () => {
     }
 };
 async function deleteRecipeInMyRecipe(recipeId) {
+    swal({
+        title: "Bạn muốn xóa?",
+        text: "Sau khi xóa, bạn sẽ không thấy Công Thức này!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                deactivateRecipe(recipeId);
+            } else {
+                //do nothing
+            }
+        });
+};
+const deactivateRecipe = async (recipeId) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/delete?recipeId=${recipeId}`, {
@@ -53,7 +69,9 @@ async function deleteRecipeInMyRecipe(recipeId) {
         },
     });
     if (recipeRes.status == 200) {
-        alert("Bạn đã xóa thành công Công Thức này!");
+        swal("Bạn đã xóa thành công Bình Luận này!", {
+            icon: "success",
+        });
         $(`#${recipeId}`).remove();
     } else {
         alert("Bạn không thể xóa thành công Công Thức này, vui lòng thử lại!!!");

@@ -13,9 +13,9 @@
                         <span class="grid "><i class="fa fa-th-large"></i></span>
                         <span class="list current"><i class="fa fa-bars"></i></span>
                     </div>
-                    <h2>Latest Recipes</h2>
+                    <h2>Những công thức thuộc một nhóm</h2>
 
-                    <div class="recipe-listing listing-list" id="list-latest-recipe-page">
+                    <div class="recipe-listing listing-list" id="list-recipe">
                     </div>
 
                     <div id="pagination-container" class="page-nav"></div>
@@ -36,13 +36,13 @@
                         <div class="widget recipe-search">
 
                             <div class="category-list">
-                                <ul id="list-category-item-recipe-page"></ul>
+                                <ul id="list-category-item"></ul>
                             </div>
                         </div>
                         <!--recipes search widget ends-->
                         <!--recent recipes widget-->
                         <div class="widget latest-news-widget">
-                            <h2>Recent Recipes</h2>
+                            <h2>Công thức vừa xem</h2>
                             <ul id="list-recent-recipe"></ul>
                         </div>
                         <!--popular recipes widget ends-->
@@ -53,13 +53,13 @@
                         </div>
                         <!--popular recipe widget-->
                         <div class="widget latest-news-widget">
-                            <h2 id="test">Popular recipe</h2>
+                            <h2 id="test">Công thức thịnh hành</h2>
                             <ul id="list-popular-recipe-widget"></ul>
                         </div>
                         <!--latest news widget ends-->
                         <!--get social-->
                         <div class="widget widget-get-social">
-                            <h2>get social</h2>
+                            <h2>Liên kết xã hội</h2>
                             <ul>
                                 <li class="facebook">
                                     <a href="#">
@@ -95,15 +95,25 @@
 </div>
 
 @section Scripts {
+
+    <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
+
     <script type="text/javascript" src="~/js/recipebycategory.js"></script>
+
+    <script type="text/javascript" src="~/js/menu-widgets.js"></script>
     <script type="text/javascript">
-    const changeHeadername = async () => {
-        var someText = "Kết quả tìm kiếm";
-        $('.main-heading h1').append(document.createTextNode(someText));
-    };
-    (async () => {
-        await changeHeadername();
-        await callRecipeByCategoryAPI();
-    })();
+        const changeHeadername = async () => {
+            var someText = "Kết quả tìm kiếm";
+            $('.main-heading h1').append(document.createTextNode(someText));
+        };
+        (async () => {
+            await changeHeadername();
+            await callRecipeByCategoryAPI();
+            await callPopularRecipeWidgetApi();
+            await loadRecipeLocalStorage();
+            await callListCategoryItem();
+            await RedirectAPI();
+
+        })();
     </script>
 }

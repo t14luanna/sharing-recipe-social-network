@@ -1,20 +1,20 @@
-﻿const readTopTenUsers = (account) =>
+﻿const readTopTenUsers = (account, rankUser) =>
  `<li>
     <div class="single-chef">
         <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="team" /></a>
         <div class="chef-detail">
             <div class="chef-detail-inner">
                 <h4>${account.firstName} ${account.lastName}</h4>
-                <span class="type">executive chef</span>
+                <span class="type">${rankUser}</span>
                 <p>${account.description}</p>
                 <ul class="social-icons-chef">
-                    <li><a href="#" title="Follow" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
+                    <li><a href="#" title="Theo dõi" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
                             <input type="hidden" value="${account.id}">
                             <i class="fa fa-user-plus"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
+                        <a href="#" title="Gửi tin nhắn" class="btn-link" data-toggle="tooltip" data-placement="bottom">
                             <i class="fa fa-envelope-o"></i>
                         </a>
                    </li>
@@ -26,11 +26,11 @@
 
 const readTopUser = (account) =>
     `<div class="left-side" >
-                        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="head chef" /></a>
+                        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="thành viên đứng đầu" /></a>
                     </div>
                     <div class="right-side">
                         <h3><a href="/account/information/${account.username}">${account.firstName} ${account.lastName}</a></h3>
-                        <span class="type">head chef</span>
+                        <span class="type">Thành viên đứng đầu</span>
                         <ul class="expertise">
                             <li>
                                 <a href="#">
@@ -113,16 +113,16 @@ const readTopUser = (account) =>
                         <div class="separator-chef"></div>
                         <p>${account.description}</p>
                         <br />
-                        <a class="button-default theme-filled video-button" href="#">Watch Video</a>
+                        <a class="button-default theme-filled video-button" href="#">Xem Video</a>
 
                         <ul class="social-icons-chef">
-                            <li><a href="" title="Follow" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
+                            <li><a href="" title="Theo dõi" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
                                 <input type="hidden" value="${account.id}">
                                 <i class="fa fa-user-plus"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
+                                <a href="#" title="Gửi tin nhắn" class="btn-link" data-toggle="tooltip" data-placement="bottom">
                             <i class="fa fa-envelope-o"></i>
                                 </a>
                             </li>
@@ -136,7 +136,19 @@ const callTopTenAccountApi = async () => {
     var data = (await res.json());
     var count = 0;
     for (var item of data) {
-        let element = readTopTenUsers(item);
+        var rankUser;
+        if (item.point >= 0 && item.point <= 99) {
+            rankUser = "Newbee";
+        } else if (item.point >= 100 && item.point <= 499) {
+            rankUser = "Tastee";
+        } else if (item.point >= 500 && item.point <= 999) {
+            rankUser = "Cookee";
+        } else if (item.point >= 1000 && item.point <= 4999) {
+            rankUser = "Chefee";
+        } else if (item.point >= 5000) {
+            rankUser = "Mastee";
+        }
+        let element = readTopTenUsers(item, rankUser);
         $("#list-top-ten-users").append(element);
     }
     $('.follow-btn').click((e) => {

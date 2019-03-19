@@ -31,26 +31,17 @@
                     <div class="side-bar">
                         <!--recipes search widget-->
                         <div class="widget recipe-search">
-                            <div class="search-bar-widget">
-                                <form action="#">
-                                    <div class="search-field">
-                                        <input type="search" name="search" placeholder="Search" />
-                                        <button type="submit"><i class="fa fa-search"></i></button>
-                                    </div>
-                                </form>
-                            </div>
-
                             <div class="category-list">
                                 <!--<div class="list-inner">-->
-                                <ul id="list-category-item-loginpage"></ul>
+                                <ul id="list-category-item"></ul>
                                 <!--</div>-->
                             </div>
                         </div>
                         <!--recipes search widget ends-->
                         <!--popular recipes widget-->
                         <div class="widget latest-news-widget">
-                            <h2>popular recipes</h2>
-                            <ul id="list-popular-recipe-widget-loginpage"></ul>
+                            <h2>Công thức thịnh hành</h2>
+                            <ul id="list-popular-recipe-widget"></ul>
                         </div>
                         <!--popular recipes widget ends-->
                         <div class="widget">
@@ -60,13 +51,13 @@
                         </div>
                         <!--latest news widget-->
                         <div class="widget latest-news-widget">
-                            <h2>Latest News</h2>
-                            <ul id="list-latest-recipe-widget-loginpage"></ul>
+                            <h2>Công thức mới nhất</h2>
+                            <ul id="list-latest-recipe-widget"></ul>
                         </div>
                         <!--latest news widget ends-->
                         <!--get social-->
                         <div class="widget widget-get-social">
-                            <h2>get social</h2>
+                            <h2>Liên kết xã hội</h2>
                             <ul>
                                 <li class="facebook">
                                     <a href="#">
@@ -102,7 +93,7 @@
 </div>
 <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
 
-<script src="~/js/login.js"></script>
+<script src="~/js/menu-widgets.js"></script>
 <script src="~/js/recipe.js"></script>
 @section Scripts
     {
@@ -154,9 +145,9 @@
         };
         (async () => {
             await changeHeadername();
-            await callLatestRecipeWidgetLoginPageApi();
-            await callListCategoryItemLoginPageApi();
-            await callPopularLoginPageApi();
+            await callLatestRecipeWidgetApi();
+            await callListCategoryItem();
+            await callPopularRecipeWidgetApi();
         })();
     </script>
 

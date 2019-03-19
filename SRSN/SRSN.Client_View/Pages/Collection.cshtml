@@ -325,15 +325,15 @@
 
                             <div class="category-list">
                                 <!--<div class="list-inner">-->
-                                <ul id="list-category-item-recipe-detail"></ul>
+                                <ul id="list-category-item"></ul>
                                 <!--</div>-->
                             </div>
                         </div>
                         <!--recipes search widget ends-->
                         <!--popular recipes widget-->
                         <div class="widget latest-news-widget">
-                            <h2>popular recipes</h2>
-                            <ul id="popular-recipes-detail"></ul>
+                            <h2>Công thức thịnh hành</h2>
+                            <ul id="list-popular-recipe-widget"></ul>
                         </div>
                         <!--popular recipes widget ends-->
                         <div class="widget">
@@ -343,8 +343,8 @@
                         </div>
                         <!--latest news widget-->
                         <div class="widget latest-news-widget">
-                            <h2>Latest News</h2>
-                            <ul id="latest-recipe-detail"></ul>
+                            <h2>Công thức mới nhất</h2>
+                            <ul id="list-latest-recipe-widget"></ul>
                         </div>
                         <!--latest news widget ends-->
                         <!--get social-->
@@ -389,7 +389,7 @@
     <script src="~/js/collection.js"></script>
     <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
     <script type="text/javascript" src="~/js/recipe.js"></script>
-    <script src="~/js/recipeDetail.js"></script>
+    <script src="~/js/menu-widgets.js"></script>
 
     <script type="text/javascript">
         const changeHeadername = async () => {
@@ -399,10 +399,10 @@
         (async () => {
             // Init elements
             await changeHeadername();
-            await callPopularCollectionPageApi();
-            await callListCategoryItemDetailPage();
-            await callLatestRecipeDetailApi();
-            await callPopularRecipeDetailPageApi();
+            await callListCategoryItem();
+            await callPopularRecipeWidgetApi();
+            await callLatestRecipeWidgetApi();
+            await RedirectAPI();
         })();
 
     </script>

@@ -77,6 +77,22 @@ const createSinglerRecipes = (recipe) => `<div class="listing custom-listing" st
     
 </div>`;
 async function deleteCollectionById(collectionId) {
+    swal({
+        title: "Bạn muốn xóa?",
+        text: "Sau khi xóa, bạn sẽ không thấy Bộ Sưu Tập này!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                deactivateCollection(collectionId);
+            } else {
+                //do nothing
+            }
+        });
+};
+const deactivateCollection = async (collectionId) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var data = {
@@ -90,21 +106,40 @@ async function deleteCollectionById(collectionId) {
             'Authorization': `Bearer ${token}`
         }
     });
-    
+
     if (res.status == 200) {//delete successfully
-        alert("Bạn đã xóa thành công Bộ sưu tập!!");
+        swal("Bạn đã xóa thành công Bình Luận này!", {
+            icon: "success",
+        });
         window.location.replace(`/account/collection/${window.localStorage.getItem("username")}`);
     } else {
         alert("Không thể xóa Bộ Sưu Tập. Vui lòng thử lại!!!");
     }
 };
 async function deleteRecipeInMyCollection(collectionId, recipePostId ) {
+    swal({
+        title: "Bạn muốn xóa?",
+        text: "Sau khi xóa, bạn sẽ không thấy Công Thức này!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                deactivateRecipe(collectionId, recipePostId);
+            } else {
+                //do nothing
+            }
+        });
+};
+const deactivateRecipe = async (collectionId, recipePostId) => {
     var res = await fetch(`${BASE_API_URL}/${COLLECTION_POST_API_URL}/delete-recipepost?collectionId=${collectionId}&recipePostId=${recipePostId}`);
 
     if (res.status == 200) {//delete successfully
-        alert("Bạn đã xóa thành công công thức này!");
+        swal("Bạn đã xóa thành công Bình Luận này!", {
+            icon: "success",
+        });
         $(`#${collectionId}${recipePostId}`).remove();
-        //window.location.reload();
     } else {
         alert("Không thể xóa công thức này. Vui lòng thử lại!!!");
     }

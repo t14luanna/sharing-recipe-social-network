@@ -1,7 +1,8 @@
 ﻿var getRecipeByCategory = (recipe) =>
-    `<div class="listing" itemid="${recipe.id}">
+    `<div class="listing" itemid="${recipe.id}" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                 <div class="image">
-                                    <a href="#">
+                                    <a href="/recipe/${recipe.id}">
                                         <img src="${recipe.imageCover}" alt="image"/>
                                     </a>
                                 </div>
@@ -12,7 +13,7 @@
                                     </p>
                                     <div class="meta-listing">
                                         <ul class="post-meta">
-                                            <li class="author"><a href="#" >${recipe.fullName}</a></li>
+                                            <li class="author"><a href="#">${recipe.fullName}</a></li>
                                             <li class="calendar" id="createTime">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</li>
                                         </ul>
                                         <div class="rating-box">
@@ -27,17 +28,45 @@
                             </div>`;
 
 const callRecipeByCategoryAPI = async () => {
-
     var url = window.location.href;
     var categoryName = url.split("=")[1];
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read-recipe-by-category?categoryName=` + categoryName);
-    var a = await res.json();
-    var data = a.result;
-    console.log('data: ' + data);
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-recipe-by-category?categoryName=${categoryName}`);
+    var dataRes = await res.json();
+    var dataSrc = dataRes.result;
+    $("#pagination-container").pagination({
+        dataSource: dataSrc,
+        locator: '',// array
+        totalNumberLocator: function (response) {
+            return response.length;
+        },
+        //totalNumber: 40,
+        pageSize: 9,
+        ajax: {
+            beforeSend: function () {
+                $('#list-recipe').html('Đang tải dữ liệu ...');
+            }
+        },
+        callback: function (data, pagination) {
+            // template method of yourself
+            var html = template(data, pagination);
+            $('#list-recipe').html(html);
+        }
+    });
+    
+};
+var template = function (data, pagination) {
+    var pageSize = pagination.pageSize;
+    var currentPageNumber = pagination.pageNumber - 1;
+    var s = "";
+
     var count = 0;
-    for (var item of data) {
+    while (count < pageSize) {
+        var i = currentPageNumber * pageSize + count;
+        if (i >= data.length) {
+            break;
+        }
+        s += getRecipeByCategory(data[i]);
         count++;
-        let element = getRecipeByCategory(item);
-        $("#list-latest-recipe-page").append(element);
     }
+    return s;
 };
