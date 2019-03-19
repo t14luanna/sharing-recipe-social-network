@@ -48,7 +48,7 @@ namespace SRSN.DatabaseManager.Services
         ICollection<RecipeViewModel> GetLastestRecipes();
         Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName);
         Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
-        Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(string categoryName);
+        Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(UserManager<SRSNUser> userManager, string categoryName);
         Task UpdateIsShareReaction(int recipeId, int userId);
         
 
@@ -540,7 +540,7 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(string categoryName)
+        public async Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(UserManager<SRSNUser> userManager, string categoryName)
         {
             try
             {
@@ -549,12 +549,13 @@ namespace SRSN.DatabaseManager.Services
                     "INNER JOIN Recipe_Category ON Recipe.Id = Recipe_Category.RecipeId " +
                     "INNER JOIN CategoryItem ON Recipe_Category.CategoryItemId = CategoryItem.Id " +
                     "WHERE CategoryItem.CategoryItemName=N'" + categoryName + "'").ToList();
-
                 
                 foreach (var item in listItems)
                 {
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
                     var recipeViewModel = this.EntityToVM(item);
-
+                    recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
                 }
                 return list;

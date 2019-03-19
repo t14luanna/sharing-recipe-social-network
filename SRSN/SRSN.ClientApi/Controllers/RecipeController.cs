@@ -323,7 +323,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(recipeService.GetRecipeBaseOnCategory(categoryName));
+                return Ok(recipeService.GetRecipeBaseOnCategory(userManager, categoryName));
             }
             catch (Exception ex)
             {

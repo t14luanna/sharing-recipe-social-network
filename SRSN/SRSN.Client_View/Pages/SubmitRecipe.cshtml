@@ -70,7 +70,7 @@
                                         </span>
                                     </fieldset>
                                     <fieldset class="ingredient-set">
-                                        <label for="steps">Steps</label> </br>
+                                        <label for="steps">Steps</label> <br />
                                         <span class="error" name="stepsDes">*Các bước không được để trống</span>
                                         <ul class="list-sortable steps">
                                             <li>
@@ -110,27 +110,18 @@
                     <div class="side-bar">
                         <!--recipes search widget-->
                         <div class="widget recipe-search">
-                            <div class="search-bar-widget">
-                                <form action="#">
-                                    <div class="search-field">
-                                        <input type="search" name="search" placeholder="Search" />
-                                        <button type="submit">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+                            
                             <div class="category-list">
                                 <!--<div class="list-inner">-->
-                                <ul id="list-category-item-submitpage"></ul>
+                                <ul id="list-category-item"></ul>
                                 <!--</div>-->
                             </div>
                         </div>
                         <!--recipes search widget ends-->
                         <!--popular recipes widget-->
                         <div class="widget latest-news-widget">
-                            <h2>popular recipes</h2>
-                            <ul id="list-popular-recipe-widget-submitpage"></ul>
+                            <h2>Công thức thịnh hành</h2>
+                            <ul id="list-popular-recipe-widget"></ul>
                         </div>
                         <!--popular recipes widget ends-->
                         <div class="widget">
@@ -140,13 +131,13 @@
                         </div>
                         <!--latest news widget-->
                         <div class="widget latest-news-widget">
-                            <h2>Latest News</h2>
-                            <ul id="list-latest-recipe-widget-submitpage"></ul>
+                            <h2>Công thức mới nhất</h2>
+                            <ul id="list-latest-recipe-widget"></ul>
                         </div>
                         <!--latest news widget ends-->
                         <!--get social-->
                         <div class="widget widget-get-social">
-                            <h2>get social</h2>
+                            <h2>Liên kết xã hội</h2>
                             <ul>
                                 <li class="facebook">
                                     <a href="#">
@@ -194,6 +185,8 @@
     <script src="~/js/notification.js"></script>
     <script src="~/js/Configuration.js"></script>
     <script src="~/js/submit-recipe.js"></script>
+    <script src="~/js/menu-widgets.js"></script>
+
     <script type="text/javascript">
 
         const changeHeadername = async () => {
@@ -202,7 +195,11 @@
         };
         (async () => {
             await changeHeadername();
+            await callLatestRecipeWidgetApi();
+            await callListCategoryItem();
+            await callPopularRecipeWidgetApi();
             await loadCategory();
+            await RedirectAPI();
             $('#submitBtn').on("click", async function (event) {
                 $("#loading-box").show();
                 var results = getData();

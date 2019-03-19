@@ -69,7 +69,7 @@ const createSingleRandomRecipeElement = (recipe) =>
                                                 </a>
                                             </h3>
                                             <div class="short-separator"></div>
-                                            <a href="#" class="read-more">read more</a>
+                                            <a href="#" class="read-more">Xem thêm...</a>
                                         </div>
                                     </div>
       </div>`;
@@ -101,7 +101,7 @@ const createSingleBanner = (recipe) =>
                             <p>
                                ${recipe.contentRecipe}
                             </p>
-                            <a class="read-more-bordered" href="/recipe/${recipe.id}">Read More</a>
+                            <a class="read-more-bordered" href="/recipe/${recipe.id}">Xem Thêm...</a>
                         </div>`;
 const createSingleRecipeOfDay = (recipe) =>
     `<img src="${recipe.imageCover}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="Recipe of the day" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
@@ -115,7 +115,7 @@ const createSingleRecipeOfDay = (recipe) =>
                                         <p>
                                             ${recipe.contentRecipe}
                                         </p>
-                                        <a href="/recipe/${recipe.id}" class="read-more">Read More</a>
+                                        <a href="/recipe/${recipe.id}" class="read-more">Xem Thêm...</a>
                                     </div>
                                 </div>
                             </div>`;
@@ -142,51 +142,9 @@ const createSingleCategoryItem = (item) =>
                                             </li>
                                            `;
 
-const RedirectAPI = async () => {
-    $(".text").on("click", function (e) {
-        e.preventDefault();
-        var categoryName = $(this).text();
-        console.log(categoryName);
-        fetch("https://localhost:44361/api/recipe/read-recipe-by-category?categoryName=" + categoryName,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
-            })
-            .then(res => res.json())
-            .then(response => {
-                
-                var win = window.open('/RecipeByCategory?categoryName=' + categoryName);
-                if (win) {
-                    //Browser has allowed it to be opened
-                    win.focus();
-                } else {
-                    //Browser has blocked it
-                    alert('Please allow popups for this website');
-                }
-                //window.location.pathname = '/SearchRecipe';
-                console.log(response);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    });
-};
-    
-
 
 //choxem khúc giao diện
-const callListCategoryItem = async () => {
-    var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
-    var data = await res.json();
-    for (var item of data) {
-        for (var cateItem of item.listCategoryItem) {
-            let element = createSingleCategoryItem(cateItem);
-            $("#list-category-item").append(element);
-        }
-    }
-};
+
 const callRandomRecipeApi = async () => {
     var res = await fetch(`${BASE_API_URL}/api/recipe/read-random`);
     var data = await res.json();
@@ -260,30 +218,7 @@ const callPopularRecipeApi = async () => {
         }
     }
 };
-const callPopularRecipeWidgetApi = async () => {
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read-popular`);
-    var list = await res.json();
-    var count = 0;
-    for (var item of list) {
-        count++;
-        if (count >= 10) {
-            let element = createSingleRecipeWidgetElement(item);
-            $("#list-popular-recipe-widget").append(element);
-        }
-    }
-};
-const callLatestRecipeWidgetApi = async () => {
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest`);
-    var data = await res.json();
-    var count = 0;
-    for (var item of data) {
-        count++;
-        if (count >= 8) {
-            let element = createSingleRecipeWidgetElement(item);
-            $("#list-latest-recipe-widget").append(element);
-        }
-    }
-};
+
 
 //Gọi API search Recipe
 const callSearchRecipeApi = async (searchVal) => {

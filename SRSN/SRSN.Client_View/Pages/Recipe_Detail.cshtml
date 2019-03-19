@@ -71,19 +71,19 @@
                         <div class="about-chef"></div>
 
                         <div class="related-recipes">
-                            <h3 class="lined">Related Recipes</h3>
+                            <h3 class="lined">Những công thức liên quan</h3>
                             <div class="boxed-recipes text-center" id="list-related-recipe">
 
                             </div>
                         </div>
 
                         <div class="recipe-comments">
-                            <h3 class="lined">Comments (<span id="numOfComment"></span>)</h3>
+                            <h3 class="lined">Bình Luận (<span id="numOfComment"></span>)</h3>
                             <ul id="list-rating-comment"></ul>
                         </div>
 
                         <div class="comment-form">
-                            <h3 class="lined">Leave Comment</h3>
+                            <h3 class="lined">Viết bình luận</h3>
 
                             <div class="form-rating">
                                 <div class="form-rating-recipe">
@@ -120,7 +120,7 @@
                                         ...
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Report this recipe</a></li>
+                                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo công thức này</a></li>
                                         <li><a href="#">Nothing</a></li>
                                         <li><a href="#">Nothing</a></li>
                                     </ul>
@@ -164,15 +164,15 @@
 
                             <div class="category-list">
                                 <!--<div class="list-inner">-->
-                                <ul id="list-category-item-recipe-detail"></ul>
+                                <ul id="list-category-item"></ul>
                                 <!--</div>-->
                             </div>
                         </div>
                         <!---recipes search widget ends-->
                         <!--popular recipes widget-->
                         <div class="widget latest-news-widget">
-                            <h2>popular recipes</h2>
-                            <ul id="popular-recipes-detail"></ul>
+                            <h2>Công thức thịnh hành</h2>
+                            <ul id="list-popular-recipe-widget"></ul>
                         </div>
                         <!--popular recipes widget ends-->
                         <div class="widget">
@@ -182,13 +182,13 @@
                         </div>
                         <!--latest news widget-->
                         <div class="widget latest-news-widget">
-                            <h2>Latest Recipes</h2>
-                            <ul id="latest-recipe-detail"></ul>
+                            <h2>Công thức mới nhất</h2>
+                            <ul id="list-latest-recipe-widget"></ul>
                         </div>
                         <!--latest news widget ends-->
                         <!--get social-->
                         <div class="widget widget-get-social">
-                            <h2>get social</h2>
+                            <h2>Liên kết cộng đồng</h2>
                             <ul>
                                 <li class="facebook">
                                     <a href="#">
@@ -288,6 +288,8 @@
     <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
     <script type="text/javascript" src="/recipepress/js/main.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/js/menu-widgets.js"></script>
+
     <script type="text/javascript">
                 // fetch and render element to html
                 const changeHeadername = async () => {
@@ -348,8 +350,10 @@
                     await callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
                     await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));
                     await callChefRecipeApi(@(RouteData.Values["recipe_id"]));
-                    await callPopularRecipeDetailPageApi();
-                    await callLatestRecipeDetailApi();
+                    await callPopularRecipeWidgetApi();
+                    await callLatestRecipeWidgetApi();
+                    await callListCategoryItem();
+                    await RedirectAPI();
 
                     // Init products on modal list product item
                     // Get ingredient names
@@ -514,7 +518,7 @@
                                 "link": "/recipe/" + data.recipeId,
                                 "isRead": "False"
                             });
-                            //update uid into firebase 
+                            //update uid into firebase
                             SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
                                 uid: uid.key
                             });
