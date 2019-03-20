@@ -1,0 +1,71 @@
+﻿@page
+@{
+    ViewData["Title"] = "MessageChat";
+    Layout = "~/Pages/Shared/_NoBannerLayout.cshtml";
+}
+
+@section StyleOptional{
+    <link rel="stylesheet" href="recipepress/css/plugins.min.css">
+    <link rel="stylesheet" href="recipepress/css/style.css">
+    <link rel="stylesheet" href="recipepress/css/responsive-style.css">
+    <link rel="stylesheet" href="recipepress/css/colors/color-1.css" id="changeColorScheme">
+}
+
+<div class="recipes-home-body inner-page forum-home-body">
+    <div class="container">
+        <div class="row">
+            <div class="wrapper">
+                <section class="page--wrapper">
+                    <div class="container">
+                        <div class="row">
+                            <!-- Main Content Start -->
+                            <div class="main--content col-md-4 pb--60 right-chat" data-trigger="stickyScroll">
+                                <div class="main--content-inner drop--shadow inbox_chat inbox-chat-left">
+
+                                    <!-- Topic Replies Start -->
+                                    <div class="topic--replies">
+                                        <ul class="nav">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Main Content End -->
+                            <!-- Main Sidebar Start -->
+                            <div class="main--sidebar col-md-8 pb--60 left-chat" data-trigger="stickyScroll">
+                                <div class="main--content-inner drop--shadow  inbox-chat-left">
+                                    <div class="mesgs">
+                                        <div class="name-receiver-header">
+                                            <h3 class="name-header-mesgs"></h3>
+                                        </div>
+                                        <div class="msg_history">
+                                            <div class="msg-list">
+                                            </div>
+                                        </div>
+                                        <div class="type_msg">
+                                            <div class="input_msg_write">
+                                                <input type="text" class="write_msg" placeholder="Type a message" />
+                                                <button class="msg_send_btn" type="button">
+                                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Main Sidebar End -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="recipepress/js/main.js"></script>
+    <script src="~/lib/firebase.js"></script>
+    <script src="~/lib/algoliasearch.min.js"></script>
+    <script type="text/javascript" src="~/js/message-chat.js"></script>
+}
+
