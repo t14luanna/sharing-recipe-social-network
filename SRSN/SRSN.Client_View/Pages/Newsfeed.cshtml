@@ -260,9 +260,10 @@
             $(".btn-share-post").on("click", function (e) {
                 var currentTarget = e.currentTarget;
                 var recipeId = currentTarget.getAttribute("data-recipe-id");
-                callShareRecipeModalApi(recipeId);
+                var recipeOwner = currentTarget.getAttribute("data-recipeOwner-name");
+                callShareRecipeModalApi(recipeId, recipeOwner);
                 $(".modal-share-post").css("display", "block");
-
+                
             });
             $(".close-share-recipe").on("click", function (e) {
                 $(".modal-share-post").css("display", "none")

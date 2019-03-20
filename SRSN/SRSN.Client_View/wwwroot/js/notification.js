@@ -9,51 +9,51 @@ var usernameLocal = window.localStorage.getItem("username");//username của mõ
 if (usernameLocal != null) {
 
     var myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
-    myDataRef.on('child_changed', function (snapshot) {//Handle child data change
+    //myDataRef.on('child_changed', function (snapshot) {//Handle child data change
 
-        var link = "";
-        var username = "";
-        var text = "";
-        var noti;
-        var uid = "";
+    //    var link = "";
+    //    var username = "";
+    //    var text = "";
+    //    var noti;
+    //    var uid = "";
         
-        snapshot.forEach(function (childSnapshot) {
-            //var childKey = childSnapshot.key;
-            if (childSnapshot.key == "uid") {
-                uid = childSnapshot.val();
-            } else
-                if (childSnapshot.key == "isRead") {
-                    if (childSnapshot.val() != "True") {
-                        countNoti++;
+    //    snapshot.forEach(function (childSnapshot) {
+    //        //var childKey = childSnapshot.key;
+    //        if (childSnapshot.key == "uid") {
+    //            uid = childSnapshot.val();
+    //        } else
+    //            if (childSnapshot.key == "isRead") {
+    //                if (childSnapshot.val() != "True") {
+    //                    countNoti++;
 
-                    }
-                } else if (childSnapshot.key == "link") {
-                    link = childSnapshot.val();
-                } else if (childSnapshot.key == "username") {
-                    username = childSnapshot.val();
-                } else {
-                    text += childSnapshot.val() + "<br/>";
-                }
-        });
-        noti = {
-            "uid": uid,
-            "username": username,
-            "content": text,
-            "link": link,
-        }
+    //                }
+    //            } else if (childSnapshot.key == "link") {
+    //                link = childSnapshot.val();
+    //            } else if (childSnapshot.key == "username") {
+    //                username = childSnapshot.val();
+    //            } else {
+    //                text += childSnapshot.val() + "<br/>";
+    //            }
+    //    });
+    //    noti = {
+    //        "uid": uid,
+    //        "username": username,
+    //        "content": text,
+    //        "link": link,
+    //    }
        
-        var flag = false;
-        for (var itemNoti of listNotification) {
-            if (itemNoti.uid == uid) {
-                flag = true;
-                break;
-            }
-        }
-        if (flag != true) {//không tồn tại trong list
-            listNotification.push(noti);
-        }
-        displayNotifi();
-    });
+    //    var flag = false;
+    //    for (var itemNoti of listNotification) {
+    //        if (itemNoti.uid == uid) {
+    //            flag = true;
+    //            break;
+    //        }
+    //    }
+    //    if (flag != true) {//không tồn tại trong list
+    //        listNotification.push(noti);
+    //    }
+    //    displayNotifi();
+    //});
 
     myDataRef.on('child_added', function (snapshot) {//Handle khi có một child mới
 
@@ -108,27 +108,6 @@ if (usernameLocal != null) {
     });
 
 }
-
-////them data vao firebase
-//var myDataRef = firebase.database().ref(usernameLocal);
-
-//var uid = myDataRef.push({
-//    "uid": "",
-//    "username": "NghiaHH",
-//    "content": "toi bit roi",
-//    "date": "15/3/2019",
-//    "link": "/recipe/8",
-//    "isRead": "True"
-//});
-//let dbRef = firebase.database().ref("/" + usernameLocal + "/");
-////update unique key on firebase
-//dbRef.on("value", function (snapshot) {
-//    snapshot.forEach(function (child) {
-//        child.ref.update({
-//            uid: uid.key
-//        });
-//    });
-//});
 
 //update all child isRead = True
 function changeStatusNoti() {

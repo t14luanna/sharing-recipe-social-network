@@ -55,7 +55,7 @@ const createSingleLatestRecipeElement = (recipe) =>
             </div>
         </div>
     </div>`;
-const createSingleRandomRecipeElement = (recipe) =>
+const createSingleSuggestRecipeElement = (recipe) =>
     `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                     <div class="recipe-image">
@@ -145,12 +145,21 @@ const createSingleCategoryItem = (item) =>
 
 //choxem khúc giao diện
 
-const callRandomRecipeApi = async () => {
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read-random`);
+const callSuggestRecipeApi = async () => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var res = await fetch(`${BASE_API_URL}/api/recipe/newsfeed?limit=9&page=0`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
     var data = await res.json();
     for (var item of data) {
-        let element = createSingleRandomRecipeElement(item);
-        $("#list-random-recipe").append(element);
+        let element = createSingleSuggestRecipeElement(item);
+        $("#list-suggest-recipe").append(element);
     }
 };
 

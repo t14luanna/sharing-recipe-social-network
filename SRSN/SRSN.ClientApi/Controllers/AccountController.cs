@@ -108,15 +108,15 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(user, userVM);
             return Ok(userVM);
         }
-        [HttpGet("read-username-profile")]
-        [AllowAnonymous]
-        public async Task<ActionResult> ReadByUserName(string userName)
-        {
-            var user = await userManager.FindByNameAsync(userName);
-            var userVM = new AccountViewModel();
-            mapper.Map(user, userVM);
-            return Ok(userVM);
-        }
+        //[HttpGet("read-username-profile")]
+        //[AllowAnonymous]
+        //public async Task<ActionResult> ReadByUserName(string userName)
+        //{
+        //    var user = await userManager.FindByNameAsync(userName);
+        //    var userVM = new AccountViewModel();
+        //    mapper.Map(user, userVM);
+        //    return Ok(userVM);
+        //}
 
 
         [HttpGet("get-top-ten")]
@@ -177,24 +177,12 @@ namespace SRSN.ClientApi.Controllers
             try
             {
                 var list = new List<AccountViewModel>();
-
                 foreach (var u in userManager.Users.Where(u => u.UserName.Contains(username)).ToList().OrderByDescending(t => t.Id).Take(3))
                 {
-                    list.Add(new AccountViewModel()
-                    {
-                        Id = u.Id,
-                        Username = u.UserName,
-                        FirstName = u.FirstName,
-                        Address = u.Address,
-                        Birthdate = u.Birthdate,
-                        Email = u.Email,
-                        Gender = u.Gender,
-                        LastName = u.LastName,
-                        Phone = u.Phone,
-                        Point = u.Point,
-                        Description = u.Description,
-                        AvatarImageUrl = u.AvatarImageUrl
-                    });
+                    var accountVM = new AccountViewModel();
+                    mapper.Map(u, accountVM);
+                    list.Add(accountVM);
+                   
                 }
                 return Ok(list);
             }

@@ -259,19 +259,32 @@
                                     var uid = myDataRef.push({
                                         "uid": "",
                                         "username": usernameLocal,
-                                        "content": "đã chia sẽ công thức mới",
+                                        "content": "đã chia sẻ công thức mới",
                                         "date": new Date().toLocaleString(),
                                         "link": "/recipe/" + recipeId,
                                         "isRead": "False"
                                     });
-                                    var dbRef = firebase.database().ref('/' + chefUsername + "/" + uid);
-
-                                    //let dbRef = firebase.database().ref("/" + chefUsername + "/");
-                                    //update unique key on firebase
+                                    var dbRef = firebase.database().ref('/' + chefUsername + "/" + uid);                          
                                     dbRef.update({
                                         "uid": uid
                                     });
                                 }
+                                //thông báo công điểm cho chính user
+                                var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
+                                
+                                myDataRef.push({
+                                    "uid": "",
+                                    "username": "Bạn",
+                                    "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>" ,
+                                    "date": new Date().toLocaleString(),
+                                    "link": "/recipe/" + data.recipeId,
+                                    "isRead": "False"
+                                });
+                                //update uid into firebase
+                                SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
+                                    uid: uid.key
+                                });
+
                             }
                         })
                         .catch(function (e) {

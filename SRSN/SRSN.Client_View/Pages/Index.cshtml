@@ -236,7 +236,7 @@
 
                         <div class="recipe-set">
                             <h2>Có thể bạn thích</h2>
-                            <div class="boxed-recipes text-center" id="list-random-recipe">
+                            <div class="boxed-recipes text-center" id="list-suggest-recipe">
 
                             </div>
                         </div>
@@ -404,7 +404,7 @@
         await callPopularRecipeApi();
         await callLatestRecipeApi();
         await callLatestRecipeWidgetApi();
-        await callRandomRecipeApi();
+        await callSuggestRecipeApi();
         await callListCategoryItem();
         await attachInputSearchCallback();
         await RedirectAPI();

@@ -43,8 +43,9 @@
                             <input type="hidden" name="birthdate" id="birthdate" />
                             <label for="gender">Giới tính</label>
                             <select name="gender" id="gender" class="advance-selectable">
-                                <option value="0" selected="selected">Nam</option>
-                                <option value="1">Nữ</option>
+                                <option value="1" selected="selected">Nam</option>
+                                <option value="2">Nữ</option>
+                                <option value="3">Khác</option>
                             </select>
                             <label for="txtAddress">Địa chỉ</label>
                             <input type="text" name="address" id="txtAddress" required />
@@ -185,6 +186,21 @@
                             localStorage.setItem("authorization", JSON.stringify(response.token));
                             localStorage.setItem("username", response.username);
                             window.location.href = '/';
+
+                            //thông báo cộng điểm
+                            var myDataRef = SRSN.FIREBASE_DATABASE.ref(response.username);
+                            var uid = myDataRef.push({
+                                "uid": "",
+                                "username": "",
+                                "content": "Chúc mừng bạn là thành viên mới và được cộng thêm <b>10 điểm</b>",
+                                "date": new Date().toLocaleString(),
+                                "link": "/recipe/" + data.recipeId,
+                                "isRead": "False"
+                            });
+                            //update uid into firebase
+                            SRSN.FIREBASE_DATABASE.ref("/" + response.username + "/" + uid.key).update({
+                                uid: uid.key
+                            });
                         }
                     })
                     .catch(error => console.error('Error:', error));

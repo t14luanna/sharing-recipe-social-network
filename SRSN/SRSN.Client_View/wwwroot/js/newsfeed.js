@@ -1,6 +1,4 @@
-﻿
-
-const createRecipePost = (recipe) =>
+﻿const createRecipePost = (recipe) =>
     `<li><div class="activity--item ">
                                                     <div class="activity--avatar">
                                                         <a href="/MemberProfile">
@@ -39,19 +37,19 @@ const createRecipePost = (recipe) =>
 
                                             <div class="details-social-icons">
                                             <div class="like-count-${recipe.id} newsfeeds-social-icons"> </div>
-<div class="newsfeeds-social-icons">
-<a class="btn-share-post" title="Chia sẻ" data-recipe-id="${recipe.id}"><i class="fa fa-2x fa-share"></i></a>
-<a href="#" title="Like" class="like-button">
-                                                    <i class="fa fa-2x fa-heart-o" onclick="toggleLikeButton(this, ${recipe.id})" id="like-heart-${recipe.id}"></i>
-                                                </a>
-                                            <a id="btn-add-comment" onclick="callOpenCommentPostApi(${recipe.id})" title="Bình luận"><i class="fa fa-2x fa-comments-o"></i></a>
+                                            <div class="newsfeeds-social-icons">
+                                            <a class="btn-share-post" title="Chia sẻ" data-recipe-id="${recipe.id}" data-recipeOwner-name="${recipe.accountVM.username}"><i class="fa fa-2x fa-share"></i></a>
+                                            <a href="#" title="Like" class="like-button">
+                                                                                                <i class="fa fa-2x fa-heart-o" onclick="toggleLikeButton(this, ${recipe.id},'${recipe.accountVM.username}')" id="like-heart-${recipe.id}"></i>
+                                                                                            </a>
+                                                                                        <a id="btn-add-comment" onclick="callOpenCommentPostApi(${recipe.id}, '${recipe.accountVM.username}')" title="Bình luận"><i class="fa fa-2x fa-comments-o"></i></a>
                                                 
-                                            </div>
-                                                </div>
-                                                    </div>
-<div class="activity--comments fs--12">
+                                                                                        </div>
+                                                                                            </div>
+                                                                                                </div>
+                                            <div class="activity--comments fs--12">
                                                                             <ul class="acomment--items nav container-${recipe.id}">
-</ul>
+                                                                            </ul>
                                                                         </div>
                                                 </div>
 
@@ -106,7 +104,7 @@ const callIsLikeRecipe = async (recipeId) => {
 
 };
 
-async function toggleLikeButton(x, recipeId) {
+async function toggleLikeButton(x, recipeId, recipeOwner) {
     try {
         var token = JSON.parse(localStorage.getItem('authorization')).token;
         var res = await fetch(`https://localhost:44361/api/userreactionrecipe/like?recipeId=${recipeId}`, {
@@ -122,18 +120,25 @@ async function toggleLikeButton(x, recipeId) {
             await callCountApi(recipeId);
             x.classList.add("fa-heart");
             //them data vao firebase
-            var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
-            var usernameLocal = window.localStorage.getItem("username");//người đang like
-
-            var myDataRef = firebase.database().ref(chefUsername);
-            myDataRef.push({
-                "username": usernameLocal,
-                "content": "đã thích công thức của bạn.",
-                "date": new Date().toLocaleString(),
-                "link": "/recipe/" + recipeId,
-                "isRead": "False"
-            });
-
+            //chủ sở hữu recipe
+            if (usernameLocal == recipeOwner) {
+                //do nothing
+            } else {
+                var usernameLocal = window.localStorage.getItem("username");//người đang like
+                var myDataRef = firebase.database().ref(recipeOwner);//chủ của recipe
+                var uid = myDataRef.push({
+                    "uid": "",
+                    "username": usernameLocal,
+                    "content": "đã thích Công Thức của bạn.",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.recipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase
+                SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
+                    uid: uid.key
+                });
+            }
         }
         else {
             x.classList.remove("fa-heart");
@@ -143,7 +148,7 @@ async function toggleLikeButton(x, recipeId) {
 
     }
 }
-const createShareRecipeModal = (recipe, dataUser) => `<li><div class="activity--list share-post-item">
+const createShareRecipeModal = (recipe, dataUser, recipeOwner) => `<li><div class="activity--list share-post-item">
                     <ul class="activity--items nav">
                         <li>
                             <div class="activity--item">
@@ -183,10 +188,10 @@ const createShareRecipeModal = (recipe, dataUser) => `<li><div class="activity--
                             </div>
                         </li>
                     </ul>
-                    <a id="btn-share-recipe" onclick="callCreateShareRecipeModalApi(${recipe.id})" class="default-btn mid-button theme-color pull-right">Chia sẻ bài viết</a>
+                    <a id="btn-share-recipe" onclick="callCreateShareRecipeModalApi(${recipe.id}, '${recipeOwner}')" class="default-btn mid-button theme-color pull-right">Chia sẻ bài viết</a>
                 </div></li>`;
 
-const callShareRecipeModalApi = async (id) => {
+const callShareRecipeModalApi = async (id, recipeOwner) => {
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${id}`);
     var data = (await res.json());
     var authorization = localStorage.getItem("authorization");
@@ -207,11 +212,11 @@ const callShareRecipeModalApi = async (id) => {
     }
     var dataUser = await resUser.json();
     for (var item of data) {
-        var content = createShareRecipeModal(item, dataUser);
+        var content = createShareRecipeModal(item, dataUser, recipeOwner);
         $(".modal-body-share-post").append(content);
     }
 };
-const callCreateShareRecipeModalApi = async (id) => {
+const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var comment = $(`.textarea-caption`).val();
@@ -229,24 +234,65 @@ const callCreateShareRecipeModalApi = async (id) => {
     });
     if (res.status == 200) {
         $(".modal-share-post").css("display", "none");
-        swal("", "Bạn đã chia sẻ công thức thành công", "success")
+        swal("", "Bạn đã chia sẻ công thức thành công", "success");
+        //thông báo chia sẽ công thức (sharing notification)
+        var usernameLocal = window.localStorage.getItem("username");//người đang comment
+        var myDataRef;
+        var uid;
+        if (recipeOwner == usernameLocal) {
+            //do nothing
+        } else {
+            try {
+                console.log("Starting firebase")
+                myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
+                 uid = myDataRef.push({
+                    "uid": "",
+                    "username": usernameLocal,
+                    "content": "đã chia sẽ bài viết của bạn.",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.recipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase 
+                SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
+                    uid: uid.key
+                });
+                //thông báo cộng điểm
+                myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+                 uid = myDataRef.push({
+                    "uid": "",
+                    "username": "Bạn",
+                    "content": "đã chia sẽ bài viết và được cộng thêm <b>5 điểm</b>",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.recipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase 
+                SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                    uid: uid.key
+                });
+
+            } catch (e) {
+                console.error("Exception create rely comment: ", e);
+            }
+        }
     }
 };
-const openCommentPost = (user, recipeId, username = "") => `<li class="comment-newsfeed-li comment-post-li"><div class="recipe-comments comment-post-container"><ul class="reply-baongoc">
+const openCommentPost = (user, recipeId, recipeOwner, commentOwner) => `<li class="comment-newsfeed-li comment-post-li"><div class="recipe-comments comment-post-container"><ul class="reply-baongoc">
                 <li>
                     <div class="acomment--avatar">
                         <a href="#"><img class="user-reply-comment user-comment" src="${user.avatarImageUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"></a>
                     </div>
                     <div class="comment comment-newsfeeds">
                         <div class="comment-form">
-                            <textarea class="reply-comment" name="comment-${recipeId}" id="message" cols="3" rows="3">${username ? `@${username} ` : ``}</textarea>
-                             <a onclick="callCreateCommentApi(${recipeId})" class="reply-button">Đăng</a>
+                            <textarea class="reply-comment" name="comment-${recipeId}" id="message" cols="3" rows="3">${commentOwner ? `@${commentOwner} ` : ``}</textarea>
+                             <a onclick="callCreateCommentApi(${recipeId},'${recipeOwner}','${commentOwner}' )" class="reply-button">Đăng</a>
                         </div>
                     </div>
                 </li>
             </ul></div></li>`;
-const callOpenCommentPostApi = async (recipeId) => {
-    await callReadCommentApi(recipeId);
+const callOpenCommentPostApi = async (recipeId, recipeOwner) => {
+    await callReadCommentApi(recipeId, recipeOwner);
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var res = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
@@ -257,10 +303,10 @@ const callOpenCommentPostApi = async (recipeId) => {
         }
     });
     var data = await res.json();
-    var elementComment = openCommentPost(data, recipeId);
+    var elementComment = openCommentPost(data, recipeId, recipeOwner);
     $(`.container-${recipeId}`).append(elementComment)
 };
-const callCreateCommentApi = async (recipeId) => {
+const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var comment = $(`textarea[name="comment-${recipeId}"]`).val();
@@ -278,11 +324,67 @@ const callCreateCommentApi = async (recipeId) => {
             }
         });
         if (res.status == 200) {
-            await callOpenCommentPostApi(recipeId);
+            await callOpenCommentPostApi(recipeId, recipeOwner);
+            var usernameLocal = usernameLocal = window.localStorage.getItem("username");//người đang comment
+            if (commentOwner == "") {
+
+
+                //comment notification
+                //Đánh giá (comment) công thức firebase
+                 
+
+                var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
+                var uid = myDataRef.push({
+                    "uid": "",
+                    "username": usernameLocal,
+                    "content": "đã bình luận công thức của bạn",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.recipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase 
+                SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
+                    uid: uid.key
+                });
+            } else
+                if (commentOwner != "") {//thông báo trả lời comment
+                    //Đánh giá (comment) công thức firebase
+
+                    var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
+                    var uid1 = myDataRef.push({
+                        "uid": "",
+                        "username": usernameLocal,
+                        "content": "đã trả lời bình luận về công thức của bạn",
+                        "date": new Date().toLocaleString(),
+                        "link": "/recipe/" + data.recipeId,
+                        "isRead": "False"
+                    });
+                    //update uid into firebase 
+                    SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid1.key).update({
+                        uid: uid1.key
+                    });
+
+                    var usernameLocal = window.localStorage.getItem("username");//người đang comment
+
+                    var myDataRef = SRSN.FIREBASE_DATABASE.ref(commentOwner);//người sở hữu comment
+                    var uid2 = myDataRef.push({
+                        "uid": "",
+                        "username": usernameLocal,
+                        "content": "đã trả lời bình luận của bạn",
+                        "date": new Date().toLocaleString(),
+                        "link": "/recipe/" + data.recipeId,
+                        "isRead": "False"
+                    });
+                    //update uid into firebase 
+                    SRSN.FIREBASE_DATABASE.ref("/" + commentOwner + "/" + uid2.key).update({
+                        uid: uid2.key
+                    });
+                }
+
         }
     }
 }
-const callReadCommentApi = async (recipeId) => {
+const callReadCommentApi = async (recipeId, recipeOwner) => {
 
     var res = await fetch(`${BASE_API_URL}/${COMMENT_API_URL}/get-comment-by-recipeId?recipeId=${recipeId}`);
     var data = (await res.json()).result;
@@ -297,24 +399,23 @@ const callReadCommentApi = async (recipeId) => {
         var hr = date.getHours();
         var min = date.getMinutes();
         item.createTime = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
-        var element = createSingleReplyComment(item);
+        var element = createSingleReplyComment(item, recipeOwner);
         $(`.container-${recipeId}`).append(element);
     }
 };
 const callCountApi = async (recipeId) => {
     var countReply = await fetch(`${BASE_API_URL}/api/userreactionrecipe/get-like-share-count?recipeId=${recipeId}`);
     var dataCount = (await countReply.json());
-   
+
     var elements = $(`.update-like-${recipeId}`);
     if (elements[0]) {
         elements.remove();
     }
-    var element = createCountLine(dataCount,recipeId);
+    var element = createCountLine(dataCount, recipeId);
     $(`.like-count-${recipeId}`).append(element);
 };
 const createCountLine = (count, recipeId) => `<p class="update-like-${recipeId}">${count.likeCount} lượt thích, ${count.shareCount} lượt chia sẻ</p>`;
-const createSingleReplyComment = (comment) =>
-{
+const createSingleReplyComment = (comment, recipeOwner) => {
     var tagUserContents = comment.commentContent.match(/@(\w+)/gm);
     if (tagUserContents) {
         for (var item of tagUserContents) {
@@ -341,16 +442,16 @@ const createSingleReplyComment = (comment) =>
                         
                 <div class="acomment--content">${comment.commentContent}
                 </div>
-                    <a href="#/" id="comment-link-${comment.id}" onclick="openReplyView(${comment.id}, ${comment.recipeId}, '${comment.fullName}')" class="reply-button reply-newsfeed-comment">Trả lời</a>                        
+                    <a href="#/" id="comment-link-${comment.id}" onclick="openReplyView(${comment.id}, ${comment.recipeId}, '${comment.fullName}', '${recipeOwner}')" class="reply-button reply-newsfeed-comment">Trả lời</a>                        
             </div>
         </div>
     </li>`;
     return element;
 };
 
-function openReplyView(commentId, commentRecipeId, username) {
+function openReplyView(commentId, commentRecipeId, commentOwner, recipeOwner) {
     $(".comment-post-li").remove();
-    var elementComment = openCommentPost(commentId, commentRecipeId, username);
+    var elementComment = openCommentPost(commentId, commentRecipeId, recipeOwner, commentOwner);
     $(`.container-${commentRecipeId}`).append(elementComment)
 };
 
