@@ -15,6 +15,8 @@ let user_id = 1;
 let user_chat_list = [];
 let user_list = [];
 let db = firebase.firestore();
+let current_chat_id = '';
+let chatData = [];
 
 //View
 let message_list = $('.topic--replies > .nav')[0];
@@ -33,22 +35,24 @@ let user = firebase.auth().signInAnonymously();
       }
     });
 
+
+//-----------------------------User Chat Action-----------------------------------------
 let saveMessage = (messageText) => {
     // Add a new message entry to the Firebase database.
-    return db.collection('chat').add({
-        user_id: user_id,
-        message: message,
-        isSeenByOther: {
-            status: false,
-            time: ""
-        },
-        createAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).catch(function (error) {
+    return db.collection('chats').doc(current_chat_id).update(
+        {
+            messages: firebase.firestore.FieldValue.arrayUnion({
+                userSent: user_id,
+                content: messageText,
+                isOppositeSeen: false,
+                createAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+        }).catch(function (error) {
         console.error('Error writing new message to Firebase Database', error);
     });
 };
 
-let loadMessages = () => {
+let getEventLoad = () => {
     // Create the query to load the last 12 messages and listen for new ones.
     var query = db.collection('chat')
         .orderBy('timestamp', 'desc')
@@ -67,6 +71,7 @@ let loadMessages = () => {
         });
     });
 };
+//-----------------------------End User Chat Action-------------------------------------
 
 //Convert Timestamp to Date
 function convertTimestampToDate(unixtimestamp) {
@@ -110,7 +115,7 @@ let readUserChatList = () => {
         user_chat_list = [];
         db.collection("chats").where('users_id', 'array-contains', user_id).get().then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
-                user_chat_list.push(doc.data());
+                user_chat_list.push({ id: doc.id, data: doc.data() });
             });
             return resolve(user_chat_list);
         }).catch((e) => {
@@ -121,7 +126,9 @@ let readUserChatList = () => {
 
 //Show user chat list
 let showUserChat = (data) => {
-    $(data).each(async (i, chat) => {
+    $(data).each(async (i, item) => {
+        let chat = item.data;
+        let id = item.id;
         let opposite_user;
         let active = false;
         await $(chat.users).each((i, user) => {
@@ -136,19 +143,14 @@ let showUserChat = (data) => {
             $(message_user_title).text(opposite_user.user_name);
         }
 
-        let last_mess_content = '';
-        let last_mess_time = '';
-        if (chat.messages.length > 0) {
-            last_mess = chat.messages[chat.messages.length - 1];
-            last_mess_content = last_mess.content;
-            last_mess_time = convertTimestampToDate(last_mess.createdAt.seconds);
-        }
+        let last_mess_content = chat.last_message;
+        let last_mess_time = convertTimestampToDate(chat.updatedAt.seconds);
 
-        let user_chat_item = '<li class="' + (active ? 'active' : '') + '">' +
+        let user_chat_item = '<li id="' + id + '" class="' + (active ? 'active' : '') + '">' +
             '<div class="topic--reply"><div class="clearfix"><p class="date float--right">' + last_mess_time +
             '</p></div><div class="body clearfix"><div class="author mr--20 float--left text-center">' +
             '<div class="avatar" data-overlay="0.3" data-overlay-color="primary">' +
-            '<a href="member-activity-personal.html"><img src="' + opposite_user.user_image + '" alt=""></a></div></div>' +
+            '<a><img src="' + opposite_user.user_image + '" alt=""></a></div></div>' +
             '<div class="content fs--14 ov--h"><div class="name text-darkest">' +
             '<p><a href="member-activity-personal.html">' + opposite_user.user_name + '</a></p></div></div>' +
             '<div class="content fs--14 ov--h">' +
@@ -156,31 +158,77 @@ let showUserChat = (data) => {
             '</div></div></div></li>';
 
         if (active) {
-            $(chat.messages).each((i, mess) => {
-                let date = convertTimestampToDate(mess.createdAt.seconds);
-                let user_message_item = '<div class="incoming_msg"><div class="incoming_msg_img" >' +
-                '<img class="receiver-avatar" src="' + opposite_user.user_image + '" alt="sunil"></div>' +
-                '<div class="received_msg"><div class="received_withd_msg"><p>' + mess.content + '</p>' +
-                    '<span class="time_date">' + date + '</span></div></div></div >';
-
-                if (mess.userSent === user_id) {
-                    user_message_item = '<div class="outgoing_msg"><div class="sent_msg">' +
-                        '<p>' + mess.content + '</p><span class="time_date">' + date + '</span></div></div>';
-                }
-
-                message_content.innerHTML += user_message_item;
-            })
+            showMessageContent(id);
         }
 
         message_list.innerHTML += user_chat_item;
     });
     
 };
+
+let showMessageContent = (id) => {
+    current_chat_id = id;
+    findChatById(id).then(async (res) => {
+        let messages = await loadMessages(id);
+        let opposite_user;
+        await $(res.data.users).each((i, user) => {
+            if (user.user_id !== user_id) {
+                opposite_user = user;
+                return;
+            }
+        });
+        $(messages).each((i, mess) => {
+            let date = convertTimestampToDate(mess.createdAt.seconds);
+            let user_message_item = '<div class="incoming_msg"><div class="incoming_msg_img" >' +
+                '<img class="receiver-avatar" src="' + opposite_user.user_image + '" alt="sunil"></div>' +
+                '<div class="received_msg"><div class="received_withd_msg"><p>' + mess.content + '</p>' +
+                '<span class="time_date">' + date + '</span></div></div></div >';
+
+            if (mess.userSent === user_id) {
+                user_message_item = '<div class="outgoing_msg"><div class="sent_msg">' +
+                    '<p>' + mess.content + '</p><span class="time_date">' + date + '</span></div></div>';
+            }
+
+            message_content.innerHTML += user_message_item;
+        });
+    });
+};
+
+let findChatById = (id) => {
+    return new Promise((resolve, reject) => {
+        $(chatData).each((i, item) => {
+            if (item.id === id) return resolve(item);
+        });
+    })
+}
 //-----------------------------End User Chat List--------------------------------------
 
+//-----------------------------User Chat Content---------------------------------------
+
+let loadMessages = (id) => {
+    return new Promise((resolve, reject) => {
+        let messages = [];
+        db.collection("chats").doc(id).collection('messages').orderBy('createdAt').get().then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+                messages.push(doc.data());
+            });
+            return resolve(messages);
+        }).catch((e) => {
+            return reject(e);
+        });
+    });
+}
+
+//-----------------------------End User Chat Content-----------------------------------
+
+let setChatListItem = () => {
+    
+}
+
 $(document).ready((e) => {
-    readUserChatList().then((res) => {
-        showUserChat(res);
+    readUserChatList().then(async (res) => {
+        chatData = res;
+        await showUserChat(chatData);
     }).catch((e) => {
 
     });
