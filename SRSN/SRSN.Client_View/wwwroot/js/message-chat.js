@@ -15,13 +15,20 @@ let user_id = 1;
 let user_chat_list = [];
 let user_list = [];
 let db = firebase.firestore();
-let current_chat_id = '';
+let current_chat;
 let chatData = [];
 
 //View
 let message_list = $('.topic--replies > .nav')[0];
 let message_content = $('.msg-list')[0];
 let message_user_title = $('.name-header-mesgs')[0];
+let send_btn = $('.msg_send_btn')[0];
+
+$(send_btn).on('click', () => {
+    let message_text = $('.write_msg')[0];
+    sendMessage($(message_text).val());
+    $(message_text).val('');
+});
 
 //Sign-in with Anonymous account
 let user = firebase.auth().signInAnonymously();
@@ -37,40 +44,20 @@ let user = firebase.auth().signInAnonymously();
 
 
 //-----------------------------User Chat Action-----------------------------------------
-let saveMessage = (messageText) => {
+let sendMessage = (messageText) => {
     // Add a new message entry to the Firebase database.
-    return db.collection('chats').doc(current_chat_id).update(
+    return db.collection('chats').doc(current_chat.id).collection('messages').add(
         {
-            messages: firebase.firestore.FieldValue.arrayUnion({
-                userSent: user_id,
-                content: messageText,
-                isOppositeSeen: false,
-                createAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-        }).catch(function (error) {
-        console.error('Error writing new message to Firebase Database', error);
-    });
-};
-
-let getEventLoad = () => {
-    // Create the query to load the last 12 messages and listen for new ones.
-    var query = db.collection('chat')
-        .orderBy('timestamp', 'desc')
-        .limit(12);
-
-    // Start listening to the query.
-    query.onSnapshot(function (snapshot) {
-        snapshot.docChanges().forEach(function (change) {
-            if (change.type === 'removed') {
-                deleteMessage(change.doc.id);
-            } else {
-                var message = change.doc.data();
-                displayMessage(change.doc.id, message.timestamp, message.name,
-                    message.text, message.profilePicUrl, message.imageUrl);
-            }
+            userSent: user_id,
+            content: messageText,
+            isOppositeSeen: false,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(function (docRef) {
+        })
+        .catch(function (error) {
         });
-    });
 };
+
 //-----------------------------End User Chat Action-------------------------------------
 
 //Convert Timestamp to Date
@@ -167,31 +154,48 @@ let showUserChat = (data) => {
 };
 
 let showMessageContent = (id) => {
-    current_chat_id = id;
     findChatById(id).then(async (res) => {
+        current_chat = res;        
         let messages = await loadMessages(id);
         let opposite_user;
         await $(res.data.users).each((i, user) => {
             if (user.user_id !== user_id) {
                 opposite_user = user;
+                current_chat['opposite_user'] = opposite_user;
                 return;
             }
         });
+
+        //Set listener
+        db.collection("chats").doc(current_chat.id).collection('messages')
+            .onSnapshot(function (snapshot) {
+                snapshot.docChanges().forEach(function (change) {
+                    if (change.type === "modified") {
+                        appendMessage(change.doc.data(), opposite_user);
+                    }
+                });
+            });
+        //End Set listener
+
         $(messages).each((i, mess) => {
-            let date = convertTimestampToDate(mess.createdAt.seconds);
-            let user_message_item = '<div class="incoming_msg"><div class="incoming_msg_img" >' +
-                '<img class="receiver-avatar" src="' + opposite_user.user_image + '" alt="sunil"></div>' +
-                '<div class="received_msg"><div class="received_withd_msg"><p>' + mess.content + '</p>' +
-                '<span class="time_date">' + date + '</span></div></div></div >';
-
-            if (mess.userSent === user_id) {
-                user_message_item = '<div class="outgoing_msg"><div class="sent_msg">' +
-                    '<p>' + mess.content + '</p><span class="time_date">' + date + '</span></div></div>';
-            }
-
-            message_content.innerHTML += user_message_item;
+            appendMessage(mess, opposite_user);
         });
     });
+};
+
+let appendMessage = (message, opposite_user) => {
+    let date = convertTimestampToDate(message.createdAt.seconds);
+    let user_message_item = '<div class="incoming_msg"><div class="incoming_msg_img" >' +
+        '<img class="receiver-avatar" src="' + opposite_user.user_image + '" alt="sunil"></div>' +
+        '<div class="received_msg"><div class="received_withd_msg"><p>' + message.content + '</p>' +
+        '<span class="time_date">' + date + '</span></div></div></div >';
+
+    if (message.userSent === user_id) {
+        user_message_item = '<div class="outgoing_msg"><div class="sent_msg">' +
+            '<p>' + message.content + '</p><span class="time_date">' + date + '</span></div></div>';
+    }
+
+    message_content.innerHTML += user_message_item;
 };
 
 let findChatById = (id) => {
