@@ -232,6 +232,7 @@
                     })
                         .then(async (res) => {
                             $("#loading-box").hide();
+                            var uid;
                             if (res.status === 200) {
                                 swal({
                                     title: "",
@@ -256,7 +257,7 @@
                                     var followingMe = window.localStorage.getItem(user.username);//user is following me
 
                                     var myDataRef = firebase.database().ref(followingMe);
-                                    var uid = myDataRef.push({
+                                     uid = myDataRef.push({
                                         "uid": "",
                                         "username": usernameLocal,
                                         "content": "đã chia sẻ công thức mới",
@@ -264,27 +265,25 @@
                                         "link": "/recipe/" + recipeId,
                                         "isRead": "False"
                                     });
-                                    var dbRef = firebase.database().ref('/' + chefUsername + "/" + uid);                          
-                                    dbRef.update({
-                                        "uid": uid
+                                    SRSN.FIREBASE_DATABASE.ref('/' + chefUsername + "/" + uid.key).update({
+                                        "uid": uid.key
                                     });
                                 }
                                 //thông báo công điểm cho chính user
                                 var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
                                 
-                                myDataRef.push({
+                                uid = myDataRef.push({
                                     "uid": "",
                                     "username": "Bạn",
                                     "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>" ,
                                     "date": new Date().toLocaleString(),
-                                    "link": "/recipe/" + data.recipeId,
+                                    "link": "/recipe/" + recipeId,
                                     "isRead": "False"
                                 });
                                 //update uid into firebase
-                                SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
-                                    uid: uid.key
+                                SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                                    "uid": uid.key
                                 });
-
                             }
                         })
                         .catch(function (e) {

@@ -132,13 +132,13 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">Thông tin người th
     <div class="listing">
         <div class="image">
             <div class="image-inner">
-                <a href="#"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
+                <a href="/account/information/${chef.username}"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
             </div>
         </div>
         <div class="detail">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4><a href="#">${chef.username}</a></h4>
+                    <h4><a href="/account/information/${chef.username}">${chef.username}</a></h4>
 
                 </div>
                 <div class="col-sm-4">
@@ -152,7 +152,7 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">Thông tin người th
             <p>
                ${ chef.description}
             </p>
-            <a href="#" class="read-more-angle">Xem thêm...</a>
+            <a href="/account/information/${chef.username}" class="read-more-angle">Xem thêm...</a>
         </div>
     </div>`;
 
