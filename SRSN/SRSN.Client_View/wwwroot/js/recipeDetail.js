@@ -28,7 +28,9 @@ const createSingleBannerRecipeDetail = (recipe) =>
         <a href="${recipe.videoLink}" class="swipebox slider-video-button">Xem Video</a>
     </div>`;
 const createContentRecipe = (recipe) =>
-    `<span class="rating-figure" id="evRating"><u>Đánh giá:</u><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>&nbsp&nbsp(${recipe.evRating} / 5)</span>
+    `<span class="rating-figure" id="evRating"><u>Đánh giá: </u><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>&nbsp&nbsp(${recipe.evRating} / 5) 
+    <i class="rating-figure" style="float: right;">Lượt xem: ${recipe.viewQuantity}</i>
+    </span>
         <div class="separator-post"></div>
         <p>${recipe.contentRecipe}</p>`;
 
