@@ -28,7 +28,9 @@ const createSingleBannerRecipeDetail = (recipe) =>
         <a href="${recipe.videoLink}" class="swipebox slider-video-button">Xem Video</a>
     </div>`;
 const createContentRecipe = (recipe) =>
-    `<span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>&nbsp&nbsp(${recipe.evRating} / 5)</span>
+    `<span class="rating-figure" id="evRating"><u>Đánh giá: </u><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>&nbsp&nbsp(${recipe.evRating} / 5) 
+    <i class="rating-figure" style="float: right;">Lượt xem: ${recipe.viewQuantity}</i>
+    </span>
         <div class="separator-post"></div>
         <p>${recipe.contentRecipe}</p>`;
 
@@ -72,9 +74,8 @@ const createSingleRelatedRecipe = (recipe) =>
                 </h3>
                 <div class="short-separator"></div>
                 <div class="rating-box">
-                    <span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="
-                    font-size: 20px;
-                    color: green;"></i>&nbsp&nbsp
+                    <span class="rating-figure" id="evRating"><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>
+                         &nbsp&nbsp
                         (${recipe.evRating} / 5)
             </span>
                 </div>
@@ -117,9 +118,8 @@ const createSingleRatingComment2 = (comment, commentReplyCount) =>
         <div class="comment">
             <h5><a href="#">${comment.fullName}</a></h5>
             <span class="time">${comment.ratingTime}</span>
-            
-            <span class="rating-figure comment-rating-star">${comment.ratingRecipe} / 5 <i class="fa fa-star" aria-hidden="true"></i></span>
-            
+
+            <span class="rating-figure comment-rating-star">${comment.ratingRecipe} / 5 <span id="comment-id-${comment.id}"></span></span>
             
             <p>
                 ${comment.ratingContent}
@@ -178,6 +178,11 @@ const callRelatedRecipeApi = async (id) => {
         let element = createSingleRelatedRecipe(item);
 
         $("#list-related-recipe").append(element);
+        var numStar = item.evRating % 10;
+        $("#number-of-star-" + item.id).text("");
+        for (var i = 0; i < parseInt(numStar); i++) {
+            $("#number-of-star-" + item.id).append(`<i class="fa fa-star-half-o" aria-hidden="true"></i>`);
+        }
     }
 };
 
@@ -214,6 +219,11 @@ const callRecipeDetailApi = async (id) => {
         var content = createContentRecipe(item);
         $("#banner-recipe").append(element);
         $("#content-recipe").append(content);
+        var numStar = item.evRating % 10;
+        $("#number-of-star-" + item.id).text("");
+        for (var i = 0; i < parseInt(numStar); i++) {
+            $("#number-of-star-" + item.id).append(`<i class="fa fa-star-half-o" aria-hidden="true"></i>`);
+        }
     }
 
     callRelatedRecipeApi(userid);
@@ -246,6 +256,10 @@ const callReadRatingCommentApi = async (id) => {
         item.ratingTime = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
         var element = createSingleRatingComment2(item, dataCount)
         $("#list-rating-comment").append(element);
+        var num = item.ratingRecipe % 10;
+        for (var i = 0; i < parseInt(num); i++) {
+            $("#comment-id-" + item.id).append(`<i class="fa fa-star" aria-hidden="true"></i>`);
+        }
     }
     $("#numOfComment").append(count);
     $(`.comment-owner-${userId}`).css("display", "block");
@@ -476,24 +490,44 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
 
         }
         callReadRatingCommentApi(recipeId);
-
-        //them data vao firebase
+        //thông báo
+        //Đánh giá (comment) công thức firebase
         var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
         var usernameLocal = window.localStorage.getItem("username");//người đang comment
-
-        var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
-        var uid = myDataRef.push({
-            "uid": "",
-            "username": usernameLocal,
-            "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
-            "date": new Date().toLocaleString(),
-            "link": "/recipe/" + data.recipeId,
-            "isRead": "False"
-        });
-        //update uid into firebase 
-        SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
-            uid: uid.key
-        });
+        var myDataRef;
+        var uid;
+        if (chefUsername == usernameLocal) {
+            //do nothinng
+        } else {
+             myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+            uid = myDataRef.push({
+                "uid": "",
+                "username": usernameLocal,
+                "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
+                "date": new Date().toLocaleString(),
+                "link": "/recipe/" + data.recipeId,
+                "isRead": "False"
+            });
+            //update uid into firebase 
+            SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                uid: uid.key
+            });
+            //thông báo cộng điểm
+            myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+            uid = myDataRef.push({
+                "uid": "",
+                "username": "Bạn",
+                "content": "đã đánh giá công thức và được cộng thêm <b>5 điểm</b>",
+                "date": new Date().toLocaleString(),
+                "link": "/recipe/" + data.recipeId,
+                "isRead": "False"
+            });
+            //update uid into firebase
+            SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                uid: uid.key
+            });
+        }
+        
     } else if (res.status == 400) {
         removeAlert();
         $(".form-rating-recipe").append(alertRatedWarning);
@@ -625,7 +659,7 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
             await openReplyView(commentParentId, recipeId);
             // End render comment link from dataCount
 
-            //thong bao cho người chủ sở hữu recipe
+            //thông báo cho người chủ sở hữu recipe
             var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
             var usernameLocal = window.localStorage.getItem("username");//người đang comment
             if (chefUsername == usernameLocal) {
@@ -637,7 +671,7 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
                     var uid = myDataRef.push({
                         "uid": "",
                         "username": usernameLocal,
-                        "content": "đã bình luận về bài viết của bạn.",
+                        "content": "đã trả lời bình luận về bài viết của bạn.",
                         "date": new Date().toLocaleString(),
                         "link": "/recipe/" + data.recipeId,
                         "isRead": "False"
@@ -663,12 +697,11 @@ const notifyDependencyCommentedUser = async function (commentParentId) {
 
     try {
         // thong bao cho nguoi chủ comment
-        
         var ratingRecipeRes = await fetch(`${BASE_API_URL}/${RATING_RECIPE_API_URL}/get-ratingrecipe-by-id?commentParentId=${commentParentId}`);
         var userRes = await ratingRecipeRes.json();
         if (userRes.length) {
             var userId = userRes[0].userId;
-            
+            //thông báo
             var user = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
             var userParentCommentRes = await user.json();
             var userParentComment = userParentCommentRes.username;//chủ comment
@@ -677,7 +710,7 @@ const notifyDependencyCommentedUser = async function (commentParentId) {
                 // do nothing
             } else {
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(userParentComment);
-                myDataRef.push({
+                var uid = myDataRef.push({
                     "uid": "",
                     "username": usernameLocal,
                     "content": "đã trả lời bình luận của bạn.",
@@ -785,6 +818,47 @@ const callCreateShareRecipeModalApi = async (id) => {
     if (res.status == 200) {
         $("#modal-share-recipe").css("display", "none");
         swal("", "Bạn đã chia sẻ công thức thành công", "success")
+        //thông báo chia sẽ công thức (sharing notification)
+        var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
+        var usernameLocal = window.localStorage.getItem("username");//người đang chia sẻ
+        var myDataRef, uid;
+        if (chefUsername == usernameLocal) {
+            //do nothing
+        } else {
+            try {
+                console.log("Starting firebase")
+                myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+                uid = myDataRef.push({
+                    "uid": "",
+                    "username": usernameLocal,
+                    "content": "đã chia sẽ bài viết của bạn.",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.referencedRecipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase 
+                SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
+                    uid: uid.key
+                });
+                //thông báo cộng điểm
+                myDataRef  = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+                uid = myDataRef.push({
+                    "uid": "",
+                    "username": "Bạn",
+                    "content": "đã chia sẻ công thức và được cộng thêm <b>5 điểm</b>",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.referencedRecipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase
+                SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                    uid: uid.key
+                });
+
+            } catch (e) {
+                console.error("Exception create rely comment: ", e);
+            }
+        }
     }
 };
 const createCollectionItemModal = (collection) => `<div class="col-md-3 col-xs-6 col-xxs-12 collection-modal-item" onclick="callCreateAddCollectionApi(${collection.id}, ${recipeMainId})">

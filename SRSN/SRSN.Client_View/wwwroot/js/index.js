@@ -23,8 +23,8 @@ const createSingleRecipeElement = (singeRecipe) =>
                 <div class="short-separator"></div>
                 <ul class="news-post-meta post-meta">
                     <li class="rating-figure"><i class="fa fa-eye" aria-hidden="true">${singeRecipe.viewQuantity}</i></li>
-                    <li class="rating-icons">
-                         <i class="fa fa-star-half-o" aria-hidden="true"></i>
+                    <li class="rating-icons" >
+                         <span id="number-of-star-${singeRecipe.id}" style="color:#56E920"></span>
                         <span class="rating-figure">(${singeRecipe.evRating} / 5)</span>
                     </li>
                 </div>
@@ -55,7 +55,7 @@ const createSingleLatestRecipeElement = (recipe) =>
             </div>
         </div>
     </div>`;
-const createSingleRandomRecipeElement = (recipe) =>
+const createSingleSuggestRecipeElement = (recipe) =>
     `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                     <div class="recipe-image">
@@ -145,12 +145,25 @@ const createSingleCategoryItem = (item) =>
 
 //choxem khúc giao diện
 
-const callRandomRecipeApi = async () => {
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read-random`);
-    var data = await res.json();
-    for (var item of data) {
-        let element = createSingleRandomRecipeElement(item);
-        $("#list-random-recipe").append(element);
+const callSuggestRecipeApi = async () => {
+    var authorization = localStorage.getItem("authorization");
+    if (authorization != null) {
+
+
+        var token = (JSON.parse(authorization))["token"];
+        var res = await fetch(`${BASE_API_URL}/api/recipe/newsfeed?limit=9&page=0`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        var data = await res.json();
+        for (var item of data) {
+            let element = createSingleSuggestRecipeElement(item);
+            $("#list-suggest-recipe").append(element);
+        }
     }
 };
 
@@ -211,7 +224,11 @@ const callPopularRecipeApi = async () => {
         count++;
         if (count >= 4) {
             let element = createSingleRecipeElement(item);
+            var numStar = item.evRating % 10;
             $("#list-single-recipe").append(element);
+            for (var i = 0; i < numStar; i++) {
+                $("#number-of-star-" + item.id).append(`<i class="fa fa-star-half-o" aria-hidden="true"></i>`);
+            }
         }
         if (count == 9) {
             break;

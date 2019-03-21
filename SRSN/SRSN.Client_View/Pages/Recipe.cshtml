@@ -144,7 +144,16 @@
                 if (i >= data.length) {
                     break;
                 }
-                s += createSingleLatestRecipeElementPage(data[i]);
+                
+                var numStar = data[i].evRating % 10;
+                var ratingStarElement = "";
+                if (numStar>0) {
+                    for (var j = 0; j < parseInt(numStar); j++) {
+                        ratingStarElement += `<i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
+                    }
+                }
+                s += createSingleLatestRecipeElementPage(data[i], ratingStarElement);
+                ratingStarElement = "";
                 count++;
             }
             return s;

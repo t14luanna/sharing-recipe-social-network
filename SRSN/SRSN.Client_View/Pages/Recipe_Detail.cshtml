@@ -57,7 +57,7 @@
                                     </div>
                                     <div class="col-sm-5">
                                         <div class="details-social-icons">
-                                            <a href="#" title="Like" class="like-button">
+                                            <a href="javascript:void(0)" title="Like" class="like-button">
                                                 <i class=" fa fa-2x fa-heart-o" onclick="toggleLikeButton(this)" id="like-heart"></i>
                                             </a>
                                             <a id="btn-share-recipe" title="Chia sẻ"><i class="fa fa-2x fa-share"></i></a>
@@ -280,7 +280,12 @@
 </div>
 
 @section Scripts {
-
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
     <script src="~/js/recipeDetail.js"></script>
     <script type="text/javascript" src="/recipepress/js/plugins.min.js"></script>
     <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
@@ -293,6 +298,7 @@
         var currentString = "vị trí hiện tại của bạn";
         var indexString = "vị trí mặc định trong trang cá nhân của bạn";
                 // fetch and render element to html
+      
                 const changeHeadername = async () => {
                     var someText = "Công thức chi tiết";
                     $('.main-heading h1').append(document.createTextNode(someText));
@@ -508,22 +514,26 @@
                         if (data.isLike) {
                             x.classList.add("fa-heart");
                             //them data vao firebase
+                            //thông báo
                             var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
                             var usernameLocal = window.localStorage.getItem("username");//người đang like
-
-                            var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
-                            myDataRef.push({
-                                "uid": "",
-                                "username": usernameLocal,
-                                "content": "đã thích Công Thức của bạn.",
-                                "date": new Date().toLocaleString(),
-                                "link": "/recipe/" + data.recipeId,
-                                "isRead": "False"
-                            });
-                            //update uid into firebase
-                            SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
-                                uid: uid.key
-                            });
+                            if (chefUsername == usernameLocal) {
+                                //do nothing
+                            } else {
+                                var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+                                var uid = myDataRef.push({
+                                    "uid": "",
+                                    "username": usernameLocal,
+                                    "content": "đã thích Công Thức của bạn.",
+                                    "date": new Date().toLocaleString(),
+                                    "link": "/recipe/" + data.recipeId,
+                                    "isRead": "False"
+                                });
+                                //update uid into firebase
+                                SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
+                                    uid: uid.key
+                                });
+                            }
                         }
                         else {
                             x.classList.remove("fa-heart");

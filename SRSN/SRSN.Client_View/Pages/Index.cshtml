@@ -234,9 +234,9 @@
                         </div>
                         <!--recipe of the day ends-->
 
-                        <div class="recipe-set">
+                        <div class="recipe-set" id="suggest-recipe">
                             <h2>Có thể bạn thích</h2>
-                            <div class="boxed-recipes text-center" id="list-random-recipe">
+                            <div class="boxed-recipes text-center" id="list-suggest-recipe">
 
                             </div>
                         </div>
@@ -404,7 +404,7 @@
         await callPopularRecipeApi();
         await callLatestRecipeApi();
         await callLatestRecipeWidgetApi();
-        await callRandomRecipeApi();
+        await callSuggestRecipeApi();
         await callListCategoryItem();
         await attachInputSearchCallback();
         await RedirectAPI();
@@ -413,6 +413,11 @@
 
 </script>
 <script>
+    var authorization = JSON.parse(localStorage.getItem('authorization'));
+    if (authorization == null) {
+        $("#suggest-recipe").css("display", "none");
+    }
+    
     $("#searchBtn").on("click", function (e) {
         e.preventDefault();
         var searchValue = $('#custom-input-search').val();

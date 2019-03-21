@@ -1,5 +1,5 @@
 ﻿
-var createSingleLatestRecipeElementPage = (recipe) =>
+var createSingleLatestRecipeElementPage = (recipe, ratingStarElement) =>
     `                            <div class="listing" itemid="${recipe.id}" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                 <div class="image">
@@ -19,9 +19,7 @@ var createSingleLatestRecipeElementPage = (recipe) =>
                                             <li class="calendar" id="createTime">${ new Date(recipe.createTime).getDate()}/${new Date(recipe.createTime).getMonth() + 1}/${new Date(recipe.createTime).getFullYear()}</li>
                                         </ul>
                                         <div class="rating-box">
-                                            <span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="
-                                                    font-size: 20px;
-                                                    color: green;"></i>&nbsp&nbsp
+                                            <span class="rating-figure" id="evRating">${ratingStarElement}&nbsp&nbsp
                                                      (${recipe.evRating} / 5)
                                             </span>
                                         </div>

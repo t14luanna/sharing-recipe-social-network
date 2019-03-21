@@ -76,7 +76,10 @@ const callAccountInforApi = async (username) => {
         data = await res.json();
         data = data[0];
     }
-
+    var friendsRes = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + username);
+    var friendData = await friendsRes.json();
+    var countFriends = friendData.length;
+    $("#count-friends").text(countFriends);
     //Update profile user
     $("#btnUpdateInfo").on("click", async function (e) {
         $(this).attr("disabled", "disabled");
@@ -183,7 +186,7 @@ const callAccountInforApi = async (username) => {
     $("#hiddenFirstName").val(data.firstName);
     $("#lastName").val(data.lastName);
     $("#hiddenLastName").val(data.lastName);
-    $("#gender").val(data.gender);
+    //$("#gender").val(data.gender);
     $("#hiddenGender").val(data.gender);
 
     var birthDateValue = new Date(data.birthdate);
@@ -238,7 +241,7 @@ const callAccountInforApi = async (username) => {
     $("#txtAddress").val(data.address);
     $("#hiddenAddress").val(data.address);
 
-    $("#gender option[data-value='" + data.gender + "']").attr("selected", "selected");
+    $("#gender option[data-value=" + data.gender + "]").attr("selected", "selected");
     if (username == userNameLocalStorage) {//chinh chủ
         $(".edit-profile").css("display", "inline-table");
     } else {

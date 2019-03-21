@@ -1,4 +1,4 @@
-﻿var getRecipeByCategory = (recipe) =>
+﻿var getRecipeByCategory = (recipe, ratingStarElement) =>
     `<div class="listing" itemid="${recipe.id}" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                                 <div class="image">
@@ -17,9 +17,7 @@
                                             <li class="calendar" id="createTime">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</li>
                                         </ul>
                                         <div class="rating-box">
-                                            <span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="
-                                                    font-size: 20px;
-                                                    color: green;"></i>&nbsp&nbsp
+                                            <span class="rating-figure" id="evRating">${ratingStarElement}&nbsp&nbsp
                                                      (${recipe.evRating} / 5)
                                             </span>
                                         </div>
@@ -63,7 +61,15 @@ var template = function (data, pagination) {
         if (i >= data.length) {
             break;
         }
-        s += getRecipeByCategory(data[i]);
+        var numStar = data[i].evRating % 10;
+        var ratingStarElement = "";
+        if (numStar > 0) {
+            for (var j = 0; j < parseInt(numStar); j++) {
+                ratingStarElement += `<i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
+            }
+        }
+        s += getRecipeByCategory(data[i], ratingStarElement);
+        ratingStarElement = "";
         count++;
     }
     return s;
