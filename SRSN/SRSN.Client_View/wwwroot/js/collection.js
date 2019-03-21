@@ -1,8 +1,8 @@
 ﻿const createSingleCollectionElement = (collection) =>
-    `<div class="listing">
+    `<div class="listing custom-listing">
                             <div class="image">
-                                <a href="#">
-                                    <img src="${collection.coverImage}" alt="image" />
+                                <a href="/account/collection-detail/${collection.id}">
+                                    <img src="${collection.coverImage}" alt="image" class="custome-image-listing"/>
                                 </a>
                             </div>
                             <div class="detail">
@@ -21,11 +21,14 @@ const callPopularCollectionPageApi = async () => {
     var data = await res.json();
     var count = 0;
     for (var item of data) {
-        count++;
-        var noImgUrl = '/recipepress/images/no-image-icon-15.png'
-        var image = item.coverImage != null ? item.coverImage : noImgUrl;
-        item.coverImage = image;
-        let element = createSingleCollectionElement(item);
-        $("#recipe-listing-above").append(element);
+        if (count < 6) {
+            count++;
+            let element1 = createSingleCollectionElement(item);
+            $("#recipe-listing-above").append(element1);
+        } else {
+            count++;
+            let element2 = createSingleCollectionElement(item);
+            $("#recipe-listing-below").append(element2)
+        }
     }
 };

@@ -143,6 +143,7 @@ async function toggleLikeButton(x, recipeId, recipeOwner) {
         else {
             x.classList.remove("fa-heart");
         }
+        callCountApi(recipeId);
     } catch (e) {
         alert("Like không thành công")
 

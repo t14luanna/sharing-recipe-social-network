@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
+using SRSN.DatabaseManager;
 using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Redis;
 using SRSN.DatabaseManager.Services;
@@ -28,12 +29,14 @@ namespace SRSN.ClientApi.Controllers
         private IRecipeService recipeService;
         private IUserFollowingService userFollowingService;
         private UserManager<SRSNUser> userManager;
+        private SRSNUserManager SRSNuserManager;
         private IDatabase redisDatabase;
         private IMapper mapper;
-        public RecipeController(IRecipeService recipeService, IUserFollowingService userFollowingService, UserManager<SRSNUser> userManager, IMapper mapper)
+        public RecipeController(IRecipeService recipeService, IUserFollowingService userFollowingService, UserManager<SRSNUser> userManager, IMapper mapper, SRSNUserManager SRSNuserManager)
         {
             this.recipeService = recipeService;
             this.userFollowingService = userFollowingService;
+            this.SRSNuserManager = SRSNuserManager ?? throw new ArgumentNullException(nameof(SRSNuserManager));
             this.userManager = userManager;
             this.redisDatabase = RedisUtil.Connection.GetDatabase();
             this.mapper = mapper;
@@ -274,8 +277,10 @@ namespace SRSN.ClientApi.Controllers
             {
                 ClaimsPrincipal claims = this.User;
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var user = await this.userManager.FindByIdAsync(userId);
                 request.RecipeVM.UserId = userId;
                 var recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.CreateNewRecipe);
                 return Ok(new
                 {
                     recipeId = recipeId,
@@ -357,6 +362,8 @@ namespace SRSN.ClientApi.Controllers
             request.CreateTime = DateTime.Now;
             await recipeService.UpdateIsShareReaction(request.ReferencedRecipeId.Value, int.Parse(request.UserId));
             await recipeService.CreateAsync(request);
+            var user = await this.userManager.FindByIdAsync(userId);
+            var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.SharingRecipe);
             return Ok(new
             {
                 message = $"Ban da tao thanh cong Recipe co ten la: {request.Id}"

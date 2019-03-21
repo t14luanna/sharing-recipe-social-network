@@ -1,14 +1,15 @@
 ﻿var apikeyFilestack = 'AHs8S0A0zQ0SNWqyiHT2qz';
 var clientFilestack = filestack.init(apikeyFilestack);
-//var onProgress = (evt) => {
-//    document.getElementById('progress').innerHTML = `${evt.totalPercent}%`;
-//};
+var onProgress = (evt) => {
+    document.getElementById('progress').innerHTML = `${evt.totalPercent}%`;
+};
 
 $("#comment-form").submit(function (e) {
     e.preventDefault();
     const token = {};
     var file = $('#fileUploadedPreview').attr('src');
     var authorization = localStorage.getItem("authorization");
+    var username = localStorage.getItem("username");
     var tokenAuthorize = (JSON.parse(authorization))["token"];
     clientFilestack.upload(file, {}, {}, token)
         .then(res => {
@@ -27,9 +28,14 @@ $("#comment-form").submit(function (e) {
                     'Authorization': `Bearer ${tokenAuthorize}`
                 }
             }).then(res => {
-                if (res.status == "stored") {
-                    swal("", "Bạn đã chia sẻ công thức thành công", "success");
-                    console.log('success: ', response)
+                if (res.status == 200) {
+                    $("#modal-create-new-collection").hide();
+                    Swal.fire({
+                        type: 'success',
+                        title: 'Thông báo',
+                        text: 'Tạo bộ sưu tập thành công!',
+                    });
+                    callReadCollectionApi(username);
                 }
             }).catch(error => console.error('Error:', error));
            
@@ -51,7 +57,7 @@ $('#upload-image').on("change", function (e) {
     }
 });
 
-const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-xxs-12"  >
+const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-xxs-12 collection-item-container">
                                                         <div class="member--item online  collection-item">
                                                         <div onclick="window.location='/account/collection-detail/${collection.id}'">
                                                         <div class="img-recipe-avatar">
@@ -68,8 +74,8 @@ const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-
                                                         <div class="actions">
                                                             <ul class="nav">
                                                                 <li>
-                                                                    <a href="#" class="btn-link">
-                                                                        <i class="fa fa-book"></i> ${collection.recipeCount} công thức
+                                                                    <a href="#" class="btn-link recipe-count-${collection.id}">
+                                                                        
                                                                     </a>
                                                                 </li>
                                                                 <li>
@@ -92,7 +98,7 @@ const callReadCollectionApi = async (userName) => {
             'Authorization': `Bearer ${token}`
         }
     });
-    var elements = $(`.collection-item`);
+    var elements = $(`.collection-item-container`);
 
     if (elements[0]) {
 
@@ -103,9 +109,25 @@ const callReadCollectionApi = async (userName) => {
     for (var item of data) {
         var content = createCollectionItem(item);
         $(".main-contain-collection").append(content);
+        callReadRecipeCountApi(item.id);
     }
 };
-
+const callReadRecipeCountApi = async (collectionId) => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_POST_API_URL}/get-recipe-count-collection?collectionId=${collectionId}`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var data = await res.json();
+    var content = createRecipeCountItem(data);
+    $(`.recipe-count-${collectionId}`).append(content);
+};
+const createRecipeCountItem = (collection) =>
+    `<i class="fa fa-book recipe-count-append"></i> ${collection} công thức`;
 //function deactivateMemberCollection(collectionId) {
 //    var data = {
 //        Id: collectionId

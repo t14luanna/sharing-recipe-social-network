@@ -46,7 +46,7 @@
 
                                 <!-- Load More Button Start -->
                                 <div class="load-more--btn pt--30 text-center">
-                                    <a href="javascript:void()" onclick="getMoreNewFeeds()" class="btn btn-animate">
+                                    <a href="#/" onclick="getMoreNewFeeds()" class="btn btn-animate">
                                         <span>See More Activities<i class="fa ml--10 fa-caret-right"></i></span>
                                     </a>
                                 </div>
@@ -262,27 +262,21 @@
         (async () => {
             await changeHeadername();
             await callNewsfeedPageApi();
-            $(".btn-share-post").on("click", function (e) {
-                var currentTarget = e.currentTarget;
-                var recipeId = currentTarget.getAttribute("data-recipe-id");
-                var recipeOwner = currentTarget.getAttribute("data-recipeOwner-name");
-                callShareRecipeModalApi(recipeId, recipeOwner);
-                $(".modal-share-post").css("display", "block");
-
-            });
             $(".close-share-recipe").on("click", function (e) {
-                $(".modal-share-post").css("display", "none")
-
+                $(".modal-share-post").css("display", "none");
             });
-
         })();
 
         var newsFeedGetMorePage = 0;
         var newsFeedGetMoreLimit = 10;
         function getMoreNewFeeds() {
-            debugger;
             callNewsfeedPageApi(newsFeedGetMoreLimit, ++newsFeedGetMorePage);
         };
+        function openShareModal(e) {
+            var recipeId = e.getAttribute("data-recipe-id");
+            callShareRecipeModalApi(recipeId);
+            $(".modal-share-post").css("display", "block");
+        }
 
         window.onclick = function (event) {
             if (event.target.id == "modal-share-post") {

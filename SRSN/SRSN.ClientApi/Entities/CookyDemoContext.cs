@@ -177,6 +177,8 @@ namespace SRSN.ClientApi.Entities
 
                 entity.ToTable("Collection_Post");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.HasOne(d => d.Collection)
                     .WithMany(p => p.CollectionPost)
                     .HasForeignKey(d => d.CollectionId)
@@ -447,6 +449,8 @@ namespace SRSN.ClientApi.Entities
                     .HasName("PK_User_Following_1");
 
                 entity.ToTable("User_Following");
+
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 

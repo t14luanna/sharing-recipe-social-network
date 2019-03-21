@@ -197,7 +197,10 @@
 #btn-share-recipe {
     cursor: pointer
 }
-
+.img-recipe-avatar {
+    /*width: 150px;*/
+    height: 150px;
+}
 .img-recipe-avatar a {
     width: 150px;
     height: 150px;
@@ -229,10 +232,13 @@
 
 .collection-modal-item {
     margin-bottom: 10px;
-    padding: 5px 0px;
+    /*padding: 5px 0px;*/
     border-radius: 10px
 }
-
+.collection-modal-item .name{
+    text-align: center;
+    /*width: 150px*/
+}
 .nav-collapse ul li {
     margin-left: 0px !important
 }
@@ -268,7 +274,7 @@
 }
 
 .custom-listing {
-    width: 262.725px !important;
+    /*width: 262.725px !important;*/
     height: 350.725px !important;
     /*margin-left: 20px;*/
 }
@@ -401,9 +407,9 @@ input[name=ingredient] {
 .user-comment{
     border-radius: 50%
 }
-a{
+/*a{
     color: black!important
-}
+}*/
 #list-category-item-tags li a:hover{
     color: white!important
 }
@@ -706,4 +712,8 @@ a{
 }
 .delete-button a{
     float: right
+}
+.single-chef{
+    width: 258px;
+    height: 280px
 }

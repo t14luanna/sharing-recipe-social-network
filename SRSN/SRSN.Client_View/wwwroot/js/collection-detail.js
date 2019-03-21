@@ -1,4 +1,5 @@
-﻿const callReadUserByTokerApi = async () => {
+﻿let collectionUserId, currentUserId;
+const callReadUserByTokerApi = async () => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-profile-token`, {
@@ -25,6 +26,7 @@ const createCollectionHeaderContainer = (collection) =>
 const callReadCollectionIdApi = async (collectionId) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
+    currentUserId = localStorage.getItem("userId");
     var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read-by-Id?collectionId=${collectionId}`, {
         method: "GET",
         headers: {
@@ -33,8 +35,26 @@ const callReadCollectionIdApi = async (collectionId) => {
         }
     });
     var data = await res.json();
+    collectionUserId = data.userId;
+    var issaved = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/is-saved-collection?userId=${currentUserId}&collectionId=${collectionId}`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
     let element = createCollectionHeaderContainer(data);
     $("#avatar-container").append(element);
+    if (collectionUserId == currentUserId) {
+        $(".delete-button").append(deleteButton(collectionId));
+    } else {
+        if (issaved.status == 200) {
+            $(".delete-button").append(unsaveCollectionButton(collectionId, currentUserId));
+        } else {
+            $(".delete-button").append(addCollectionButton(collectionId));
+        }
+    }
 };
 
 const callRecipeByCollectionIdApi = async (collectionId) => {
@@ -47,18 +67,24 @@ const callRecipeByCollectionIdApi = async (collectionId) => {
             'Authorization': `Bearer ${token}`
         }
     });
-    $(".delete-button").append(deleteButton(collectionId));
-    $(".delete-button").append(addCollectionButton(collectionId));
+    
     var data = await res.json();
     for (var item of data) {
         var element = createSinglerRecipes(item);
         $(".listing-grid").append(element);
+        if (collectionUserId == currentUserId) {
+            $(`#recipe-${item.recipePostId}`).append(deleteRecipeButton(item));
+        }
     }
 };
 const deleteButton = (collectionID) =>
     `<a href="#/" class="default-btn mid-button theme-tag-color" onclick="deleteCollectionById(${collectionID})">Xóa bộ sưu tập</a>`;
+const deleteRecipeButton = (recipe) =>
+    `<i class="fa fa-trash icon-delete" onclick="deleteRecipeInMyCollection(${recipe.collectionId},${recipe.recipePostId})"></i>`;
 const addCollectionButton = (collectionID) =>
     `<a href="#/" class="default-btn mid-button theme-color" onclick="callAddCollectionApi(${collectionID})">Lưu bộ sưu tập</a>`;
+const unsaveCollectionButton = (collectionID, currentUserId) =>
+    `<a href="#/" class="default-btn mid-button theme-tag-color" onclick="callUnSaveCollectionApi(${collectionID}, ${currentUserId})">Bỏ lưu bộ sưu tập</a>`;
 const createSinglerRecipes = (recipe) => `<div class="listing custom-listing" style="margin-left: 10px;" id="${recipe.collectionId}${recipe.recipePostId}">
     <div class="image">
         <a href="/recipe/${recipe.recipePostId}">
@@ -68,11 +94,10 @@ const createSinglerRecipes = (recipe) => `<div class="listing custom-listing" st
     <div class="detail custom-grid detail-collection-grid">
         <h4><a href="#">${recipe.recipeName}</a></h4>
         
-        <div class="meta-listing">
+        <div class="meta-listing" id="recipe-${recipe.recipePostId}">
             <ul class="post-meta">
                 <li class="author"><a href="#">${recipe.authorName}</a></li>
             </ul>
-            <i class="fa fa-trash icon-delete" onclick="deleteRecipeInMyCollection(${recipe.collectionId},${recipe.recipePostId})"></i>
         </div>
     </div>
     
@@ -164,6 +189,31 @@ const callAddCollectionApi = async (collectionId) => {
             type: 'success',
             title: 'Thông báo',
             text: 'Lưu bộ sưu tập thành công!',
-        })
+        });
+        setTimeout(async function () {
+            window.location.replace(`/account/collection/${window.localStorage.getItem("username")}`);
+        }, 1500);
+    }
+};
+const callUnSaveCollectionApi = async (collectionId, currentUserId) => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/un-saved-collection?userId=${currentUserId}&collectionId=${collectionId}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (res.status == 200) {
+        Swal.fire({
+            title: "",
+            text: "Bạn đã bỏ lưu bộ sưu tập thành công",
+            type: "success",
+            closeOnConfirm: true
+        });
+        setTimeout(async function () {
+            window.location.replace(`/account/collection/${window.localStorage.getItem("username")}`);
+        }, 1500);
     }
 };
