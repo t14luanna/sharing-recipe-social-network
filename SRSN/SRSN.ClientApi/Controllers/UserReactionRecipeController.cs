@@ -33,54 +33,23 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                ClaimsPrincipal claims = this.User;
+               ClaimsPrincipal claims = this.User;
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = await this.userManager.FindByIdAsync(userId);
                 request.UserId = int.Parse(userId);
-
-                if (request.RatingRecipe == null || request.RatingRecipe == 0)
+                bool result = (bool)await selfService.CreateRatingRecipe(request);
+                if (result)
                 {
-                    return Ok(new
+                    if (!request.RatingContent.IsNullOrEmpty())
                     {
-                        message = "Rating star please"
-                    });
-                }
-
-                var existingUserReaction = await selfService.FirstOrDefaultAsync(x => x.UserId == request.UserId && x.RecipeId == request.RecipeId);
-                request.RatingTime = DateTime.UtcNow.AddHours(7);
-                if (existingUserReaction == null)
-                {
-                    await selfService.UpdateRecipeRating(request.RecipeId, request.RatingRecipe.Value);
-                    await selfService.CreateAsync(request);
-                    
+                        var increasePointResult = userManager.IncreasePoint(user, (int)IncreasePointRuleEnum.RatingRecipeAndReview);
+                    }
+                    return Ok(result);
                 }
                 else
                 {
-                    if(existingUserReaction.RatingRecipe == null)
-                    {
-                        existingUserReaction.RatingRecipe = request.RatingRecipe.Value;
-                        existingUserReaction.RatingContent = request.RatingContent;
-                        existingUserReaction.RatingTime = request.RatingTime;
-                        await selfService.UpdateAsync(existingUserReaction);
-                    }
-                    else
-                    {
-                        return BadRequest(new
-                        {
-                            message = "Rating recipe exception"
-                        });
-                    }
+                    return BadRequest();
                 }
-
-                if(!request.RatingContent.IsNullOrEmpty())
-                {
-                    var increasePointResult = userManager.IncreasePoint(user, (int)IncreasePointRuleEnum.RatingRecipeAndReview);
-                }
-
-                return Ok(new
-                {
-                    message = "Rating recipe successfull"
-                });
             } catch(Exception ex)
             {
                 return BadRequest(new
@@ -227,23 +196,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                var like = await selfService.Get(x => x.RecipeId == recipeId && x.IsLike == true).ToListAsync();
-                var share = await selfService.Get(x => x.RecipeId == recipeId && x.IsShare == true).ToListAsync();
-                var comment = await selfService.CommentCount(recipeId);
-                if (like != null)
-                {
-                    return Ok(new
-                    {
-                        success = true,
-                        likeCount = like.Count(),
-                        shareCount = share.Count(),
-                        commentCount = comment
-                    });
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Ok(await selfService.LikeShareCount(recipeId));
             }
             catch (Exception ex)
             {

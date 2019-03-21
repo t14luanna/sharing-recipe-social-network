@@ -40,8 +40,8 @@ const createRecipePost = (recipe) =>
                                             <div class="details-social-icons">
                                             <div class="like-count-${recipe.id} newsfeeds-social-icons"> </div>
 <div class="newsfeeds-social-icons">
-<a class="btn-share-post" title="Chia sẻ" data-recipe-id="${recipe.id}"><i class="fa fa-2x fa-share"></i></a>
-<a href="#" title="Like" class="like-button">
+<a class="btn-share-post" title="Chia sẻ" data-recipe-id="${recipe.id}" onclick="openShareModal(this)"><i class="fa fa-2x fa-share"></i></a>
+<a href="#/" title="Like" class="like-button">
                                                     <i class="fa fa-2x fa-heart-o" onclick="toggleLikeButton(this, ${recipe.id})" id="like-heart-${recipe.id}"></i>
                                                 </a>
                                             <a id="btn-add-comment" onclick="callOpenCommentPostApi(${recipe.id})" title="Bình luận"><i class="fa fa-2x fa-comments-o"></i></a>
@@ -138,6 +138,7 @@ async function toggleLikeButton(x, recipeId) {
         else {
             x.classList.remove("fa-heart");
         }
+        callCountApi(recipeId);
     } catch (e) {
         alert("Like không thành công")
 
@@ -229,7 +230,8 @@ const callCreateShareRecipeModalApi = async (id) => {
     });
     if (res.status == 200) {
         $(".modal-share-post").css("display", "none");
-        swal("", "Bạn đã chia sẻ công thức thành công", "success")
+        swal("", "Bạn đã chia sẻ công thức thành công", "success");
+        callCountApi(id);
     }
 };
 const openCommentPost = (user, recipeId, username = "") => `<li class="comment-newsfeed-li comment-post-li"><div class="recipe-comments comment-post-container"><ul class="reply-baongoc">

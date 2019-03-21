@@ -16,7 +16,9 @@ namespace SRSN.DatabaseManager.Services
     {
         Task<UserReactionRecipeViewModel> LikeRecipe(int userId, int recipeId);
         Task<UserReactionRecipeViewModel> ViewRecipe(int userId, int recipeId);
+        Task<bool> CreateRatingRecipe(UserReactionRecipeViewModel userreactionVM);
         Task<int> CommentCount( int recipeId);
+        Task<Object> LikeShareCount( int recipeId);
         Task UpdateRecipeRating(int recipeId, double ratingRecipe);
     }
     public class UserReactionRecipeService : BaseService<UserReactionRecipe, UserReactionRecipeViewModel>, IUserReactionRecipeService
@@ -123,7 +125,15 @@ namespace SRSN.DatabaseManager.Services
             var recipeDbset = this.unitOfWork.GetDbContext().Set<Recipe>();
             var recipe = await recipeDbset.FindAsync(recipeId);
             var recipeEvRating = recipeDbset.Where(p => p.Id == recipeId).FirstOrDefault().EvRating;
-            double newRecipeRating = (recipeEvRating.Value + ratingRecipe) / 2;
+            double newRecipeRating = 0;
+            if (recipeEvRating.Value == 0 || recipeEvRating.Value == null)
+            {
+                newRecipeRating = ratingRecipe;
+            }
+            else
+            {
+                newRecipeRating = (recipeEvRating.Value + ratingRecipe) / 2;
+            }
             recipe.EvRating = newRecipeRating;
             recipeDbset.Update(recipe);
             await this.unitOfWork.CommitAsync();
@@ -136,6 +146,53 @@ namespace SRSN.DatabaseManager.Services
             var recipe = await recipeDbset.FindAsync(recipeId);
             var commentCount = recipeDbset.Where(p => p.RecipeId == recipeId).Count();
             return commentCount;
+        }
+
+        public async Task<Object> LikeShareCount(int recipeId)
+        {
+            var countList = new List<int>();
+            var recipeDbset = this.unitOfWork.GetDbContext().Set<Recipe>();
+            var commentDbset = this.unitOfWork.GetDbContext().Set<Comment>();
+            var recipe = await recipeDbset.FindAsync(recipeId);
+            var like = this.Get(x => x.RecipeId == recipeId && x.IsLike == true).Count();
+            var share = recipeDbset.Where(x => x.ReferencedRecipeId == recipeId && x.Active == true).Count();
+            var commentCount = commentDbset.Where(p => p.RecipeId == recipeId).Count();
+            return (new {
+                success = true,
+                likeCount = like,
+                shareCount = share,
+                commentCount = commentCount
+            });
+        }
+
+        public async Task<bool> CreateRatingRecipe(UserReactionRecipeViewModel request)
+        {
+            if (request.RatingRecipe == null || request.RatingRecipe == 0)
+            {
+                return false;
+            }
+            var existingUserReaction = await this.FirstOrDefaultAsync(x => x.UserId == request.UserId && x.RecipeId == request.RecipeId);
+            request.RatingTime = DateTime.UtcNow.AddHours(7);
+            if (existingUserReaction == null)
+            {
+                await this.CreateAsync(request);
+            }
+            else
+            {
+                if (existingUserReaction.RatingRecipe == null)
+                {
+                    existingUserReaction.RatingRecipe = request.RatingRecipe.Value;
+                    existingUserReaction.RatingContent = request.RatingContent;
+                    existingUserReaction.RatingTime = request.RatingTime;
+                    await this.UpdateAsync(existingUserReaction);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            await this.UpdateRecipeRating(request.RecipeId, request.RatingRecipe.Value);
+            return true;
         }
     }
 }

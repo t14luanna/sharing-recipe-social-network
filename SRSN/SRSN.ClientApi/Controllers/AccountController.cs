@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using SRSN.DatabaseManager;
 using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
@@ -57,12 +58,14 @@ namespace SRSN.ClientApi.Controllers
                 var addToRoleResult = await userManager.AddToRoleAsync(existedUser, "ActiveUser");
 
                 var token = await user.AuthorizeAsync(userManager, existedUser);
+                var increasePointResult = userManager.IncreasePoint(user, (int)IncreasePointRuleEnum.FirstLogin);
                 return Ok(new
                 {
                     message = "register thanh cong",
                     success = true,
                     token = token,
-                    username = user.UserName
+                    username = user.UserName,
+                    userId = user.Id
                 });
             }
             else
@@ -87,7 +90,8 @@ namespace SRSN.ClientApi.Controllers
                         message = "Đăng nhập thành công",
                         success = true,
                         token = token,
-                        username = user.UserName
+                        username = user.UserName,
+                        userId = user.Id
                     });
                 }
             }
@@ -124,7 +128,7 @@ namespace SRSN.ClientApi.Controllers
         public async Task<IEnumerable<AccountViewModel>> GetTopUser()
         {
             var list = new List<AccountViewModel>();
-            foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point).Take(10))
+            foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point).Take(12))
             {
                 var user = u;
                 var userVM = new AccountViewModel();

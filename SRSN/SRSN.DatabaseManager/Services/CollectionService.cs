@@ -60,7 +60,7 @@ namespace SRSN.DatabaseManager.Services
             try
             {
                 var list = new List<CollectionViewModel>();
-                var listItems = this.selfDbSet.AsNoTracking().Where(p => p.Active == true).Take(6);
+                var listItems = this.selfDbSet.AsNoTracking().Where(p => p.Active == true && p.CollectionRefId == null).OrderByDescending(p => p.SaveCount).Take(12);
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao

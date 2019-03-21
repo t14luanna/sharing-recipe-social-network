@@ -184,6 +184,7 @@
                         if (response.success) {
                             localStorage.setItem("authorization", JSON.stringify(response.token));
                             localStorage.setItem("username", response.username);
+                            localStorage.setItem("userId", response.userId);
                             window.location.href = '/';
                         }
                     })

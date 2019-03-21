@@ -121,8 +121,6 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo công thức này</a></li>
-                                        <li><a href="#">Nothing</a></li>
-                                        <li><a href="#">Nothing</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -274,7 +272,7 @@
             <div class="col-md-12 modal-header">
                 <h4 class="title-modal-collection">Thêm vào bộ sưu tập<span id="close-add-collection" class="close">&times;</span></h4>
             </div>
-            <div class="col-md-12 modal-body row gutter--15 AdjustRow" id="modal-body-add-collection">
+            <div class="col-md-12 modal-body" id="modal-body-add-collection">
             </div>
         </div>
 
@@ -291,6 +289,9 @@
     <script src="~/js/menu-widgets.js"></script>
 
     <script type="text/javascript">
+
+        var currentString = "vị trí hiện tại của bạn";
+        var indexString = "vị trí mặc định trong trang cá nhân của bạn";
                 // fetch and render element to html
                 const changeHeadername = async () => {
                     var someText = "Công thức chi tiết";
@@ -322,18 +323,19 @@
                         handleLocationError(false, infoWindow, map.getCenter());
                     }
                     if ($("input[name='currentPosition']:checked").length > 0) {
-                        setPositionMap(pos);
+                        
+                        setPositionMap(pos, currentString);
                     } else {
                         if (indexPosition != null) {
-                            setPositionMap(indexPosition);
+                            setPositionMap(indexPosition, indexString);
                         }
                     }
                 };
-                function setPositionMap(index) {
+            function setPositionMap(index, stringPosition) {
                     marker.setPosition(index);
                     marker.setMap(map);
                     infoWindow.setPosition(index);
-                    infoWindow.setContent('Vị trí của bạn');
+                       infoWindow.setContent(stringPosition);
                     infoWindow.open(map, marker);
                     map.setCenter(index);
                 };
@@ -366,7 +368,7 @@
                     //    }
                     //});
 
-                    callListCategoryItemDetailPage();
+                    //callListCategoryItemDetailPage();
                     // Recipe slider variation two
                     //$('.slider-detail2').slick({
                     //    autoplay: true,
@@ -471,11 +473,11 @@
                 var star;
                 $("input[name='currentPosition']").on("click", function (e) {
                     if ($("input[name='currentPosition']:checked").length > 0) {
-                        setPositionMap(pos);
+                        setPositionMap(pos, currentString);
                         callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
                     }
                     else {
-                        setPositionMap(indexPosition);
+                        setPositionMap(indexPosition, indexString);
                         callReadListIngredientNearByStoresApi(indexPosition.lat, indexPosition.lng, listCheckedIngres);
                     }
                     

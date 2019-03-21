@@ -588,7 +588,7 @@ ul {
 
     .read-more-bordered:hover {
         background: #000000;
-        color: #ffffff;
+        color: #ffffff!important;
     }
 
 .button-dark {

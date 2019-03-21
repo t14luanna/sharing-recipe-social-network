@@ -38,13 +38,25 @@ namespace SRSN.ClientApi.Controllers
         [HttpPost("create")]
         public async Task<ActionResult> Create([FromBody] CollectionViewModel request)
         {
-            // Lay ra user id tu Token
             var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
             request.UserId = userId;
-            
-            // goi db context ra
-            // Save lai context du lieu cap nhat duoi Database
-            await collectionService.CreateAsync(request);
+            var existed = collectionService.Get(u => u.CollectionRefId == request.CollectionRefId 
+            && request.UserId == userId && u.Active == false).FirstOrDefault();
+            if (request.CollectionRefId != null)
+            {
+                var collection = collectionService.Get(u => u.Id == request.CollectionRefId && u.Active == true).FirstOrDefault();
+                collection.SaveCount += 1;
+                await collectionService.UpdateAsync(collection);
+            }
+            if (existed != null)
+            {
+                existed.Active = true;
+                await collectionService.UpdateAsync(existed);
+            }
+            else
+            {
+                await collectionService.CreateAsync(request);
+            }
             return Ok(new
             {
                 message = $"Ban da tao thanh cong Bo Suu Tap co ten la: {request.CollectionName}"
@@ -94,6 +106,38 @@ namespace SRSN.ClientApi.Controllers
             {
                 message = $"Ban da sua thanh cong Bo Suu Tap:{request.CollectionName} "
             });
+        }
+        [HttpGet("is-saved-collection")]
+        public async Task<ActionResult> IsSavedCollection(int userId, int collectionId)
+        {
+            var issaved = collectionService.Get(q => q.CollectionRefId == collectionId && q.UserId == userId && q.Active == true).Count();
+            if(issaved > 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        [HttpPost("un-saved-collection")]
+        [Authorize]
+        public async Task<ActionResult> UnSavedCollection(int userId, int collectionId)
+        {
+            var issaved = collectionService.Get(q => q.CollectionRefId == collectionId && q.UserId == userId).FirstOrDefault();
+            if (issaved != null)
+            {
+                issaved.Active = false;
+                await collectionService.UpdateAsync(issaved);
+                return Ok(new
+                {
+                    message = $"Bỏ lưu bộ sưu tập thành công"
+                });
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         [HttpGet("read-by-userName")]
         [AllowAnonymous]
@@ -157,7 +201,7 @@ namespace SRSN.ClientApi.Controllers
                 ClaimsPrincipal claims = this.User;
                 var userTokenName = claims.FindFirst(ClaimTypes.Name).Value;
                 var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
-                return Ok(collectionService.Get(u => u.UserId == int.Parse(userId) && u.Active == true));
+                return Ok(collectionService.Get(u => u.UserId == int.Parse(userId) && u.Active == true && u.CollectionRefId == null));
             }
             catch (Exception ex)
             {

@@ -69,5 +69,19 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("get-recipe-count-collection")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ReadRecipeCountCollection(int collectionId)
+        {
+            try
+            {
+                var collection = collectionPostService.Get(q => q.CollectionId == collectionId).Count();
+                return Ok(collection);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

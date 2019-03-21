@@ -152,7 +152,7 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">Thông tin người th
             <p>
                ${ chef.description}
             </p>
-            <a href="#" class="read-more-angle">Xem thêm...</a>
+            <a href="/account/information/${chef.username}" class="read-more-angle">Xem thêm...</a>
         </div>
     </div>`;
 

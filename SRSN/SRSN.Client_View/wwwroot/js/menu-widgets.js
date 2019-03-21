@@ -159,16 +159,16 @@ const RedirectAPI = async () => {
             .then(res => res.json())
             .then(response => {
 
-                var win = window.open('/RecipeByCategory?categoryName=' + categoryName);
-                if (win) {
-                    //Browser has allowed it to be opened
-                    win.focus();
-                } else {
-                    //Browser has blocked it
-                    alert('Please allow popups for this website');
-                }
-                //window.location.pathname = '/SearchRecipe';
-                console.log(response);
+                window.location.replace('/RecipeByCategory?categoryName=' + categoryName);
+                //if (win) {
+                //    //Browser has allowed it to be opened
+                //    win.focus();
+                //} else {
+                //    //Browser has blocked it
+                //    alert('Please allow popups for this website');
+                //}
+                ////window.location.pathname = '/SearchRecipe';
+                //console.log(response);
             })
             .catch(error => {
                 console.error('Error:', error);
