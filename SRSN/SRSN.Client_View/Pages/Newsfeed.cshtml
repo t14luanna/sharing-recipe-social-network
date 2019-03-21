@@ -4,7 +4,7 @@
     ViewData["Title"] = "Newsfeed";
 }
 @section PrefixStyleOptional
-{
+    {
 
     <!-- ==== Main Stylesheet ==== -->
     <link rel="stylesheet" href="recipepress/css/style.css">
@@ -242,7 +242,12 @@
 
 </div>
 @section Scripts {
-
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
     <script type="text/javascript" src="/recipepress/js/plugins.min.js"></script>
     <script type="text/javascript" src="~/js/newsfeed.js"></script>
     <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
@@ -263,7 +268,7 @@
                 var recipeOwner = currentTarget.getAttribute("data-recipeOwner-name");
                 callShareRecipeModalApi(recipeId, recipeOwner);
                 $(".modal-share-post").css("display", "block");
-                
+
             });
             $(".close-share-recipe").on("click", function (e) {
                 $(".modal-share-post").css("display", "none")

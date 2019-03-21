@@ -411,7 +411,12 @@
     </div>
     <!--footer ends-->
 
-
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
     <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="~/recipepress/js/jquery-ui.js"></script>
     <script src="~/recipepress/js/slick.min.js"></script>

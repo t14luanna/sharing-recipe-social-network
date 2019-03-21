@@ -28,7 +28,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
         <a href="${recipe.videoLink}" class="swipebox slider-video-button">Xem Video</a>
     </div>`;
 const createContentRecipe = (recipe) =>
-    `<span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>&nbsp&nbsp(${recipe.evRating} / 5)</span>
+    `<span class="rating-figure" id="evRating"><u>Đánh giá:</u><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>&nbsp&nbsp(${recipe.evRating} / 5)</span>
         <div class="separator-post"></div>
         <p>${recipe.contentRecipe}</p>`;
 
@@ -72,9 +72,8 @@ const createSingleRelatedRecipe = (recipe) =>
                 </h3>
                 <div class="short-separator"></div>
                 <div class="rating-box">
-                    <span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="
-                    font-size: 20px;
-                    color: green;"></i>&nbsp&nbsp
+                    <span class="rating-figure" id="evRating"><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>
+                         &nbsp&nbsp
                         (${recipe.evRating} / 5)
             </span>
                 </div>
@@ -117,9 +116,8 @@ const createSingleRatingComment2 = (comment, commentReplyCount) =>
         <div class="comment">
             <h5><a href="#">${comment.fullName}</a></h5>
             <span class="time">${comment.ratingTime}</span>
-            
-            <span class="rating-figure comment-rating-star">${comment.ratingRecipe} / 5 <i class="fa fa-star" aria-hidden="true"></i></span>
-            
+
+            <span class="rating-figure comment-rating-star">${comment.ratingRecipe} / 5 <span id="comment-id-${comment.id}"></span></span>
             
             <p>
                 ${comment.ratingContent}
@@ -178,6 +176,11 @@ const callRelatedRecipeApi = async (id) => {
         let element = createSingleRelatedRecipe(item);
 
         $("#list-related-recipe").append(element);
+        var numStar = item.evRating % 10;
+        $("#number-of-star-" + item.id).text("");
+        for (var i = 0; i < parseInt(numStar); i++) {
+            $("#number-of-star-" + item.id).append(`<i class="fa fa-star-half-o" aria-hidden="true"></i>`);
+        }
     }
 };
 
@@ -214,6 +217,11 @@ const callRecipeDetailApi = async (id) => {
         var content = createContentRecipe(item);
         $("#banner-recipe").append(element);
         $("#content-recipe").append(content);
+        var numStar = item.evRating % 10;
+        $("#number-of-star-" + item.id).text("");
+        for (var i = 0; i < parseInt(numStar); i++) {
+            $("#number-of-star-" + item.id).append(`<i class="fa fa-star-half-o" aria-hidden="true"></i>`);
+        }
     }
 
     callRelatedRecipeApi(userid);
@@ -246,6 +254,10 @@ const callReadRatingCommentApi = async (id) => {
         item.ratingTime = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
         var element = createSingleRatingComment2(item, dataCount)
         $("#list-rating-comment").append(element);
+        var num = item.ratingRecipe % 10;
+        for (var i = 0; i < parseInt(num); i++) {
+            $("#comment-id-" + item.id).append(`<i class="fa fa-star" aria-hidden="true"></i>`);
+        }
     }
     $("#numOfComment").append(count);
     $(`.comment-owner-${userId}`).css("display", "block");

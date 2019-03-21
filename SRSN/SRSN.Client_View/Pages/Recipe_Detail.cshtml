@@ -282,7 +282,12 @@
 </div>
 
 @section Scripts {
-
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
     <script src="~/js/recipeDetail.js"></script>
     <script type="text/javascript" src="/recipepress/js/plugins.min.js"></script>
     <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
@@ -292,6 +297,7 @@
 
     <script type="text/javascript">
                 // fetch and render element to html
+      
                 const changeHeadername = async () => {
                     var someText = "Công thức chi tiết";
                     $('.main-heading h1').append(document.createTextNode(someText));
