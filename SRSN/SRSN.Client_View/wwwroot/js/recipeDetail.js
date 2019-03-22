@@ -10,7 +10,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
             <div class="recipe-slider">
                 <div class="slider-detail2">
                     <div>
-                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
+                        <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '${recipe.imageCover}';"/></a>
                     </div>
                 </div>
 
