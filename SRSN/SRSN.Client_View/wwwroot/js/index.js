@@ -16,17 +16,24 @@ const createSingleRecipeElement = (singeRecipe) =>
                 </h3>
                 <div class="short-separator"></div>
                 <ul class="news-post-meta post-meta">
-                   <li class="author"><a href="#">${singeRecipe.fullName}</a></li>
+                   <li class="author"><a href="/account/information/${singeRecipe.username}">${singeRecipe.fullName}</a></li>
                    <li class="date">${ new Date(singeRecipe.createTime).getDay() + "/" + new Date(singeRecipe.createTime).getMonth() + "/" + new Date(singeRecipe.createTime).getFullYear()}</li >
                    
                 </ul>
                 <div class="short-separator"></div>
                 <ul class="news-post-meta post-meta">
-                    <li class="rating-figure"><i class="fa fa-eye" aria-hidden="true">${singeRecipe.viewQuantity}</i></li>
-                    <li class="rating-icons" >
-                         <span id="number-of-star-${singeRecipe.id}" style="color:#56E920"></span>
+                    <li class="rating-figure rating-icons">
+                        <i class="fa fa-clock-o stats-ico" aria-hidden="true"> ${singeRecipe.cookTime}p</i>&nbsp
+                        <i class="fa fa-bolt stats-ico" aria-hidden="true"> ${RECIPE_LEVEL_ENUM[singeRecipe.levelRecipe]}</i>
+                        
+                    </li>
+                    
+                    <li class="rating-figure rating-icons">
+                        <i class="fa fa-bar-chart stats-ico" aria-hidden="true">${singeRecipe.viewQuantity} xem</i>&nbsp
+                        <span id="number-of-star-${singeRecipe.id}" style="color:#56E920"></span>
                         <span class="rating-figure">(${singeRecipe.evRating} / 5)</span>
                     </li>
+                    
                 </div>
             </div>
         </div>
@@ -69,7 +76,7 @@ const createSingleSuggestRecipeElement = (recipe) =>
                                                 </a>
                                             </h3>
                                             <div class="short-separator"></div>
-                                            <a href="#" class="read-more">Xem thêm...</a>
+                                            <a href="/recipe/${recipe.id}" class="read-more">Xem thêm...</a>
                                         </div>
                                     </div>
       </div>`;
@@ -86,16 +93,14 @@ const createSingleRecipeWidgetElement = (recipe) =>
                                                 <span class="post-date">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</span>
                                             </div>
                                         </li>`;
-const createSingleBanner = (recipe) =>
+const createSingleBanner = (recipe, ratingStarElement) =>
     `<div class="slide-detail-inner" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
                             <h2><a href="/recipe/${recipe.id}">${recipe.recipeName}</a></h2>
                             <div class="short-separator"></div>
                             <div class="rating-box">
                                 <span class="rating-figure">
-                                    <i class="fa fa-star-half-o" aria-hidden="true" style="
-                                    font-size: 20px;
-                                    color: green;"></i>&nbsp&nbsp
+                                    ${ratingStarElement}&nbsp&nbsp
                                 (${recipe.evRating} / 5)</span>
                             </div>
                             <p>
@@ -192,17 +197,24 @@ const callPopularRecipeBannerApi = async () => {
         var count = 0;
         for (let item of data) {
             count++;
+            var ratingStarElement = "";
+            var numStar = item.evRating % 10;
+            if (parseInt(numStar) > 0) {
+                for (var j = 0; j < parseInt(numStar); j++) {
+                    ratingStarElement += `<i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
+                }
+            }
             switch (count) {
                 case 1:
-                    var element = createSingleBanner(item);
+                    var element = createSingleBanner(item,ratingStarElement);
                     $("#single-banner1").append(element);
                     break;
                 case 2:
-                    var element = createSingleBanner(item);
+                    var element = createSingleBanner(item,ratingStarElement);
                     $("#single-banner2").append(element);
                     break;
                 case 3:
-                    var element = createSingleBanner(item);
+                    var element = createSingleBanner(item,ratingStarElement);
                     $("#single-banner3").append(element);
                     break;
             }
