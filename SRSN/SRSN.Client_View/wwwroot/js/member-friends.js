@@ -73,7 +73,7 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#" title="Bỏ theo dỏi" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
+                                                                    <a href="#" title="Bỏ theo dõi" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
                                                                         <input type="hidden" value="${followingUser.id}">
                                                                         <i class="fa fa-user-times"></i>
                                                                     </a>
