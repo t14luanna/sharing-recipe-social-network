@@ -47,7 +47,7 @@
 const unfollowUserFunction = async (userName, followingUserId) => {
     var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userFollowingId=" + followingUserId);
     var data = await res.json();
-    location.reload();
+    //location.reload();
 };
 
 const createSingleFollowingUserElement = (followingUser) =>
