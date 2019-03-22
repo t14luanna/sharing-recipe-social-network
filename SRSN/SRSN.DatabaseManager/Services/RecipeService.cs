@@ -256,14 +256,17 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
-                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    if(item.UserId != null)
+                    {
+                        var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                        var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
 
-                    // apply automapper 
-                    var recipeViewModel = this.EntityToVM(item);
-                    // da co duoc du lieu cua entity trong view model cap nhat them vai field dac biet nhu la fullname chi viewmodel moi co
-                    recipeViewModel.FullName = fullName;
-                    list.Add(recipeViewModel);
+                        // apply automapper 
+                        var recipeViewModel = this.EntityToVM(item);
+                        // da co duoc du lieu cua entity trong view model cap nhat them vai field dac biet nhu la fullname chi viewmodel moi co
+                        recipeViewModel.FullName = fullName;
+                        list.Add(recipeViewModel);
+                    }
 
                 }
                 return list;
