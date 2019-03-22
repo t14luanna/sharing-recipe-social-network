@@ -9,7 +9,7 @@ $('.add-recipe-steps').on("click", function (event) {
         '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>' +
         ' <span class="del-list"><i class="fa fa-trash"></i></span>' +
         '</div><div class="image-fields">' +
-        '<input type = "file" name = "stepsImage" />' +
+        '<input type = "file" name = "stepsImage" multiple/>' +
         '</div >' +
         '</li>';
 
@@ -119,6 +119,7 @@ function getData() {
     var steps = [];
     $(stepDescription).each(i => {
         validation = validationField('stepsDes', $(stepDescription[i]).val().trim()) && validation;
+
         steps.push({
             Description: $(stepDescription[i]).val().trim(),
             ImageUrl: $(stepsImage[i])[0].files[0]
