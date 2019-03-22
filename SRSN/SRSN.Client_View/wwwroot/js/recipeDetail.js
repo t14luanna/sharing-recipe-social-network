@@ -29,7 +29,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
     </div>`;
 const createContentRecipe = (recipe) =>
     `<span class="rating-figure" id="evRating"><u>Đánh giá: </u><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>&nbsp&nbsp(${recipe.evRating} / 5) 
-    <i class="rating-figure" style="float: right;">Lượt xem: ${recipe.viewQuantity}</i>
+    <i class="rating-figure" style="float: right;">Lượt xem: ${recipe.viewQuantity != null ? recipe.viewQuantity : "0"}</i>
     </span>
         <div class="separator-post"></div>
         <p>${recipe.contentRecipe}</p>`;
@@ -59,7 +59,7 @@ const createSingleStepOfRecipe = (step) =>
         </div>
     </dd>`;
 
-const createSingleRelatedRecipe = (recipe) =>
+const createSingleRelatedRecipe = (recipe, ratingStarElement) =>
     `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
@@ -74,7 +74,7 @@ const createSingleRelatedRecipe = (recipe) =>
                 </h3>
                 <div class="short-separator"></div>
                 <div class="rating-box">
-                    <span class="rating-figure" id="evRating"><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>
+                    <span class="rating-figure" id="evRating">${ratingStarElement}</span>
                          &nbsp&nbsp
                         (${recipe.evRating} / 5)
             </span>
@@ -132,13 +132,13 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">Thông tin người th
     <div class="listing">
         <div class="image">
             <div class="image-inner">
-                <a href="#"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
+                <a href="/account/information/${chef.username}"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
             </div>
         </div>
         <div class="detail">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4><a href="#">${chef.username}</a></h4>
+                    <h4><a href="/account/information/${chef.username}">${chef.firstName} ${chef.lastName}</a></h4>
 
                 </div>
                 <div class="col-sm-4">
@@ -175,14 +175,17 @@ const callRelatedRecipeApi = async (id) => {
     var data = (await res.json());
 
     for (var item of data) {
-        let element = createSingleRelatedRecipe(item);
+        var ratingStarElement = "";
+        var numStar = item.evRating % 10;
+        if (parseInt(numStar) > 0) {
+            for (var j = 0; j < parseInt(numStar); j++) {
+                ratingStarElement += `<i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
+            }
+        }
+        let element = createSingleRelatedRecipe(item, ratingStarElement);
 
         $("#list-related-recipe").append(element);
-        var numStar = item.evRating % 10;
-        $("#number-of-star-" + item.id).text("");
-        for (var i = 0; i < parseInt(numStar); i++) {
-            $("#number-of-star-" + item.id).append(`<i class="fa fa-star-half-o" aria-hidden="true"></i>`);
-        }
+        
     }
 };
 
@@ -205,7 +208,7 @@ const callIngrdientsOfRecipeApi = async (id) => {
     }
 };
 const createCateItemTags = (tag) =>
-    `<li class="text"><a href="#">${tag.categoryItemName}</a></li>`;
+    `<li class="text"><a href="#">${tag.categoryItemName == "null" ? "không có" : tag.categoryItemName}</a></li>`;
 
 const callRecipeDetailApi = async (id) => {
     
@@ -229,9 +232,8 @@ const callRecipeDetailApi = async (id) => {
     callRelatedRecipeApi(userid);
     callReadRatingCommentApi(id);
 };
-const callReadRatingCommentApi = async (id) => {
-    //tim user dựa theo userid để biết comment của ai, thì người đó có thể xóa comment
-
+const callReadRatingCommentApi = async (recipeId) => {
+    //tim user để biết comment của ai, thì người đó có thể xóa comment
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
@@ -244,11 +246,11 @@ const callReadRatingCommentApi = async (id) => {
     var user = await resUser.json();
     var userId = user.id;
     //
-    var res = await fetch(`${BASE_API_URL}/${USER_REACTION_RECIPE_API_URL}/read-reactions?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${USER_REACTION_RECIPE_API_URL}/read-reactions?recipeId=${recipeId}`);
     var data = (await res.json()).data;
     var count = 0;
     for (var item of data) {
-        var dataCount = (await callCountCommentsApi(id, item.id));
+        var dataCount = (await callCountCommentsApi(recipeId, item.id));
         count++;
         let date = new Date(item.ratingTime);
         var hr = date.getHours();
@@ -308,9 +310,9 @@ const getCheckedIngredient = async () => {
         console.log(e);
     }
 };
-const callStepOfRecipeApi = async (id) => {
+const callStepOfRecipeApi = async (recipeId) => {
 
-    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe?recipeId=${recipeId}`);
     var data = (await res.json());
     var count = 0;
     for (var item of data) {
@@ -346,9 +348,9 @@ const callIsLikeRecipe = async (recipeId) => {
 
 };
 
-const callChefRecipeApi = async (id) => {
+const callChefRecipeApi = async (recipeId) => {
 
-    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe-chef?recipeId=${id}`);
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe-chef?recipeId=${recipeId}`);
     var data = (await res.json());
     var chef = data.accountVM;
     var description = chef.description != null ? chef.description : "";

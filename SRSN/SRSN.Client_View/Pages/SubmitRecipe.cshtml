@@ -232,6 +232,7 @@
                     })
                         .then(async (res) => {
                             $("#loading-box").hide();
+                            var uid;
                             if (res.status === 200) {
                                 swal({
                                     title: "",
@@ -244,46 +245,46 @@
                                 setTimeout(async function () {
                                     var data = (await res.json());
                                     recipeId = data.recipeId;
-                                    window.location.href = `/recipe/${recipeId}`
-                                }, 1500);
+                                    //add data to firebase to notification with users who are following me
+                                    //them data vao firebase
+                                    var usernameLocal = window.localStorage.getItem("username");//người đang comment
+                                    var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
+                                    var dataUser = userRes.json();
+                                    for (var user of dataUser) {
+                                        var followingMe = window.localStorage.getItem(user.username);//user is following me
 
-                                //add data to firebase to notification with users who are following me
-                                //them data vao firebase
-                                var usernameLocal = window.localStorage.getItem("username");//người đang comment
-                                var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
-                                var dataUser = userRes.json();
-                                for (var user of dataUser) {
-                                    var followingMe = window.localStorage.getItem(user.username);//user is following me
+                                        var myDataRef = firebase.database().ref(followingMe);
+                                        uid = myDataRef.push({
+                                            "uid": "",
+                                            "username": usernameLocal,
+                                            "content": "đã chia sẻ công thức mới",
+                                            "date": new Date().toLocaleString(),
+                                            "link": "/recipe/" + recipeId,
+                                            "isRead": "False"
+                                        });
+                                        SRSN.FIREBASE_DATABASE.ref('/' + chefUsername + "/" + uid.key).update({
+                                            "uid": uid.key
+                                        });
+                                    }
+                                    //thông báo công điểm cho chính user
+                                    var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
 
-                                    var myDataRef = firebase.database().ref(followingMe);
-                                    var uid = myDataRef.push({
+                                    uid = myDataRef.push({
                                         "uid": "",
-                                        "username": usernameLocal,
-                                        "content": "đã chia sẻ công thức mới",
+                                        "username": "Bạn",
+                                        "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>",
                                         "date": new Date().toLocaleString(),
                                         "link": "/recipe/" + recipeId,
                                         "isRead": "False"
                                     });
-                                    var dbRef = firebase.database().ref('/' + chefUsername + "/" + uid);                          
-                                    dbRef.update({
-                                        "uid": uid
+                                    //update uid into firebase
+                                    SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                                        "uid": uid.key
                                     });
-                                }
-                                //thông báo công điểm cho chính user
-                                var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
+                                    window.location.href = `/recipe/${recipeId}`
+                                }, 1500);
+                               
                                 
-                                myDataRef.push({
-                                    "uid": "",
-                                    "username": "Bạn",
-                                    "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>" ,
-                                    "date": new Date().toLocaleString(),
-                                    "link": "/recipe/" + data.recipeId,
-                                    "isRead": "False"
-                                });
-                                //update uid into firebase
-                                SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
-                                    uid: uid.key
-                                });
 
                             }
                         })
