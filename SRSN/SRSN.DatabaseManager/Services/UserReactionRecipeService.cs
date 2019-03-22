@@ -87,8 +87,13 @@ namespace SRSN.DatabaseManager.Services
                         if(!userReactionRecipeVM.IsView.HasValue || userReactionRecipeVM.IsView.Value == false)
                         {
                             userReactionRecipeVM.IsView = true;
-                            await this.UpdateAsync(userReactionRecipeVM);
                         }
+                        if (userReactionRecipeVM.TotalView == null)
+                        {
+                            userReactionRecipeVM.TotalView = 0;
+                        }
+                        userReactionRecipeVM.TotalView += 1;
+                        await this.UpdateAsync(userReactionRecipeVM);
                         return userReactionRecipeVM;
                     }
                     else
@@ -97,7 +102,8 @@ namespace SRSN.DatabaseManager.Services
                         {
                             UserId = userId,
                             RecipeId = recipeId,
-                            IsView = true
+                            IsView = true,
+                            TotalView = 1,
                         };
                         await this.CreateAsync(creatingUserReactionRecipeVM);
                         return creatingUserReactionRecipeVM;
@@ -109,7 +115,8 @@ namespace SRSN.DatabaseManager.Services
                     {
                         UserId = userId,
                         RecipeId = recipeId,
-                        IsView = true
+                        IsView = true,
+                        TotalView = 1,
                     };
                     await this.CreateAsync(creatingUserReactionRecipeVM);
                     return creatingUserReactionRecipeVM;

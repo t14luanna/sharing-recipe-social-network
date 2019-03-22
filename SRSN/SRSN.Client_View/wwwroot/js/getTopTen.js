@@ -50,7 +50,7 @@ const readTopTenUserUnfollow = (account, rankUser) =>
     </div>
   </li>`;
 
-const readTopUserFollow = (account) =>
+const readTopUserFollow = (account, rankUser) =>
     `<div class="left-side" >
                         <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="thành viên đứng đầu" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>

@@ -84,7 +84,7 @@
                                                     </span>
                                                 </div>
                                                 <div class="image-fields">
-                                                    <input type="file" name="stepsImage" required />
+                                                    <input type="file" name="stepsImage" required multiple/>
                                                 </div>
                                             </li>
                                         </ul>
@@ -203,7 +203,7 @@
             $('#submitBtn').on("click", async function (event) {
                 $("#loading-box").show();
                 var results = getData();
-                console.log(results.validation)
+                console.log(results)
                 if (results.validation === false) {
                     window.scrollTo(0, 400);
                     $("#congthucBtn").click();
@@ -218,6 +218,7 @@
                 } else {
                     var data = results.data;
                     data = await uploadImageSubmit(data);
+                    
                     var recipeId;
                     var authorization = localStorage.getItem("authorization");
                     var token = (JSON.parse(authorization))["token"];

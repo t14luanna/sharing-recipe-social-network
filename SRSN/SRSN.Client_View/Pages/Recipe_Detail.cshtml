@@ -572,7 +572,7 @@
                 var verifyUserInteresting = setInterval(function () {
                     ++verifyUserInterestingCounter;
                     console.log(`Verify at ${verifyUserInterestingCounter}`);
-                    if (verifyUserInterestingCounter === 30) {
+                    if (verifyUserInterestingCounter === 5) {
                         console.log(`Verify at Done`);
                         verifyUserInterestingCleaner();
                         var recipeId = @(RouteData.Values["recipe_id"]);
