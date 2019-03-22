@@ -1,5 +1,5 @@
 ﻿
-const createAvatarContainer = (user) =>
+const createAvatarContainerUnfollow = (user) =>
     `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
                                 <img src="${user.avatarImageUrl}" alt=""/>
                             </div>
@@ -30,8 +30,70 @@ const createAvatarContainer = (user) =>
                             </div>
                             <div class="cover--user-desc fw--400 fs--18 fstyle--i text-darkest">
                                 <p>${user.description}</p>
+                            </div>
+                            <div><a href="#" title="Unfollow" class="btn-link unFollow-btn" data-toggle="tooltip" data-placement="bottom">
+                                <input type="hidden" value="${user.id}">
+                                <i class="fa fa-user-times"></i>
+                                </a>
+                            </div>`;
+const createAvatarContainerFollow = (user) =>
+    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
+                                <img src="${user.avatarImageUrl}" alt=""/>
+                            </div>
+
+                            <div class="cover--user-name">
+                                <h2 class="h3 fw--600">${user.lastName} ${user.firstName}</h2>
+                            </div>
+                            <div class="mem-statis-box">
+                                <div>
+                                    <span class="headline">Newbee</span>
+
+                                    <div class="val">
+                                        <span class="newbee" id="ranknewbee"></span>
+                                        <span class="tastee" id="ranktastee"></span>
+                                        <span class="cookee" id="rankcookee"></span>
+                                        <span class="chefee" id="rankchefee"></span>
+                                        <span class="mastee" id="rankmastee"></span>
+                                    </div>
+                                    <div class="text">
+                                        <span class="user-lvl newbee"> newbee</span>
+                                        <span class="user-lvl tastee"> tastee</span>
+                                        <span class="user-lvl cookee"> cookee</span>
+                                        <span class="user-lvl chefee"> chefee</span>
+                                        <span class="user-lvl mastee"> mastee</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cover--user-desc fw--400 fs--18 fstyle--i text-darkest">
+                                <p>${user.description}</p>
+                            </div>
+                            <div><a href="#" title="Follow" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
+                                <input type="hidden" value="${user.id}">
+                                <i class="fa fa-user-plus"></i>
+                                </a>
                             </div>`;
 
+
+const followUser = async (userName, followingUserId) => {
+    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userName + "&userFollowingId=" + followingUserId)
+        .then(res => res.json())
+        .then(response => {
+            if (response.success) {
+                location.reload();
+            }
+        });
+};
+
+const unfollowUser = async (userName, followingUserId) => {
+    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userFollowingId=" + followingUserId)
+        .then(res => res.json())
+        .then(response => {
+            if (response.success) {
+                location.reload();
+            }
+        });
+};
 
 const loadAvatarContainer = async (username) => {
     $("#link-to-profile").attr("href", "/account/information/" + username);
@@ -54,11 +116,28 @@ const loadAvatarContainer = async (username) => {
         res = await fetch(`https://localhost:44361/api/account/read-username?userName=${username}`); /* tim theo user name*/
         data = await res.json();//do 2 cach trả về giá trị khác nhau, data[0] là vị trí đầu tiên trong chuổi json
         data = data[0];
+        
     }
- 
-    var element = createAvatarContainer(data);
-    $("#avatar-container").append(element);
 
+    const checkFollow = (id, listFollowed) => {
+        return listFollowed.some(acc => acc.id == id);
+    }
+
+    var resCheck = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userNameLocalStorage);
+    var dataCheck = (await resCheck.json());
+    var isFollowed = checkFollow(data.id, dataCheck);
+    var element = isFollowed ? createAvatarContainerUnfollow(data) : createAvatarContainerFollow(data);
+    $("#avatar-container").append(element);
+    $('.follow-btn').click((e) => {
+        e.preventDefault();
+        var followingUserId = $(e.target).siblings('input').val();
+        followUser(userNameLocalStorage, followingUserId);
+    });
+    $('.unFollow-btn').click((e) => {
+        e.preventDefault();
+        var followingUserId = $(e.target).siblings('input').val();
+        unfollowUser(userNameLocalStorage, followingUserId);
+    });
     
     if (data.point >= 0 && data.point <= 99) {
         $("#ranknewbee").attr("class", "newbee active");
@@ -89,5 +168,15 @@ const loadAvatarContainer = async (username) => {
 
     }
 
-   
+
+    if (data.username == userNameLocalStorage) {
+        $(".dropdown").css("display", "none");
+        $(".follow-btn").css("display", "none");
+        $(".unfollow-btn").css("display", "none");
+    }
+
+    //var scriptEle = document.createElement("script");
+    //scriptEle.src = "/js/site.js";
+    //document.body.appendChild(scriptEle);
+    
 };

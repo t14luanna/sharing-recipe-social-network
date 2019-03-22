@@ -1,7 +1,6 @@
 ﻿
 const callFollowingUserApi = async (userName) => {
-
-    $('#pagination-container').pagination({
+        $('#pagination-container').pagination({
         dataSource: `${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userName,
         locator: '',// array
         totalNumberLocator: function (response) {
@@ -20,8 +19,9 @@ const callFollowingUserApi = async (userName) => {
             $('#list-following-user').html(html);
             $('#list-following-user').css('height', '');
             $('#count-friends').html(data.length);
-            $('.unfollow-btn').on('click', function () {
-                var followingUserId = $(this).children('input').val();
+            $('.unfollow-btn').on('click', function (e) {
+                var followingUserId = $(e.target).siblings('input').val();;
+                var userName = localStorage.getItem('username');
                 unfollowUser(userName, followingUserId);
             });
         }
@@ -46,7 +46,7 @@ const callFollowingUserApi = async (userName) => {
 };
 
 const unfollowUser = async (userName, followingUserId) => {
-    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userId=" + followingUserId);
+    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userFollowingId=" + followingUserId);
     var data = await res.json();
     location.reload();
 };

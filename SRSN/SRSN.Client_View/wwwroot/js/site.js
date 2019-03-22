@@ -17,7 +17,6 @@
         $("#authorized-group-username").attr("href", "/account/information/" + username);
         $(".unauthorized-group").css("display", "none");
         $("#noti-color").css("color", "red");
-   
     } else {
         $(".authorized-group").css("display", "none");
         $(".unauthorized-group").css("display", "inline-table");
