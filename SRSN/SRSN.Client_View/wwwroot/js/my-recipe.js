@@ -1,7 +1,7 @@
 ﻿const createRecipeByUserId = (recipe) =>
     `<div class="col-md-4 col-xs-6 col-xxs-12" id="${recipe.id}">
 <div class="box--item text-center" >
-<a href="group-home.html" class="img img-my-recipe" data-overlay="0.1">
+<a href="/recipe/${recipe.id}" class="img" data-overlay="0.1">
                                                             <img src="${recipe.imageCover}" alt="">
                                                         </a>
                                                         <div class="info">
