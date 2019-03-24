@@ -10,6 +10,7 @@
                 <ul class="social-icons-chef">
                     <li><a href="#" title="Theo dõi" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
                             <input type="hidden" value="${account.id}">
+                            <input type="hidden" value="${account.username}" id="username-of-${account.id}">
                             <i class="fa fa-user-plus"></i>
                         </a>
                     </li>
@@ -136,7 +137,8 @@ const callTopTenAccountApi = async () => {
     $('.follow-btn').click((e) => {
         e.preventDefault();
         var followingUserId = $(e.target).siblings('input').val();
-        followUser(userName, followingUserId);
+        var followingUsername = $("#username-of-" + followingUserId).val();
+        followUser(userName, followingUserId, followingUsername);
     });
     $('.unfollow-btn').click((e) => {
         e.preventDefault();
@@ -178,7 +180,8 @@ const callTopAccountApi = async () => {
         e.preventDefault();
         var followingUserId = $("#followTopAccount").val();
         var userName = localStorage.getItem('username');
-        followUser(userName, followingUserId);
+        var followingUsername = $("#username-of-" + followingUserId).val();
+        followUser(userName, followingUserId, followingUsername);
     });
     $('.unfollow-btn').click((e) => {
         e.preventDefault();
@@ -188,12 +191,24 @@ const callTopAccountApi = async () => {
     });
 };
 
-const followUser = async (userName, followingUserId) => {
+const followUser = async (userName, followingUserId, followingUsername) => {
     var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userName + "&userFollowingId=" + followingUserId)
         .then(res => res.json())
         .then(response => {
         if (response.success) {
-            location.reload();
+            var myDataRef = SRSN.FIREBASE_DATABASE.ref(followingUsername);
+            var uid = myDataRef.push({
+                "uid": "",
+                "username": userName,
+                "content": "đang theo dõi bạn",
+                "date": new Date().toLocaleString(),
+                "link": "/account/information/" + userName,
+                "isRead": "False"
+            });
+            //update uid into firebase
+            SRSN.FIREBASE_DATABASE.ref("/" + followingUsername + "/" + uid.key).update({
+                uid: uid.key
+            });
         }
     });
 };

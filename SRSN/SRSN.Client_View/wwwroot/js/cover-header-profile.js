@@ -102,7 +102,21 @@ const followUser = async (userName, followingUserId) => {
         .then(res => res.json())
         .then(response => {
             if (response.success) {
-                location.reload();
+                //thông báo follow user
+                var myDataRef = SRSN.FIREBASE_DATABASE.ref(followingUsername);
+                var uid = myDataRef.push({
+                    "uid": "",
+                    "username": userName,
+                    "content": "đang theo dõi bạn",
+                    "date": new Date().toLocaleString(),
+                    "link": "/account/information/" + userName,
+                    "isRead": "False"
+                });
+                //update uid into firebase
+                SRSN.FIREBASE_DATABASE.ref("/" + followingUsername + "/" + uid.key).update({
+                    uid: uid.key
+                });
+                //location.reload();
             }
         });
 };
@@ -112,7 +126,7 @@ const unfollowUser = async (userName, followingUserId) => {
         .then(res => res.json())
         .then(response => {
             if (response.success) {
-                location.reload();
+                //location.reload();
             }
         });
 };
