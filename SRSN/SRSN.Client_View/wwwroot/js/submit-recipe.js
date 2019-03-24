@@ -113,15 +113,17 @@ function getData() {
     });
 
     var stepDescription = $("textarea[name='stepsDes']");
-    var stepsImage = $("input[name='stepsImage']");
+    var stepsImages = $("input[name='stepsImage']");
     var steps = [];
+
     $(stepDescription).each(i => {
         validation = validationField('stepsDes', $(stepDescription[i]).val().trim()) && validation;
-
+        let files = stepsImages[i].files;
         steps.push({
             Description: $(stepDescription[i]).val().trim(),
-            ImageUrl: $(stepsImage[i])[0].files[0]
-        });
+            ImageUrl: "",
+            files: files
+        }); 
     });
 
     var categoriesItemList = $("input[name='categoryItem']:checked");
@@ -172,9 +174,14 @@ function uploadImageSubmit(data) {
         });
 
         for (let sorvm of data.listSORVM) {
-            await uploadFile(sorvm.ImageUrl).then((res) => {
+            for (let image of sorvm.files) {
+                await uploadFile(image).then(res => {
+                    sorvm.ImageUrl += res.url + ";";
+                })
+            }
+            /* await uploadFile(sorvm.ImageUrl).then((res) => {
                 sorvm.ImageUrl = res.url;
-            });
+            }); */
         }
 
 
