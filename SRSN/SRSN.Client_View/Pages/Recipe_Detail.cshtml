@@ -291,6 +291,8 @@
     <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
     <script type="text/javascript" src="/recipepress/js/main.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/recipepress/js/jquery.swipebox.js"></script>
+    <script src="/recipepress/js/slick.min.js"></script>
     <script src="~/js/menu-widgets.js"></script>
 
     <script type="text/javascript">
@@ -298,7 +300,7 @@
         var currentString = "vị trí hiện tại của bạn";
         var indexString = "vị trí mặc định trong trang cá nhân của bạn";
                 // fetch and render element to html
-      
+
                 const changeHeadername = async () => {
                     var someText = "Công thức chi tiết";
                     $('.main-heading h1').append(document.createTextNode(someText));
@@ -329,7 +331,7 @@
                         handleLocationError(false, infoWindow, map.getCenter());
                     }
                     if ($("input[name='currentPosition']:checked").length > 0) {
-                        
+
                         setPositionMap(pos, currentString);
                     } else {
                         if (indexPosition != null) {
@@ -376,13 +378,17 @@
 
                     //callListCategoryItemDetailPage();
                     // Recipe slider variation two
-                    //$('.slider-detail2').slick({
-                    //    autoplay: true,
-                    //    infinite: true,
-                    //    pauseOnHover: true,
-                    //    prevArrow: $('.left-arrow'),
-                    //    nextArrow: $('.right-arrow')
-                    //});
+                    //$('.slider-detail2').swipebox();
+                    //if (jQuery().swipebox) {
+                    //    $('.slider-detail2').swipebox();
+                    //}
+                    $('.slider-detail2').slick({
+                        autoplay: true,
+                        infinite: true,
+                        pauseOnHover: true,
+                        prevArrow: $('.left-arrow'),
+                        nextArrow: $('.right-arrow')
+                    });
                     $('dl.accordion dt').on("click", function () {
                         $(this).siblings('dt').removeClass('current');
                         $(this).addClass('current').next('dd').stop(true, true).slideDown(500).siblings('dd').stop(true, true).slideUp(500);
@@ -486,7 +492,7 @@
                         setPositionMap(indexPosition, indexString);
                         callReadListIngredientNearByStoresApi(indexPosition.lat, indexPosition.lng, listCheckedIngres);
                     }
-                    
+
                 });
                 $("input[name='rating']").on("click", function (e) {
                     star = parseFloat(e.target.value);

@@ -75,7 +75,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                var collection = collectionPostService.Get(q => q.CollectionId == collectionId).Count();
+                var collection = collectionPostService.Get(q => q.CollectionId == collectionId && q.IsActive == true).Count();
                 return Ok(collection);
             }
             catch (Exception ex)

@@ -35,7 +35,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public string ImageCover { get; set; }
         public DateTime? CreateTime { get; set; }
         public DateTime? UpdateTime { get; set; }
-        public string UserId { get; set; }
+        public int? UserId { get; set; }
         public string RecipeName { get; set; }
         public string VideoLink { get; set; }
         public int? LevelRecipe { get; set; }

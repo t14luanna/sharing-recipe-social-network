@@ -50,7 +50,8 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
         Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(UserManager<SRSNUser> userManager, string categoryName);
         Task UpdateIsShareReaction(int recipeId, int userId);
-        
+        Task<ICollection<RecipeViewModel>> GetTimeLineRecipes(UserManager<SRSNUser> userManager, int userId, int limit, int page);
+
 
     }
 
@@ -637,7 +638,8 @@ namespace SRSN.DatabaseManager.Services
                 {
                     UserId = userId,
                     RecipeId = recipeId,
-                    IsShare = true
+                    IsShare = true,
+                    TotalShare = 1,
                 };
                 var userReactionRecipe = this.VMToEntity<UserReactionRecipe, UserReactionRecipeViewModel>(creatingUserReactionRecipeVM);
                 await recipeDbset.AddAsync(userReactionRecipe);
@@ -645,11 +647,31 @@ namespace SRSN.DatabaseManager.Services
             }
             else
             {
+                if (recipe.TotalShare == null)
+                {
+                    recipe.TotalShare = 0;
+                }
+                recipe.TotalShare += 1;
                 recipe.IsShare = true;
                 recipeDbset.Update(recipe);
                 await this.unitOfWork.CommitAsync();
             }
             
+        }
+
+        public async Task<ICollection<RecipeViewModel>> GetTimeLineRecipes(UserManager<SRSNUser> userManager, int userId, int limit, int page)
+        {
+            var list = new List<RecipeViewModel>();
+            var listItems = this.Get().AsNoTracking().Where(r => r.Active == true && r.UserId == userId ).OrderByDescending(x => x.CreateTime).ToList();
+            foreach (var item in listItems)
+            {
+                var recipeUserID = await userManager.FindByIdAsync(userId.ToString());
+                item.AccountVM = new AccountViewModel();
+                mapper.Map(recipeUserID, item.AccountVM);
+                list.Add(item);
+            }
+            list = list.Skip(page * limit).Take(limit).ToList();
+            return list;
         }
     }
 }

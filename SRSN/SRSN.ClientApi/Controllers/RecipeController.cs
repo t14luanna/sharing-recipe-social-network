@@ -25,6 +25,7 @@ namespace SRSN.ClientApi.Controllers
     public class RecipeController : ControllerBase
     {
         private string userRecipeRecommendPrefix = "RCS_User_";
+        private string rankrecipePrefix = "Rank_Recipe_";
 
         private IRecipeService recipeService;
         private IUserFollowingService userFollowingService;
@@ -48,8 +49,8 @@ namespace SRSN.ClientApi.Controllers
         {
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-            request.RecipeVM.UserId = userId;
-            
+            request.RecipeVM.UserId = int.Parse(userId);
+
             await recipeService.CreateRecipeWithStepsAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
             return Ok(new
             {
@@ -132,7 +133,7 @@ namespace SRSN.ClientApi.Controllers
             }
         }
 
-        [HttpGet("newsfeed")]
+        [HttpGet("get-similar-recipes")]
         public async Task<ActionResult> ReadRecommendRecipes([FromQuery]int limit = 10, [FromQuery]int page = 0)
         {
             try
@@ -146,24 +147,61 @@ namespace SRSN.ClientApi.Controllers
 
                 // take limit from redis
                 var datas = await redisDatabase.SortedSetRangeByScoreWithScoresAsync(key);
-                var dataIds = datas.Select(x => 
+                var dataIds = datas.Select(x =>
                 {
                     int recipeId = 0;
                     int.TryParse(x.Element, out recipeId);
                     return recipeId;
                 });
-                // Get all user following ids
-                var listUserFollowingId = await userFollowingService.GetAllFollowingUser(userId);
-
-
-                dataIds = dataIds.Skip(page * limit).Take(limit).ToList();
                 var listRecipe = new List<RecipeViewModel>();
                 foreach (var recipeId in dataIds)
                 {
                     var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true);
                     if (recipe != null)
-                    {   
-                        if(listUserFollowingId.Contains(int.Parse(recipe.UserId)))
+                    {
+                        var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
+                        recipe.AccountVM = new AccountViewModel();
+                        mapper.Map(recipeUserID, recipe.AccountVM);
+                        listRecipe.Add(recipe);
+                    }
+                }
+                return Ok(listRecipe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("newsfeed-follow")]
+        public async Task<ActionResult> ReadNewsfeedRecipes([FromQuery]int limit = 10, [FromQuery]int page = 0)
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var userIdStr = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = 0;
+                int.TryParse(userIdStr, out userId);
+
+                var key = $"{rankrecipePrefix}";
+                var datas = await redisDatabase.SortedSetRangeByScoreWithScoresAsync(key, order: Order.Descending);
+                var dataIds = datas.Select(x =>
+                {
+                    int id = 0;
+                    int.TryParse(x.Element, out id);
+                    return id;
+                });
+                // Get all user following ids
+                var listUserFollowingId = await userFollowingService.GetAllFollowingUser(userId);
+
+                //dataIds = dataIds.Skip(page * limit).Take(limit).ToList();
+                dataIds = dataIds.ToList();
+                var listRecipe = new List<RecipeViewModel>();
+                foreach (var recipeId in dataIds)
+                {
+                    var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true);
+                    if (recipe != null)
+                    {
+                        if (listUserFollowingId.Contains(recipe.UserId.Value))
                         {
                             var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
                             recipe.AccountVM = new AccountViewModel();
@@ -172,29 +210,70 @@ namespace SRSN.ClientApi.Controllers
                         }
                     }
                 }
+                listRecipe = listRecipe.Skip(page * limit).Take(limit).ToList();
+                return Ok(listRecipe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("newsfeed-no-follow")]
+        public async Task<ActionResult> ReadNewsfeedNoFollowingRecipes([FromQuery]int limit = 10, [FromQuery]int page = 0)
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var userIdStr = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = 0;
+                int.TryParse(userIdStr, out userId);
 
-                if(listRecipe.Count < limit)
+                var key = $"{rankrecipePrefix}";
+                var datas = await redisDatabase.SortedSetRangeByScoreWithScoresAsync(key, order: Order.Descending);
+                var dataIds = datas.Select(x =>
                 {
-                    var currentPage = (page) - (datas.Count() / limit);
-                    var numberOfLakeData = limit - listRecipe.Count;
-                    if((currentPage*limit) < 35)
+                    int id = 0;
+                    int.TryParse(x.Element, out id);
+                    return id;
+                });
+                // Get all user following ids
+                var listUserFollowingId = await userFollowingService.GetAllFollowingUser(userId);
+
+
+                //dataIds = dataIds.Skip(page * limit).Take(limit).ToList();
+                var listRecipe = new List<RecipeViewModel>();
+                foreach (var recipeId in dataIds)
+                {
+                    var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true);
+                    if (recipe != null)
                     {
-                        var listItems = recipeService
-                            .Get(p => p.Active == true && !dataIds.Contains(p.Id) && p.ReferencedRecipeId == null)
-                            .OrderBy(p => p.EvRating)
-                            .Skip(currentPage * limit)
-                            .Take(numberOfLakeData);
-                        foreach (var item in listItems)
+                        if (!listUserFollowingId.Contains(recipe.UserId.Value))
                         {
-                            // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
-                            var currentUser = await userManager.FindByIdAsync(item.UserId.ToString());
-                            item.AccountVM = new AccountViewModel();
-                            mapper.Map(currentUser, item.AccountVM);
-                            listRecipe.Add(item);
+                            var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
+                            recipe.AccountVM = new AccountViewModel();
+                            mapper.Map(recipeUserID, recipe.AccountVM);
+                            listRecipe.Add(recipe);
                         }
                     }
                 }
+                listRecipe = listRecipe.Skip(page * limit).Take(limit).ToList();
                 return Ok(listRecipe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("get-time-line")]
+        public async Task<ActionResult> ReadTimeLineRecipes([FromQuery]int limit = 10, [FromQuery]int page = 0)
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var userIdStr = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = 0;
+                int.TryParse(userIdStr, out userId);
+                return Ok(await recipeService.GetTimeLineRecipes(this.userManager, userId, limit, page));
             }
             catch (Exception ex)
             {
@@ -257,7 +336,7 @@ namespace SRSN.ClientApi.Controllers
         {
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-            request.RecipeVM.UserId = userId;
+            request.RecipeVM.UserId = int.Parse(userId);
             await recipeService.UpdateRecipe(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
             return Ok(new
             {
@@ -279,7 +358,7 @@ namespace SRSN.ClientApi.Controllers
                 ClaimsPrincipal claims = this.User;
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = await this.userManager.FindByIdAsync(userId);
-                request.RecipeVM.UserId = userId;
+                request.RecipeVM.UserId = int.Parse(userId);
                 Console.WriteLine("kim bao:" + request.ListSORVM.Capacity);
                 var recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
                 var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.CreateNewRecipe);
@@ -330,7 +409,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok( await recipeService.GetRecipeBaseOnCategory(userManager, categoryName));
+                return Ok(await recipeService.GetRecipeBaseOnCategory(userManager, categoryName));
             }
             catch (Exception ex)
             {
@@ -360,9 +439,9 @@ namespace SRSN.ClientApi.Controllers
         {
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-            request.UserId = userId;
+            request.UserId = int.Parse(userId);
             request.CreateTime = DateTime.Now;
-            await recipeService.UpdateIsShareReaction(request.ReferencedRecipeId.Value, int.Parse(request.UserId));
+            await recipeService.UpdateIsShareReaction(request.ReferencedRecipeId.Value, request.UserId.Value);
             await recipeService.CreateAsync(request);
             var user = await this.userManager.FindByIdAsync(userId);
             var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.SharingRecipe);

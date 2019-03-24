@@ -14,7 +14,7 @@
         $(".noti-message-icon").css("display", "inline-table");//index, recipe page
         $("#noti-message-icon").css("display", "inline-table");//member profile page
         $("#authorized-group-username").text(username);
-        $("#authorized-group-username").attr("href", "/account/information/" + username);
+        $("#authorized-group-username").attr("href", "/account/timeline/" + username);
         $(".unauthorized-group").css("display", "none");
         $("#noti-color").css("color", "red");
     } else {

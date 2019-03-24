@@ -2,7 +2,7 @@
     `<div class="col-md-4 col-xs-6 col-xxs-12" id="${recipe.id}">
 <div class="box--item text-center" >
 <a href="/recipe/${recipe.id}" class="img" data-overlay="0.1">
-                                                            <img src="${recipe.imageCover}" alt="" class="img-my-recipe">
+                                                            <img src="${recipe.imageCover}" alt="" class="img-my-recipe"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                                         </a>
                                                         <div class="info">
                                                             <div class="title">
