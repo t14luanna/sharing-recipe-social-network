@@ -42,7 +42,7 @@ const createNumSteps = (num) =>
     `<dt class="current">
         <span class="arrow"><i class="fa fa-minus"></i><i class="fa fa-minus stand"></i></span><strong>Bước ${num}: </strong>
     </dt>`;
-const createSingleStepOfRecipe = (step) =>
+const createSingleStepOfRecipe = (step, images) =>
     `<dd>
         <div class="row">
             <div class="col-sm-7">
@@ -51,11 +51,13 @@ const createSingleStepOfRecipe = (step) =>
                 </p>
                                                     
             </div>
-            <div class="col-sm-5">
-                <img class="img-step-recipe" src="${step.imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
+            <div id="step-images" class="col-sm-5">
+                ${images}
             </div>
         </div>
     </dd>`;
+
+const createStepImage = imageUrl => `<img class="img-step-recipe" src="${imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>`
 
 const createSingleRelatedRecipe = (recipe) =>
     `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
@@ -361,10 +363,18 @@ const callStepOfRecipeApi = async (id) => {
     var data = (await res.json());
     var count = 0;
     for (var item of data) {
-        for (var steps of item.listSORVM) {
+        for (var step of item.listSORVM) {
             count++;
+            step.imageUrl = step.imageUrl.slice(0, -1) // remove trailing ";"
+            let images = step.imageUrl.split(";");
+            let resultStepImages = "";
+            for (let image of images) {
+                let stepImage = createStepImage(image);
+                resultStepImages += stepImage;
+            }
             var num = createNumSteps(count);
-            var step = createSingleStepOfRecipe(steps);
+            var step = createSingleStepOfRecipe(step, resultStepImages);
+            
             num = num + step;
             $("#list-step-recipe").append(num);
         }
