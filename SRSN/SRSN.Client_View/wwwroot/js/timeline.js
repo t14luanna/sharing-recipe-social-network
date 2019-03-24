@@ -1,6 +1,6 @@
 ﻿var currentPage = 0;
 const createRecipePost = (recipe) =>
-    `<li><div class="activity--item ">
+    `<li class="col-md-12" style ="list-style-type: none"><div class="activity--item col-md-8">
                                                     <div class="activity--avatar">
                                                         <a href="/MemberProfile">
                                                             <img src="${recipe.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
@@ -59,7 +59,7 @@ const createRecipePost = (recipe) =>
                                             </li>`;
 
 const createShareRecipePost = (post, recipe) =>
-    `<li><div class="activity--item ">
+    `<li class="col-md-12" style ="list-style-type: none"><div class="activity--item col-md-8">
                                                     <div class="activity--avatar">
                                                         <a href="/MemberProfile">
                                                             <img src="${post.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
@@ -117,12 +117,11 @@ const createShareRecipePost = (post, recipe) =>
                                                 </div>
 
                                             </li>`;
-// 
-const popularPost = () => `<p><i class="fa fa-fire" aria-hidden="true"></i> Bài đăng nổi bật</p>`;
-const callNewsfeedPageApi = async (limit = 10, page = 0) => {
+
+const callTimeLineApi = async (limit = 10, page = 0) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var res = await fetch(`${BASE_API_URL}/api/recipe/newsfeed-follow?limit=${limit}&page=${page}`, {
+    var res = await fetch(`${BASE_API_URL}/api/recipe/get-time-line?limit=${limit}&page=${page}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
@@ -131,50 +130,8 @@ const callNewsfeedPageApi = async (limit = 10, page = 0) => {
     });
 
     var data = await res.json();
-    if (!data || !data.length) {
-        var newPaging = page - currentPage - 1;
-        callNewsfeedPagePopularApi(limit, newPaging);
-    } else {
-        currentPage = page;
-        for (var item of data) {
-            let date = new Date(item.createTime);
-            var hr = date.getHours();
-            var min = date.getMinutes();
-            item.createTime = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
-            if (item.referencedRecipeId == null) {
-                let element = createRecipePost(item);
-                callIsLikeRecipe(item.id);
-                $(".activity--items").append(element);
-                callCountApi(item.id);
-            } else {
-                var recipeRef = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe?recipeId=${item.referencedRecipeId}`);
-                var dataRef = (await recipeRef.json());
-                callIsLikeRecipe(item.id);
-                for (var recipeRef of dataRef) {
-                    let element = createShareRecipePost(item, recipeRef);
-                    $(".activity--items").append(element);
-                }
-                callCountApi(item.id);
-            }
-        }
-    }
-   
-};
-
-const callNewsfeedPagePopularApi = async (limit, page) => {
-    var authorization = localStorage.getItem("authorization");
-    var token = (JSON.parse(authorization))["token"];
-    var res = await fetch(`${BASE_API_URL}/api/recipe/newsfeed-no-follow?limit=${limit}&page=${page}`, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    });
-
-    var data = await res.json();
-    if (!data || !data.length) {
-        $(".load-more--btn").hide();
+    if (!data || !data.length || data.length < limit) {
+        $(".page-nav").hide();
     }
     for (var item of data) {
         let date = new Date(item.createTime);
@@ -184,20 +141,17 @@ const callNewsfeedPagePopularApi = async (limit, page) => {
         if (item.referencedRecipeId == null) {
             let element = createRecipePost(item);
             callIsLikeRecipe(item.id);
-            $(".activity--items").append(element);
-
-            $(`.popular-item-${item.id}`).append(popularPost);
+            $(".timeline-personal").append(element);
             callCountApi(item.id);
         } else {
             var recipeRef = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe?recipeId=${item.referencedRecipeId}`);
             var dataRef = (await recipeRef.json());
             callIsLikeRecipe(item.id);
-            
+
             for (var recipeRef of dataRef) {
                 let element = createShareRecipePost(item, recipeRef);
-                $(".activity--items").append(element);
+                $(".timeline-personal").append(element);
             }
-            $(`.popular-item-${item.id}`).append(popularPost);
             callCountApi(item.id);
         }
     }
@@ -368,7 +322,7 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
             try {
                 console.log("Starting firebase")
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
-                 uid = myDataRef.push({
+                uid = myDataRef.push({
                     "uid": "",
                     "username": usernameLocal,
                     "content": "đã chia sẽ bài viết của bạn.",
@@ -382,7 +336,7 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
                 });
                 //thông báo cộng điểm
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
-                 uid = myDataRef.push({
+                uid = myDataRef.push({
                     "uid": "",
                     "username": "Bạn",
                     "content": "đã chia sẽ bài viết và được cộng thêm <b>5 điểm</b>",
@@ -454,7 +408,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner) => {
 
                 //comment notification
                 //Đánh giá (comment) công thức firebase
-                 
+
 
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
                 var uid = myDataRef.push({

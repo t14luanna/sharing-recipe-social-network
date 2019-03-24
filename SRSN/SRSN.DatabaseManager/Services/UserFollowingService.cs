@@ -33,7 +33,7 @@ namespace SRSN.DatabaseManager.Services
         {
             var listAccount = new List<AccountViewModel>();
 
-            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active='True' AND UserId=" + userid).ToListAsync();
+            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active= 1 AND UserId=" + userid).ToListAsync();
 
 
             foreach (var item in listItems)
@@ -109,7 +109,7 @@ namespace SRSN.DatabaseManager.Services
 
         public async Task<ICollection<int>> GetAllFollowingUser(int userid)
         {
-            var listItems = this.selfDbSet.AsNoTracking().Where(x => x.UserId == userid);
+            var listItems = this.selfDbSet.AsNoTracking().Where(x => x.UserId == userid && x.Active == true);
             var listIds = await listItems.Select(x => x.FollowingUserId).ToListAsync();
             return listIds;
         }

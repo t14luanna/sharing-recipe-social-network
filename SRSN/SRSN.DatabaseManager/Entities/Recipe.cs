@@ -30,10 +30,12 @@ namespace SRSN.DatabaseManager.Entities
         public int? CookTime { get; set; }
         public int? Serving { get; set; }
         public bool? Active { get; set; }
-        public int? ViewQuantity { get; set; }
         public double? EvRating { get; set; }
         public string SharedStatus { get; set; }
         public int? ReferencedRecipeId { get; set; }
+        public int? ViewQuantity { get; set; }
+        public int? LikeQuantity { get; set; }
+        public int? ShareQuantity { get; set; }
 
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }

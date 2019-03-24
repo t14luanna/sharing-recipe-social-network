@@ -143,7 +143,7 @@ const deactivateCollection = async (collectionId) => {
     }
 };
 async function deleteRecipeInMyCollection(collectionId, recipePostId ) {
-    swal({
+    Swal.fire({
         title: "Bạn muốn xóa?",
         text: "Sau khi xóa, bạn sẽ không thấy Công Thức này!",
         icon: "warning",
@@ -162,10 +162,12 @@ const deactivateRecipe = async (collectionId, recipePostId) => {
     var res = await fetch(`${BASE_API_URL}/${COLLECTION_POST_API_URL}/delete-recipepost?collectionId=${collectionId}&recipePostId=${recipePostId}`);
 
     if (res.status == 200) {//delete successfully
-        swal("Bạn đã xóa thành công Bình Luận này!", {
-            icon: "success",
+        Swal.fire({
+            type: 'success',
+            title: 'Thông báo',
+            text: 'Xóa công thức khỏi bộ sưu tập thành công!',
         });
-        $(`#${collectionId}${recipePostId}`).remove();
+           $(`#${collectionId}${recipePostId}`).remove();
     } else {
         alert("Không thể xóa công thức này. Vui lòng thử lại!!!");
     }

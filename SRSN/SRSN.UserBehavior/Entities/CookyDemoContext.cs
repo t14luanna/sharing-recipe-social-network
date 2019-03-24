@@ -53,7 +53,7 @@ namespace SRSN.UserBehavior.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=12345678;Trusted_Connection=False;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
 
@@ -176,6 +176,8 @@ namespace SRSN.UserBehavior.Entities
                     .HasName("PK_Collection_Post_1");
 
                 entity.ToTable("Collection_Post");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.Collection)
                     .WithMany(p => p.CollectionPost)
@@ -447,6 +449,8 @@ namespace SRSN.UserBehavior.Entities
                     .HasName("PK_User_Following_1");
 
                 entity.ToTable("User_Following");
+
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 

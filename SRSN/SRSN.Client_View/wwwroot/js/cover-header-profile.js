@@ -1,4 +1,4 @@
-﻿const apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
+﻿const apikey = 'Al45YPe3PTkSEr6vjtzg6z';
 const client = filestack.init(apikey);
 function uploadFile(file) {
     return new Promise((resolve, reject) => {
@@ -133,6 +133,7 @@ const loadAvatarContainer = async (username) => {
                 'Authorization': `Bearer ${token}`
             },
         });
+        
         data = await res.json();
     } else {
         res = await fetch(`https://localhost:44361/api/account/read-username?userName=${username}`); /* tim theo user name*/
@@ -152,6 +153,9 @@ const loadAvatarContainer = async (username) => {
     data.description = data.description == null ? "" : data.description;
     var element = createAvatarContainer(data);
     $("#avatar-container").append(element);
+    if (username == userNameLocalStorage) {
+        $(".follow-btn").hide();
+    }
     $('.follow-btn').click((e) => {
         e.preventDefault();
         var followingUserId = $(e.target).siblings('input').val();

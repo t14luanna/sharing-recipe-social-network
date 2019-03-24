@@ -256,6 +256,7 @@ const callReadRatingCommentApi = async (recipeId) => {
         var hr = date.getHours();
         var min = date.getMinutes();
         item.ratingTime = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
+        item.ratingContent = item.ratingContent == null ? "" : item.ratingContent
         var element = createSingleRatingComment2(item, dataCount)
         $("#list-rating-comment").append(element);
         var num = item.ratingRecipe % 10;

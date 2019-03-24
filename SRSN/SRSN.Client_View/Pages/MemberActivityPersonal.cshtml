@@ -1,8 +1,419 @@
-﻿@page
+﻿@page "/account/timeline/{userName}"
 @model SRSN.Client_View.Pages.MemberActivityPersonalModel
 @{
     ViewData["Title"] = "MemberActivityPersonal";
+    Layout = null;
 }
 
-<h1>MemberActivityPersonal</h1>
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from templates.majesticthemes.com/recipepress/recipe-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:10:26 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>Food & Health</title>
+    <!--google fonts-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,500,600,700%7CRoboto:300,400,400i,500,700">
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'
+          rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Karla:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <!--jquery ui stylesheet-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+
+    <!-- site favicon -->
+    <link rel="icon" href="~/recipepress/images/favicon.png" />
+
+    <!--selectric stylesheet-->
+    <link rel="stylesheet" href="~/recipepress/css/selectric.css" />
+    <!--font awesome stylesheet-->
+    <link rel="stylesheet" href="~/recipepress/css/font-awesome.min.css" />
+    <!--swipe box stylesheet-->
+    <link rel="stylesheet" href="~/recipepress/css/swipebox.css" />
+    <!-- mean menu stylesheet-->
+    <link rel="stylesheet" href="~/recipepress/css/meanmenu.css" />
+    <!--slick slider stylesheet-->
+    <link rel="stylesheet" href="~/recipepress/css/slick.css" />
+    <link rel="stylesheet" href="~/recipepress/css/slick-theme.css" />
+    <!--bootstrap stylesheets-->
+    <link rel="stylesheet" href="~/recipepress/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/recipepress/css/bootstrap-theme.css" />
+    <!--animate stylesheet-->
+    <link rel="stylesheet" href="~/recipepress/css/animate.css" />
+    <!--main stylesheet-->
+    <link rel="stylesheet" href="~/recipepress/css/main.css" />
+    <link rel="icon" href="~/recipepress/images/favicon.png" type="image/png">
+
+    <!-- ==== Google Font ==== -->
+    <!-- ==== Plugins Bundle ==== -->
+    <link rel="stylesheet" href="~/recipepress/css/plugins.min.css">
+
+    <!-- ==== Main Stylesheet ==== -->
+    <link rel="stylesheet" href="~/recipepress/css/style.css">
+
+    <!-- ==== Responsive Stylesheet ==== -->
+    <link rel="stylesheet" href="~/recipepress/css/responsive-style.css">
+
+    <!-- ==== Color Scheme Stylesheet ==== -->
+    <link rel="stylesheet" href="~/recipepress/css/colors/color-1.css" id="changeColorScheme">
+
+    <!-- ==== Custom Stylesheet ==== -->
+    <link rel="stylesheet" href="~/recipepress/css/custom.css">
+
+    <link rel="stylesheet" href="~/recipepress/css/rankuser.css">
+</head>
+
+<body>
+    <!--pre-loader-->
+    <div class="preloader">
+        <div class="loadr">
+            <svg viewbox="0 0 74.6 81">
+                <path d="M67.8,12.9C51.7,5.2,26.2,0.2,26.2,0.2c-10.9-1.8-9.3,11.4-9,20.2c0,0.7,0.1,1.4,0.1,2c7.8,1.5,19.7,4,29.2,7.4c11.4,4.1,9.6,8.3,9.2,16c-0.2,4.9-0.4,14,1.1,21.3c7.7,1.4,13.8,1.9,13.1-0.3c-6.3-7.2-0.1-29.6,1.8-34.2C73.3,28.7,79.3,18.4,67.8,12.9z">
+                </path>
+                <path d="M58.9,79.5c-6.5-5.6-6.2-23.6-5.8-31.3c0.4-7.7,2.1-11.9-9.2-16c-15.3-5.5-37.3-8.8-37.3-8.8c-9.1-1.1-6.6,8.4-5.5,15.1c1.7,10,5.4,22,7.9,27.8c2.8,6.5,8.9,7.3,8.9,7.3S65.4,85.1,58.9,79.5z"></path>
+            </svg>
+        </div>
+    </div>
+    <!--pre-loader ends-->
+    <!--header-->
+
+
+    <header>
+        <div class="header header-var1 fade-load-down">
+            <div class="responsive-menu"></div>
+            <div class="nav-var1">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5">
+
+                            <div class="left-nav">
+                                <nav class="nav-collapse">
+                                    <ul class="main-menu left">
+                                        <li>
+                                            <a href="/index">Trang chủ</a>
+                                        </li>
+                                        <li>
+                                            <a href="/recipe">Công thức</a>
+                                        </li>
+                                        <li>
+                                            <a href="/newsfeed">Cộng đồng</a>
+                                        </li>
+                                        <li><a href="/topUsers">Top Thành viên</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="logo-wrapper">
+                                <a href="/index"><img src="~/recipepress/images/logo.png" alt="logo" /></a>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="right-nav">
+                                <div class="wrapper-links header-profile-right">
+                                    <ul class="header-social-icons">
+                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                    </ul>
+                                    <nav class="nav-collapse header-social-icons" id="noti-message-icon" style="display:none">
+                                        <ul>
+                                            <li>
+                                                <a href="#" onclick="changeStatusNoti()">
+                                                    <i class="fa fa-bell"></i>
+                                                    <span style="
+                                                          position: absolute;
+                                                          top: 5px;
+                                                          right: -4px;
+                                                          padding: 0px 5px;
+                                                          border-radius: 50%;
+                                                          background-color: red;
+                                                          color: white; font-size: 12px" id="number-of-notification"></span>
+                                                </a>
+                                                <ul id="list-notification"></ul>
+                                            </li>
+                                            <li><a href="forums.html"><i class="fa fa-envelope"></i></a></li>
+                                        </ul>
+                                    </nav>
+                                    <span class="sign-in-buttons authorized-group" style="display: none;" id="user">
+                                        <a class="information" href="/account/information" id="authorized-group-username">Username</a>
+                                    </span>
+                                    <span class="sign-in-buttons authorized-group" id="logoutBtn">
+                                        <a class="login" href="">Logout</a>
+                                    </span>
+                                    <span class="sign-in-buttons unauthorized-group">
+                                        <a class="login" href="/login">Login</a>
+                                        <a class="register" href="/register">Register</a>
+                                    </span>
+                                </div>
+                                <nav class="nav-collapse">
+                                    <ul class="main-menu right">
+                                        <li>
+                                            <a href="blog.html">blog</a>
+                                        </li>
+                                        <li><a href="/collection">Bộ sưu tập</a></li>
+                                        <li><a href="contact.html">Liên hệ</a></li>
+                                        <li><a class="submit-recipe" href="submit-recipe.html">Đăng công thức</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!--header ends-->
+
+    <div class="recipes-home-body inner-page">
+        <div class="container">
+            <div class="row">
+                <div class="wrapper">
+
+                    <!-- Cover Header Start -->
+                    <div class="cover--header pt--80 text-center" data-bg-img="img/cover-header-img/bg-01.jpg" data-overlay="0.6" data-overlay-color="white">
+                        <div class="container" id="avatar-container">
+
+                        </div>
+                    </div>
+                    <!-- Cover Header End -->
+                    <!-- Page Wrapper Start -->
+                    <section class="page--wrapper pt--80 pb--20">
+                        <div class="container">
+                            <div class="row">
+                                <!-- Main Content Start -->
+                                <div class="main--content col-md-12 pb--60" data-trigger="stickyScroll">
+                                    <div class="main--content-inner drop--shadow">
+                                        <!-- Content Nav Start -->
+                                        <div class="content--nav pb--30">
+                                            <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
+                                                <li class="active"><a href="/account/timeline/@(RouteData.Values["userName"])">Dòng thời gian</a></li>
+                                                <li><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
+                                                <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
+                                                <li><a href="/account/my-recipe/@(RouteData.Values["userName"])">Công thức của tôi</a></li>
+                                                <li><a href="/account/collection/@(RouteData.Values["userName"])">Bộ sưu tập của tôi</a></li>
+                                            </ul>
+                                        </div>
+                                        <!-- Content Nav End -->
+                                        <!-- Filter Nav Start -->
+                                        <!-- Filter Nav End -->
+                                        <!-- Member Items Start -->
+                                        <div class="member--items">
+                                            <div class="timeline-personal">
+                                            </div>
+
+                                            <div id="pagination-container" class="page-nav" style="display: none"></div>
+                                            <div class="page-nav" style="margin-top: 15px">
+                                                <a href="#/" onclick="getMoreTimeLine()" class="btn btn-animate">
+                                                    <span>Xem thêm<i class="fa ml--10 fa-caret-right"></i></span>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Main Content End -->
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-share-post modal">
+        <!-- Modal content -->
+        <div class="row modal-content modal-share-content">
+            <div class="col-md-12 modal-header">
+                <span class="close-share-recipe close">&times;</span>
+            </div>
+            <div class="col-md-12 modal-body modal-body-share-post">
+            </div>
+        </div>
+
+    </div>
+    <!--footer-->
+    <div class="footer footer-variant-one footer-fluid">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="text-center">
+                    <a class="logo-footer" href="index.html">
+                        <img src="~/recipepress/images/logo2.png" alt="Logo" />
+                    </a>
+                    <p class="flipInX">
+                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                        <br /> magna aliquyam erat, with an extra ordinary design and quality development features in low
+                    </p>
+
+                </div>
+
+                <div class="subs-social-options">
+                    <div class="row custom-row-footer">
+                        <div class="col-md-6 custom-col-options">
+                            <div class="left-side">
+                                <div class="widget widget-footer news-letter-signupflipInY">
+                                    <h2>Newsletter Signup</h2>
+
+                                    <form class="subs-form" action="#" method="post">
+                                        <div class="email-field">
+                                            <input type="email" name="email" placeholder="Enter you email address" />
+                                            <button>
+                                                <i class="fa fa-paper-plane-o"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="right-side">
+                                <div class="widget widget-footer social-icons">
+                                    <h2 class="fadeInRight">Get Social with Us</h2>
+                                    <ul>
+                                        <li class="bounceInRight">
+                                            <a href="#">
+                                                <i class="fa fa-facebook"></i>
+                                            </a>
+                                        </li>
+                                        <li class="bounceInRight animation-delay100ms">
+                                            <a href="#">
+                                                <i class="fa fa-twitter"></i>
+                                            </a>
+                                        </li>
+                                        <li class="bounceInRight animation-delay200ms">
+                                            <a href="#">
+                                                <i class="fa fa-linkedin"></i>
+                                            </a>
+                                        </li>
+                                        <li class="bounceInRight animation-delay300ms">
+                                            <a href="#">
+                                                <i class="fa fa-google-plus"></i>
+                                            </a>
+                                        </li>
+                                        <li class="bounceInRight animation-delay400ms">
+                                            <a href="#">
+                                                <i class="fa fa-youtube-play"></i>
+                                            </a>
+                                        </li>
+                                        <li class="bounceInRight animation-delay500ms">
+                                            <a href="#">
+                                                <i class="fa fa-flickr"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-copyright text-center flipInX">
+                    <p>
+                        &copy; Copyright 2015 All Rights Reserved by
+                        <a href="#">Majestic Themes</a>
+                    </p>
+                </div>
+                <div class="corner-image fadeInRight">
+                    <img src="~/recipepress/images/footer-corner-image.jpg" alt="image" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--footer ends-->
+
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
+    <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
+    <script src="~/recipepress/js/jquery-ui.js"></script>
+    <script src="~/recipepress/js/slick.min.js"></script>
+    <script src="~/recipepress/js/jquery.meanmenu.js"></script>
+
+    <script src="~/recipepress/js/jquery.selectric.min.js"></script>
+    <script src="~/recipepress/js/wow.js"></script>
+    <script src="~/recipepress/js/jquery.form.js"></script>
+
+    <script src="~/recipepress/js/jquery.validate.min.js"></script>
+    <script src="~/recipepress/js/jquery.swipebox.js"></script>
+
+
+    <script src="~/recipepress/js/custom.js"></script>
+    @*<script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>*@
+
+    <!-- ==== Color Switcher Plugin ==== -->
+    <script src="~/recipepress/js/color-switcher.min.js"></script>
+    <script src="~/recipepress/js/plugins.min.js"></script>
+
+    <!-- ==== Main Script ==== -->
+    <script src="~/recipepress/js/main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+
+    <script src="~/js/Configuration.js"></script>
+    <script src="~/js/notification.js"></script>
+
+    <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+    <script src="~/js/member-profile.js"></script>
+    <script src="~/js/cover-header-profile.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="~/js/moment.min.js"></script>
+    <script src="~/js/daterangepicker.min.js"></script>
+    <script src="~/js/member-collection.js"></script>
+    <script src="~/js/member-friends.js"></script>
+    <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
+    <script src="~/js/timeline.js"></script>
+    <script type="text/javascript">
+
+    // fetch and render element to html
+    (async () => {
+
+
+        await loadAvatarContainer("@(RouteData.Values["userName"])");
+        await callFollowingUserApi("@(RouteData.Values["userName"])");
+
+    })();
+
+    </script>
+    <script src="~/js/site.js"></script>
+    <script type="text/javascript">
+        (async () => {
+            await callTimeLineApi();
+            $(".close-share-recipe").on("click", function (e) {
+                $(".modal-share-post").css("display", "none");
+            });
+        })();
+
+        var timelineGetMorePage = 0;
+        var timelineGetMoreLimit = 10;
+        function getMoreTimeLine() {
+            callTimeLineApi(timelineGetMoreLimit, ++timelineGetMorePage);
+        };
+        function openShareModal(e) {
+            var recipeId = e.getAttribute("data-recipe-id");
+            callShareRecipeModalApi(recipeId);
+            $(".modal-share-post").css("display", "block");
+        }
+
+        window.onclick = function (event) {
+            if (event.target.id == "modal-share-post") {
+                $(".modal-share-post").css("display", "none");
+            }
+        }
+    </script>
+</body>
+
+<!-- Mirrored from templates.majesticthemes.com/recipepress/recipe-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:10:38 GMT -->
+
+</html>
+
 

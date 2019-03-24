@@ -156,7 +156,7 @@ const callSuggestRecipeApi = async () => {
 
 
         var token = (JSON.parse(authorization))["token"];
-        var res = await fetch(`${BASE_API_URL}/api/recipe/newsfeed?limit=9&page=0`, {
+        var res = await fetch(`${BASE_API_URL}/api/recipe/get-similar-recipes?limit=9&page=0`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

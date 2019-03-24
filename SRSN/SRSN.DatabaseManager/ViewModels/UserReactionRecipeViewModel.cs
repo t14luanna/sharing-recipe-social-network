@@ -20,7 +20,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public double? CalculatedRating { get; set; }
         public string FullName { get; set; }
         public string AvatarUrl { get; set; }
-
+        public int? TotalShare { get; set; }
 
     }
 }
