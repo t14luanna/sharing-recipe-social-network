@@ -1,0 +1,13 @@
+﻿.header{
+    padding: 10px;
+    height: 64px;
+}
+
+.header .logo-wrapper img {
+    height: 50px;
+    width: auto;
+}
+
+.recipes-home-body{
+    padding: 0!important;
+}

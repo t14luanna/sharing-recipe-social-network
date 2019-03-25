@@ -489,13 +489,13 @@ Author URI  : https://themeforest.net/user/themelooks
         /* ------------------------------------------------------------------------- *
          * STICKY CONTENT
          * ------------------------------------------------------------------------- */
-        var $stickyScroll = $('[data-trigger="stickyScroll"]');
+        //var $stickyScroll = $('[data-trigger="stickyScroll"]');
 
-        if ( $stickyScroll.length ) {
-            $stickyScroll.theiaStickySidebar({
-                additionalMarginTop: $headerNavbar.length ? $headerNavbar.outerHeight() + 40 : 40
-            });
-        }
+        //if ( $stickyScroll.length ) {
+        //    $stickyScroll.theiaStickySidebar({
+        //        additionalMarginTop: $headerNavbar.length ? $headerNavbar.outerHeight() + 40 : 40
+        //    });
+        //}
 
         /* ------------------------------------------------------------------------- *
          * PRELOADER

@@ -8,7 +8,6 @@ namespace SRSN.UpdateLatLongStore.Entities
         public StoreBrand()
         {
             Products = new HashSet<Products>();
-            Store = new HashSet<Store>();
         }
 
         public int Id { get; set; }
@@ -18,6 +17,5 @@ namespace SRSN.UpdateLatLongStore.Entities
         public string Phone { get; set; }
 
         public virtual ICollection<Products> Products { get; set; }
-        public virtual ICollection<Store> Store { get; set; }
     }
 }

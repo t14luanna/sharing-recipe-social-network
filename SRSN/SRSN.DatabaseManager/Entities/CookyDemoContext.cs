@@ -312,8 +312,6 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Products>(entity =>
             {
-                entity.Property(e => e.Name).HasMaxLength(50);
-
                 entity.Property(e => e.Price).HasMaxLength(50);
 
                 entity.HasOne(d => d.Brand)
@@ -399,14 +397,6 @@ namespace SRSN.DatabaseManager.Entities
                     .WithMany(p => p.StepsOfRecipe)
                     .HasForeignKey(d => d.RecipeId)
                     .HasConstraintName("FK_StepsOfRecipe_RecipePost");
-            });
-
-            modelBuilder.Entity<Store>(entity =>
-            {
-                entity.HasOne(d => d.Brand)
-                    .WithMany(p => p.Store)
-                    .HasForeignKey(d => d.BrandId)
-                    .HasConstraintName("FK_Store_StoreBrand");
             });
 
             modelBuilder.Entity<StoreBrand>(entity =>

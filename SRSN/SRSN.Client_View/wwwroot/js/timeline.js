@@ -1,6 +1,6 @@
 ﻿var currentPage = 0;
 const createRecipePost = (recipe) =>
-    `<li class="col-md-12" style ="list-style-type: none"><div class="activity--item col-md-8">
+    `<li class="col-md-12 timeline-post" style ="list-style-type: none"><div class="activity--item col-md-8  col-md-offset-2">
                                                     <div class="activity--avatar">
                                                         <a href="/MemberProfile">
                                                             <img src="${recipe.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
@@ -59,7 +59,7 @@ const createRecipePost = (recipe) =>
                                             </li>`;
 
 const createShareRecipePost = (post, recipe) =>
-    `<li class="col-md-12" style ="list-style-type: none"><div class="activity--item col-md-8">
+    `<li class="col-md-12 timeline-post" style ="list-style-type: none"><div class="activity--item col-md-8  col-md-offset-2">
                                                     <div class="activity--avatar">
                                                         <a href="/MemberProfile">
                                                             <img src="${post.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
@@ -118,10 +118,10 @@ const createShareRecipePost = (post, recipe) =>
 
                                             </li>`;
 
-const callTimeLineApi = async (limit = 10, page = 0) => {
+const callTimeLineApi = async (username, limit = 10, page = 0) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var res = await fetch(`${BASE_API_URL}/api/recipe/get-time-line?limit=${limit}&page=${page}`, {
+    var res = await fetch(`${BASE_API_URL}/api/recipe/get-time-line?userName=${username}&limit=${limit}&page=${page}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',

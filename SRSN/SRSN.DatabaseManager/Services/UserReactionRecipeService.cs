@@ -20,6 +20,7 @@ namespace SRSN.DatabaseManager.Services
         Task<int> CommentCount( int recipeId);
         Task<Object> LikeShareCount( int recipeId);
         Task UpdateRecipeRating(int recipeId, double ratingRecipe);
+        Task<ICollection<RecipeViewModel>> GetAllFavoriteRecipeByUserId(int userId);
     }
     public class UserReactionRecipeService : BaseService<UserReactionRecipe, UserReactionRecipeViewModel>, IUserReactionRecipeService
     {
@@ -200,6 +201,21 @@ namespace SRSN.DatabaseManager.Services
             }
             await this.UpdateRecipeRating(request.RecipeId, request.RatingRecipe.Value);
             return true;
+        }
+
+        public async Task<ICollection<RecipeViewModel>> GetAllFavoriteRecipeByUserId(int userId)
+        {
+            var list = new List<RecipeViewModel>();
+            var listItems = this.Get().AsNoTracking().Where(r => r.IsLike == true && r.UserId == userId).ToList();
+            var recipeDbset = this.unitOfWork.GetDbContext().Set<Recipe>();
+            foreach (var item in listItems)
+            {
+                var recipe = await recipeDbset.FindAsync(item.RecipeId);
+                var recipeVM = new RecipeViewModel();
+                mapper.Map(recipe, recipeVM);
+                list.Add(recipeVM);
+            }
+            return list;
         }
     }
 }

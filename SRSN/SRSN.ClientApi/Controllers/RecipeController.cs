@@ -265,14 +265,16 @@ namespace SRSN.ClientApi.Controllers
             }
         }
         [HttpGet("get-time-line")]
-        public async Task<ActionResult> ReadTimeLineRecipes([FromQuery]int limit = 10, [FromQuery]int page = 0)
+        public async Task<ActionResult> ReadTimeLineRecipes([FromQuery]string userName, [FromQuery]int limit = 10, [FromQuery]int page = 0)
         {
             try
             {
-                ClaimsPrincipal claims = this.User;
-                var userIdStr = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var userId = 0;
-                int.TryParse(userIdStr, out userId);
+                //ClaimsPrincipal claims = this.User;
+                //var userIdStr = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                //var userId = 0;
+                //int.TryParse(userIdStr, out userId);
+                var user = await userManager.FindByNameAsync(userName);
+                int userId = user.Id;
                 return Ok(await recipeService.GetTimeLineRecipes(this.userManager, userId, limit, page));
             }
             catch (Exception ex)

@@ -19,8 +19,12 @@ namespace SRSN.UpdateLatLongStore.Entities
         public string ImageUrl { get; set; }
         public int? CommentParentId { get; set; }
         public bool? Active { get; set; }
+        public int? RecipeCommentParentId { get; set; }
+        public int? RecipeId { get; set; }
 
         public virtual Post Post { get; set; }
+        public virtual Recipe Recipe { get; set; }
+        public virtual UserReactionRecipe RecipeCommentParent { get; set; }
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CommentLike> CommentLike { get; set; }
     }

@@ -821,3 +821,6 @@ input[name=ingredient] {
     -webkit-animation: fa-spin 2s infinite linear;
     animation: fa-spin 2s infinite linear;
 }
+.timeline-post{
+    margin-top: 50px
+}

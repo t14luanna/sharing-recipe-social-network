@@ -10,19 +10,24 @@ let config = {
 };
 firebase.initializeApp(config);
 
-//Db
-let user_id = 1;
+//Variable
+let user_id = (JSON.parse(localStorage.getItem("userId")));
 let user_chat_list = [];
 let user_list = [];
 let db = firebase.firestore();
 let current_chat;
+let current_user;
 let chatData = [];
+let topUser;
+let token;
 
 //View
-let message_list = $('.topic--replies > .nav')[0];
+let message_list = $('.topic--replies.chat-list > .nav')[0];
+let search_list = $('.topic--replies.search-list > .nav')[0];
 let message_content = $('.msg-list')[0];
 let message_user_title = $('.name-header-mesgs')[0];
 let send_btn = $('.msg_send_btn')[0];
+let search_bar = $('.search-bar')[0];
 
 $(send_btn).on('click', () => {
     let message_text = $('.write_msg')[0];
@@ -42,10 +47,19 @@ let user = firebase.auth().signInAnonymously();
       }
     });
 
-
 //-----------------------------User Chat Action-----------------------------------------
 let sendMessage = (messageText) => {
     // Add a new message entry to the Firebase database.
+    db.collection('chats').doc(current_chat.id).update({
+        last_message: messageText,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+
+    updateChatList(current_chat.id, {
+        createdAt: (new Date()).getTime(),
+        content: messageText
+    });
+
     return db.collection('chats').doc(current_chat.id).collection('messages').add(
         {
             userSent: user_id,
@@ -57,6 +71,34 @@ let sendMessage = (messageText) => {
         .catch(function (error) {
         });
 };
+
+let createChat = (oppositeUser) => {
+    // Add a new message entry to the Firebase database.
+    return db.collection('chats').add(
+        {
+            users: [
+                {
+                    user_id: user_id,
+                    user_image: current_user.avatarImageUrl,
+                    user_name: current_user.username
+                },
+                {
+                    user_id: oppositeUser.id,
+                    user_image: oppositeUser.avatarImageUrl,
+                    user_name: oppositeUser.username
+                }
+            ],
+            users_id: [
+                user_id,
+                oppositeUser.id
+            ],
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(function (docRef) {
+        })
+        .catch(function (error) {
+        });
+}
 
 //-----------------------------End User Chat Action-------------------------------------
 
@@ -148,6 +190,19 @@ let showUserChat = (data) => {
             showMessageContent(id);
         }
 
+        db.collection('chats').doc(id).onSnapshot(function (doc) {
+            let data = doc.data();
+            updateChatList(id, {
+                createdAt: data.updatedAt,
+                content: data.last_message
+            });
+            appendMessage({
+                createdAt: data.updatedAt,
+                content: data.last_message,
+                userSend: id
+            }, opposite_user);
+        });
+
         message_list.innerHTML += user_chat_item;
     });
     
@@ -205,7 +260,82 @@ let findChatById = (id) => {
         });
     })
 }
+
+let updateChatList = (id, message) => {
+    //let date = message.createdAt.seconds != undefined ? convertTimestampToDate(message.createdAt) : convertTimestampToDate(message.createdAt.seconds);
+    //$('#' + id + ' .date ').text(date);
+    $('#' + id + ' .chat-message-wrap').text(message.content);
+}
 //-----------------------------End User Chat List--------------------------------------
+
+//-----------------------------Search Bar----------------------------------------------
+$(search_bar).focusin(() => {
+    $(search_list).css('display', 'block');
+    $(message_list).css('display', 'none');
+    showSearchList(topUser);
+});
+
+$(search_bar).focusout(() => {
+    //$(search_list).css('display', 'none');
+    $(message_list).css('display', 'block');
+    $(search_bar).val('');
+});
+
+$(search_bar).keydown(() => {
+    let search_val = $(search_bar).val();
+    if (search_val.length > 1) {
+        searchLikeUser(search_val).then(res => {
+            showSearchList(res)
+        }).catch(e => {
+
+        })
+    }
+});
+
+let showSearchList = async (list) => {
+    search_list.innerHTML = '';
+    await $(list).each((i, user) => {
+        showSearchItem(user);
+    });
+    $(search_list).children('li').each((i, chat) => {
+        $(chat).on('click', () => {
+            createChat(list[i]);
+        });
+    });
+}
+
+let showSearchItem = (user) => {
+    let user_item = '<li id="' + user.id + '">' +
+        '<div class="topic--reply">' +
+        '<div class="body clearfix"><div class="author mr--20 float--left text-center">' +
+        '<div class="avatar" data-overlay="0.3" data-overlay-color="primary">' +
+        '<a><img src="' + user.avatarImageUrl + '" alt=""></a></div></div>' +
+        '<div class="content fs--14 ov--h"><div class="name text-darkest">' +
+        '<p><a href="member-activity-personal.html">' + user.firstName + ' ' + user.lastName + '</a></p></div></div>' +
+        '</div></div></li>';
+    search_list.innerHTML += user_item;
+}
+//-----------------------------End Search Bar------------------------------------------
+
+//-----------------------------User List-----------------------------------------------
+let getTopUser = async () => {
+    let res = await fetch('https://localhost:44361/api/account/get-top-ten');
+    let data = (await res.json());
+    return data;
+}
+
+let searchLikeUser = async (name) => {
+    let res = await fetch(`https://localhost:44361/api/account/find-user?name=${name}`);
+    let data = await res.json();
+    return data;
+}
+
+let loadUserData = async (userId) => {
+    let res = await fetch(`https://localhost:44361/api/account/read?userId=${userId}`);
+    let data = await res.json();
+    return data;
+}
+//-----------------------------End User List-------------------------------------------
 
 //-----------------------------User Chat Content---------------------------------------
 
@@ -230,10 +360,19 @@ let setChatListItem = () => {
 }
 
 $(document).ready((e) => {
+    loadUserData(user_id).then((data) => {
+        current_user = data;
+    });
+
+    getTopUser().then(data => {
+        topUser = data;
+        showSearchList(data);
+    });
+
     readUserChatList().then(async (res) => {
         chatData = res;
         await showUserChat(chatData);
     }).catch((e) => {
 
-    });
+    });    
 });

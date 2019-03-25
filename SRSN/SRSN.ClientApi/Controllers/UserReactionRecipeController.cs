@@ -159,7 +159,6 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-
         [HttpGet("is-like")]
         [Authorize]
         public async Task<ActionResult> IsLikeRecipe([FromQuery]int recipeId)
@@ -197,6 +196,25 @@ namespace SRSN.ClientApi.Controllers
             try
             {
                 return Ok(await selfService.LikeShareCount(recipeId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("get-favorite-recipes")]
+        public async Task<ActionResult> GetFavoriteRecipe([FromQuery]string username)
+        {
+            try
+            {
+                //ClaimsPrincipal claims = this.User;
+                //var userIdStr = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                //var userId = 0;
+                //int.TryParse(userIdStr, out userId);
+                var user = await userManager.FindByNameAsync(username);
+                int userId = user.Id;
+                return Ok(await selfService.GetAllFavoriteRecipeByUserId(userId));
             }
             catch (Exception ex)
             {
