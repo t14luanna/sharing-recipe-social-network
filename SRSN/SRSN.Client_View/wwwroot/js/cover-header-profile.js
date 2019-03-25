@@ -135,22 +135,28 @@ async function followUserFuntion(userId) {
             if (response.success) {
                 $(".follow-area").html(btnFollowed(userId));
                 //thông báo follow user
-                //var myDataRef = SRSN.FIREBASE_DATABASE.ref(followingUsername);
-                //var uid = myDataRef.push({
-                //    "uid": "",
-                //    "username": userName,
-                //    "content": "đang theo dõi bạn",
-                //    "date": new Date().toLocaleString(),
-                //    "link": "/account/information/" + userName,
-                //    "isRead": "False"
-                //});
-                ////update uid into firebase
-                //SRSN.FIREBASE_DATABASE.ref("/" + followingUsername + "/" + uid.key).update({
-                //    uid: uid.key
-                //});
+                callNotification(userId);
 
             }
         });
+};
+const callNotification = async (userId) => {
+    var userNameLocalStorage = localStorage.getItem("username");
+    var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
+    var userData = await userRes.json();
+    var myDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
+    var uid = myDataRef.push({
+        "uid": "",
+        "username": userNameLocalStorage,
+        "content": "đang theo dõi bạn",
+        "date": new Date().toLocaleString(),
+        "link": "/account/information/" + userData.username,
+        "isRead": "False"
+    });
+    //update uid into firebase
+    SRSN.FIREBASE_DATABASE.ref("/" + userData.username + "/" + uid.key).update({
+        uid: uid.key
+    });
 };
 async function unfollowUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
@@ -240,17 +246,6 @@ const loadAvatarContainer = async (username) => {
     if (username == userNameLocalStorage) {
         $(".follow-area").hide();
     }
-    //$('.follow-user-btn').click((e) => {
-    //    e.preventDefault();
-    //    var followingUserId = $("#following-user-id").val();
-    //    followUser(userNameLocalStorage, followingUserId);
-    //});
-    //$('.unfollow-user-btn').click((e) => {
-    //    e.preventDefault();
-    //    var unfollowingUserId = $("#unfollowing-user-id").val();
-    //    unfollowUser(userNameLocalStorage, unfollowingUserId);
-    //});
-
     if (data.point >= 0 && data.point <= 99) {
         $("#ranknewbee").attr("class", "newbee active");
     } else if (data.point >= 100 && data.point <= 499) {
