@@ -67,6 +67,11 @@ let sendMessage = (messageText) => {
             isOppositeSeen: false,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(function (docRef) {
+            appendMessage({
+                createdAt: (new Date()).getTime(),
+                content: messageText,
+                userSent: user_id
+            }, {});
         })
         .catch(function (error) {
         });
@@ -219,19 +224,12 @@ let showUserChat = async (data) => {
                 createdAt: data.updatedAt,
                 content: data.last_message
             });
-            console.log(doc)
             if (data.last_message !== '') {
                 if (!doc._hasPendingWrites) {
                     appendMessage({
                         createdAt: data.updatedAt,
                         content: data.last_message,
-                        userSend: user_id
-                    }, opposite_user);
-                } else {
-                    appendMessage({
-                        createdAt: data.updatedAt,
-                        content: data.last_message,
-                        userSend: id
+                        userSent: id
                     }, opposite_user);
                 }
             }
