@@ -44,11 +44,27 @@ const createAvatarContainerUnfollow = (user) =>
                             <div class="cover--user-desc fw--400 fs--18 fstyle--i text-darkest">
                                 <p>${user.description}</p>
                             </div>
-                            <div><a href="#" title="Unfollow" class="btn-link unFollow-btn" data-toggle="tooltip" data-placement="bottom">
-                                <input type="hidden" value="${user.id}">
-                                <i class="fa fa-user-times"></i>
-                                </a>
-                            </div>`;
+                            <!--follow area-->
+                            <div class="follow-area">
+                            <div class="follow-btn-custom" onclick="followUserFuntion(${user.id})">
+                            <input type="hidden" value="${user.id}" id="unfollowing-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default" data-bind="visible: status()==1">
+                                    <a title="Hủy quan tâm" href="javascript:void(0)" data-bind="click:remove">
+                                        <span class="fa fa-check"></span>
+                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                        <span>Đang theo dõi</span>
+                                    </a>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span data-bind="text: totalFollowing()">487</span></span>
+                                </span>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                            <!--end follow area-->
+                            `;
 //const createAvatarContainerFollow = (user) =>
 //    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
 //                                <img src="${user.avatarImageUrl}" alt=""/>`;
@@ -86,37 +102,123 @@ const createAvatarContainer = (user) =>
                             <div class="cover--user-desc fw--400 fs--18 fstyle--i text-darkest">
                                 <p>${user.description}</p>
                             </div>
- <div class="edit-avatar" style="display: none">
+                            <div class="edit-avatar" style="display: none">
                                                     <button id="btnUpdateAvatar" onclick="btnUpdateAvatar_Click(this)" class="btn btn-primary btn-update-info"><span>Lưu thay đổi</span></button>
-                                                </div>;
+                                                </div>
+                           <!--follow area-->
+                            <div class="follow-area">
+                            <div class="follow-btn-custom" onclick="unfollowUserFuntion(${user.id})">
+                            <input type="hidden" value="${user.id}" id="following-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default">
+                                        <a title="Quan tâm">
+                                            <span class="fa fa-user-plus"></span>
+                                            <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                            <span>Theo dõi</span>
+                                        </a>
+                                        <span class="count" title="Đang được theo dõi"><i style=""></i><b></b><span data-bind="text: totalFollowing()">184</span>
+                                        </span>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                            <div><a href="#" title="Follow" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
-                                <input type="hidden" value="${user.id}">
-                                <i class="fa fa-user-plus"></i>
-                                </a>
+                            </div>
+                            <!--end follow area-->
+                            `;
+async function followUserFuntion(userId) {
+    var userNameLocalStorage = localStorage.getItem("username");
+    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userNameLocalStorage + "&userFollowingId=" + userId)
+        .then(res => res.json())
+        .then(response => {
+            if (response.success) {
+                $(".follow-area").html(btnFollowed(userId));
+                //thông báo follow user
+                //var myDataRef = SRSN.FIREBASE_DATABASE.ref(followingUsername);
+                //var uid = myDataRef.push({
+                //    "uid": "",
+                //    "username": userName,
+                //    "content": "đang theo dõi bạn",
+                //    "date": new Date().toLocaleString(),
+                //    "link": "/account/information/" + userName,
+                //    "isRead": "False"
+                //});
+                ////update uid into firebase
+                //SRSN.FIREBASE_DATABASE.ref("/" + followingUsername + "/" + uid.key).update({
+                //    uid: uid.key
+                //});
+
+            }
+        });
+};
+async function unfollowUserFuntion(userId) {
+    var userNameLocalStorage = localStorage.getItem("username");
+    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userNameLocalStorage + "&userFollowingId=" + userId)
+        .then(res => res.json())
+        .then(response => {
+            if (response.success) {
+                //location.reload();
+                $(".follow-area").html(btnFollow(userId));
+            }
+        });
+};
+
+const btnFollow = (userId) => `<div class="follow-btn-custom"  onclick="followUserFuntion(${userId})">
+                            <input type="hidden" value="${userId}" id="following-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default">
+                                        <a title="Quan tâm">
+                                            <span class="fa fa-user-plus"></span>
+                                            <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                            <span>Theo dõi</span>
+                                        </a>
+                                        <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span data-bind="text: totalFollowing()">184</span>
+                                        </span>
+                                  </span>
+                                </div>
+                              </div>
                             </div>`;
-
-
+const btnFollowed = (userId) => `
+<div class="follow-btn-custom"  onclick="unfollowUserFuntion(${userId})">
+                            <input type="hidden" value="${userId}" id="unfollowing-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default" data-bind="visible: status()==1">
+                                    <a title="Hủy quan tâm" href="javascript:void(0)" data-bind="click:remove">
+                                        <span class="fa fa-check"></span>
+                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                        <span>Đang theo dõi</span>
+                                    </a>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span data-bind="text: totalFollowing()">487</span></span>
+                                </span>
+                                </div>
+                              </div>
+                            </div>`;
 const followUser = async (userName, followingUserId) => {
     var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userName + "&userFollowingId=" + followingUserId)
         .then(res => res.json())
         .then(response => {
             if (response.success) {
+                $(".follow-area").html(btnFollowed(followingUserId));
                 //thông báo follow user
-                var myDataRef = SRSN.FIREBASE_DATABASE.ref(followingUsername);
-                var uid = myDataRef.push({
-                    "uid": "",
-                    "username": userName,
-                    "content": "đang theo dõi bạn",
-                    "date": new Date().toLocaleString(),
-                    "link": "/account/information/" + userName,
-                    "isRead": "False"
-                });
-                //update uid into firebase
-                SRSN.FIREBASE_DATABASE.ref("/" + followingUsername + "/" + uid.key).update({
-                    uid: uid.key
-                });
-                //location.reload();
+                //var myDataRef = SRSN.FIREBASE_DATABASE.ref(followingUsername);
+                //var uid = myDataRef.push({
+                //    "uid": "",
+                //    "username": userName,
+                //    "content": "đang theo dõi bạn",
+                //    "date": new Date().toLocaleString(),
+                //    "link": "/account/information/" + userName,
+                //    "isRead": "False"
+                //});
+                ////update uid into firebase
+                //SRSN.FIREBASE_DATABASE.ref("/" + followingUsername + "/" + uid.key).update({
+                //    uid: uid.key
+                //});
+
             }
         });
 };
@@ -127,6 +229,7 @@ const unfollowUser = async (userName, followingUserId) => {
         .then(response => {
             if (response.success) {
                 //location.reload();
+                $(".follow-area").html(btnFollow(followingUserId));
             }
         });
 };
@@ -147,13 +250,13 @@ const loadAvatarContainer = async (username) => {
                 'Authorization': `Bearer ${token}`
             },
         });
-        
+
         data = await res.json();
     } else {
-        res = await fetch(`https://localhost:44361/api/account/read-username?userName=${username}`); /* tim theo user name*/
+        res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?userName=${username}`); /* tim theo user name*/
         data = await res.json();//do 2 cach trả về giá trị khác nhau, data[0] là vị trí đầu tiên trong chuổi json
         data = data[0];
-        
+
     }
 
     const checkFollow = (id, listFollowed) => {
@@ -163,42 +266,43 @@ const loadAvatarContainer = async (username) => {
     var resCheck = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userNameLocalStorage);
     var dataCheck = (await resCheck.json());
     var isFollowed = checkFollow(data.id, dataCheck);
-    var element = isFollowed ? createAvatarContainerUnfollow(data) : createAvatarContainer(data);
     data.description = data.description == null ? "" : data.description;
-    var element = createAvatarContainer(data);
+    var element = isFollowed ? createAvatarContainerUnfollow(data) : createAvatarContainer(data);
+    
+    //var element = createAvatarContainer(data);
     $("#avatar-container").append(element);
     if (username == userNameLocalStorage) {
-        $(".follow-btn").hide();
+        $(".follow-user-btn").hide();
     }
-    $('.follow-btn').click((e) => {
+    $('.follow-user-btn').click((e) => {
         e.preventDefault();
-        var followingUserId = $(e.target).siblings('input').val();
+        var followingUserId = $("#following-user-id").val();
         followUser(userNameLocalStorage, followingUserId);
     });
-    $('.unFollow-btn').click((e) => {
+    $('.unfollow-user-btn').click((e) => {
         e.preventDefault();
-        var followingUserId = $(e.target).siblings('input').val();
-        unfollowUser(userNameLocalStorage, followingUserId);
+        var unfollowingUserId = $("#unfollowing-user-id").val();
+        unfollowUser(userNameLocalStorage, unfollowingUserId);
     });
-    
+
     if (data.point >= 0 && data.point <= 99) {
         $("#ranknewbee").attr("class", "newbee active");
     } else if (data.point >= 100 && data.point <= 499) {
         $("#ranknewbee").attr("class", "newbee active");
         $("#ranktastee").attr("class", "tastee active");
-        $(".headline").text("Tastee").css("color","#ffc107");
+        $(".headline").text("Tastee").css("color", "#ffc107");
     } else if (data.point >= 500 && data.point <= 999) {
         $("#ranknewbee").attr("class", "newbee active");
         $("#ranktastee").attr("class", "tastee active");
         $("#rankcookee").attr("class", "cookee active");
-        $(".headline").text("Cookee").css("color","#ff4f4f");
+        $(".headline").text("Cookee").css("color", "#ff4f4f");
 
     } else if (data.point >= 1000 && data.point <= 4999) {
         $("#ranknewbee").attr("class", "newbee active");
         $("#ranktastee").attr("class", "tastee active");
         $("#rankcookee").attr("class", "cookee active");
         $("#rankchefee").attr("class", "chefee active");
-        $(".headline").text("Chefee").css("color","#a930ca");
+        $(".headline").text("Chefee").css("color", "#a930ca");
 
     } else if (data.point >= 5000) {
         $("#ranknewbee").attr("class", "newbee active");
@@ -206,7 +310,7 @@ const loadAvatarContainer = async (username) => {
         $("#rankcookee").attr("class", "cookee active");
         $("#rankchefee").attr("class", "chefee active");
         $("#rankmastee").attr("class", "mastee active");
-        $(".headline").text("mastee").css("color","#ff0834");
+        $(".headline").text("mastee").css("color", "#ff0834");
     }
 };
 
