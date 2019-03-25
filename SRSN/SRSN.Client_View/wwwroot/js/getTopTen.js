@@ -7,19 +7,26 @@
                 <h4>${account.firstName} ${account.lastName}</h4>
                 <span class="type">${rankUser}</span>
                 <p>${account.description}</p>
-                <ul class="social-icons-chef">
-                    <li><a href="#" title="Theo dõi" class="btn-link follow-btn" data-toggle="tooltip" data-placement="bottom">
-                            <input type="hidden" value="${account.id}">
-                            <input type="hidden" value="${account.username}" id="username-of-${account.id}">
-                            <i class="fa fa-user-plus"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="Gửi tin nhắn" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                            <i class="fa fa-envelope-o"></i>
-                        </a>
-                   </li>
-                </ul>
+                <!--follow area-->
+                <div class="follow-area">
+                            <div class="follow-btn-custom" onclick="followUserFuntion()">
+                            <input type="hidden" value="" id="following-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default">
+                                    <a title="Hủy theo dõi" href="javascript:void(0)" data-bind="click:remove">
+                                        <span class="fa fa-check"></span>
+                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                        <span>Theo dõi</span>
+                                    </a>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span></span>
+                                </span>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+             <!--end follow area-->
             </div>
         </div>
     </div>
@@ -28,24 +35,32 @@
 const readTopTenUserUnfollow = (account, rankUser) =>
     `<li>
     <div class="single-chef">
-        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="team" /></a>
+        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="team"/></a>
         <div class="chef-detail">
             <div class="chef-detail-inner">
-                <h4><a href="/account/information/${account.username}">${account.firstName} ${account.lastName}</h4>
+                <h4><a href="/account/information/${account.username}">${account.firstName} ${account.lastName}</a></h4>
                 <span class="type">${rankUser}</span>
                 <p>${account.description}</p>
-                <ul class="social-icons-chef">
-                    <li><a href="#" title="Unfollow" class="btn-link unFollow-btn" data-toggle="tooltip" data-placement="bottom">
-                            <input type="hidden" value="${account.id}">
-                            <i class="fa fa-user-times"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                            <i class="fa fa-envelope-o"></i>
-                        </a>
-                   </li>
-                </ul>
+                <!--follow area-->
+                <div class="follow-area">
+                            <div class="follow-btn-custom" onclick="unfollowUserFuntion()">
+                            <input type="hidden" value="" id="unfollowing-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default" >
+                                    <a title="Hủy theo dõi">
+                                        <span class="fa fa-check"></span>
+                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                        <span>Đang theo dõi</span>
+                                    </a>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span></span>
+                                </span>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+             <!--end follow area-->
             </div>
         </div>
     </div>
@@ -63,16 +78,24 @@ const readTopUserFollow = (account, rankUser) =>
                         <p>${account.description}</p>
                         <br />
                         <ul class="social-icons-chef">
-                            <li><a href="" title="Follow" class="btn-link top-follow-btn" data-toggle="tooltip" data-placement="bottom">
-                                    <input type="hidden" value="${account.id}" id="followTopAccount">
-                                    <i class="fa fa-user-plus"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" title="Gửi tin nhắn" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                            <i class="fa fa-envelope-o"></i>
-                                </a>
-                            </li>
+                           <div class="follow-area">
+                            <div class="follow-btn-custom" onclick="unfollowUserFuntion()">
+                            <input type="hidden" value="" id="unfollowing-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default" >
+                                    <a title="Hủy theo dõi">
+                                        <span class="fa fa-check"></span>
+                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                        <span>Theo dõi</span>
+                                    </a>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span></span>
+                                </span>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
                         </ul>
                     </div>`;
 
@@ -88,17 +111,24 @@ const readTopUserUnfollow = (account, rankUser) =>
                         <br />
 
                         <ul class="social-icons-chef">
-                            <li>
-                                <a href="#" title="Unfollow" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
-                                    <input type="hidden" value="${account.id}" id="unfollowTopAccount">
-                                    <i class="fa fa-user-times"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" title="Send Message" class="btn-link" data-toggle="tooltip" data-placement="bottom">
-                            <i class="fa fa-envelope-o"></i>
-                                </a>
-                            </li>
+                           <div class="follow-area">
+                            <div class="follow-btn-custom" onclick="unfollowUserFuntion()">
+                            <input type="hidden" value="" id="unfollowing-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default" >
+                                    <a title="Hủy theo dõi">
+                                        <span class="fa fa-check"></span>
+                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                        <span>Đang theo dõi</span>
+                                    </a>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span></span>
+                                </span>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
                         </ul>
                     </div>`
 
