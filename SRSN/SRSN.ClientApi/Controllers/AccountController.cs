@@ -195,7 +195,29 @@ namespace SRSN.ClientApi.Controllers
                 return null;
             }
         }
-        
+
+        [HttpGet("find-user")]
+        public async Task<ActionResult<AccountViewModel>> FindUser(string name)
+        {
+            try
+            {
+                var list = new List<AccountViewModel>();
+                foreach (var u in userManager.Users.Where(u => u.FirstName.Contains(name) || u.LastName.Contains(name)).ToList().OrderByDescending(t => t.Id))
+                {
+                    var accountVM = new AccountViewModel();
+                    mapper.Map(u, accountVM);
+                    list.Add(accountVM);
+
+                }
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> UpdateProfile([FromBody] AccountEditViewModel data)

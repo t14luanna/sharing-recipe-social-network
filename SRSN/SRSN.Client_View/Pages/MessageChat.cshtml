@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="recipepress/css/style.css">
     <link rel="stylesheet" href="recipepress/css/responsive-style.css">
     <link rel="stylesheet" href="recipepress/css/colors/color-1.css" id="changeColorScheme">
+    <link rel="stylesheet" href="~/css/message-chat.css">
 }
-
 <div class="recipes-home-body inner-page forum-home-body">
     <div class="container">
         <div class="row">
@@ -22,10 +22,13 @@
                             <div class="main--content col-md-4 pb--60 right-chat" data-trigger="stickyScroll">
                                 <div class="main--content-inner drop--shadow inbox_chat inbox-chat-left">
 
+                                    <input type="text" class="search-bar" />
                                     <!-- Topic Replies Start -->
-                                    <div class="topic--replies">
-                                        <ul class="nav">
-                                        </ul>
+                                    <div class="topic--replies chat-list">
+                                        <ul class="nav"></ul>
+                                    </div>
+                                    <div class="topic--replies search-list">
+                                        <ul class="nav" style="display:none"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +68,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="recipepress/js/main.js"></script>
     <script src="~/lib/firebase.js"></script>
-    <script src="~/lib/algoliasearch.min.js"></script>
     <script type="text/javascript" src="~/js/message-chat.js"></script>
 }
 
