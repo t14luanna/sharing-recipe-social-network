@@ -726,6 +726,101 @@ input[name=ingredient] {
     color: #6ebe3b;
     font-weight: 600
 }
+.favorite {
+    position: relative;
+    font-size: 14px;
+    min-width: 166px;
+    text-align: center;
+}
+.clearfix {
+    clear: both;
+}
+.follow-btn-custom .favourite a, .favourited a:hover {
+    color: #fff;
+    overflow: hidden;
+    padding: 6px 12px;
+    margin-right: 5px;
+    background-color: #428bca;
+    text-decoration: none;
+    border-radius: 12px;
+    border: .5px solid #357ebd;
+    vertical-align: top;
+}
+.follow-btn-custom .fa {
+    font: normal normal normal 14px1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.follow-btn-custom .fa-spin {
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+.follow-btn-custom .fa {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.follow-btn-custom .favourite span.count {
+    color: #b2b2b2;
+    padding: 6px 8px;
+    position: relative;
+    border: .5px solid #ddd;
+    border-radius: 12px;
+    margin-top: 1px;
+    background: #fff;
+}
+.follow-btn-custom .favourite a, .favourite span.count {
+    display: inline-block;
+}
+
+.follow-btn-custom .favourite span.count {
+    color: #b2b2b2;
+    padding: 6px 8px;
+    position: relative;
+    border: .5px solid #ddd;
+    border-radius: 12px;
+    margin-top: 1px;
+    background: #fff;
+}
+.follow-btn-custom .favourite .count b {
+    border-color: transparent #fff transparent transparent;
+    left: -4px;
+    top: 33%;
+}
+.follow-btn-custom .favourite .count b, .favourite .count i {
+    display: block;
+    width: 0;
+    height: 0;
+    border-width: 5px 5px 5px 0;
+    border-style: solid;
+    position: absolute;
+}
+.follow-btn-custom b, optgroup, strong {
+    font-weight: 700;
+}
+.favourite .count i {
+    border-color: transparent #ddd transparent transparent;
+    left: -5px;
+    top: 33%;
+}
+.follow-btn-custom a:hover {
+    background-color: #c70808;
+}
+.follow-btn-custom a, li {
+    white-space: nowrap;
+}
+.follow-btn-custom .favourite a:hover, .favourited a {
+    background-color: #c70808;
+    border: .5px solid #d2322d;
+}
+.follow-btn-custom .fa-spin {
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
 .timeline-post{
     margin-top: 50px
 }

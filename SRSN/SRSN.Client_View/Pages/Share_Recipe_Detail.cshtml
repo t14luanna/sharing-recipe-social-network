@@ -1,0 +1,131 @@
+﻿@page "/sharerecipe/{share_id}"
+@model SRSN.Client_View.Pages.Recipe_DetailModel
+@{
+    ViewData["Title"] = "Share_Recipe_Detail";
+}
+<!--banner ends-->
+@section StyleOptional{
+    <link rel="stylesheet" href="/recipepress/css/plugins.min.css">
+
+    <!-- ==== Main Stylesheet ==== -->
+    @*<link rel="stylesheet" href="/recipepress/css/style.css">*@
+
+    <!-- ==== Responsive Stylesheet ==== -->
+    <link rel="stylesheet" href="/recipepress/css/responsive-style.css">
+
+    <!-- ==== Color Scheme Stylesheet ==== -->
+    <link rel="stylesheet" href="/recipepress/css/colors/color-1.css" id="changeColorScheme">
+
+    <!-- ==== Custom Stylesheet ==== -->
+    <link rel="stylesheet" href="/recipepress/css/custom.css">
+    <link rel="stylesheet" href="~/recipepress/css/style.css">
+
+}
+<div class="recipes-home-body inner-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-lg-9">
+                <div class="recipe-set ">
+                    <div class="activity--list">
+                        <ul class="activity--items nav"></ul>
+                    </div>
+                        
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <aside>
+                    <div class="side-bar">
+                        <!--recipes search widget-->
+                        <div class="widget recipe-search">
+
+                            <div class="category-list">
+                                <!--<div class="list-inner">-->
+                                <ul id="list-category-item"></ul>
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <!---recipes search widget ends-->
+                        <!--popular recipes widget-->
+                        <div class="widget latest-news-widget">
+                            <h2>Công thức thịnh hành</h2>
+                            <ul id="list-popular-recipe-widget"></ul>
+                        </div>
+                        
+                        <!--latest news widget-->
+                        <div class="widget latest-news-widget">
+                            <h2>Công thức vừa xem</h2>
+                            <ul id="list-recent-recipe"></ul>
+                        </div>
+                        <!--latest news widget ends-->
+                        <!--get social-->
+                        <div class="widget widget-get-social">
+                            <h2>Liên kết cộng đồng</h2>
+                            <ul>
+                                <li class="facebook">
+                                    <a href="#">
+                                        <i class="fa fa-facebook"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+                                <li class="twitter">
+                                    <a href="#">
+                                        <i class="fa fa-twitter"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+                                <li class="google-plus">
+                                    <a href="#">
+                                        <i class="fa fa-google-plus"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <!--get social ends-->
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+
+    </div>
+   
+@section Scripts {
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
+    <script type="text/javascript" src="/recipepress/js/plugins.min.js"></script>
+    <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
+    <script type="text/javascript" src="/recipepress/js/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/recipepress/js/jquery.swipebox.js"></script>
+    <script src="/recipepress/js/slick.min.js"></script>
+    <script src="~/js/menu-widgets.js"></script>
+    <script src="~/js/share-recipe-detail.js"></script>
+
+
+    <script type="text/javascript">
+        const changeHeadername = async () => {
+            var someText = "Bài viết được chia sẻ";
+            $('.main-heading h1').append(document.createTextNode(someText));
+        };
+        (async () => {
+            await changeHeadername();
+            await callSharedReipeDetail(@(RouteData.Values["share_id"]));
+            await callListCategoryItem();
+            await callPopularRecipeWidgetApi();
+            await loadRecipeLocalStorage();
+            await RedirectAPI();
+        })();
+        
+    </script>
+ 
+}

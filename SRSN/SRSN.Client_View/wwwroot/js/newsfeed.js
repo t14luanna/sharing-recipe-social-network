@@ -549,7 +549,7 @@ const createSingleReplyComment = (comment, recipeOwner) => {
     var element = `<li class="comment-newsfeed-li">
         <div class="acomment--item clearfix acomment--item-newsfeed">
             <div class="acomment--avatar">
-                <a href="member-activity-personal.html">
+                <a href="#">
                     <img src="${comment.avatarUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                 </a>
             </div>
