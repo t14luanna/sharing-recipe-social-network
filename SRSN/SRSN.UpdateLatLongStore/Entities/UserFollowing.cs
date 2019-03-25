@@ -5,7 +5,6 @@ namespace SRSN.UpdateLatLongStore.Entities
 {
     public partial class UserFollowing
     {
-        public int Id { get; set; }
         public int UserId { get; set; }
         public int FollowingUserId { get; set; }
         public DateTime? CreateTime { get; set; }

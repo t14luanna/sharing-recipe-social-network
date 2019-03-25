@@ -726,3 +726,6 @@ input[name=ingredient] {
     color: #6ebe3b;
     font-weight: 600
 }
+.timeline-post{
+    margin-top: 50px
+}

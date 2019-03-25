@@ -191,7 +191,7 @@
                             <div class="row">
                                 <!-- Main Content Start -->
                                 <div class="main--content col-md-12 pb--60" data-trigger="stickyScroll">
-                                    <div class="main--content-inner drop--shadow">
+                                    <div class="main--content-inner drop--shadow col-md-12">
                                         <!-- Content Nav Start -->
                                         <div class="content--nav pb--30">
                                             <ul class="nav ff--primary fs--14 fw--500 bg-lighter">
@@ -199,6 +199,7 @@
                                                 <li><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
                                                 <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
                                                 <li><a href="/account/my-recipe/@(RouteData.Values["userName"])">Công thức của tôi</a></li>
+                                                <li><a href="/account/my-favorite-recipe/@(RouteData.Values["userName"])">Công thức yêu thích</a></li>
                                                 <li><a href="/account/collection/@(RouteData.Values["userName"])">Bộ sưu tập của tôi</a></li>
                                             </ul>
                                         </div>
@@ -387,7 +388,7 @@
     <script src="~/js/site.js"></script>
     <script type="text/javascript">
         (async () => {
-            await callTimeLineApi();
+            await callTimeLineApi("@(RouteData.Values["userName"])");
             $(".close-share-recipe").on("click", function (e) {
                 $(".modal-share-post").css("display", "none");
             });
@@ -396,7 +397,7 @@
         var timelineGetMorePage = 0;
         var timelineGetMoreLimit = 10;
         function getMoreTimeLine() {
-            callTimeLineApi(timelineGetMoreLimit, ++timelineGetMorePage);
+            callTimeLineApi("@(RouteData.Values["userName"])", timelineGetMoreLimit, ++timelineGetMorePage);
         };
         function openShareModal(e) {
             var recipeId = e.getAttribute("data-recipe-id");
