@@ -1,19 +1,21 @@
 ﻿const apikey = 'Al45YPe3PTkSEr6vjtzg6z';
-
+var countsteps = 1;
 const client = filestack.init(apikey);
 $('.add-recipe-steps').on("click", function (event) {
     event.preventDefault();
+    countsteps++;
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields">' +
         ' <span class="handler-list"><i class="fa fa-arrows"></i></span>' +
         '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>' +
         ' <span class="del-list"><i class="fa fa-trash"></i></span>' +
-        '</div><div class="image-fields">' +
-        '<input type = "file" name = "stepsImage" multiple/>' +
-        '</div >' +
+        '</div>' +
+        `<form action="/file-upload" class="dropzone drop-zone-form" id="myAwesomeDropzone${countsteps}"><div class="fallback"><input name="file" type="file" multiple /></div></form>`+
         '</li>';
+    
     $('.list-sortable.steps').append(newMajesticItem);
     $('.list-sortable.steps').children("li").slideDown();
+    dropzoneForm(`myAwesomeDropzone${countsteps}`);
     bindMajesticItem();
 });
 $('.add-ingredient').on("click", function (event) {
@@ -117,15 +119,23 @@ function getData() {
     var steps = [];
 
     $(stepDescription).each(i => {
+        var dropZoneId = $(stepDescription[i]).parent(".add-fields").siblings(".dropzone").first().attr("id");
         validation = validationField('stepsDes', $(stepDescription[i]).val().trim()) && validation;
-        let files = stepsImages[i].files;
+
+        // prepare imageUrl
+        var imageUrl = "";
+        listStepImages[dropZoneId].forEach(x => {
+            imageUrl += x.fileStackUrl + ";";
+        })
+
+        //let files = stepsImages[i].files;
         steps.push({
             Description: $(stepDescription[i]).val().trim(),
-            ImageUrl: "",
-            files: files
+            ImageUrl: imageUrl,
+            //files: files
         }); 
     });
-
+    console.log(steps);
     var categoriesItemList = $("input[name='categoryItem']:checked");
     var categoriesItem = [];
     $(categoriesItemList).each((i, item) => {
@@ -172,19 +182,16 @@ function uploadImageSubmit(data) {
         await uploadFile(data.recipeVM.ImageCover).then((res) => {
             data.recipeVM.ImageCover = res.url;
         });
-
-        for (let sorvm of data.listSORVM) {
-            for (let image of sorvm.files) {
-                await uploadFile(image).then(res => {
-                    sorvm.ImageUrl += res.url + ";";
-                })
-            }
+        //for (let sorvm of data.listSORVM) {
+            //for (let image of sorvm.files) {
+            //    await uploadFile(image).then(res => {
+            //        sorvm.ImageUrl += res.url + ";";
+            //    })
+            //}
             /* await uploadFile(sorvm.ImageUrl).then((res) => {
                 sorvm.ImageUrl = res.url;
             }); */
-        }
-
-
+        //}
         return resolve(data);
     });
 }
@@ -242,6 +249,7 @@ function uploadFile(file) {
         });
     })
 }
+
 
 
 $("#nextBtn").on('click', function (e) {
@@ -304,13 +312,11 @@ $tabsNavLis.on('click', function (e) {
             if ($(this).prop('files')[0]) {
                 // Use FileReader to get file
                 var reader = new FileReader();
-
                 // Create a preview once image has loaded
                 reader.onload = function (e) {
                     var preview = create_preview(that, e.target.result, settings);
                     $(that).html(preview);
                 }
-
                 // Load image
                 reader.readAsDataURL(picker_btn_input.prop('files')[0]);
                 $(that).css('display', 'block');

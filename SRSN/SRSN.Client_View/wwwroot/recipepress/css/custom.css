@@ -824,3 +824,7 @@ input[name=ingredient] {
 .timeline-post{
     margin-top: 50px
 }
+.drop-zone-form {
+    border: 1px solid #e4d9d1!important;
+    margin-top: 10px!important;
+}
