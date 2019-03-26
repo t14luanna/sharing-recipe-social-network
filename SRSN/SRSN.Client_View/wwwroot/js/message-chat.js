@@ -93,21 +93,22 @@ let checkExistChat = (user_id) => {
 
 let createChat = (oppositeUser) => {
     checkExistChat(oppositeUser.id).then(res => {
-        console.log(res)
         if (res === null) {
             // Add a new message entry to the Firebase database.
-            return db.collection('chats').add(
+            db.collection('chats').add(
                 {
                     users: [
                         {
                             user_id: user_id,
                             user_image: current_user.avatarImageUrl,
-                            user_name: current_user.username
+                            user_name: current_user.firstName + ' ' + current_user.lastName,
+                            isTyping: false
                         },
                         {
                             user_id: oppositeUser.id,
                             user_image: oppositeUser.avatarImageUrl,
-                            user_name: oppositeUser.username
+                            user_name: oppositeUser.firstName + ' ' + oppositeUser.lastName,
+                            isTyping: false
                         }
                     ],
                     users_id: [
@@ -118,12 +119,29 @@ let createChat = (oppositeUser) => {
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     last_message: ''
                 }).then(function (docRef) {
-                    console.log(docRef)
+                    docRef.get().then(doc => {
+                        let data = doc.data()
+                        let id = doc.id
+                        if (current_chat) {
+                            $('#' + current_chat.id).removeClass('active');
+                        }
+
+                        chatData.unshift({
+                            id: id,
+                            data: data
+                        });
+
+                        showUserChat(chatData)
+                    })
                 })
                 .catch(function (error) {
                 });
         } else {
-
+            $('#' + current_chat.id).removeClass('active');
+            $('#' + res).addClass('active');
+            let title = $('#' + res + ' .name-user').text()
+            $(message_user_title).text(title)
+            showMessageContent(res);
         }
     })    
 }
@@ -181,64 +199,55 @@ let readUserChatList = () => {
     });
 }
 
+let createUserChatItem = async (item, active) => {
+    let chat = item.data;
+    let id = item.id;
+    let opposite_user;
+    await $(chat.users).each((i, user) => {
+        if (user.user_id !== user_id) {
+            opposite_user = user;
+            return;
+        }
+    });
+
+    if (active) {
+        $(message_user_title).text(opposite_user.user_name);
+    }
+
+    let last_mess_content = chat.last_message;
+    let last_mess_time = convertTimestampToDate(chat.updatedAt.seconds);
+
+    let user_chat_item = '<li id="' + id + '" class="' + (active ? 'active' : '') + '">' +
+        '<div class="topic--reply"><div class="clearfix"><p class="date float--right">' + last_mess_time +
+        '</p></div><div class="body clearfix"><div class="author mr--20 float--left text-center">' +
+        '<div class="avatar" data-overlay="0.3" data-overlay-color="primary">' +
+        '<a><img src="' + opposite_user.user_image + '" alt=""></a></div></div>' +
+        '<div class="content fs--14 ov--h"><div class="name text-darkest">' +
+        '<p><a href="#" class="name-user">' + opposite_user.user_name + '</a></p></div></div>' +
+        '<div class="content fs--14 ov--h">' +
+        '<p class="chat-message-wrap">' + last_mess_content + '</p>' +
+        '</div></div></div></li>';
+
+    if (active) {
+        showMessageContent(id);
+    }
+    
+    return user_chat_item;
+}
+
 //Show user chat list
 let showUserChat = async (data) => {
     await $(data).each(async (i, item) => {
-        let chat = item.data;
-        let id = item.id;
-        let opposite_user;
+        message_list.innerHTML = ''
         let active = false;
-        await $(chat.users).each((i, user) => {
-            if (user.user_id !== user_id) {
-                opposite_user = user;
-                return;
-            }
-        });
-
         if (i === 0) {
             active = true;
-            $(message_user_title).text(opposite_user.user_name);
         }
+        await createUserChatItem(item, active).then((res) => {
+            message_list.innerHTML += res;            
+        })
 
-        let last_mess_content = chat.last_message;
-        let last_mess_time = convertTimestampToDate(chat.updatedAt.seconds);
-
-        let user_chat_item = '<li id="' + id + '" class="' + (active ? 'active' : '') + '">' +
-            '<div class="topic--reply"><div class="clearfix"><p class="date float--right">' + last_mess_time +
-            '</p></div><div class="body clearfix"><div class="author mr--20 float--left text-center">' +
-            '<div class="avatar" data-overlay="0.3" data-overlay-color="primary">' +
-            '<a><img src="' + opposite_user.user_image + '" alt=""></a></div></div>' +
-            '<div class="content fs--14 ov--h"><div class="name text-darkest">' +
-            '<p><a href="#" class="name-user">' + opposite_user.user_name + '</a></p></div></div>' +
-            '<div class="content fs--14 ov--h">' +
-            '<p class="chat-message-wrap">' + last_mess_content + '</p>' +
-            '</div></div></div></li>';
-
-        if (active) {
-            showMessageContent(id);
-        }
-
-        db.collection('chats').doc(id).onSnapshot(function (doc) {
-            let data = doc.data();
-            updateChatList(id, {
-                createdAt: data.updatedAt,
-                content: data.last_message
-            });
-            if (data.last_message !== '') {
-                if (!doc._hasPendingWrites) {
-                    appendMessage({
-                        createdAt: data.updatedAt,
-                        content: data.last_message,
-                        userSent: id
-                    }, opposite_user);
-                }
-            }
-        });
-
-        message_list.innerHTML += user_chat_item;
-    });
-    $(message_list).children('li').each((i, chat) => {
-        $(chat).on('click', () => {
+        $('#' + item.id).on('click', () => {
             $('#' + current_chat.id).removeClass('active');
             $('#' + chatData[i].id).addClass('active');
             let title = $('#' + chatData[i].id + ' .name-user').text()
@@ -296,6 +305,10 @@ let updateChatList = (id, message) => {
     //let date = message.createdAt.seconds != undefined ? convertTimestampToDate(message.createdAt) : convertTimestampToDate(message.createdAt.seconds);
     //$('#' + id + ' .date ').text(date);
     $('#' + id + ' .chat-message-wrap').text(message.content);
+}
+
+let pushToTop = (id) => {
+    //let $(message_list).children('#' + id)
 }
 //-----------------------------End User Chat List--------------------------------------
 
@@ -407,5 +420,37 @@ $(document).ready((e) => {
         await showUserChat(chatData);
     }).catch((e) => {
 
-    });    
+        });    
+
+    db.collection("chats").where('users_id', 'array-contains', user_id).onSnapshot({ includeMetadataChanges: true },
+        (snapshot) => {
+        snapshot.docChanges().forEach(function (change) {
+            let data = change.doc.data();
+            if (change.type === "modified" && !change.doc.metadata.hasPendingWrites) {
+                loadMessages(change.doc.id).then(async (mess) => {
+                    let size = mess.length;
+                    let last_mess = mess[size - 1];
+                    if (data.last_message !== '' && !change.doc.metadata.hasPendingWrites && last_mess.userSent !== user_id) {
+                        let opposite_user;
+                        await $(data.users).each((i, user) => {
+                            if (user.user_id !== user_id) {
+                                opposite_user = user;
+                                return;
+                            }
+                        });
+                        updateChatList(change.doc.id, {
+                            createdAt: data.updatedAt,
+                            content: data.last_message
+                        });
+                        appendMessage(last_mess, opposite_user);
+                        $(message_content).scrollTop($(message_content).height() + 10000)
+                    }
+                })                
+            }
+
+            var source = change.doc.metadata.hasPendingWrites ? "local cache" : "server";
+            console.log("Data came from " + source);
+            console.log(change.type);
+        });
+    });
 });
