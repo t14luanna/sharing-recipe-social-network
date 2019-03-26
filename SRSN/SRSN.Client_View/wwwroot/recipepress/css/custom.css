@@ -810,7 +810,7 @@ input[name=ingredient] {
 .follow-btn-custom a:hover {
     background-color: #c70808;
 }
-.follow-btn-custom a, li {
+.follow-btn-custom a{
     white-space: nowrap;
 }
 .follow-btn-custom .favourite a:hover, .favourited a {
@@ -827,4 +827,133 @@ input[name=ingredient] {
 .drop-zone-form {
     border: 1px solid #e4d9d1!important;
     margin-top: 10px!important;
+}
+.scroll-notification {
+    display: none;
+    height: 400px;
+    overflow: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+/*top user style newsfeed*/
+.top-chefee .member-item-wrapper {
+    width: 100%;
+}
+
+.top-chefee .member-item-wrapper .member-item {
+    border: 0;
+    padding: 0;
+}
+.member-item-wrapper .member-item {
+    border: .5px solid #ddd;
+    border-radius: 12px;
+    padding: 10px;
+    position: relative;
+}
+.member-item {
+    clear: both;
+    overflow: hidden;
+    font-size: 16px;
+}
+.nopadding {
+    padding: 0;
+}
+.member-profile .avatar {
+    width: 60px;
+    height: 60px;
+}
+.member-profile .avatar {
+    border-radius: 50%;
+}
+.member-profile .avatar, .top-followers {
+    float: left;
+    margin-right: 10px;
+    overflow: hidden;
+}
+.z-effect {
+    max-width: 100%;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+
+.member-profile .profile {
+    overflow: hidden;
+}
+    .member-profile .profile .name {
+        font-size: 12px;
+        padding-top: 0;
+        display: inline-block;
+        max-width: 130px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+    }
+.member-profile .avatar img {
+    width: 60px;
+    height: 60px;
+}
+.user-lvl.chefee {
+    color: #a930ca;
+}
+.user-lvl {
+    border-radius: 2px;
+    padding: 1px 2px;
+    text-align: center;
+    font-size: 11px;
+    display: inline-block;
+}
+.member-profile .profile .stats {
+    color: #9e9e9e;
+    overflow: hidden;
+}
+.stats {
+    font-size: 12px;
+}
+.member-item, .member-profile .member-acts {
+    position: relative;
+}
+.btn-follow:hover, .btn-followed {
+    border: .5px solid #7cb342;
+    color: #7cb342;
+}
+.btn-follow {
+    border: .5px solid #ddd;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #7e7e7e;
+    font-size: 11px;
+    background-color: #fff;
+}
+.main--content-inner{
+    background-color: white
+}
+.img-step-recipe{
+    margin-top: 12px
+}
+.recipe-seen-content{
+    margin-top: 20px!important
+}
+#list-recent-recipe li{
+    padding: 15px
+}
+.image-seen-recipe {
+    border-radius: 10px !important;
+    width: 300px!important;
+    height: 180px;
+}
+.name-seen-recipe {
+    font-style: normal;
+    text-transform: uppercase;
+    /* margin-bottom: 25px; */
+    font-family: "Times New Roman", Times, serif;
+    font-weight: 700;
+}
+.date-seen-recipe {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: rgb(110, 190, 59);
 }

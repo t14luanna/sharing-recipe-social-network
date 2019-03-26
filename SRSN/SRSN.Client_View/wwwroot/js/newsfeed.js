@@ -1,6 +1,6 @@
 ﻿var currentPage = 0;
 const createRecipePost = (recipe) =>
-    `<li><div class="activity--item ">
+    `<li><div class="activity--item" onclick="saveToLocalStorage(${recipe.id}, '${recipe.recipeName}', '${recipe.imageCover}','${recipe.createTime.split(' ')[0]}' )">
                                                     <div class="activity--avatar">
                                                         <a href="/MemberProfile">
                                                             <img src="${recipe.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
@@ -578,3 +578,110 @@ function openReplyView(commentId, commentRecipeId, commentOwner, recipeOwner) {
     $(`.container-${commentRecipeId}`).append(elementComment)
 };
 
+const checkFollowUser = (id, listFollowed) => {
+    return listFollowed.some(acc => acc.id == id);
+};
+//Get top 6 user
+const callTopUserApi = async () => {
+    var userName = localStorage.getItem('username');
+    var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/get-top-ten`);
+    var data = (await res.json());
+    var resCheck = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userName);
+    var dataCheck = (await resCheck.json());
+    var count = 0
+    for (var item of data) {
+        var rankUser;
+        var classRank;
+        count++; 
+        if (count > 6) {
+            break;
+        }
+        if (item.point >= 0 && item.point <= 99) {
+            rankUser = "Newbee";
+            classRank = "user-lvl newbee";
+        } else if (item.point >= 100 && item.point <= 499) {
+            rankUser = "Tastee";
+            classRank = "user-lvl tastee";
+        } else if (item.point >= 500 && item.point <= 999) {
+            rankUser = "Cookee";
+            classRank = "user-lvl cookee";
+        } else if (item.point >= 1000 && item.point <= 4999) {
+            rankUser = "Chefee";
+            classRank = "user-lvl chefee";
+        } else if (item.point >= 5000) {
+            rankUser = "Mastee";
+            classRank = "user-lvl mastee";
+        }
+        var description = item.description == null ? "" : item.description;
+        item.description = description;
+        let isFollowed = checkFollowUser(item.id, dataCheck);
+        let element = isFollowed ? followed_UserElement(item, rankUser, classRank) : follow_UserElement(item, rankUser, classRank);
+        $("#top-user-list").append(element);
+
+        var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read?userId=${item.id}`);
+        var recipeData = await recipeRes.json();
+        $(".countRecipe-" + item.id).text(recipeData.length);
+        var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${item.id}`);
+        var userData = await userRes.json();
+        $(".countFollowing-" + item.id).text(userData.length);
+        
+    };
+}
+const followed_UserElement = (user, rankUser, classRank) =>
+    `<div class="member-item-wrapper">
+                                            <div class="member-item" style="margin-top:10px">
+                                                <div class="member-profile nopadding">
+                                                    <div class="avatar z-effect">
+                                                        <img src="${user.avatarImageUrl}" class="img-responsive img-circle">
+                                                    </div>
+                                                    <div class="profile">
+                                                        <a class="cooky-user-link name" href="/account/information/${user.username}" >${user.firstName} ${user.lastName}</a>
+                                                        <span class="${classRank}">${rankUser}</span>
+                                                        <div class="stats">
+                                                            <span class="stats-item">
+                                                                <span class="countRecipe-${user.id}">57</span>
+                                                                <span class="stats-text">Công thức</span>
+                                                            </span>
+                                                            <span class="stats-item">
+                                                                <span class="countFollowing-${user.id}">0</span>
+                                                                <span class="stats-text">Theo dõi</span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="member-acts btnFollow-${user.id}">
+                                                            <button title="Hủy theo dõi" class="btn-follow ng-isolate-scope btn-followed" onclick="unfollowUserFuntion(${user.id})">
+                                                                <span>Đã theo dõi</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>`;
+const follow_UserElement = (user, rankUser, classRank) =>
+    `<div class="member-item-wrapper">
+                                            <div class="member-item" style="margin-top:10px">
+                                                <div class="member-profile nopadding">
+                                                    <div class="avatar z-effect">
+                                                        <img src="${user.avatarImageUrl}" class="img-responsive img-circle">
+                                                    </div>
+                                                    <div class="profile">
+                                                        <a class="cooky-user-link name"  href="/account/information/${user.username}" >${user.firstName} ${user.lastName}</a>
+                                                        <span class="${classRank}">${rankUser}</span>
+                                                        <div class="stats">
+                                                            <span class="stats-item">
+                                                                <span class="countRecipe-${user.id}">57</span>
+                                                                <span class="stats-text">Công thức</span>
+                                                            </span>
+                                                            <span class="stats-item">
+                                                                <span class="countFollowing-${user.id}">0</span>
+                                                                <span class="stats-text">Theo dõi</span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="member-acts btnFollow-${user.id}">
+                                                            <button title="Theo dõi" class="btn-follow ng-isolate-scope btn-followed" ng-class="itemClass()" onclick="followUserFuntion(${user.id})">
+                                                                <span>Theo dõi</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>`;

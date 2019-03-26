@@ -22,7 +22,6 @@
 
                     <div id="pagination-container" class="page-nav"></div>
 
-
                     <div class="banner-header text-center">
                         <a href="#">
                             <img src="recipepress/images/temp-images/header-banner.jpg" alt="banner">
@@ -111,11 +110,11 @@
             await changeHeadername();
             await callPopularRecipeWidgetApi();
             await callListCategoryItem();
-            await loadRecipeLocalStorage();
+            await loadRecipeSmallLocalStorage();
             await RedirectAPI();
         })();
         $("#pagination-container").pagination({
-            dataSource: `${BASE_API_URL}/recipe/read-latest-page`,
+            dataSource: `${BASE_API_URL}/api/recipe/read-latest-page`,
             locator: '',// array
             totalNumberLocator: function (response) {
                 return response.length;

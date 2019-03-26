@@ -39,8 +39,7 @@ namespace SRSN.ClientApi.Controllers
             {
                 return Ok(new { message = "Username da ton tai" });
             }
-
-
+            
             var user = new SRSNUser();
             mapper.Map(data, user);
             user.SecurityStamp = Guid.NewGuid().ToString();
@@ -128,7 +127,7 @@ namespace SRSN.ClientApi.Controllers
         public async Task<IEnumerable<AccountViewModel>> GetTopUser()
         {
             var list = new List<AccountViewModel>();
-            foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point).Take(12))
+            foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point).Take(13))
             {
                 var user = u;
                 var userVM = new AccountViewModel();

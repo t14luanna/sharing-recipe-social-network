@@ -86,17 +86,29 @@ const createSingleRecentRecipeElement = (recipe) =>
                                                                                         '${recipe.date}')">
                                         <div class="thumb" >
                                             <a href="/recipe/${recipe.id}">
-                                                <img src="${recipe.image}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
+                                                <img  class="image-seen-recipe" src="${recipe.image}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
                                             </a>
                                         </div>
                                         <div class="detail">
-                                            <a href="/recipe/${recipe.id}">${recipe.name}</a>
-                                            <span class="post-date">${recipe.date}</span>
+                                            <h4><a href="/recipe/${recipe.id}" class="name-seen-recipe">${recipe.name}</a></h4>
+                                            <h6><span class="post-date date-seen-recipe">${recipe.date}</span></h6>
                                         </div>
                                     </li>
 
                                    `;
-
+const createSingleSmallRecentRecipeElement = (recipe) =>
+    ` <li onclick="saveToLocalStorage(${recipe.id},'${recipe.name}', '${recipe.image}',
+                                                                                        '${recipe.date}')">
+                                            <div class="thumb">
+                                                <a href="/recipe/${recipe.id}">
+                                                    <img src="${recipe.image}" alt="thumbnail" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
+                                                </a>
+                                            </div>
+                                            <div class="detail">
+                                                <a href="/recipe/${recipe.id}">${recipe.name}</a>
+                                                <span class="post-date">${recipe.date}</span>
+                                            </div>
+                                        </li>`;
 
 const loadRecipeLocalStorage = async () => {
     if (localStorage.getItem('recentRecipe') == null) {
@@ -105,6 +117,17 @@ const loadRecipeLocalStorage = async () => {
         var array = JSON.parse(localStorage.getItem('recentRecipe'));
         for (var i = 0; i < array.length; i++) {
             var element = createSingleRecentRecipeElement(array[i]);
+            $("#list-recent-recipe").append(element);
+        }
+    }
+};
+const loadRecipeSmallLocalStorage = async () => {
+    if (localStorage.getItem('recentRecipe') == null) {
+        $("#list-recent-recipe").html("Chưa có thông tin!");
+    } else {
+        var array = JSON.parse(localStorage.getItem('recentRecipe'));
+        for (var i = 0; i < array.length; i++) {
+            var element = createSingleSmallRecentRecipeElement(array[i]);
             $("#list-recent-recipe").append(element);
         }
     }
@@ -149,7 +172,7 @@ const RedirectAPI = async () => {
         e.preventDefault();
         var categoryName = $(this).text();
         console.log(categoryName);
-        fetch(`${BASE_API_URL}/recipe/read-recipe-by-category?categoryName=` + categoryName,
+        fetch(`${BASE_API_URL}/api/recipe/read-recipe-by-category?categoryName=` + categoryName,
             {
                 method: 'GET',
                 headers: {

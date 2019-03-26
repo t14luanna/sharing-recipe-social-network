@@ -12,7 +12,7 @@ function uploadFile(file) {
     })
 }
 
-const createAvatarContainerUnfollow = (user) =>
+const createAvatarContainerUnfollow = (user, count) =>
     `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
                                 <img src="${user.avatarImageUrl}" alt=""/>
                             </div>
@@ -45,19 +45,19 @@ const createAvatarContainerUnfollow = (user) =>
                                 <p>${user.description}</p>
                             </div>
                             <!--follow area-->
-                            <div class="follow-area">
+                            <div class="follow-area-${user.id}">
                             <div class="follow-btn-custom" onclick="unfollowUserFuntion(${user.id})">
                             <input type="hidden" value="${user.id}" id="unfollowing-user-id">
                             <div class="favourite clearfix">
                                <div id="friend-status-div" class="btn-friend-stat">
                                 <div data-bind="visible:true" style="">
                                     <span style="cursor:default" data-bind="visible: status()==1">
-                                    <a title="Hủy quan tâm" href="javascript:void(0)" data-bind="click:remove">
+                                    <a title="Hủy theo dõi" href="javascript:void(0)" data-bind="click:remove">
                                         <span class="fa fa-check"></span>
                                         <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
                                         <span>Đang theo dõi</span>
                                     </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span data-bind="text: totalFollowing()">487</span></span>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${user.id}">${count}</span></span>
                                 </span>
                                 </div>
                               </div>
@@ -68,7 +68,7 @@ const createAvatarContainerUnfollow = (user) =>
 //const createAvatarContainerFollow = (user) =>
 //    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
 //                                <img src="${user.avatarImageUrl}" alt=""/>`;
-const createAvatarContainer = (user) =>
+const createAvatarContainer = (user, count) =>
     `<div class="cover--avatar online profile-pic" data-overlay="0.3" data-overlay-color="primary">
         <input type="hidden" name="avatarUrl"/>
                                 <img class="" id="imgAvatar" src="${user.avatarImageUrl}" alt="" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
@@ -106,7 +106,7 @@ const createAvatarContainer = (user) =>
                                                     <button id="btnUpdateAvatar" onclick="btnUpdateAvatar_Click(this)" class="btn btn-primary btn-update-info"><span>Lưu thay đổi</span></button>
                                                 </div>
                            <!--follow area-->
-                            <div class="follow-area">
+                            <div class="follow-area-${user.id}">
                             <div class="follow-btn-custom" onclick="followUserFuntion(${user.id})">
                             <input type="hidden" value="${user.id}" id="following-user-id">
                             <div class="favourite clearfix">
@@ -118,7 +118,7 @@ const createAvatarContainer = (user) =>
                                             <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
                                             <span>Theo dõi</span>
                                         </a>
-                                        <span class="count" title="Đang được theo dõi"><i style=""></i><b></b><span data-bind="text: totalFollowing()">184</span>
+                                        <span class="count" title="Đang được theo dõi"><i style=""></i><b></b><span class="countFollowing-${user.id}">${count}</span>
                                         </span>
                                   </span>
                                 </div>
@@ -235,16 +235,21 @@ const loadAvatarContainer = async (username) => {
         return listFollowed.some(acc => acc.id == id);
     }
 
+
     var resCheck = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userNameLocalStorage);
     var dataCheck = (await resCheck.json());
+    //get count user following
+    var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${data.id}`);
+    var userData = await userRes.json();
+
     var isFollowed = checkFollow(data.id, dataCheck);
     data.description = data.description == null ? "" : data.description;
-    var element = isFollowed ? createAvatarContainerUnfollow(data) : createAvatarContainer(data);
-    
-    //var element = createAvatarContainer(data);
+
+    var element = isFollowed ? createAvatarContainerUnfollow(data, userData.length) : createAvatarContainer(data, userData.length);
+
     $("#avatar-container").append(element);
     if (username == userNameLocalStorage) {
-        $(".follow-area").hide();
+        $(".follow-area-" + data.id).hide();
     }
     if (data.point >= 0 && data.point <= 99) {
         $("#ranknewbee").attr("class", "newbee active");
@@ -291,8 +296,8 @@ function avatarPickerChange(elePicker) {
 
     if (data.username == userNameLocalStorage) {
         $(".dropdown").css("display", "none");
-        $(".follow-btn").css("display", "none");
-        $(".unfollow-btn").css("display", "none");
+        //$(".follow-btn").css("display", "none");
+        //$(".unfollow-btn").css("display", "none");
     }
 };
 

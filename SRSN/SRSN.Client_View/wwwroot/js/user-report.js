@@ -15,7 +15,7 @@
             'description': description
         });
 
-    fetch(`${BASE_API_URL}/userreportrecipe/create-report-recipe`, {
+    fetch(`${BASE_API_URL}/api/userreportrecipe/create-report-recipe`, {
             method: 'POST',
             body: data,
             headers: {
@@ -44,7 +44,7 @@ $("#report-user-form").on("submit", function (e) {
     }
     var currentUrl = window.location.href;
     var userName = currentUrl.substr(currentUrl.indexOf('account/information/')).replace('account/information/', '');
-    fetch(`${BASE_API_URL}/account/read-username?userName=` + userName)
+    fetch(`${BASE_API_URL}/api/account/read-username?userName=` + userName)
         .then(res => res.json())
         .then(response => {
             var userReportedId = response[0].id;

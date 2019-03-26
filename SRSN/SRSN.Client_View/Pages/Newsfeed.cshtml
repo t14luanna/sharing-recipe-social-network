@@ -21,6 +21,7 @@
 
     <!-- ==== Custom Stylesheet ==== -->
     <link rel="stylesheet" href="recipepress/css/custom.css">
+    <link rel="stylesheet" href="~/recipepress/css/rankuser.css">
 }
 
 
@@ -57,14 +58,16 @@
                             <div class="main--sidebar col-md-4 pb--60">
                                 <!-- Widget Start -->
                                 <div class="widget main-content-custom">
-                                    <h2 class="h4 fw--700 widget--title">Top thành viên</h2>
-
-                                    <!-- Buddy Finder Widget Start -->
-                                    <div class="buddy-finder--widget">
+                                    <h3>Top thành viên</h3>
+                                    <div class="top-chefee-list" id="top-user-list">
+                                        
                                     </div>
-                                    <!-- Buddy Finder Widget End -->
                                 </div>
-                                
+                                <div class="widget main-content-custom recipe-seen-content">
+                                    <h3>Công thức vừa xem</h3>
+                                    <ul id="list-recent-recipe"></ul>
+                                </div>
+
                             </div>
                             <!-- Main Sidebar End -->
                         </div>
@@ -98,6 +101,10 @@
     <script type="text/javascript" src="~/js/newsfeed.js"></script>
     <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
     <script type="text/javascript" src="/recipepress/js/main.js"></script>
+    <script type="text/javascript" src="~/js/menu-widgets.js"></script>
+    <script type="text/javascript" src="~/js/follow-unfollow-funtion.js"></script>
+
+
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript">
         const changeHeadername = async () => {
@@ -107,6 +114,8 @@
         (async () => {
             await changeHeadername();
             await callNewsfeedPageApi();
+            await loadRecipeLocalStorage();
+            await callTopUserApi();
             $(".close-share-recipe").on("click", function (e) {
                 $(".modal-share-post").css("display", "none");
             });

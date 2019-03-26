@@ -88,7 +88,7 @@
                                                                           background-color: red;
                                                                           color: white; font-size: 12px" id="number-of-notification"></span>
                                                                 </a>
-                                                                <ul id="list-notification"></ul>
+                                                                <ul id="list-notification" class="scroll-notification"></ul>
                                                             </li>
                                                             <li><a href="/MessageChat"><i class="fa fa-envelope"></i></a></li>
                                                         </ul>
@@ -421,7 +421,7 @@
     $("#searchBtn").on("click", function (e) {
         e.preventDefault();
         var searchValue = $('#custom-input-search').val();
-        fetch(`${BASE_API_URL}/recipe/read-recipename?recipeName=${searchValue}`,
+        fetch(`${BASE_API_URL}/api/recipe/read-recipename?recipeName=${searchValue}`,
             {
                 method: 'GET',
                 headers: {
