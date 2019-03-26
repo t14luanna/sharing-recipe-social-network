@@ -170,7 +170,7 @@ const loadAvatarContainer = async (username) => {
 
     $("#avatar-container").append(element);
     if (username == userNameLocalStorage) {
-        $(".follow-area").hide();
+        $(".follow-area-" + data.id).hide();
     }
     if (data.point >= 0 && data.point <= 99) {
         $("#ranknewbee").attr("class", "newbee active");
