@@ -231,24 +231,7 @@ let createUserChatItem = async (item, active) => {
     if (active) {
         showMessageContent(id);
     }
-
-    db.collection('chats').doc(id).onSnapshot(function (doc) {
-        let data = doc.data();
-        updateChatList(id, {
-            createdAt: data.updatedAt,
-            content: data.last_message
-        });
-        if (data.last_message !== '') {
-            if (!doc._hasPendingWrites) {
-                appendMessage({
-                    createdAt: data.updatedAt,
-                    content: data.last_message,
-                    userSent: id
-                }, opposite_user);
-            }
-        }
-    });
-
+    
     return user_chat_item;
 }
 
@@ -437,5 +420,37 @@ $(document).ready((e) => {
         await showUserChat(chatData);
     }).catch((e) => {
 
-    });    
+        });    
+
+    db.collection("chats").where('users_id', 'array-contains', user_id).onSnapshot({ includeMetadataChanges: true },
+        (snapshot) => {
+        snapshot.docChanges().forEach(function (change) {
+            let data = change.doc.data();
+            if (change.type === "modified" && !change.doc.metadata.hasPendingWrites) {
+                loadMessages(change.doc.id).then(async (mess) => {
+                    let size = mess.length;
+                    let last_mess = mess[size - 1];
+                    if (data.last_message !== '' && !change.doc.metadata.hasPendingWrites && last_mess.userSent !== user_id) {
+                        let opposite_user;
+                        await $(data.users).each((i, user) => {
+                            if (user.user_id !== user_id) {
+                                opposite_user = user;
+                                return;
+                            }
+                        });
+                        updateChatList(change.doc.id, {
+                            createdAt: data.updatedAt,
+                            content: data.last_message
+                        });
+                        appendMessage(last_mess, opposite_user);
+                        $(message_content).scrollTop($(message_content).height() + 10000)
+                    }
+                })                
+            }
+
+            var source = change.doc.metadata.hasPendingWrites ? "local cache" : "server";
+            console.log("Data came from " + source);
+            console.log(change.type);
+        });
+    });
 });
