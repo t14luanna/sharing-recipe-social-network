@@ -8,6 +8,33 @@
     width: auto;
 }
 
-.recipes-home-body{
+.forum-home-body{
     padding: 0!important;
+    height: calc(100vh - 84px);
+}
+
+.forum-home-body .container{
+    width: 100%!important;
+    height: 100%;
+}
+
+.search-bar {
+    background: none!important;
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid gray;
+    padding: 10px;
+}
+
+.search-bar:focus{
+    outline: none;
+}
+
+.right-chat, .left-chat{
+    padding-bottom: 0;
+    height: 100%;
+}
+
+.right-chat ..inbox_chat{
+    height: 100%;
 }
