@@ -8,6 +8,8 @@
                 $(".follow-area-" + userId).html(btnFollowed(userId));
                 //thông báo follow user
                 callNotification(userId);
+                $(".btnFollow-" + userId).html(btnFollowed_OnNewsfeed(userId));
+
                 check = true;
             }
         });
@@ -45,6 +47,8 @@ async function unfollowUserFuntion(userId) {
             if (response.success) {
                 //location.reload();
                 $(".follow-area-" + userId).html(btnFollow(userId));
+                $(".btnFollow-" + userId).html(btnFollow_OnNewsfeed(userId));
+
                 check = true;
             }
         });
@@ -56,7 +60,6 @@ async function unfollowUserFuntion(userId) {
 };
 
 const btnFollow = (userId) => `<div class="follow-btn-custom"  onclick="followUserFuntion(${userId})">
-                            <input type="hidden" value="${userId}" id="following-user-id">
                             <div class="favourite clearfix">
                                <div id="friend-status-div" class="btn-friend-stat">
                                 <div data-bind="visible:true" style="">
@@ -74,7 +77,6 @@ const btnFollow = (userId) => `<div class="follow-btn-custom"  onclick="followUs
                             </div>`;
 const btnFollowed = (userId) => `
 <div class="follow-btn-custom"  onclick="unfollowUserFuntion(${userId})">
-                            <input type="hidden" value="${userId}" id="unfollowing-user-id">
                             <div class="favourite clearfix">
                                <div id="friend-status-div" class="btn-friend-stat">
                                 <div data-bind="visible:true" style="">
@@ -89,5 +91,12 @@ const btnFollowed = (userId) => `
                                 </div>
                               </div>
                             </div>`;
-
+const btnFollowed_OnNewsfeed = (userId) =>
+    `                                                            <button title="Hủy theo dõi" class="btn-follow ng-isolate-scope btn-followed" onclick="unfollowUserFuntion(${userId})">
+                                                                <span>Đã theo dõi</span>
+                                                            </button>`;
+const btnFollow_OnNewsfeed = (userId) =>
+    `<button title="Theo dõi" class="btn-follow ng-isolate-scope btn-followed" ng-class="itemClass()" onclick="followUserFuntion(${userId})">
+                                                                <span>Theo dõi</span>
+                                                            </button>`;
 
