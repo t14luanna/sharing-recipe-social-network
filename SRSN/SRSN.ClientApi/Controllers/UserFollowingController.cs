@@ -5,6 +5,7 @@ using SRSN.DatabaseManager.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SRSN.ClientApi.Controllers
@@ -21,7 +22,21 @@ namespace SRSN.ClientApi.Controllers
             this.userFollowingService = userFollowingService ;
             this.userManager = userManager ;
         }
-
+        [HttpPost("check-following-user")]
+        public async Task<ActionResult> CheckFollowingUser(int followingUserId)
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var id = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                int userId = int.Parse(id);
+                return Ok(await userFollowingService.checkFollowingUser(userId, followingUserId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpGet("read-following-user")]
         public async Task<ActionResult> ReadFollowingUser(string userName)
         {

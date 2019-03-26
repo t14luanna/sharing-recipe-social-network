@@ -19,6 +19,7 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<int>> GetAllFollowingUser(int userid);
 
         Task<ICollection<AccountViewModel>> getAllFollowingUser(UserManager<SRSNUser> userManager, int userid);
+        Task<UserFollowingViewModel> checkFollowingUser(int userId, int followingUserId);
         Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
         Task<ICollection<AccountViewModel>> getAllUserFollowingMe(UserManager<SRSNUser> userManager, int followingUserId);//get all user who is following me
         Task<ICollection<UserFollowing>> followUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
@@ -112,6 +113,14 @@ namespace SRSN.DatabaseManager.Services
             var listItems = this.selfDbSet.AsNoTracking().Where(x => x.UserId == userid && x.Active == true);
             var listIds = await listItems.Select(x => x.FollowingUserId).ToListAsync();
             return listIds;
+        }
+
+        public async Task<UserFollowingViewModel> checkFollowingUser(int userId, int followingUserId)
+        {
+            var userFollowingEntity = await this.selfDbSet.AsNoTracking().Where(p => p.UserId == userId && p.FollowingUserId == followingUserId).FirstOrDefaultAsync();
+            var userFollowingVM = new UserFollowingViewModel();
+            mapper.Map(userFollowingEntity, userFollowingVM);
+            return userFollowingVM;
         }
     }
 }

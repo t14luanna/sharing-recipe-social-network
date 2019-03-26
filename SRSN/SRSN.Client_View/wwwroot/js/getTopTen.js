@@ -8,19 +8,19 @@
                 <span class="type">${rankUser}</span>
                 <p>${account.description}</p>
                 <!--follow area-->
-                <div class="follow-area">
-                            <div class="follow-btn-custom" onclick="followUserFuntion()">
+                <div class="follow-area-${account.id}">
+                            <div class="follow-btn-custom" onclick="followUserFuntion(${account.id})">
                             <input type="hidden" value="" id="following-user-id">
                             <div class="favourite clearfix">
                                <div id="friend-status-div" class="btn-friend-stat">
                                 <div data-bind="visible:true" style="">
                                     <span style="cursor:default">
-                                    <a title="Hủy theo dõi" href="javascript:void(0)" data-bind="click:remove">
-                                        <span class="fa fa-check"></span>
+                                    <a title="Theo dõi">
+                                        <span class="fa fa-user-plus"></span>
                                         <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
                                         <span>Theo dõi</span>
                                     </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span></span>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${account.id}"></span></span>
                                 </span>
                                 </div>
                               </div>
@@ -42,8 +42,8 @@ const readTopTenUserUnfollow = (account, rankUser) =>
                 <span class="type">${rankUser}</span>
                 <p>${account.description}</p>
                 <!--follow area-->
-                <div class="follow-area">
-                            <div class="follow-btn-custom" onclick="unfollowUserFuntion()">
+                <div class="follow-area-${account.id}">
+                            <div class="follow-btn-custom" onclick="unfollowUserFuntion(${account.id})">
                             <input type="hidden" value="" id="unfollowing-user-id">
                             <div class="favourite clearfix">
                                <div id="friend-status-div" class="btn-friend-stat">
@@ -51,10 +51,9 @@ const readTopTenUserUnfollow = (account, rankUser) =>
                                     <span style="cursor:default" >
                                     <a title="Hủy theo dõi">
                                         <span class="fa fa-check"></span>
-                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
                                         <span>Đang theo dõi</span>
                                     </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span></span>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${account.id}"></span></span>
                                 </span>
                                 </div>
                               </div>
@@ -78,19 +77,18 @@ const readTopUserFollow = (account, rankUser) =>
                         <p>${account.description}</p>
                         <br />
                         <ul class="social-icons-chef">
-                           <div class="follow-area">
-                            <div class="follow-btn-custom" onclick="unfollowUserFuntion()">
+                           <div class="follow-area-${account.id}">
+                            <div class="follow-btn-custom" onclick="followUserFuntion(${account.id})">
                             <input type="hidden" value="" id="unfollowing-user-id">
                             <div class="favourite clearfix">
                                <div id="friend-status-div" class="btn-friend-stat">
                                 <div data-bind="visible:true" style="">
                                     <span style="cursor:default" >
-                                    <a title="Hủy theo dõi">
-                                        <span class="fa fa-check"></span>
-                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                    <a title="Theo dõi">
+                                        <span class="fa fa-user-plus"></span>
                                         <span>Theo dõi</span>
                                     </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span></span>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${account.id}"></span></span>
                                 </span>
                                 </div>
                               </div>
@@ -111,8 +109,8 @@ const readTopUserUnfollow = (account, rankUser) =>
                         <br />
 
                         <ul class="social-icons-chef">
-                           <div class="follow-area">
-                            <div class="follow-btn-custom" onclick="unfollowUserFuntion()">
+                           <div class="follow-area-${account.id}">
+                            <div class="follow-btn-custom" onclick="unfollowUserFuntion(${account.id})">
                             <input type="hidden" value="" id="unfollowing-user-id">
                             <div class="favourite clearfix">
                                <div id="friend-status-div" class="btn-friend-stat">
@@ -123,7 +121,7 @@ const readTopUserUnfollow = (account, rankUser) =>
                                         <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
                                         <span>Đang theo dõi</span>
                                     </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span></span>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${account.id}"></span></span>
                                 </span>
                                 </div>
                               </div>
@@ -144,7 +142,12 @@ const callTopTenAccountApi = async () => {
     var data = (await res.json());
     var resCheck = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userName);
     var dataCheck = (await resCheck.json());
+    var flag = false;
     for (var item of data) {
+        if (flag == false) {
+            flag = true;
+            continue;
+        }
         var rankUser;
         if (item.point >= 0 && item.point <= 99) {
             rankUser = "Newbee";
@@ -163,18 +166,22 @@ const callTopTenAccountApi = async () => {
         let isFollowed = checkFollow(item.id, dataCheck);
         let element = isFollowed ? readTopTenUserUnfollow(item, rankUser) : readTopTenUserFollow(item, rankUser);
         $("#list-top-ten-users").append(element);
+        var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${item.id}`);
+        var userData = await userRes.json();
+        $(".countFollowing-" + item.id).text(userData.length);
     }
-    $('.follow-btn').click((e) => {
-        e.preventDefault();
-        var followingUserId = $(e.target).siblings('input').val();
-        var followingUsername = $("#username-of-" + followingUserId).val();
-        followUser(userName, followingUserId, followingUsername);
-    });
-    $('.unfollow-btn').click((e) => {
-        e.preventDefault();
-        var followingUserId = $(e.target).siblings('input').val();
-        unfollowUser(userName, followingUserId);
-    });
+    
+    //$('.follow-btn').click((e) => {
+    //    e.preventDefault();
+    //    var followingUserId = $(e.target).siblings('input').val();
+    //    var followingUsername = $("#username-of-" + followingUserId).val();
+    //    followUser(userName, followingUserId, followingUsername);
+    //});
+    //$('.unfollow-btn').click((e) => {
+    //    e.preventDefault();
+    //    var followingUserId = $(e.target).siblings('input').val();
+    //    unfollowUser(userName, followingUserId);
+    //});
 };
 
 
@@ -205,55 +212,59 @@ const callTopAccountApi = async () => {
         let isFollowed = checkFollow(item.id, dataCheck);
         let element = isFollowed ? readTopUserUnfollow(item, rankUser) : readTopUserFollow(item, rankUser);
         $("#read-top-user").append(element);
+        var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${item.id}`);
+        var userData = await userRes.json();
+        $(".countFollowing-" + item.id).text(userData.length);
     }
-    $('.top-follow-btn').click((e) => {
-        e.preventDefault();
-        var followingUserId = $("#followTopAccount").val();
-        var userName = localStorage.getItem('username');
-        var followingUsername = $("#username-of-" + followingUserId).val();
-        followUser(userName, followingUserId, followingUsername);
-    });
-    $('.unfollow-btn').click((e) => {
-        e.preventDefault();
-        var followingUserId = $("#unfollowTopAccount").val();
-        var userName = localStorage.getItem('username');
-        unfollowUser(userName, followingUserId);
-    });
+
+    //$('.top-follow-btn').click((e) => {
+    //    e.preventDefault();
+    //    var followingUserId = $("#followTopAccount").val();
+    //    var userName = localStorage.getItem('username');
+    //    var followingUsername = $("#username-of-" + followingUserId).val();
+    //    followUser(userName, followingUserId, followingUsername);
+    //});
+    //$('.unfollow-btn').click((e) => {
+    //    e.preventDefault();
+    //    var followingUserId = $("#unfollowTopAccount").val();
+    //    var userName = localStorage.getItem('username');
+    //    unfollowUser(userName, followingUserId);
+    //});
 };
 
-const followUser = async (userName, followingUserId, followingUsername) => {
-    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userName + "&userFollowingId=" + followingUserId)
-        .then(res => res.json())
-        .then(response => {
-        if (response.success) {
-            var myDataRef = SRSN.FIREBASE_DATABASE.ref(followingUsername);
-            var uid = myDataRef.push({
-                "uid": "",
-                "username": userName,
-                "content": "đang theo dõi bạn",
-                "date": new Date().toLocaleString(),
-                "link": "/account/information/" + userName,
-                "isRead": "False"
-            });
-            //update uid into firebase
-            SRSN.FIREBASE_DATABASE.ref("/" + followingUsername + "/" + uid.key).update({
-                uid: uid.key
-            });
-        }
-    });
-};
+//const followUser = async (userName, followingUserId, followingUsername) => {
+//    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userName + "&userFollowingId=" + followingUserId)
+//        .then(res => res.json())
+//        .then(response => {
+//        if (response.success) {
+//            var myDataRef = SRSN.FIREBASE_DATABASE.ref(followingUsername);
+//            var uid = myDataRef.push({
+//                "uid": "",
+//                "username": userName,
+//                "content": "đang theo dõi bạn",
+//                "date": new Date().toLocaleString(),
+//                "link": "/account/information/" + userName,
+//                "isRead": "False"
+//            });
+//            //update uid into firebase
+//            SRSN.FIREBASE_DATABASE.ref("/" + followingUsername + "/" + uid.key).update({
+//                uid: uid.key
+//            });
+//        }
+//    });
+//};
 
-const unfollowUser = async (userName, followingUserId) => {
-    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userFollowingId=" + followingUserId)
-        .then(res => res.json())
-        .then(response => {
-        if (response.success) {
-            location.reload();
-        }
-    });
-};
+//const unfollowUser = async (userName, followingUserId) => {
+//    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userFollowingId=" + followingUserId)
+//        .then(res => res.json())
+//        .then(response => {
+//        if (response.success) {
+//            location.reload();
+//        }
+//    });
+//};
 
-$(document).ready((e) => {
-    callTopTenAccountApi();
-    callTopAccountApi();
-});
+//$(document).ready((e) => {
+//    callTopTenAccountApi();
+//    callTopAccountApi();
+//});

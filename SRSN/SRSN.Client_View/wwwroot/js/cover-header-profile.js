@@ -45,7 +45,7 @@ const createAvatarContainerUnfollow = (user, count) =>
                                 <p>${user.description}</p>
                             </div>
                             <!--follow area-->
-                            <div class="follow-area">
+                            <div class="follow-area-${user.id}">
                             <div class="follow-btn-custom" onclick="unfollowUserFuntion(${user.id})">
                             <input type="hidden" value="${user.id}" id="unfollowing-user-id">
                             <div class="favourite clearfix">
@@ -57,7 +57,7 @@ const createAvatarContainerUnfollow = (user, count) =>
                                         <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
                                         <span>Đang theo dõi</span>
                                     </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing">${count}</span></span>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${user.id}">${count}</span></span>
                                 </span>
                                 </div>
                               </div>
@@ -106,7 +106,7 @@ const createAvatarContainer = (user, count) =>
                                                     <button id="btnUpdateAvatar" onclick="btnUpdateAvatar_Click(this)" class="btn btn-primary btn-update-info"><span>Lưu thay đổi</span></button>
                                                 </div>
                            <!--follow area-->
-                            <div class="follow-area">
+                            <div class="follow-area-${user.id}">
                             <div class="follow-btn-custom" onclick="followUserFuntion(${user.id})">
                             <input type="hidden" value="${user.id}" id="following-user-id">
                             <div class="favourite clearfix">
@@ -118,7 +118,7 @@ const createAvatarContainer = (user, count) =>
                                             <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
                                             <span>Theo dõi</span>
                                         </a>
-                                        <span class="count" title="Đang được theo dõi"><i style=""></i><b></b><span class="countFollowing">${count}</span>
+                                        <span class="count" title="Đang được theo dõi"><i style=""></i><b></b><span class="countFollowing-${user.id}">${count}</span>
                                         </span>
                                   </span>
                                 </div>
@@ -127,99 +127,6 @@ const createAvatarContainer = (user, count) =>
                             </div>
                             <!--end follow area-->
                             `;
-async function followUserFuntion(userId) {
-    var userNameLocalStorage = localStorage.getItem("username");
-    var check = false;
-    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userNameLocalStorage + "&userFollowingId=" + userId)
-        .then(res => res.json())
-        .then(response => {
-            if (response.success) {
-                $(".follow-area").html(btnFollowed(userId));
-                //thông báo follow user
-                callNotification(userId);
-                check = true;
-            }
-        });
-    if (check) {
-        var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${userId}`);
-        var userData = await userRes.json();
-        $(".countFollowing").text(userData.length);
-    }
-};
-
-const callNotification = async (userId) => {
-    var userNameLocalStorage = localStorage.getItem("username");
-    var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
-    var userData = await userRes.json();
-    var myDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
-    var uid = myDataRef.push({
-        "uid": "",
-        "username": userNameLocalStorage,
-        "content": "đang theo dõi bạn",
-        "date": new Date().toLocaleString(),
-        "link": "/account/information/" + userData.username,
-        "isRead": "False"
-    });
-    //update uid into firebase
-    SRSN.FIREBASE_DATABASE.ref("/" + userData.username + "/" + uid.key).update({
-        uid: uid.key
-    });
-};
-async function unfollowUserFuntion(userId) {
-    var userNameLocalStorage = localStorage.getItem("username");
-    var check = false;
-    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userNameLocalStorage + "&userFollowingId=" + userId)
-        .then(res => res.json())
-        .then(response => {
-            if (response.success) {
-                //location.reload();
-                $(".follow-area").html(btnFollow(userId));
-                check = true;
-            }
-        });
-    if (check) {
-        var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${userId}`);
-        var userData = await userRes.json();
-        $(".countFollowing").text(userData.length);
-    }
-};
-
-const btnFollow = (userId) => `<div class="follow-btn-custom"  onclick="followUserFuntion(${userId})">
-                            <input type="hidden" value="${userId}" id="following-user-id">
-                            <div class="favourite clearfix">
-                               <div id="friend-status-div" class="btn-friend-stat">
-                                <div data-bind="visible:true" style="">
-                                    <span style="cursor:default">
-                                        <a title="Quan tâm">
-                                            <span class="fa fa-user-plus"></span>
-                                            <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
-                                            <span>Theo dõi</span>
-                                        </a>
-                                        <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span>
-                                        </span>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>`;
-const btnFollowed = (userId) => `
-<div class="follow-btn-custom"  onclick="unfollowUserFuntion(${userId})">
-                            <input type="hidden" value="${userId}" id="unfollowing-user-id">
-                            <div class="favourite clearfix">
-                               <div id="friend-status-div" class="btn-friend-stat">
-                                <div data-bind="visible:true" style="">
-                                    <span style="cursor:default" data-bind="visible: status()==1">
-                                    <a title="Hủy quan tâm" href="javascript:void(0)" data-bind="click:remove">
-                                        <span class="fa fa-check"></span>
-                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
-                                        <span>Đang theo dõi</span>
-                                    </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing"></span></span>
-                                </span>
-                                </div>
-                              </div>
-                            </div>`;
-
-
 const loadAvatarContainer = async (username) => {
     $("#link-to-profile").attr("href", "/account/information/" + username);
     $("#link-to-following-user").attr("href", "/account/memberfriends/" + username);

@@ -131,7 +131,7 @@ const createSingleRatingComment2 = (comment, commentReplyCount) =>
         </div>
     </li>`;
 
-const createChefByRecipeId = (chef) => `<h3 class="lined">Thông tin người thực hiện</h3>
+const createChefByRecipeId = (chef, btnActionFollow) => `<h3 class="lined">Thông tin người thực hiện</h3>
     <div class="listing">
         <div class="image">
             <div class="image-inner">
@@ -150,6 +150,11 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">Thông tin người th
                         <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                         <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
                     </ul>
+                    <ul style="position: absolute;right: -10px;">
+                        <li>
+                                ${btnActionFollow}
+                        </li>
+                    </ul>
                 </div>
             </div>
             <p>
@@ -158,7 +163,44 @@ const createChefByRecipeId = (chef) => `<h3 class="lined">Thông tin người th
             <a href="/account/information/${chef.username}" class="read-more-angle">Xem thêm...</a>
         </div>
     </div>`;
-
+const followElement = (userId) => 
+    `             <!--follow area-->
+                                <div class="follow-area-${userId}">
+                                            <div class="follow-btn-custom" onclick="followUserFuntion(${userId})">
+                                            <div class="favourite clearfix">
+                                               <div id="friend-status-div" class="btn-friend-stat">
+                                                <div data-bind="visible:true" style="">
+                                                    <span style="cursor:default">
+                                                    <a title="Theo dõi">
+                                                        <span class="fa fa-user-plus"></span>
+                                                        <span>Theo dõi</span>
+                                                    </a>
+                                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${userId}">0</span></span>
+                                                </span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            </div>
+                             <!--end follow area-->`;
+const unfollowElement = (userId) =>
+    ` <!--follow area-->
+                                <div class="follow-area-${userId}">
+                                            <div class="follow-btn-custom" onclick="followUserFuntion(${userId})">
+                                            <div class="favourite clearfix">
+                                               <div id="friend-status-div" class="btn-friend-stat">
+                                                <div data-bind="visible:true" style="">
+                                                    <span style="cursor:default">
+                                                    <a title="Hủy theo dõi">
+                                                        <span class="fa fa-check"></span>
+                                                        <span>Đang theo dõi</span>
+                                                    </a>
+                                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${userId}">0</span></span>
+                                                </span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            </div>
+                             <!--end follow area-->`;
 const callPopularRecipeDetailPageApi = async () => {
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-popular`);
     var data = await res.json();
@@ -367,7 +409,28 @@ const callChefRecipeApi = async (recipeId) => {
     var chef = data.accountVM;
     var description = chef.description != null ? chef.description : "";
     chef.description = description;
-    let chefView = createChefByRecipeId(chef);
+
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var userFollowingRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/check-following-user`, {
+        method: "POST",
+        body: JSON.stringify({ followingUserId: chef.id }),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var userFollowingData = await userFollowingRes.json();
+
+    var isFollow;
+    if (userFollowingData.length > 0) {
+        isFollow = userFollowingData.active;
+    } else {
+        isFollow = false;
+    }
+
+    var btnFollow = isFollow ? unfollowElement(chef.id) : followElement(chef.id);
+    let chefView = createChefByRecipeId(chef, btnFollow);
     var chefUsername = chef.username;
     chefUsername = window.localStorage.setItem("chefusername", chefUsername);
     $(".about-chef").append(chefView);
