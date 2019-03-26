@@ -365,19 +365,19 @@ let showSearchItem = (user) => {
 
 //-----------------------------User List-----------------------------------------------
 let getTopUser = async () => {
-    let res = await fetch('https://localhost:44361/api/account/get-top-ten');
+    let res = await fetch(`${BASE_API_URL}/account/get-top-ten`);
     let data = (await res.json());
     return data;
 }
 
 let searchLikeUser = async (name) => {
-    let res = await fetch(`https://localhost:44361/api/account/find-user?name=${name}`);
+    let res = await fetch(`${BASE_API_URL}/account/find-user?name=${name}`);
     let data = await res.json();
     return data;
 }
 
 let loadUserData = async (userId) => {
-    let res = await fetch(`https://localhost:44361/api/account/read?userId=${userId}`);
+    let res = await fetch(`${BASE_API_URL}/account/read?userId=${userId}`);
     let data = await res.json();
     return data;
 }

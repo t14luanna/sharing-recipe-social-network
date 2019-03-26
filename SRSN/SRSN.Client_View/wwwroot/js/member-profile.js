@@ -72,7 +72,7 @@ const callAccountInforApi = async (username) => {
         });
         data = await res.json();
     } else {
-        res = await fetch(`https://localhost:44361/api/account/read-username?userName=${username}`); /* tim theo user name*/
+        res = await fetch(`${BASE_API_URL}/account/read-username?userName=${username}`); /* tim theo user name*/
         data = await res.json();
         data = data[0];
     }

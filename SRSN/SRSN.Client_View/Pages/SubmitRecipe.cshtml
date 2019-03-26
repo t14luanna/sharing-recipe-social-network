@@ -290,7 +290,7 @@
                     var recipeId;
                     var authorization = localStorage.getItem("authorization");
                     var token = (JSON.parse(authorization))["token"];
-                    await fetch("https://localhost:44361/api/recipe/submit-recipe", {
+                    await fetch(`${BASE_API_URL}/recipe/submit-recipe`, {
                         method: "POST",
                         //body: JSON.stringify({ request: data }),
                         body: JSON.stringify(data),

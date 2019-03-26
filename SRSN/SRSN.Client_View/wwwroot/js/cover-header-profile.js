@@ -129,7 +129,7 @@ const createAvatarContainer = (user) =>
                             `;
 async function followUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
-    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userNameLocalStorage + "&userFollowingId=" + userId)
+    var res = await fetch(`${BASE_API_URL}/api/userfollowing/follow-user?userName=` + userNameLocalStorage + `&userFollowingId=` + userId)
         .then(res => res.json())
         .then(response => {
             if (response.success) {

@@ -149,7 +149,7 @@ const RedirectAPI = async () => {
         e.preventDefault();
         var categoryName = $(this).text();
         console.log(categoryName);
-        fetch("https://localhost:44361/api/recipe/read-recipe-by-category?categoryName=" + categoryName,
+        fetch(`${BASE_API_URL}/recipe/read-recipe-by-category?categoryName=` + categoryName,
             {
                 method: 'GET',
                 headers: {

@@ -2,7 +2,7 @@
     `<div class="listing custom-listing">
                             <div class="image">
                                 <a href="/account/collection-detail/${collection.id}">
-                                    <img src="${collection.coverImage}" alt="image" class="custome-image-listing"/>
+                                    <img src="${collection.coverImage}" alt="image" class="custome-image-listing" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="avatar"/>
                                 </a>
                             </div>
                             <div class="detail">

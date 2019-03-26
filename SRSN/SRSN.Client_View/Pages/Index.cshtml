@@ -421,7 +421,7 @@
     $("#searchBtn").on("click", function (e) {
         e.preventDefault();
         var searchValue = $('#custom-input-search').val();
-        fetch(`https://localhost:44361/api/recipe/read-recipename?recipeName=${searchValue}`,
+        fetch(`${BASE_API_URL}/recipe/read-recipename?recipeName=${searchValue}`,
             {
                 method: 'GET',
                 headers: {

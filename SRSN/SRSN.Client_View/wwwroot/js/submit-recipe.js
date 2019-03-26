@@ -54,7 +54,7 @@ function openTab(tab) {
 }
 
 async function loadCategory() {
-    var res = await fetch("https://localhost:44361/api/category/read");
+    var res = await fetch(`${BASE_API_URL}/api/category/read`);
     var mains = await res.json();
     $(mains).each((i, main) => {
         var div = document.createElement("div");
@@ -206,7 +206,7 @@ function openTab(tab) {
 }
 
 const loadcategory = async () => {
-    var res = await fetch("https://localhost:44361/api/category/read");
+    var res = await fetch(`${BASE_API_URL}/category/read`);
     var mains = await res.json();
     $(mains).each((i, main) => {
         var div = document.createElement("div");

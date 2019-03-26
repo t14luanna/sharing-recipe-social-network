@@ -192,7 +192,7 @@ const callTopAccountApi = async () => {
 };
 
 const followUser = async (userName, followingUserId, followingUsername) => {
-    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userName + "&userFollowingId=" + followingUserId)
+    var res = await fetch(`${BASE_API_URL}/userfollowing/follow-user?userName=` + userName + `&userFollowingId=` + followingUserId)
         .then(res => res.json())
         .then(response => {
         if (response.success) {
