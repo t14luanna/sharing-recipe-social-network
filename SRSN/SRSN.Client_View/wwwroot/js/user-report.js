@@ -47,7 +47,7 @@ $("#report-user-form").on("submit", function (e) {
     fetch(`${BASE_API_URL}/api/account/read-username?userName=` + userName)
         .then(res => res.json())
         .then(response => {
-            var userReportedId = response[0].id;
+            var userReportedId = response.id;
             var authorization = localStorage.getItem("authorization");
             var token = (JSON.parse(authorization))["token"];
             var data = JSON.stringify({

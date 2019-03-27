@@ -84,8 +84,8 @@ const userWithRecipeElement = (user, recipe, rankUser, num, countRecipe, countFo
                     <div class="member-item-recipe clearfix ng-scope" style="padding-top:10px">
                        <div class="top-item ng-scope">
                             <a href="recipe/${recipe.id}">
-                                <img class="img-responsive" src="${recipe.imageCover}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
-                                <div class="name text-ellipsis ng-binding name-seen-recipe">${recipe.recipeName}</div>
+                                <div class="img-responsive cover-recipe-contain" style="background-image: url(${recipe.imageCover})" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"></div>
+                                <div class="name text-ellipsis ng-binding name-seen-recipe title-recipe-top">${recipe.recipeName}</div>
                             </a>
                         </div>
                     </div>

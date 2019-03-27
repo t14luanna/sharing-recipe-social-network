@@ -227,7 +227,6 @@ const loadAvatarContainer = async (username) => {
     } else {
         res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?userName=${username}`); /* tim theo user name*/
         data = await res.json();//do 2 cach trả về giá trị khác nhau, data[0] là vị trí đầu tiên trong chuổi json
-        data = data[0];
 
     }
 

@@ -21,7 +21,7 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        
+
         private SRSNUserManager userManager;
         private IMapper mapper;
         public AccountController(SRSNUserManager userManager, IMapper mapper)
@@ -39,7 +39,7 @@ namespace SRSN.ClientApi.Controllers
             {
                 return Ok(new { message = "Username da ton tai" });
             }
-            
+
             var user = new SRSNUser();
             mapper.Map(data, user);
             user.SecurityStamp = Guid.NewGuid().ToString();
@@ -49,9 +49,9 @@ namespace SRSN.ClientApi.Controllers
             {
                 return BadRequest();
             }
-           
+
             var result = await userManager.CreateAsync(user, data.Password);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 var existedUser = await userManager.FindByNameAsync(user.UserName);
                 var addToRoleResult = await userManager.AddToRoleAsync(existedUser, "ActiveUser");
@@ -78,10 +78,10 @@ namespace SRSN.ClientApi.Controllers
         public async Task<ActionResult> Login([FromBody] AccountEditViewModel data)
         {
             var user = await userManager.FindByNameAsync(data.UsernameVM);
-            if(user != null)
+            if (user != null)
             {
                 var isCorrect = await userManager.CheckPasswordAsync(user, data.Password);
-                if(isCorrect)
+                if (isCorrect)
                 {
                     var token = await user.AuthorizeAsync(userManager, user);
                     return Ok(new
@@ -194,15 +194,10 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                var list = new List<AccountViewModel>();
-                foreach (var u in userManager.Users.Where(u => u.UserName.Contains(username)).ToList().OrderByDescending(t => t.Id).Take(3))
-                {
-                    var accountVM = new AccountViewModel();
-                    mapper.Map(u, accountVM);
-                    list.Add(accountVM);
-                   
-                }
-                return Ok(list);
+                var isCorrect = userManager.Users.Where(u => u.UserName.Equals(username)).FirstOrDefault();
+                var accountVM = new AccountViewModel();
+                mapper.Map(isCorrect, accountVM);
+                return Ok(accountVM);
             }
             catch (Exception ex)
             {
@@ -242,7 +237,7 @@ namespace SRSN.ClientApi.Controllers
             var currentUser = await userManager.FindByIdAsync(userId);
             mapper.Map(data, currentUser);
             await userManager.UpdateAsync(currentUser);
-            
+
             return Ok(new
             {
                 message = $"Ban da update thanh cong User co ten la: {currentUser.UserName}"
@@ -258,7 +253,7 @@ namespace SRSN.ClientApi.Controllers
 
             var currentUser = await userManager.FindByIdAsync(userId);
             var result = await userManager.ChangePasswordAsync(currentUser, data.CurrentPassword, data.NewPassword);
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 return Ok(new
                 {

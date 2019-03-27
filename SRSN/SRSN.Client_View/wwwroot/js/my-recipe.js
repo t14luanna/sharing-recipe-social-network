@@ -20,10 +20,10 @@
 </div>
 </div>`;
 
-const callRecipeByUserId = async () => {
+const callRecipeByUserId = async (username) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var userRes = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+    var userRes = await fetch(`${BASE_API_URL}/api/account/read-username?username=${username}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',

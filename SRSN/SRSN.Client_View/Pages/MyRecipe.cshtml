@@ -372,7 +372,7 @@
     (async () => {
         await callAccountInforApi('@(RouteData.Values["userName"])');
         await loadAvatarContainer('@(RouteData.Values["userName"])');
-        await callRecipeByUserId();
+        await callRecipeByUserId('@(RouteData.Values["userName"])');
     })();
 
     </script>

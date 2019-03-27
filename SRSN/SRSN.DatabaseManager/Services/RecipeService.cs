@@ -682,7 +682,7 @@ namespace SRSN.DatabaseManager.Services
 
         public async Task<RecipeViewModel> getBestRecipeOfUser(int userId)
         {
-            var recipeEntity = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE Active='1' AND UserId=" + userId + " ORDER BY EvRating DESC, ViewQuantity DESC").ToList().FirstOrDefault();
+            var recipeEntity = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE Active='1' AND UserId=" + userId + "AND ReferencedRecipeId IS NULL ORDER BY EvRating DESC, ViewQuantity DESC").ToList().FirstOrDefault();
             var recipeVM = new RecipeViewModel();
             mapper.Map(recipeEntity, recipeVM);
             return recipeVM;

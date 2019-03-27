@@ -74,7 +74,6 @@ const callAccountInforApi = async (username) => {
     } else {
         res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?userName=${username}`); /* tim theo user name*/
         data = await res.json();
-        data = data[0];
     }
     var friendsRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-following-user?userName=` + username);
     var friendData = await friendsRes.json();

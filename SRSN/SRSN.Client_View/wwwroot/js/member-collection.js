@@ -88,6 +88,9 @@ const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-
                                                     </div>
                                                     </div>
                                                 </div>`;
+const createButtonNewCollection = () => ` <label>
+                                                    <a id="btn-create-new-collection" class="default-btn min-width-button theme-color">Tạo mới Bộ sưu tập</a>
+                                                </label>`;
 const callReadCollectionApi = async (userName) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
@@ -98,6 +101,10 @@ const callReadCollectionApi = async (userName) => {
             'Authorization': `Bearer ${token}`
         }
     });
+    if (userName == localStorage.getItem("username")) {
+        var btnCreateCollection = createButtonNewCollection();
+        $(".btn-create-collection-container").append(btnCreateCollection);
+    }
     var elements = $(`.collection-item-container`);
 
     if (elements[0]) {
