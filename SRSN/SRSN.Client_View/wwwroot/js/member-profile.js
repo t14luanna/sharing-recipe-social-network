@@ -142,7 +142,7 @@ const callAccountInforApi = async (username) => {
             })
             setTimeout(async function () {
                 var username = localStorage.getItem("username");
-                window.location.href = `/account/information/${username}`
+                //window.location.href = `/account/information/${username}`
             }, 1500);
         }
     });
@@ -175,7 +175,7 @@ const callAccountInforApi = async (username) => {
             })
             setTimeout(async function () {
                 var username = localStorage.getItem("username");
-                window.location.href = `/account/information/${username}`
+                //window.location.href = `/account/information/${username}`
             }, 1500);
         }
     });
