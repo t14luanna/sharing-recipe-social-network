@@ -982,3 +982,17 @@ input[name=ingredient] {
         background: #FFC107;
         display: block;
     }
+.top-user-page-custom .recipe-more-inner {
+    border: .5px solid #ddd;
+    background: #fff;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 12px;
+    position: relative;
+    padding: 15px;
+}
+    .top-user-page-custom .recipe-more-inner a {
+        display: block;
+        text-decoration: none;
+        color: #333;
+    }
