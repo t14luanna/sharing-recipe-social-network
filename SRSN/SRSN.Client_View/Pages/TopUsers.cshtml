@@ -5,28 +5,1037 @@
 }
 <section class="wrapper-main-contents all-chefs">
     <div class="container">
-        <div class="line-heading">
-            <h2>Top thành viên</h2>
-        </div>
+
         <!--Get top user-->
-        <div class="wrapper-head-chef">
-            <div class=head-chef id="read-top-user">
-
-
-            </div>
-            <div class="bg-corner-head-chef">
-                <img src="recipepress/images/temp-images/bg-corner-shef.jpg" alt="image" />
-            </div>
-        </div>
-
         <div class="line-heading">
             <h2>Top 10 thành viên</h2>
         </div>
+        <div class="top-user-page-custom member-list topchef-list row10 ng-scope" ng-if="true">
+            <!-- ngRepeat: item in items --><div class="member-item-wrapper ng-scope top-feature" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum1">1</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g16/150077/avt/c60x60/cooky-avatar-636846610693292717.JPG" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g16/150077/avt/c60x60/cooky-avatar-636846610693292717.JPG">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/hoangoanh1976" class="cooky-user-link name ng-binding" data-userid="150077" href="/thanh-vien/hoangoanh1976" data-hasqtip="60">Hoàng Oanh</a>
+                            <span class="stats-text user-lvl cookee">cookee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">33</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">12</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
 
-        <!--Get top ten user-->
-        <div class="wrapper-chef-team">
-            <ul class="chef-team" id="list-top-ten-users"></ul>
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 --><div class="member-item-recipe clearfix ng-scope" style="padding-top:10px" ng-if="($index < topFeaturedMember) &amp;&amp; item.TopRecipes !== null &amp;&amp; item.TopRecipes.length > 0">
+                        <!-- ngRepeat: mrecipe in item.TopRecipes --><div class="top-item ng-scope" ng-repeat="mrecipe in item.TopRecipes">
+                            <a href="/cong-thuc/dau-phong-rang-bo-toi-46723" target="_blank" ng-href="/cong-thuc/dau-phong-rang-bo-toi-46723">
+                                <img class="img-responsive" ng-src="https://media.cooky.vn/recipe/g5/46723/s400x400/cooky-recipe-cover-r46723.JPG" src="https://media.cooky.vn/recipe/g5/46723/s400x400/cooky-recipe-cover-r46723.JPG">
+                                <div class="name text-ellipsis ng-binding" ng-bind="mrecipe.Name">Đậu phộng rang bơ tỏi</div>
+                            </a>
+                        </div><!-- end ngRepeat: mrecipe in item.TopRecipes -->
+                    </div><!-- end ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope top-feature" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum2">2</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g22/213895/avt/c60x60/cooky-avatar-636889408569058659.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g22/213895/avt/c60x60/cooky-avatar-636889408569058659.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/dangphanminhchau" class="cooky-user-link name ng-binding" data-userid="213895" href="/thanh-vien/dangphanminhchau" data-hasqtip="61">Minh Châu</a>
+                            <span class="stats-text user-lvl tastee">tastee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">9</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">4</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Hủy quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope btn-followed" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 --><span ng-if="status == 1" class="ng-scope">Đã quan tâm</span><!-- end ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 --><div class="member-item-recipe clearfix ng-scope" style="padding-top:10px" ng-if="($index < topFeaturedMember) &amp;&amp; item.TopRecipes !== null &amp;&amp; item.TopRecipes.length > 0">
+                        <!-- ngRepeat: mrecipe in item.TopRecipes --><div class="top-item ng-scope" ng-repeat="mrecipe in item.TopRecipes">
+                            <a href="/cong-thuc/thit-bo-cuon-mang-tay-don-gian-46728" target="_blank" ng-href="/cong-thuc/thit-bo-cuon-mang-tay-don-gian-46728">
+                                <img class="img-responsive" ng-src="https://media.cooky.vn/recipe/g5/46728/s400x400/cooky-recipe-636891877532298336.jpg" src="https://media.cooky.vn/recipe/g5/46728/s400x400/cooky-recipe-636891877532298336.jpg">
+                                <div class="name text-ellipsis ng-binding" ng-bind="mrecipe.Name">Thịt bò cuộn măng tây đơn giản</div>
+                            </a>
+                        </div><!-- end ngRepeat: mrecipe in item.TopRecipes -->
+                    </div><!-- end ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope top-feature" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum3">3</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g21/205942/avt/c60x60/cooky-avatar-636870187842720174.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g21/205942/avt/c60x60/cooky-avatar-636870187842720174.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/Diepngoc%20Nguyen" class="cooky-user-link name ng-binding" data-userid="205942" href="/thanh-vien/Diepngoc%20Nguyen" data-hasqtip="62">Nguyen Diepngoc</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">4</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 --><div class="member-item-recipe clearfix ng-scope" style="padding-top:10px" ng-if="($index < topFeaturedMember) &amp;&amp; item.TopRecipes !== null &amp;&amp; item.TopRecipes.length > 0">
+                        <!-- ngRepeat: mrecipe in item.TopRecipes --><div class="top-item ng-scope" ng-repeat="mrecipe in item.TopRecipes">
+                            <a href="/cong-thuc/uc-ga-ap-chao-salad-bap-cai-46105" target="_blank" ng-href="/cong-thuc/uc-ga-ap-chao-salad-bap-cai-46105">
+                                <img class="img-responsive" ng-src="https://media.cooky.vn/recipe/g5/46105/s400x400/cooky-recipe-636872862877828717.jpg" src="https://media.cooky.vn/recipe/g5/46105/s400x400/cooky-recipe-636872862877828717.jpg">
+                                <div class="name text-ellipsis ng-binding" ng-bind="mrecipe.Name">Ức gà áp chảo salad bắp cải</div>
+                            </a>
+                        </div><!-- end ngRepeat: mrecipe in item.TopRecipes -->
+                    </div><!-- end ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum4">4</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g5/40036/avt/c60x60/cooky-avatar-636735712065231990.JPG" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g5/40036/avt/c60x60/cooky-avatar-636735712065231990.JPG">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/me.moon.map" class="cooky-user-link name ng-binding" data-userid="40036" href="/thanh-vien/me.moon.map" data-hasqtip="63">Bếp Bà Cám</a>
+                            <span class="stats-text user-lvl tastee">tastee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">34</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">2</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum5">5</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g11/102984/avt/c60x60/cooky-avatar-636528375210228562.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g11/102984/avt/c60x60/cooky-avatar-636528375210228562.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/miuscookerybook" class="cooky-user-link name ng-binding" data-userid="102984" href="/thanh-vien/miuscookerybook" data-hasqtip="64">Miu's  Cookery Book</a>
+                            <span class="stats-text user-lvl tastee">tastee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">15</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">9</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum6">6</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g10/90782/avt/c60x60/cooky-avatar-636447223171671016.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g10/90782/avt/c60x60/cooky-avatar-636447223171671016.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/hongngocle3011" class="cooky-user-link name ng-binding" data-userid="90782" href="/thanh-vien/hongngocle3011" data-hasqtip="65">Ngọc Lê</a>
+                            <span class="stats-text user-lvl tastee">tastee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">13</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">5</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum7">7</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g17/165829/avt/s60/user-default.png" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g17/165829/avt/s60/user-default.png">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/hops" class="cooky-user-link name ng-binding" data-userid="165829" href="/thanh-vien/hops" data-hasqtip="66">Hốp</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">5</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum8">8</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g17/167218/avt/s60/user-default.png" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g17/167218/avt/s60/user-default.png">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/hellie1207" class="cooky-user-link name ng-binding" data-userid="167218" href="/thanh-vien/hellie1207" data-hasqtip="67">Doan Thao</a>
+                            <span class="stats-text user-lvl tastee">tastee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">5</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum9">9</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g14/138205/avt/c60x60/cooky-avatar-636740154612882109.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g14/138205/avt/c60x60/cooky-avatar-636740154612882109.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/dobyntnguyen1995" class="cooky-user-link name ng-binding" data-userid="138205" href="/thanh-vien/dobyntnguyen1995" data-hasqtip="68">Nguyễn Duy</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">4</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum10">10</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g19/185148/avt/c60x60/cooky-avatar-636885183700705723.JPG" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g19/185148/avt/c60x60/cooky-avatar-636885183700705723.JPG">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/ngoclinhkt612" class="cooky-user-link name ng-binding" data-userid="185148" href="/thanh-vien/ngoclinhkt612" data-hasqtip="69">Rinwinter</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum11">11</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g21/205889/avt/s60/user-default.png" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g21/205889/avt/s60/user-default.png">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/jangokheun1997" class="cooky-user-link name ng-binding" data-userid="205889" href="/thanh-vien/jangokheun1997" data-hasqtip="70">Min Jin</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum12">12</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g17/168378/avt/c60x60/cooky-avatar-636773539384699987.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g17/168378/avt/c60x60/cooky-avatar-636773539384699987.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/lysusi811" class="cooky-user-link name ng-binding" data-userid="168378" href="/thanh-vien/lysusi811" data-hasqtip="71">lysusi811 Phạm Hương Ly</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum13">13</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g22/212128/avt/c60x60/cooky-avatar-636885457743412487.JPG" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g22/212128/avt/c60x60/cooky-avatar-636885457743412487.JPG">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/linhlen1987" class="cooky-user-link name ng-binding" data-userid="212128" href="/thanh-vien/linhlen1987" data-hasqtip="72">Lén Linh</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum14">14</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g21/207900/avt/c60x60/cooky-avatar-636875194320400916.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g21/207900/avt/c60x60/cooky-avatar-636875194320400916.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/nguyenhoangtrucvi315" class="cooky-user-link name ng-binding" data-userid="207900" href="/thanh-vien/nguyenhoangtrucvi315" data-hasqtip="73">nguyenhoangtrucvi315 Vivien</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">10</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum15">15</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g11/106570/avt/c60x60/cooky-avatar-636545631265939720.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g11/106570/avt/c60x60/cooky-avatar-636545631265939720.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/tonhuhoangngoc" class="cooky-user-link name ng-binding" data-userid="106570" href="/thanh-vien/tonhuhoangngoc" data-hasqtip="74">tonhuhoangngoc</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum16">16</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g15/148990/avt/s60/user-default.png" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g15/148990/avt/s60/user-default.png">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/michanthai" class="cooky-user-link name ng-binding" data-userid="148990" href="/thanh-vien/michanthai" data-hasqtip="75">michanthai</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum17">17</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g12/110264/avt/c60x60/cooky-avatar-636577716242477667.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g12/110264/avt/c60x60/cooky-avatar-636577716242477667.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/quanmanhmultiply" class="cooky-user-link name ng-binding" data-userid="110264" href="/thanh-vien/quanmanhmultiply" data-hasqtip="76">Giang Nguyen</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">120</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">64</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum18">18</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g14/139637/avt/c60x60/cooky-avatar-636730072181231687.JPG" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g14/139637/avt/c60x60/cooky-avatar-636730072181231687.JPG">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/nttmyct" class="cooky-user-link name ng-binding" data-userid="139637" href="/thanh-vien/nttmyct" data-hasqtip="77">Trà My Nguyễn Nguyễn</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">95</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">117</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum19">19</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g10/91652/avt/c60x60/cooky-avatar-636836788417873862.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g10/91652/avt/c60x60/cooky-avatar-636836788417873862.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/hatrang1406" class="cooky-user-link name ng-binding" data-userid="91652" href="/thanh-vien/hatrang1406" data-hasqtip="78">Hồng Ân Lê</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">82</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">213</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum20">20</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g14/131315/avt/c60x60/cooky-avatar-636684863375091503.JPG" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g14/131315/avt/c60x60/cooky-avatar-636684863375091503.JPG">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/ptkngan251" class="cooky-user-link name ng-binding" data-userid="131315" href="/thanh-vien/ptkngan251" data-hasqtip="79">Cherry Phạm</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">76</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">22</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum21">21</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g6/53266/avt/c60x60/cooky-avatar-636310008286569268.png" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g6/53266/avt/c60x60/cooky-avatar-636310008286569268.png">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/buitrongkhiem2010" class="cooky-user-link name ng-binding" data-userid="53266" href="/thanh-vien/buitrongkhiem2010" data-hasqtip="80">Cười  Khúc Khích</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">74</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">8</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum22">22</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g11/109360/avt/c60x60/cooky-avatar-636651746311521065.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g11/109360/avt/c60x60/cooky-avatar-636651746311521065.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/nguyenlbnhii" class="cooky-user-link name ng-binding" data-userid="109360" href="/thanh-vien/nguyenlbnhii" data-hasqtip="81">Bảo Nhii</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">71</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">173</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum23">23</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g1/11/avt/s60/user-default.png" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g1/11/avt/s60/user-default.png">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/thaonguyen" class="cooky-user-link name ng-binding" data-userid="11" href="/thanh-vien/thaonguyen" data-hasqtip="82">thaonguyen</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">58</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum24">24</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g12/117637/avt/c60x60/cooky-avatar-636600737100055403.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g12/117637/avt/c60x60/cooky-avatar-636600737100055403.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/thuuyentrannguon" class="cooky-user-link name ng-binding" data-userid="117637" href="/thanh-vien/thuuyentrannguon" data-hasqtip="83">Uyên  Bánh Mì</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">58</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">30</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum25">25</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g14/134752/avt/c60x60/cooky-avatar-636760812845271095.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g14/134752/avt/c60x60/cooky-avatar-636760812845271095.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/phuong_oanh7809" class="cooky-user-link name ng-binding" data-userid="134752" href="/thanh-vien/phuong_oanh7809" data-hasqtip="84">Phương Oanh</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">57</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">365</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Hủy quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope btn-followed" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 --><span ng-if="status == 1" class="ng-scope">Đã quan tâm</span><!-- end ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum26">26</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g12/112946/avt/c60x60/cooky-avatar-636577966322772910.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g12/112946/avt/c60x60/cooky-avatar-636577966322772910.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/hangts135" class="cooky-user-link name ng-binding" data-userid="112946" href="/thanh-vien/hangts135" data-hasqtip="85">HANG CAN COOK</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">57</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum27">27</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g13/120168/avt/c60x60/cooky-avatar-636776308819375774.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g13/120168/avt/c60x60/cooky-avatar-636776308819375774.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/lanavo90" class="cooky-user-link name ng-binding" data-userid="120168" href="/thanh-vien/lanavo90" data-hasqtip="86">Võ Liên</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">54</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">1</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum28">28</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g1/6316/avt/c60x60/cooky-avatar-635641677688227047.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g1/6316/avt/c60x60/cooky-avatar-635641677688227047.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/giaphat92tn" class="cooky-user-link name ng-binding" data-userid="6316" href="/thanh-vien/giaphat92tn" data-hasqtip="87">Minh Phát Nguyễn</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">49</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">36</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum29">29</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g15/144134/avt/c60x60/cooky-avatar-636803725930661298.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g15/144134/avt/c60x60/cooky-avatar-636803725930661298.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/tranganhlekhac" class="cooky-user-link name ng-binding" data-userid="144134" href="/thanh-vien/tranganhlekhac" data-hasqtip="88">Trang Anh Le</a>
+                            <span class="stats-text user-lvl chefee">chefee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">46</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">36</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum30">30</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g7/61794/avt/c60x60/cooky-avatar-636251921973822632.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g7/61794/avt/c60x60/cooky-avatar-636251921973822632.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/hoangthitoha" class="cooky-user-link name ng-binding" data-userid="61794" href="/thanh-vien/hoangthitoha" data-hasqtip="89">Hoàng Thị Tố Hà</a>
+                            <span class="stats-text user-lvl cookee">cookee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">46</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">4</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items --><div class="member-item-wrapper ng-scope" ng-class="{'top-feature': $index < topFeaturedMember}" ng-repeat="item in items">
+                <div class="member-item">
+                    <span class="topnum topnum31">31</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img ng-src="https://media.cooky.vn/usr/g10/95319/avt/c60x60/cooky-avatar-636473747697151819.jpg" class="img-responsive img-circle" src="https://media.cooky.vn/usr/g10/95319/avt/c60x60/cooky-avatar-636473747697151819.jpg">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/kimtrang94" class="cooky-user-link name ng-binding" data-userid="95319" href="/thanh-vien/kimtrang94" data-hasqtip="90">Kim Trang</a>
+                            <span class="stats-text user-lvl newbee">newbee </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">45</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">0</span>
+                                    <span class="stats-text">Quan tâm</span>
+                                </span>
+                            </div>
+                            <div class="member-acts">
+
+                                <button ng-show="visible()" title="Quan tâm" ng-click="follow()" class="btn-follow ng-isolate-scope" ng-class="itemClass()" userid="item.Id" status="item.Status" type="1">
+                                    <span ng-show="isPosting" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span>
+                                    <!-- ngIf: status == 1 -->
+                                    <!-- ngIf: status != 1 --><span ng-if="status != 1" class="ng-scope">Quan tâm</span><!-- end ngIf: status != 1 -->
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ngIf: ($index < topFeaturedMember) && item.TopRecipes !== null && item.TopRecipes.length > 0 -->
+                </div>
+            </div><!-- end ngRepeat: item in items -->
+            <div class="clearfix"></div>
+            <div ng-show="totalRemaining>0" class="recipe-more">
+                <div class="recipe-more-inner">
+                    <a href="javascript:void(0)" ng-click="loadmore()" target="_self">Xem thêm <span ng-show="isLoadingMore" style="text-align:center;" class="ng-hide"><img src="/Style/images/icons/small-loading.gif"></span></a>
+                </div>
+            </div>
         </div>
+        <!--Get top ten user-->
+        @*<div class="wrapper-chef-team">
+            <ul class="chef-team" id="list-top-ten-users"></ul>
+        </div>*@
     </div>
 </section>
 
@@ -49,7 +1058,6 @@
         (async () => {
             await changeHeadername();
             await callTopTenAccountApi();
-            await callTopAccountApi();
         })();
     </script>
 }

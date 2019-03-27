@@ -171,17 +171,7 @@ const callTopTenAccountApi = async () => {
         $(".countFollowing-" + item.id).text(userData.length);
     }
     
-    //$('.follow-btn').click((e) => {
-    //    e.preventDefault();
-    //    var followingUserId = $(e.target).siblings('input').val();
-    //    var followingUsername = $("#username-of-" + followingUserId).val();
-    //    followUser(userName, followingUserId, followingUsername);
-    //});
-    //$('.unfollow-btn').click((e) => {
-    //    e.preventDefault();
-    //    var followingUserId = $(e.target).siblings('input').val();
-    //    unfollowUser(userName, followingUserId);
-    //});
+  
 };
 
 
@@ -217,54 +207,5 @@ const callTopAccountApi = async () => {
         $(".countFollowing-" + item.id).text(userData.length);
     }
 
-    //$('.top-follow-btn').click((e) => {
-    //    e.preventDefault();
-    //    var followingUserId = $("#followTopAccount").val();
-    //    var userName = localStorage.getItem('username');
-    //    var followingUsername = $("#username-of-" + followingUserId).val();
-    //    followUser(userName, followingUserId, followingUsername);
-    //});
-    //$('.unfollow-btn').click((e) => {
-    //    e.preventDefault();
-    //    var followingUserId = $("#unfollowTopAccount").val();
-    //    var userName = localStorage.getItem('username');
-    //    unfollowUser(userName, followingUserId);
-    //});
+    
 };
-
-//const followUser = async (userName, followingUserId, followingUsername) => {
-//    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userName + "&userFollowingId=" + followingUserId)
-//        .then(res => res.json())
-//        .then(response => {
-//        if (response.success) {
-//            var myDataRef = SRSN.FIREBASE_DATABASE.ref(followingUsername);
-//            var uid = myDataRef.push({
-//                "uid": "",
-//                "username": userName,
-//                "content": "đang theo dõi bạn",
-//                "date": new Date().toLocaleString(),
-//                "link": "/account/information/" + userName,
-//                "isRead": "False"
-//            });
-//            //update uid into firebase
-//            SRSN.FIREBASE_DATABASE.ref("/" + followingUsername + "/" + uid.key).update({
-//                uid: uid.key
-//            });
-//        }
-//    });
-//};
-
-//const unfollowUser = async (userName, followingUserId) => {
-//    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userFollowingId=" + followingUserId)
-//        .then(res => res.json())
-//        .then(response => {
-//        if (response.success) {
-//            location.reload();
-//        }
-//    });
-//};
-
-//$(document).ready((e) => {
-//    callTopTenAccountApi();
-//    callTopAccountApi();
-//});
