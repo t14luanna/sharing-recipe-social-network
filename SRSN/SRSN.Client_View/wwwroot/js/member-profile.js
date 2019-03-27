@@ -72,11 +72,11 @@ const callAccountInforApi = async (username) => {
         });
         data = await res.json();
     } else {
-        res = await fetch(`https://localhost:44361/api/account/read-username?userName=${username}`); /* tim theo user name*/
+        res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?userName=${username}`); /* tim theo user name*/
         data = await res.json();
         data = data[0];
     }
-    var friendsRes = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + username);
+    var friendsRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-following-user?userName=` + username);
     var friendData = await friendsRes.json();
     var countFriends = friendData.length;
     $("#count-friends").text(countFriends);
@@ -117,7 +117,7 @@ const callAccountInforApi = async (username) => {
     $("#btnUpdateHistory").on("click", async function (e) {
         $(this).attr("disabled", "disabled");
         e.preventDefault();
-        var res =  await fetch(`${BASE_API_URL}/api/account/update`, {
+        var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/update`, {
             method: 'PUT',
             body: JSON.stringify({
                 'firstName': $('#hiddenFirstName').val(),

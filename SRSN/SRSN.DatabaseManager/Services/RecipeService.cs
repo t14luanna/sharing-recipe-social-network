@@ -50,6 +50,7 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
         Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(UserManager<SRSNUser> userManager, string categoryName);
         Task UpdateIsShareReaction(int recipeId, int userId);
+        Task<RecipeViewModel> getBestRecipeOfUser(int userId);
         Task<ICollection<RecipeViewModel>> GetTimeLineRecipes(UserManager<SRSNUser> userManager, int userId, int limit, int page);
 
 
@@ -257,7 +258,7 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
-                    if(item.UserId != null)
+                    if (item.UserId != null)
                     {
                         var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
                         var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
@@ -404,7 +405,7 @@ namespace SRSN.DatabaseManager.Services
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
                     var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
-                    
+
                     var accountVM = new AccountViewModel();
                     mapper.Map(currentUser, accountVM);
 
@@ -559,7 +560,7 @@ namespace SRSN.DatabaseManager.Services
                     "INNER JOIN Recipe_Category ON Recipe.Id = Recipe_Category.RecipeId " +
                     "INNER JOIN CategoryItem ON Recipe_Category.CategoryItemId = CategoryItem.Id " +
                     "WHERE CategoryItem.CategoryItemName=N'" + categoryName + "'").ToList();
-                
+
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
@@ -576,7 +577,7 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-      
+
 
         public async Task<int> CreateRecipeWithStepsAndResultAsync(RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
         {
@@ -637,7 +638,7 @@ namespace SRSN.DatabaseManager.Services
         {
             var recipeDbset = this.unitOfWork.GetDbContext().Set<UserReactionRecipe>();
             var recipe = recipeDbset.Where(q => q.RecipeId == recipeId && q.UserId == userId).FirstOrDefault();
-            if(recipe == null)
+            if (recipe == null)
             {
                 var creatingUserReactionRecipeVM = new UserReactionRecipeViewModel()
                 {
@@ -661,13 +662,13 @@ namespace SRSN.DatabaseManager.Services
                 recipeDbset.Update(recipe);
                 await this.unitOfWork.CommitAsync();
             }
-            
+
         }
 
         public async Task<ICollection<RecipeViewModel>> GetTimeLineRecipes(UserManager<SRSNUser> userManager, int userId, int limit, int page)
         {
             var list = new List<RecipeViewModel>();
-            var listItems = this.Get().AsNoTracking().Where(r => r.Active == true && r.UserId == userId ).OrderByDescending(x => x.CreateTime).ToList();
+            var listItems = this.Get().AsNoTracking().Where(r => r.Active == true && r.UserId == userId).OrderByDescending(x => x.CreateTime).ToList();
             foreach (var item in listItems)
             {
                 var recipeUserID = await userManager.FindByIdAsync(userId.ToString());
@@ -677,6 +678,14 @@ namespace SRSN.DatabaseManager.Services
             }
             list = list.Skip(page * limit).Take(limit).ToList();
             return list;
+        }
+
+        public async Task<RecipeViewModel> getBestRecipeOfUser(int userId)
+        {
+            var recipeEntity = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE Active='1' AND UserId=" + userId + " ORDER BY EvRating DESC, ViewQuantity DESC").ToList().FirstOrDefault();
+            var recipeVM = new RecipeViewModel();
+            mapper.Map(recipeEntity, recipeVM);
+            return recipeVM;
         }
     }
 }

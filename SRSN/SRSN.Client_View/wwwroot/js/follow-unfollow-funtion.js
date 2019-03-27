@@ -1,7 +1,7 @@
 ﻿async function followUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
     var check = false;
-    var res = await fetch("https://localhost:44361/api/userfollowing/follow-user?userName=" + userNameLocalStorage + "&userFollowingId=" + userId)
+    var res = await fetch(BASE_API_URL + "/" + USER_FOLLOWING_API_URL + "/follow-user?userName=" + userNameLocalStorage + "&userFollowingId=" + userId)
         .then(res => res.json())
         .then(response => {
             if (response.success) {
@@ -41,7 +41,7 @@ const callNotification = async (userId) => {
 async function unfollowUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
     var check = false;
-    var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userNameLocalStorage + "&userFollowingId=" + userId)
+    var res = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/unfollow-user?userName=` + userNameLocalStorage + "&userFollowingId=" + userId)
         .then(res => res.json())
         .then(response => {
             if (response.success) {
@@ -93,7 +93,7 @@ const btnFollowed = (userId) => `
                             </div>`;
 const btnFollowed_OnNewsfeed = (userId) =>
     `                                                            <button title="Hủy theo dõi" class="btn-follow ng-isolate-scope btn-followed" onclick="unfollowUserFuntion(${userId})">
-                                                                <span>Đã theo dõi</span>
+                                                                <span>Đang theo dõi</span>
                                                             </button>`;
 const btnFollow_OnNewsfeed = (userId) =>
     `<button title="Theo dõi" class="btn-follow ng-isolate-scope btn-followed" ng-class="itemClass()" onclick="followUserFuntion(${userId})">

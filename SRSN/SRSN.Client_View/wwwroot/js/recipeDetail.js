@@ -47,20 +47,20 @@ const createNumSteps = (num) =>
 const createSingleStepOfRecipe = (step, images) =>
     `<dd>
         <div class="row">
-            <div class="col-sm-7">
+            <div class="col-md-12">
                 <p>
                     ${step.description}
                 </p>
                                                     
             </div>
-            <div id="step-images" class="col-sm-5">
+            <div id="step-images" class="col-md-12">
                 ${images}
             </div>
         </div>
     </dd>`;
 
 
-const createStepImage = imageUrl => `<img class="img-step-recipe" src="${imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>`
+const createStepImage = imageUrl => `<img class="img-step-recipe col-md-6" src="${imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>`
 
 const createSingleRelatedRecipe = (recipe, ratingStarElement) =>
     `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
@@ -145,11 +145,6 @@ const createChefByRecipeId = (chef, btnActionFollow) => `<h3 class="lined">Thôn
 
                 </div>
                 <div class="col-sm-4">
-                    <ul class="chef-social-links">
-                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                    </ul>
                     <ul style="position: absolute;right: -10px;">
                         <li>
                                 ${btnActionFollow}

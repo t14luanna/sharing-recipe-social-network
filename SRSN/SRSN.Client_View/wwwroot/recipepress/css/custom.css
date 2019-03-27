@@ -810,7 +810,7 @@ input[name=ingredient] {
 .follow-btn-custom a:hover {
     background-color: #c70808;
 }
-.follow-btn-custom a, li {
+.follow-btn-custom a{
     white-space: nowrap;
 }
 .follow-btn-custom .favourite a:hover, .favourited a {
@@ -823,6 +823,10 @@ input[name=ingredient] {
 }
 .timeline-post{
     margin-top: 50px
+}
+.drop-zone-form {
+    border: 1px solid #e4d9d1!important;
+    margin-top: 10px!important;
 }
 .scroll-notification {
     display: none;
@@ -996,3 +1000,33 @@ input[name=ingredient] {
         text-decoration: none;
         color: #333;
     }
+.main--content-inner{
+    background-color: white
+}
+.img-step-recipe{
+    margin-top: 12px
+}
+.recipe-seen-content{
+    margin-top: 20px!important
+}
+#list-recent-recipe li{
+    padding: 15px
+}
+.image-seen-recipe {
+    border-radius: 10px !important;
+    width: 300px!important;
+    height: 180px;
+}
+.name-seen-recipe {
+    font-style: normal;
+    text-transform: uppercase;
+    /* margin-bottom: 25px; */
+    font-family: "Times New Roman", Times, serif;
+    font-weight: 700;
+}
+.date-seen-recipe {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: rgb(110, 190, 59);
+}

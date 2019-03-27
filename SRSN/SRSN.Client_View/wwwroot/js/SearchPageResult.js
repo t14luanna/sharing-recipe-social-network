@@ -27,12 +27,10 @@
                             </div>`;
 
 const callSearchResultAPI = async (searchValue) => {
-    var res = await fetch(`https://localhost:44361/api/recipe/read-recipename-page?recipeName=${encodeURIComponent(searchValue)}`);
-    var a = await res.json();
-    var data = a.result;
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-recipename-page?recipeName=${encodeURIComponent(searchValue)}`);
+    var data = await res.json();
     for (var item of data) {
         console.log(item);
-        count++;
         let element = getSearchResultAPI(item);
         $("#list-latest-recipe-page").append(element);
     } 

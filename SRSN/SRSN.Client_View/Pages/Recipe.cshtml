@@ -18,7 +18,7 @@
                     <h2>Công thức mới nhất</h2>
 
                     <div class="recipe-listing listing-list" id="list-latest-recipe-page"></div>
-                    
+
 
                     <div id="pagination-container" class="page-nav"></div>
 
@@ -100,7 +100,7 @@
     <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
     <script type="text/javascript" src="~/js/recipe.js"></script>
     <script type="text/javascript" src="~/js/menu-widgets.js"></script>
-
+    <script type="text/javascript" src="~/js/Configuration.js"></script>
     <script type="text/javascript">
         const changeHeadername = async () => {
             var someText = "Công thức";
@@ -110,11 +110,11 @@
             await changeHeadername();
             await callPopularRecipeWidgetApi();
             await callListCategoryItem();
-            await loadRecipeLocalStorage();
+            await loadRecipeSmallLocalStorage();
             await RedirectAPI();
         })();
         $("#pagination-container").pagination({
-            dataSource: 'https://localhost:44361/api/recipe/read-latest-page',
+            dataSource: `${BASE_API_URL}/api/recipe/read-latest-page`,
             locator: '',// array
             totalNumberLocator: function (response) {
                 return response.length;
@@ -143,10 +143,10 @@
                 if (i >= data.length) {
                     break;
                 }
-                
+
                 var numStar = data[i].evRating % 10;
                 var ratingStarElement = "";
-                if (numStar>0) {
+                if (numStar > 0) {
                     for (var j = 0; j < parseInt(numStar); j++) {
                         ratingStarElement += `<i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
                     }

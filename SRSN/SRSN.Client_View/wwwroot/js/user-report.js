@@ -15,7 +15,7 @@
             'description': description
         });
 
-        fetch("https://localhost:44361/api/userreportrecipe/create-report-recipe", {
+    fetch(`${BASE_API_URL}/api/userreportrecipe/create-report-recipe`, {
             method: 'POST',
             body: data,
             headers: {
@@ -44,7 +44,7 @@ $("#report-user-form").on("submit", function (e) {
     }
     var currentUrl = window.location.href;
     var userName = currentUrl.substr(currentUrl.indexOf('account/information/')).replace('account/information/', '');
-    fetch("https://localhost:44361/api/account/read-username?userName=" + userName)
+    fetch(`${BASE_API_URL}/api/account/read-username?userName=` + userName)
         .then(res => res.json())
         .then(response => {
             var userReportedId = response[0].id;
@@ -54,7 +54,7 @@ $("#report-user-form").on("submit", function (e) {
                 'reportedUserId': userReportedId,
                 'description': description
         }); /* tim theo user name*/
-            fetch("https://localhost:44361/api/userreportuser/create-report-user", {
+            fetch(`${BASE_API_URL}/userreportuser/create-report-user`, {
                 method: 'POST',
                 body: data,
                 headers: {

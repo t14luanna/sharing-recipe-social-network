@@ -1,211 +1,123 @@
-﻿const readTopTenUserFollow = (account, rankUser) =>
- `<li>
-    <div class="single-chef">
-        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="team" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
-        <div class="chef-detail">
-            <div class="chef-detail-inner">
-                <h4>${account.firstName} ${account.lastName}</h4>
-                <span class="type">${rankUser}</span>
-                <p>${account.description}</p>
-                <!--follow area-->
-                <div class="follow-area-${account.id}">
-                            <div class="follow-btn-custom" onclick="followUserFuntion(${account.id})">
-                            <input type="hidden" value="" id="following-user-id">
-                            <div class="favourite clearfix">
-                               <div id="friend-status-div" class="btn-friend-stat">
-                                <div data-bind="visible:true" style="">
-                                    <span style="cursor:default">
-                                    <a title="Theo dõi">
-                                        <span class="fa fa-user-plus"></span>
-                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
-                                        <span>Theo dõi</span>
-                                    </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${account.id}"></span></span>
-                                </span>
-                                </div>
-                              </div>
-                            </div>
-                            </div>
-             <!--end follow area-->
-            </div>
-        </div>
-    </div>
-  </li>`;
-
-const readTopTenUserUnfollow = (account, rankUser) =>
-    `<li>
-    <div class="single-chef">
-        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="team"/></a>
-        <div class="chef-detail">
-            <div class="chef-detail-inner">
-                <h4><a href="/account/information/${account.username}">${account.firstName} ${account.lastName}</a></h4>
-                <span class="type">${rankUser}</span>
-                <p>${account.description}</p>
-                <!--follow area-->
-                <div class="follow-area-${account.id}">
-                            <div class="follow-btn-custom" onclick="unfollowUserFuntion(${account.id})">
-                            <input type="hidden" value="" id="unfollowing-user-id">
-                            <div class="favourite clearfix">
-                               <div id="friend-status-div" class="btn-friend-stat">
-                                <div data-bind="visible:true" style="">
-                                    <span style="cursor:default" >
-                                    <a title="Hủy theo dõi">
-                                        <span class="fa fa-check"></span>
-                                        <span>Đang theo dõi</span>
-                                    </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${account.id}"></span></span>
-                                </span>
-                                </div>
-                              </div>
-                            </div>
-                            </div>
-             <!--end follow area-->
-            </div>
-        </div>
-    </div>
-  </li>`;
-
-const readTopUserFollow = (account, rankUser) =>
-    `<div class="left-side" >
-                        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="thành viên đứng đầu" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
-                    </div>
-                    <div class="right-side">
-                        <h3><a href="/account/information/${account.username}">${account.firstName} ${account.lastName}</a></h3>
-                        <span class="type">${rankUser}</span>
-                        
-                        <div class="separator-chef"></div>
-                        <p>${account.description}</p>
-                        <br />
-                        <ul class="social-icons-chef">
-                           <div class="follow-area-${account.id}">
-                            <div class="follow-btn-custom" onclick="followUserFuntion(${account.id})">
-                            <input type="hidden" value="" id="unfollowing-user-id">
-                            <div class="favourite clearfix">
-                               <div id="friend-status-div" class="btn-friend-stat">
-                                <div data-bind="visible:true" style="">
-                                    <span style="cursor:default" >
-                                    <a title="Theo dõi">
-                                        <span class="fa fa-user-plus"></span>
-                                        <span>Theo dõi</span>
-                                    </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${account.id}"></span></span>
-                                </span>
-                                </div>
-                              </div>
-                            </div>
-                            </div>
-                        </ul>
-                    </div>`;
-
-const readTopUserUnfollow = (account, rankUser) =>
-    `<div class="left-side" >
-                        <a href="/account/information/${account.username}"><img src=${account.avatarImageUrl} alt="head chef" /></a>
-                    </div>
-                    <div class="right-side">
-                        <h3><a href="/account/information/${account.username}">${account.firstName} ${account.lastName}</a></h3>
-                        <span class="type">${rankUser}</span>
-                        <div class="separator-chef"></div>
-                        <p>${account.description}</p>
-                        <br />
-
-                        <ul class="social-icons-chef">
-                           <div class="follow-area-${account.id}">
-                            <div class="follow-btn-custom" onclick="unfollowUserFuntion(${account.id})">
-                            <input type="hidden" value="" id="unfollowing-user-id">
-                            <div class="favourite clearfix">
-                               <div id="friend-status-div" class="btn-friend-stat">
-                                <div data-bind="visible:true" style="">
-                                    <span style="cursor:default" >
-                                    <a title="Hủy theo dõi">
-                                        <span class="fa fa-check"></span>
-                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
-                                        <span>Đang theo dõi</span>
-                                    </a>
-                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${account.id}"></span></span>
-                                </span>
-                                </div>
-                              </div>
-                            </div>
-                            </div>
-                        </ul>
-                    </div>`
-
-
-
+﻿
 const checkFollow = (id, listFollowed) => {
     return listFollowed.some(acc => acc.id == id);
 }
-//Get top ten user
-const callTopTenAccountApi = async () => {
+
+//get all user
+const callGetAllUserApi = async (limit = 23, page = 0) => {
     var userName = localStorage.getItem('username');
-    var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/get-top-ten`);
-    var data = (await res.json());
     var resCheck = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userName);
     var dataCheck = (await resCheck.json());
-    var flag = false;
-    for (var item of data) {
-        if (flag == false) {
-            flag = true;
-            continue;
-        }
-        var rankUser;
-        if (item.point >= 0 && item.point <= 99) {
-            rankUser = "Newbee";
-        } else if (item.point >= 100 && item.point <= 499) {
-            rankUser = "Tastee";
-        } else if (item.point >= 500 && item.point <= 999) {
-            rankUser = "Cookee";
-        } else if (item.point >= 1000 && item.point <= 4999) {
-            rankUser = "Chefee";
-        } else if (item.point >= 5000) {
-            rankUser = "Mastee";
-        }
-        var description = item.description == null ? "" : item.description;
-        item.description = description;
-        //let element = readTopTenUsers(item, rankUser);
-        let isFollowed = checkFollow(item.id, dataCheck);
-        let element = isFollowed ? readTopTenUserUnfollow(item, rankUser) : readTopTenUserFollow(item, rankUser);
-        $("#list-top-ten-users").append(element);
-        var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${item.id}`);
-        var userData = await userRes.json();
-        $(".countFollowing-" + item.id).text(userData.length);
-    }
-    
-  
-};
-
-
-
-//Get top user
-const callTopAccountApi = async () => {
-    var userName = localStorage.getItem('username');
-    var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/get-popular`);
+    var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/get-all-user?limit=${limit}&page=${page}`);
     var data = (await res.json());
-    var resCheck = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userName);
-    var dataCheck = (await resCheck.json());
+    var count = 0;
     for (var item of data) {
         var rankUser;
+        count++;
         if (item.point >= 0 && item.point <= 99) {
-            rankUser = "Newbee";
+            rankUser = "newbee";
         } else if (item.point >= 100 && item.point <= 499) {
-            rankUser = "Tastee";
+            rankUser = "tastee";
         } else if (item.point >= 500 && item.point <= 999) {
-            rankUser = "Cookee";
+            rankUser = "cookee";
         } else if (item.point >= 1000 && item.point <= 4999) {
-            rankUser = "Chefee";
+            rankUser = "chefee";
         } else if (item.point >= 5000) {
-            rankUser = "Mastee";
+            rankUser = "mastee";
         }
-        var description = item.description == null ? "" : item.description;
-        item.description = description;
-        //let element = readTopUser(item, rankUser);
-        let isFollowed = checkFollow(item.id, dataCheck);
-        let element = isFollowed ? readTopUserUnfollow(item, rankUser) : readTopUserFollow(item, rankUser);
-        $("#read-top-user").append(element);
+        var isFollowed = checkFollow(item.id, dataCheck);
+        var followStatus = isFollowed ? btnFollowed_OnNewsfeed(item.id) : btnFollow_OnNewsfeed(item.id);
         var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${item.id}`);
         var userData = await userRes.json();
-        $(".countFollowing-" + item.id).text(userData.length);
-    }
 
-    
+        var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read?userId=${item.id}`);
+        var recipeData = await recipeRes.json();
+        var bestRecipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/get-best-recipe-of-user?userId=${item.id}`);
+        var bestRecipe = await bestRecipeRes.json();
+        var element;
+        if (count < 4 && page == 0) {
+            element = userWithRecipeElement(item, bestRecipe.result, rankUser, count, recipeData.length, userData.length);
+        } else {
+            element = userElement(item, rankUser, recipeData.length, userData.length);
+        }
+
+        $("#list-all-users").append(element);
+        if (item.username == userName) {
+            $(".btnFollow-" + item.id).remove();
+        } else {
+            $(".btnFollow-" + item.id).html(followStatus);
+        }
+    }
+    if (data.length < limit) {
+        $(".recipe-more").remove();
+    }
 };
+
+const userWithRecipeElement = (user, recipe, rankUser, num, countRecipe, countFollower) =>
+    `<div class="member-item-wrapper ng-scope top-feature" >
+                <div class="member-item">
+                    <span class="topnum topnum${num}">${num}</span>
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img class="img-responsive img-circle" src="${user.avatarImageUrl}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
+                        </div>
+                        <div class="profile">
+                            <a class="cooky-user-link name ng-binding"  href="/account/information/${user.username}">${user.firstName} ${user.lastName}</a>
+                            <span class="stats-text user-lvl ${rankUser}">${rankUser} </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">${countRecipe}</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding countFollowing-${user.id}">${countFollower}</span>
+                                    <span class="stats-text">Theo dõi</span>
+                                </span>
+                            </div>
+                            <div class="member-acts btnFollow-${user.id}">
+                                <button title="Hủy theo dõi" class="btn-follow ng-isolate-scope btn-followed">
+                                    <span class="ng-scope">Đang theo dõi</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="member-item-recipe clearfix ng-scope" style="padding-top:10px">
+                       <div class="top-item ng-scope">
+                            <a href="recipe/${recipe.id}">
+                                <img class="img-responsive" src="${recipe.imageCover}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
+                                <div class="name text-ellipsis ng-binding name-seen-recipe">${recipe.recipeName}</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+const userElement = (user, rankUser, countRecipe, countFollower) =>
+    ` <div class="member-item-wrapper ng-scope" >
+                <div class="member-item">
+                    <div class="member-profile nopadding">
+                        <div class="avatar z-effect">
+                            <img  class="img-responsive img-circle" src="${user.avatarImageUrl}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
+                        </div>
+                        <div class="profile">
+                            <a ng-href="/thanh-vien/hellie1207" class="cooky-user-link name ng-binding"  href="/account/information/${user.username}">${user.firstName} ${user.lastName}</a>
+                            <span class="stats-text user-lvl ${rankUser}">${rankUser} </span>
+                            <div class="stats">
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding">${countRecipe}</span>
+                                    <span class="stats-text">Công thức</span>
+                                </span>
+                                <span class="stats-item">
+                                    <span class="stats-count ng-binding countFollowing-${user.id}">${countFollower}</span>
+                                    <span class="stats-text">Theo dõi</span>
+                                </span>
+                            </div>
+                            <div class="member-acts btnFollow-${user.id}">
+                                <button  title="Theo dõi"  class="btn-follow ng-isolate-scope" >
+                                    <span class="ng-scope">Theo dõi</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
