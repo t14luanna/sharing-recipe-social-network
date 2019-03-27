@@ -240,10 +240,12 @@
                     var _ref;
                     // clean in listStepImages
                     var stepImagesId = this.element.id;
-                    listStepImages[stepImagesId] = listStepImages[stepImagesId].filter(function (value, index, arr) {
-                        return value.id != file.upload.uuid;
-                    });
-
+                   
+                    if (listStepImages[stepImagesId]!=null) {
+                        listStepImages[stepImagesId] = listStepImages[stepImagesId].filter(function (value, index, arr) {
+                            return value.id != file.upload.uuid;
+                        });
+                    }
                     // remove dragzone image and return value
                     return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
                 },

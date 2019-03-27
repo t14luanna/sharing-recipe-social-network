@@ -55,9 +55,9 @@ namespace SRSN.ClientApi.Controllers
             {
                 var existedUser = await userManager.FindByNameAsync(user.UserName);
                 var addToRoleResult = await userManager.AddToRoleAsync(existedUser, "ActiveUser");
-
                 var token = await user.AuthorizeAsync(userManager, existedUser);
                 var increasePointResult = userManager.IncreasePoint(user, (int)IncreasePointRuleEnum.FirstLogin);
+                var updateDefaultImage = userManager.UpdateAvatarDefault(user);
                 return Ok(new
                 {
                     message = "register thanh cong",

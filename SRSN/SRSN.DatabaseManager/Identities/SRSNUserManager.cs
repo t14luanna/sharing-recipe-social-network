@@ -38,5 +38,18 @@ namespace SRSN.DatabaseManager.Identities
                 return -1;
             }
         }
+        public async Task<int> UpdateAvatarDefault(SRSNUser user)
+        {
+            try
+            {
+                user.AvatarImageUrl = "https://bakewithchef.com/wp-content/uploads/2017/04/default-avatar-big.png";
+                var result = this.UpdateAsync(user).Result;
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+        }
     }
 }
