@@ -435,6 +435,18 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("get-best-recipe-of-user")]
+        public async Task<ActionResult> GetBestRecipe(int userId)
+        {
+            try
+            {
+                return Ok(recipeService.getBestRecipeOfUser(userId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpPost("create-share-recipe")]
         [Authorize]
         public async Task<ActionResult> CreateShareRecipe([FromBody]RecipeViewModel request)

@@ -5,28 +5,28 @@
 }
 <section class="wrapper-main-contents all-chefs">
     <div class="container">
-        <div class="line-heading">
-            <h2>Top thành viên</h2>
-        </div>
+
         <!--Get top user-->
-        <div class="wrapper-head-chef">
-            <div class=head-chef id="read-top-user">
-
-
-            </div>
-            <div class="bg-corner-head-chef">
-                <img src="recipepress/images/temp-images/bg-corner-shef.jpg" alt="image" />
-            </div>
-        </div>
-
         <div class="line-heading">
             <h2>Top 10 thành viên</h2>
         </div>
+        <div class="top-user-page-custom member-list topchef-list row10 ng-scope" >
+           <div id="list-all-users">
 
-        <!--Get top ten user-->
-        <div class="wrapper-chef-team">
-            <ul class="chef-team" id="list-top-ten-users"></ul>
+           </div>
+
+            <div class="clearfix"></div>
+            <div class="recipe-more" style="cursor:pointer">
+                <div class="recipe-more-inner" onclick="getMoreTopUsers()">
+                    <a>Xem thêm</a>
+                </div>
+            </div>
         </div>
+        
+        <!--Get top ten user-->
+        @*<div class="wrapper-chef-team">
+            <ul class="chef-team" id="list-top-ten-users"></ul>
+        </div>*@
     </div>
 </section>
 
@@ -48,8 +48,13 @@
 
         (async () => {
             await changeHeadername();
-            await callTopTenAccountApi();
-            await callTopAccountApi();
+            await callGetAllUserApi();
+            
         })();
+        var topUserGetMorePage = 0;
+        var topUserGetMoreLimit = 23;
+        function getMoreTopUsers() {
+            callGetAllUserApi(topUserGetMoreLimit, ++topUserGetMorePage);
+        };
     </script>
 }

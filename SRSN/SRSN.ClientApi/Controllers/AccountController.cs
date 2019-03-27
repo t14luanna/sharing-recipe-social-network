@@ -136,7 +136,22 @@ namespace SRSN.ClientApi.Controllers
             }
             return list;
         }
-        
+        [HttpGet("get-all-user")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<AccountViewModel>> GetAllUser(int limit = 23, int page = 0)
+        {
+            var list = new List<AccountViewModel>();
+            foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point))
+            {
+                var user = u;
+                var userVM = new AccountViewModel();
+                mapper.Map(user, userVM);
+                list.Add(userVM);
+            }
+            list = list.Skip(page * limit).Take(limit).ToList();
+            return list;
+        }
+
         [HttpGet("get-popular")]
         [AllowAnonymous]
         public async Task<IEnumerable<AccountViewModel>> GetPopular()

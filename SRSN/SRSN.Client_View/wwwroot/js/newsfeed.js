@@ -129,7 +129,7 @@ const callNewsfeedPageApi = async (limit = 10, page = 0) => {
             'Authorization': `Bearer ${token}`
         }
     });
-
+     
     var data = await res.json();
     if (!data || !data.length) {
         var newPaging = page - currentPage - 1;
@@ -624,7 +624,9 @@ const callTopUserApi = async () => {
         var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${item.id}`);
         var userData = await userRes.json();
         $(".countFollowing-" + item.id).text(userData.length);
-        
+        if (item.username == userName) {
+            $(`.btnFollow-${item.id}`).remove();
+        }
     };
 }
 const followed_UserElement = (user, rankUser, classRank) =>
@@ -649,7 +651,7 @@ const followed_UserElement = (user, rankUser, classRank) =>
                                                         </div>
                                                         <div class="member-acts btnFollow-${user.id}">
                                                             <button title="Hủy theo dõi" class="btn-follow ng-isolate-scope btn-followed" onclick="unfollowUserFuntion(${user.id})">
-                                                                <span>Đã theo dõi</span>
+                                                                <span>Đang theo dõi</span>
                                                             </button>
                                                         </div>
                                                     </div>
