@@ -27,7 +27,7 @@
             .then(response => {
                 if (response.success) {
                     alert("Chúng tôi sẽ xử lý yêu cầu của bạn");
-                    location.reload();
+                    //location.reload();
                 }
             })
             .catch(error => {
@@ -66,7 +66,7 @@ $("#report-user-form").on("submit", function (e) {
                 .then(response => {
                     if (response.success) {
                         alert("Chúng tôi sẽ xử lý yêu cầu của bạn");
-                        location.reload();
+                        //location.reload();
                     }
                 })
                 .catch(error => {

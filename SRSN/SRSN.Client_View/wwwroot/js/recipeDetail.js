@@ -153,7 +153,7 @@ const createChefByRecipeId = (chef, btnActionFollow) => `<h3 class="lined">Thôn
                     <h4><a href="/account/information/${chef.username}">${chef.firstName} ${chef.lastName}</a></h4>
 
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4" >
                     <ul style="position: absolute;right: -10px;">
                         <li>
                                 ${btnActionFollow}
@@ -415,7 +415,7 @@ const callIsLikeRecipe = async (recipeId) => {
 };
 
 const callChefRecipeApi = async (recipeId) => {
-
+    var usernameLocal = window.localStorage.getItem("username");
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe-chef?recipeId=${recipeId}`);
     var data = (await res.json());
     var chef = data.accountVM;
@@ -440,12 +440,18 @@ const callChefRecipeApi = async (recipeId) => {
     } else {
         isFollow = false;
     }
-
-    var btnFollow = isFollow ? unfollowElement(chef.id) : followElement(chef.id);
-    let chefView = createChefByRecipeId(chef, btnFollow);
     var chefUsername = chef.username;
+    var btnFollow;
+    if (chefUsername == usernameLocal) {
+        btnFollow = "";
+    } else {
+        btnFollow = isFollow ? unfollowElement(chef.id) : followElement(chef.id);
+    }
+    let chefView = createChefByRecipeId(chef, btnFollow);
+    
     chefUsername = window.localStorage.setItem("chefusername", chefUsername);
     $(".about-chef").append(chefView);
+   
 };
 const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
     setMapOnAll(null);

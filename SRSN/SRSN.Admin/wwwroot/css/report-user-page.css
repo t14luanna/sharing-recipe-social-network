@@ -1,0 +1,247 @@
+﻿.card {
+    background-color: #fff;
+    -webkit-box-shadow: 1px 1px 5px rgba(126, 142, 159, 0.1);
+    box-shadow: 1px 1px 5px rgba(126, 142, 159, 0.1);
+    margin-bottom: 10px;
+    border-radius: 0;
+    border: none;
+}
+.card {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+html, body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    min-height: 100%;
+    font-family: 'Open Sans', sans-serif;
+    color: #4f5f6f;
+    overflow-x: hidden;
+}
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+.item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 0;
+    line-height: 1.4rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: column nowrap;
+    flex-flow: column nowrap;
+}
+ol, ul, dl {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+ul, menu, dir {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+.item-list.striped > li:nth-child(2n + 1) {
+    background-color: #fcfcfd;
+}
+.item-list.striped > li {
+    border-bottom: 1px solid #e9edf0;
+}
+.item-list .item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+@media (min-width: 1200px) .card > .item-list .item > .item-row {
+    padding: 0 20px;
+    padding-top: 0px;
+    padding-right: 20px;
+    padding-bottom: 0px;
+    padding-left: 20px;
+}
+.item-list .item-row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    min-width: 100%;
+}
+.items-list-page .item-list .item-col.item-col-check {
+    text-align: left;
+}
+.item-list .item-col.item-col-check {
+    -ms-flex-preferred-size: 30px;
+    flex-basis: 30px;
+}
+.item-list .item-col.fixed {
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+}
+.item-list .item-col {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 10px 10px 10px 0;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -webkit-box-flex: 3;
+    -ms-flex-positive: 3;
+    flex-grow: 3;
+    -ms-flex-negative: 3;
+    flex-shrink: 3;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 0;
+}
+.item-list .item-check {
+    margin-bottom: 0;
+}
+label, .control-label {
+    font-weight: 600;
+}
+label {
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+input[type="radio"], input[type="checkbox"] {
+    box-sizing: border-box;
+    padding: 0;
+}
+.radio, .checkbox {
+    display: none;
+}
+input, textarea {
+    outline: none;
+}
+button, input {
+    overflow: visible;
+}
+.item-list .item-check .checkbox + span {
+    padding-right: 0;
+}
+.items-list-page .item-list .item-col.item-col-img {
+    text-align: left;
+    width: auto;
+    text-align: center;
+    -ms-flex-preferred-size: 70px;
+    flex-basis: 70px;
+}
+.items-list-page .item-list .item-col.item-col-title {
+    text-align: left;
+    margin-left: 0 !important;
+    margin-right: auto;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -webkit-box-flex: 9;
+    -ms-flex-positive: 9;
+    flex-grow: 9;
+}
+.items-list-page .item-list .item-col.item-col-sales {
+    text-align: right;
+    font-weight: 600;
+}
+.items-list-page .item-list .item-col.item-col-stats {
+    text-align: center;
+}
+.items-list-page .item-list .item-col.item-col-category {
+    text-align: left;
+    font-weight: 600;
+}
+.items-list-page .item-list .item-col.item-col-author {
+    text-align: left;
+    -webkit-box-flex: 4.5;
+    -ms-flex-positive: 4.5;
+    flex-grow: 4.5;
+}
+.items-list-page .item-list .item-col.item-col-date {
+    text-align: right;
+}
+.item-list .item-col.item-col-actions-dropdown {
+    -ms-flex-preferred-size: 40px;
+    flex-basis: 40px;
+    text-align: center;
+    padding-left: 0 !important;
+}
+.item-list .item-col:last-child {
+    padding-right: 0;
+}
+.item-list .item-col.fixed {
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+}
+.item-list.striped > li {
+    border-bottom: 1px solid #e9edf0;
+}
+.item-list .item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+@media (min-width: 1200px) .card > .item-list .item > .item-row {
+    padding: 0 20px;
+}
+@media (min-width: 576px) .items-list-page .item-list .item-col.item-col-img:not(.item-col-header) {
+    height: 80px;
+}
