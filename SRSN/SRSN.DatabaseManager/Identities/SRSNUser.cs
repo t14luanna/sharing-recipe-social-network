@@ -25,6 +25,7 @@ namespace SRSN.DatabaseManager.Identities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? Point { get; set; }
+        public bool Active { get; set; }
         // them o day ne
         public string AvatarImageUrl { get; set; }
         /// <summary>
