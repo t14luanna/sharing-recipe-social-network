@@ -1,4 +1,4 @@
-﻿const apikey = 'Al45YPe3PTkSEr6vjtzg6z';
+﻿const apikey = 'AVDP56XFjTE6IJhKzXLK0z';
 var countsteps = 1;
 const client = filestack.init(apikey);
 $('.add-recipe-steps').on("click", function (event) {
@@ -10,6 +10,7 @@ $('.add-recipe-steps').on("click", function (event) {
         '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>' +
         ' <span class="del-list"><i class="fa fa-trash"></i></span>' +
         '</div>' +
+        '<div class="add-fields" style="margin-top: 20px"><textarea class="short-text" name="stepsTips" id="stepsTips" cols="30" rows="10" placeholder="Mẹo nhỏ cho bước này (có thể bỏ qua)" ></textarea></div>'+
         `<form action="/file-upload" class="dropzone drop-zone-form" id="myAwesomeDropzone${countsteps}"><div class="fallback"><input name="file" type="file" multiple /></div></form>`+
         '</li>';
     
@@ -23,9 +24,8 @@ $('.add-ingredient').on("click", function (event) {
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' +
         '<i class="fa fa-arrows"></i></span >' +
+        '<input class="ingredient-detail" type="text" name="ingredients" id="ingredients" placeholder="Muối, Đường, thịt gà ..." />' +
         '<input class="ingredient-weight" type="text" name="ingredientsWeight" placeholder="1g, 1kg, 1 thìa ..."/>' +
-        '<input class="ingredient-detail" type = "text" name = "ingredients" id = "ingredients" ' +
-        'placeholder = "Muối, Đường, thịt gà ..." /> ' +
         '<span class="del-list"><i class="fa fa-trash"></i></span></div >' +
         '</li>';
     $('.list-sortable.ingredients-list').append(newMajesticItem);
@@ -115,6 +115,7 @@ function getData() {
     });
 
     var stepDescription = $("textarea[name='stepsDes']");
+    var stepTipsDescription = $("textarea[name='stepsTips']");
     var stepsImages = $("input[name='stepsImage']");
     var steps = [];
 
@@ -124,13 +125,16 @@ function getData() {
 
         // prepare imageUrl
         var imageUrl = "";
-        listStepImages[dropZoneId].forEach(x => {
-            imageUrl += x.fileStackUrl + ";";
-        })
+        if (listStepImages[dropZoneId]!= null) {
+            listStepImages[dropZoneId].forEach(x => {
+                imageUrl += x.fileStackUrl + ";";
+            })
+        }
 
         //let files = stepsImages[i].files;
         steps.push({
             Description: $(stepDescription[i]).val().trim(),
+            Tips: $(stepTipsDescription)[i].value,
             ImageUrl: imageUrl,
             //files: files
         }); 

@@ -89,11 +89,12 @@ const callAccountInforApi = async (username) => {
                 'firstName': $('#firstName').val(),
                 'lastName': $('#lastName').val(),
                 'gender': $('#gender>option:selected').val(),
-                'birthdate': $('#birthdate').val(),
+                'birthdate': $('#birthdateStr').val(),
                 'description': $('#hiddenDescription').val(),
                 'phone': $('#hiddenPhone').val(),
                 'email': $('#hiddenEmail').val(),
-                'address': $('#hiddenAddress').val()
+                'address': $('#hiddenAddress').val(),
+                'avatarImageUrl': $("#avatarUrlHidden").val()
             }),
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
@@ -122,11 +123,12 @@ const callAccountInforApi = async (username) => {
                 'firstName': $('#hiddenFirstName').val(),
                 'lastName': $('#hiddenLastName').val(),
                 'gender': $('#hiddenGender').val(),
-                'birthdate': $('#hiddenBirthdate').val(),
+                'birthdate': $('#birthdate').val(),
                 'description': $('#description').val(),
                 'phone': $('#hiddenPhone').val(),
                 'email': $('#hiddenEmail').val(),
-                'address': $('#hiddenAddress').val()
+                'address': $('#hiddenAddress').val(),
+                'avatarImageUrl': $("#avatarUrlHidden").val(),
             }),
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
@@ -150,17 +152,22 @@ const callAccountInforApi = async (username) => {
     $("#btnUpdateContact").on("click", async function (e) {
         $(this).attr("disabled", "disabled");
         e.preventDefault();
+        var authorization = localStorage.getItem("authorization");
+        authorization = authorization ? JSON.parse(authorization) : {};
+        authorization['userAddress'] = $('#txtAddress').val();
+        localStorage.setItem("authorization", JSON.stringify(authorization)); 
         var res = await fetch(`${BASE_API_URL}/api/account/update`, {
             method: 'PUT',
             body: JSON.stringify({
                 'firstName': $('#hiddenFirstName').val(),
                 'lastName': $('#hiddenLastName').val(),
                 'gender': $('#hiddenGender').val(),
-                'birthdate': $('#hiddenBirthdate').val(),
+                'birthdate': $('#birthdate').val(),
                 'description': $('#hiddenDescription').val(),
                 'phone': $('#phone').val(),
                 'email': $('#email').val(),
-                'address': $('#txtAddress').val()
+                'address': $('#txtAddress').val(),
+                'avatarImageUrl': $("#avatarUrlHidden").val(),
             }),
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
@@ -183,6 +190,7 @@ const callAccountInforApi = async (username) => {
     //$("#personal-info").append(personalInfo);
     $("#firstName").val(data.firstName);
     $("#hiddenFirstName").val(data.firstName);
+    $("#avatarUrlHidden").val(data.avatarImageUrl);
     $("#lastName").val(data.lastName);
     $("#hiddenLastName").val(data.lastName);
     //$("#gender").val(data.gender);

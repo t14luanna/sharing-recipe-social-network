@@ -935,6 +935,7 @@ input[name=ingredient] {
 .top-user-page-custom .member-item-wrapper.top-feature {
     width: 33.333%;
     margin-bottom: 10px;
+    height: 485px;
 }
 .top-user-page-custom .member-item-wrapper {
     float: left;
@@ -1003,8 +1004,32 @@ input[name=ingredient] {
 .main--content-inner{
     background-color: white
 }
-.img-step-recipe{
-    margin-top: 12px
+.img-step-recipe-4 img {
+    margin-top: 12px;
+    border-radius: 20px;
+    height: 238px;
+    width: 238px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+.img-step-recipe-6 img {
+    margin-top: 12px;
+    border-radius: 20px;
+    height: 336px;
+    width: 336px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+.one-img-step-recipe {
+    margin-top: 12px;
+    border-radius: 20px;
+    height: 480px;
+    width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 .recipe-seen-content{
     margin-top: 20px!important
@@ -1059,4 +1084,40 @@ input[name=ingredient] {
     height: 300px;
     background: url(https://www.cooky.vn/content/img/gradient.png) left bottom repeat-x;
     opacity: .6;
+}
+.short-text::-webkit-input-placeholder {
+    color: #333;
+    font-style: italic;
+}
+
+.short-text:-moz-placeholder { /* Firefox 18- */
+    color: #333;
+    font-style: italic;
+}
+
+.short-text::-moz-placeholder { /* Firefox 19+ */
+    color: #333;
+    font-style: italic;
+}
+
+.short-text:-ms-input-placeholder {
+    color: #333;
+    font-style: italic;
+}
+
+.short-text::placeholder {
+    color: #333;
+    font-style: italic;
+}
+.tips-variations{
+    margin-top: 20px;
+}
+.listing-grid .listing .detail{
+    height: 282px
+}
+.title-ingredients {
+    margin: 0px!important;
+    width: auto;
+    display: contents;
+    font-weight: 600;
 }

@@ -21,7 +21,7 @@ const createCollectionHeaderContainer = (collection) =>
                                 <h2 class="h3 fw--600">${collection.collectionName}</h2>
                             </div>
                             <div class="cover--user-desc fw--400 fs--18 fstyle--i text-darkest">
-                                <p>Người tạo: ${collection.fullName}</p>
+                                <p>Người tạo:  <a class="cooky-user-link name" href="/account/timeline/${collection.username}">${collection.fullName}</a></p>
                             </div>`;
 const callReadCollectionIdApi = async (collectionId) => {
     var authorization = localStorage.getItem("authorization");

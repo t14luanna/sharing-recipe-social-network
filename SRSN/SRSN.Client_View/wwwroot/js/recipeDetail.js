@@ -25,10 +25,10 @@ const createSingleBannerRecipeDetail = (recipe) =>
                 <li><span>Độ khó : </span>${RECIPE_LEVEL_ENUM[recipe.levelRecipe]}</li>
             </ul>
         </div>
-        <a href="${recipe.videoLink}" class="swipebox slider-video-button">Xem Video</a>
+        ${ recipe.videoLink == null || recipe.videoLink == "" ? "":`<a href="${recipe.videoLink}" class="swipebox slider-video-button">Xem Video</a>`}
     </div>`;
 const createContentRecipe = (recipe) =>
-    `<span class="rating-figure" id="evRating"><u>Đánh giá: </u><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>&nbsp&nbsp(${recipe.evRating} / 5) 
+    `<span class="rating-figure" id="evRating"><u>Đánh giá: </u><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>&nbsp&nbsp(${recipe.evRating != 0 ? recipe.evRating : "Chưa có đánh giá nào"} ${recipe.evRating != 0 ? "/ 5" : ""}) 
     <i class="rating-figure" style="float: right;">Lượt xem: ${recipe.viewQuantity != null ? recipe.viewQuantity : "0"}</i>
     </span>
         <div class="separator-post"></div>
@@ -37,7 +37,7 @@ const createContentRecipe = (recipe) =>
 const createSingleIngredientOfRecipe = (ingredient) =>
     ` <li class="col-sm-3">
         <label>
-            <input type="checkbox" value="${ingredient.recipeId}-${ingredient.ingredientName}" name="ori-ingredient"/>${ingredient.quantitative} ${ingredient.ingredientName}
+            <input type="checkbox" value="${ingredient.recipeId}-${ingredient.ingredientName}" name="ori-ingredient"/><h4 class="title-ingredients">${ingredient.ingredientName}</h4> ${ingredient.quantitative} 
         </label>
     </li>`;
 const createNumSteps = (num) =>
@@ -57,11 +57,25 @@ const createSingleStepOfRecipe = (step, images) =>
                 ${images}
             </div>
         </div>
+           ${step.tips == null || step.tips == "" ? "" : ` <div class="tips-variations">
+                <h3>Mẹo nhỏ &amp; thông tin cần thiết</h3>
+                <ul>
+                    <li>
+                        <p>
+                            ${step.tips}
+                        </p>
+                    </li>
+                </ul>
+            </div>`}
     </dd>`;
 
 
-const createStepImage = imageUrl => `<img class="img-step-recipe col-md-6" src="${imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>`
-
+const createStepImage = (imageUrl, count) => `<div class=" col-md-${count} img-step-recipe-${count}">
+<img class="" src="${imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
+</div>`
+const createStepOneImage = imageUrl => `<div class="col-md-12">
+<img class="one-img-step-recipe" src="${imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
+</div>`
 const createSingleRelatedRecipe = (recipe, ratingStarElement) =>
     `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
@@ -76,12 +90,7 @@ const createSingleRelatedRecipe = (recipe, ratingStarElement) =>
                     </a>
                 </h3>
                 <div class="short-separator"></div>
-                <div class="rating-box">
-                    <span class="rating-figure" id="evRating">${ratingStarElement}</span>
-                         &nbsp&nbsp
-                        (${recipe.evRating} / 5)
-            </span>
-                </div>
+                <a href="/recipe/${recipe.id}" class="read-more">Xem thêm...</a>
             </div>
         </div>
     </div>`;
@@ -352,7 +361,7 @@ const getCheckedIngredient = async () => {
     }
 };
 const callStepOfRecipeApi = async (recipeId) => {
-
+    let stepImage;
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipe?recipeId=${recipeId}`);
     var data = (await res.json());
     var count = 0;
@@ -363,7 +372,15 @@ const callStepOfRecipeApi = async (recipeId) => {
             let images = step.imageUrl.split(";");
             let resultStepImages = "";
             for (let image of images) {
-                let stepImage = createStepImage(image);
+                if (images.length > 1) {
+                    if (images.length % 2 == 0 && images.length != 6) {
+                        stepImage = createStepImage(image, 6);
+                    } else {
+                        stepImage = createStepImage(image, 4);
+                    }
+                } else {
+                    stepImage = createStepOneImage(image);
+                }
                 resultStepImages += stepImage;
             }
             var num = createNumSteps(count);
@@ -1053,5 +1070,41 @@ const deactiveCommentFuntion = async (cmtId, recipeId, commentParentId) => {
         $(`#reply-${cmtId}`).remove();
     } else {
         alert("Không thể xóa bình luận, vui lòng thử lại!!!");
+    }
+};
+const createSingleSuggestRecipeElement = (recipe) =>
+    `<div class="recipe-single animated wow flipInY" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
+                                                                                        '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
+                                    <div class="recipe-image">
+                                        <a href="/recipe/${recipe.id}"><img src="${recipe.imageCover}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
+                                    </div>
+                                    <div class="outer-detail">
+                                        <div class="detail">
+                                            <h3>
+                                                <a href="/recipe/${recipe.id}">
+                                                   ${recipe.recipeName}
+                                                </a>
+                                            </h3>
+                                            <div class="short-separator"></div>
+                                            <a href="/recipe/${recipe.id}" class="read-more">Xem thêm...</a>
+                                        </div>
+                                    </div>
+      </div>`;
+const callSuggestRecipeApi = async () => {
+    var authorization = localStorage.getItem("authorization");
+    if (authorization != null) {
+        var token = (JSON.parse(authorization))["token"];
+        var res = await fetch(`${BASE_API_URL}/api/recipe/get-similar-recipes`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        var data = await res.json();
+        for (var item of data) {
+            let element = createSingleSuggestRecipeElement(item);
+            $("#list-suggest-recipe").append(element);
+        }
     }
 };

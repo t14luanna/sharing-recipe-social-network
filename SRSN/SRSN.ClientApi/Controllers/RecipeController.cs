@@ -82,6 +82,18 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("read-orderby-time")]
+        public async Task<ActionResult> ReadOrderByTime(int userId)
+        {
+            try
+            {
+                return Ok(await recipeService.GetAllRecipeByUserIdOrderbyTime(userId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpGet("read-recipe")]
         public async Task<ActionResult> ReadRecipe(int recipeId)
         {
@@ -134,7 +146,7 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpGet("get-similar-recipes")]
-        public async Task<ActionResult> ReadRecommendRecipes([FromQuery]int limit = 10, [FromQuery]int page = 0)
+        public async Task<ActionResult> ReadRecommendRecipes()
         {
             try
             {
@@ -153,16 +165,23 @@ namespace SRSN.ClientApi.Controllers
                     int.TryParse(x.Element, out recipeId);
                     return recipeId;
                 });
+                var rand = new Random();
+                
+                var SelectedPost = dataIds.Skip(rand.Next(0, dataIds.Count())).Take(6);
                 var listRecipe = new List<RecipeViewModel>();
-                foreach (var recipeId in dataIds)
+                foreach (var recipeId in SelectedPost)
                 {
-                    var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true);
+                    var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true && x.ReferencedRecipeId == null);
                     if (recipe != null)
                     {
                         var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
                         recipe.AccountVM = new AccountViewModel();
                         mapper.Map(recipeUserID, recipe.AccountVM);
                         listRecipe.Add(recipe);
+                    }
+                    if(listRecipe.Count() == 3)
+                    {
+                        return Ok(listRecipe);
                     }
                 }
                 return Ok(listRecipe);
@@ -235,7 +254,7 @@ namespace SRSN.ClientApi.Controllers
                     int id = 0;
                     int.TryParse(x.Element, out id);
                     return id;
-                });
+                }).Take(20);
                 // Get all user following ids
                 var listUserFollowingId = await userFollowingService.GetAllFollowingUser(userId);
 

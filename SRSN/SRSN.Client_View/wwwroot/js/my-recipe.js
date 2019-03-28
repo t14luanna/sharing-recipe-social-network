@@ -12,7 +12,7 @@
                                                             </div>
                                                             <div class="meta">
                                                                 <p>
-                                                                    <i class="fa mr--8 fa-clock-o"></i>${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}
+                                                                    <i class="fa mr--8 fa-clock-o"></i>${ new Date(recipe.createTime).getDate()}/${new Date(recipe.createTime).getMonth() + 1}/${new Date(recipe.createTime).getFullYear()}
                                                                 </p>
                                                             </div>
                                                             <i class="fa fa-trash icon-delete" onclick="deleteRecipeInMyRecipe(${recipe.id})" style="margin-left: 90%;" ></i>
@@ -32,7 +32,7 @@ const callRecipeByUserId = async (username) => {
     });
     var userData = await userRes.json();
     var userId = userData.id;
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read?userId=` + userId);
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-orderby-time?userId=` + userId);
     var data = await res.json();
     var count = 0;
     for (var item of data) {

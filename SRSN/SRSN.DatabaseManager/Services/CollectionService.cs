@@ -43,10 +43,11 @@ namespace SRSN.DatabaseManager.Services
                 var collection = this.selfDbSet.AsNoTracking().Where(p => p.Active == true && p.Id == collectionId).FirstOrDefault();
                 // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
                 var currentUser = userManager.FindByIdAsync(collection.UserId.ToString()).Result;
-                var fullName = $"{currentUser.UserName}";
+                var fullName = $"{currentUser.LastName}" + " " + $"{currentUser.FirstName}";
                 var collectionViewModel = this.EntityToVM(collection);
                 collectionViewModel.FullName = fullName;
-
+                collectionViewModel.AvatarImageUrl = currentUser.AvatarImageUrl;
+                collectionViewModel.Username = currentUser.UserName;
                 return collectionViewModel;
             }
             catch (Exception)
@@ -60,14 +61,16 @@ namespace SRSN.DatabaseManager.Services
             try
             {
                 var list = new List<CollectionViewModel>();
-                var listItems = this.selfDbSet.AsNoTracking().Where(p => p.Active == true && p.CollectionRefId == null).OrderByDescending(p => p.SaveCount).Take(12);
+                var listItems = this.selfDbSet.AsNoTracking().Where(p => p.Active == true && p.CollectionRefId == null).OrderByDescending(p => p.SaveCount).Take(13);
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.UserName}";
+                    var fullName = $"{currentUser.LastName}" + " " + $"{currentUser.FirstName}";
                     var collectionViewModel = this.EntityToVM(item);
                     collectionViewModel.FullName = fullName;
+                    collectionViewModel.AvatarImageUrl = currentUser.AvatarImageUrl;
+                    collectionViewModel.Username = currentUser.UserName;
                     list.Add(collectionViewModel);
 
                 }

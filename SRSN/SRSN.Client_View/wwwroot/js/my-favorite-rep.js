@@ -12,7 +12,7 @@
                                                             </div>
                                                             <div class="meta">
                                                                 <p>
-                                                                    <i class="fa mr--8 fa-clock-o"></i>${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}
+                                                                    <i class="fa mr--8 fa-clock-o"></i>${ new Date(recipe.createTime).getDate()}/${new Date(recipe.createTime).getMonth() + 1}/${new Date(recipe.createTime).getFullYear()}
                                                                 </p>
                                                             </div>
                                                         </div>

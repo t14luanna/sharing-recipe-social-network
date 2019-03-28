@@ -43,8 +43,8 @@ namespace SRSN.UserBehavior
                     collaborativeSystem.RecommendItems(redisClient);
                 }
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
-                Console.WriteLine($"Done, tool collaborative filter system will start after 3 hours, current time: {currentTime}");
-                Thread.Sleep(1000*60*180);
+                Console.WriteLine($"Done, tool collaborative filter system will start after 30 minutes, current time: {currentTime}");
+                Thread.Sleep(1000*60*30);
                 Console.Clear();
             } while (true);
         }

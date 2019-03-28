@@ -20,7 +20,7 @@ var createSingleLatestRecipeElementPage = (recipe, ratingStarElement) =>
                                         </ul>
                                         <div class="rating-box">
                                             <span class="rating-figure" id="evRating">${ratingStarElement}&nbsp&nbsp
-                                                     (${recipe.evRating} / 5)
+                                                     (${recipe.evRating != 0 ? recipe.evRating : "Chưa có đánh giá nào"} ${recipe.evRating != 0 ? "/ 5" : ""})
                                             </span>
                                         </div>
                                     </div>

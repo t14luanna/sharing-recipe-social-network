@@ -16,5 +16,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public string FullName { get; set; }
         public int? RecipeCount { get; set; }
         public int? CollectionRefId { get; set; }
+        public string AvatarImageUrl { get; set; }
+        public string Username { get; set; }
     }
 }

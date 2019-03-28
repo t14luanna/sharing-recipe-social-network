@@ -14,6 +14,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public int? RecipeId { get; set; }
         public string ImageUrl { get; set; }
         public string Description { get; set; }
+        public string Tips { get; set; }
     }
 
     public class StepsOfRecipeCreateViewModel

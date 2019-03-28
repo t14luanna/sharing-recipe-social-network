@@ -59,8 +59,8 @@
                                                     <span class="ingredient-handler-list handler-list">
                                                         <i class="fa fa-arrows"></i>
                                                     </span>
-                                                    <input class="ingredient-weight" type="text" name="ingredientsWeight" placeholder="1g, 1kg, 1 thìa ..." />
                                                     <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" placeholder="Muối, Đường, thịt gà ..." />
+                                                    <input class="ingredient-weight" type="text" name="ingredientsWeight" placeholder="1g, 1kg, 1 thìa ..." />
                                                     <span class="del-list">
                                                         <i class="fa fa-trash"></i>
                                                     </span>
@@ -85,6 +85,9 @@
                                                         <i class="fa fa-trash"></i>
                                                     </span>
                                                 </div>
+                                                <div class="add-fields" style="margin-top: 20px">
+                                                    <textarea class="short-text" name="stepsTips" id="stepsTips" cols="30" rows="10" placeholder="Mẹo nhỏ cho bước này (có thể bỏ qua)"></textarea>
+                                                </div>
                                                 <form action="/file-upload" class="dropzone drop-zone-form" id="myAwesomeDropzone">
                                                     <div class="fallback">
                                                         <input name="file" type="file" multiple />
@@ -100,7 +103,7 @@
                                     <div class="text-center">
                                         <button type="button" id="nextBtn" class="recipe-submit-btn">Bước tiếp theo</button>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="tab-content" id="phanloai" style="display: none;">
@@ -194,13 +197,13 @@
     <script src="~/js/menu-widgets.js"></script>
 
     <script type="text/javascript">
-            //{
-            //    // id ste images - value (delimeter ;)
-            //    "myAwesomeDropzone": "http://filestack.com/images/url;http://filestack.com/images/url2;",
-            //    "myAwesomeDropzone2": "http://filestack.com/images/url;http://filestack.com/images/url2;"
-            //}
+        //{
+        //    // id ste images - value (delimeter ;)
+        //    "myAwesomeDropzone": "http://filestack.com/images/url;http://filestack.com/images/url2;",
+        //    "myAwesomeDropzone2": "http://filestack.com/images/url;http://filestack.com/images/url2;"
+        //}
         var listStepImages = {};
-        
+
         const changeHeadername = async () => {
             var someText = "Đăng công thức";
             $('.main-heading h1').append(document.createTextNode(someText));
@@ -227,8 +230,7 @@
                 },
                 addRemoveLinks: true,
                 dictDefaultMessage: "Upload hình ảnh (tối đa 6 ảnh)",
-                removedfile: function (file)
-                {
+                removedfile: function (file) {
                     debugger;
                     var name = file.name;
                     $.ajax({
@@ -240,8 +242,8 @@
                     var _ref;
                     // clean in listStepImages
                     var stepImagesId = this.element.id;
-                   
-                    if (listStepImages[stepImagesId]!=null) {
+
+                    if (listStepImages[stepImagesId] != null) {
                         listStepImages[stepImagesId] = listStepImages[stepImagesId].filter(function (value, index, arr) {
                             return value.id != file.upload.uuid;
                         });
@@ -301,46 +303,47 @@
                             'Authorization': `Bearer ${token}`
                         }
                     }).then(async (res) => {
-                            $("#loading-box").hide();
-                            var uid;
-                            if (res.status === 200) {
-                                swal({
-                                    title: "",
-                                    text: "Bạn đã chia sẻ công thức thành công",
-                                    type: "success",
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Xác nhận",
-                                    closeOnConfirm: false
-                                });
-                                setTimeout(async function () {
-                                    var data = (await res.json());
-                                    recipeId = data.recipeId;
-                                    //add data to firebase to notification with users who are following me
-                                    //them data vao firebase
-                                    var usernameLocal = window.localStorage.getItem("username");//người đang comment
-                                    var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
-                                    var dataUser = await userRes.json();
-                                    for (var user of dataUser) {
-                                        var followingMe = window.localStorage.getItem(user.username);//user is following me
+                        $("#loading-box").hide();
+                        var uid;
+                        if (res.status === 200) {
+                            swal({
+                                title: "",
+                                text: "Bạn đã chia sẻ công thức thành công",
+                                type: "success",
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Xác nhận",
+                                closeOnConfirm: false
+                            });
+                            setTimeout(async function () {
+                                var data = (await res.json());
+                                recipeId = data.recipeId;
+                                //add data to firebase to notification with users who are following me
+                                //them data vao firebase
+                                var usernameLocal = window.localStorage.getItem("username");//người đang comment
+                                var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
+                                var dataUser = await userRes.json();
+                                for (var user of dataUser) {
+                                    var followingMe = user.username;//user is following me
 
-                                        if (followingMe) {
-                                            var myDataRef = firebase.database().ref(followingMe);
-                                            uid = myDataRef.push({
-                                                "uid": "",
-                                                "username": usernameLocal,
-                                                "content": "đã chia sẻ công thức mới",
-                                                "date": new Date().toLocaleString(),
-                                                "link": "/recipe/" + recipeId,
-                                                "isRead": "False"
-                                            });
-                                            SRSN.FIREBASE_DATABASE.ref('/' + chefUsername + "/" + uid.key).update({
-                                                "uid": uid.key
-                                            });
-                                        }
+                                    if (followingMe) {
+                                        var myDataRef = firebase.database().ref(followingMe);
+                                        uid = myDataRef.push({
+                                            "uid": "",
+                                            "username": usernameLocal,
+                                            "content": "đã chia sẻ công thức mới",
+                                            "date": new Date().toLocaleString(),
+                                            "link": "/recipe/" + recipeId,
+                                            "isRead": "False"
+                                        });
+                                        SRSN.FIREBASE_DATABASE.ref('/' + usernameLocal + "/" + uid.key).update({
+                                            "uid": uid.key
+                                        });
                                     }
-                                    //thông báo công điểm cho chính user
-                                    var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
+                                }
+                                //thông báo công điểm cho chính user
+                                var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
 
+                                if (myDataRef != null) {
                                     uid = myDataRef.push({
                                         "uid": "",
                                         "username": "Bạn",
@@ -353,13 +356,14 @@
                                     SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
                                         "uid": uid.key
                                     });
-                                    window.location.href = `/recipe/${recipeId}`
-                                }, 1500);
+                                }
+                                window.location.href = `/recipe/${recipeId}`
+                            }, 1500);
 
 
 
-                            }
-                        })
+                        }
+                    })
                         .catch(function (e) {
                             $("#loading-box").hide();
                         });

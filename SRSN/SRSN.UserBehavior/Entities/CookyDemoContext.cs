@@ -53,7 +53,7 @@ namespace SRSN.UserBehavior.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=12345678;Trusted_Connection=False;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
 
@@ -312,8 +312,6 @@ namespace SRSN.UserBehavior.Entities
 
             modelBuilder.Entity<Products>(entity =>
             {
-                entity.Property(e => e.Name).HasMaxLength(50);
-
                 entity.Property(e => e.Price).HasMaxLength(50);
 
                 entity.HasOne(d => d.Brand)
@@ -399,14 +397,6 @@ namespace SRSN.UserBehavior.Entities
                     .WithMany(p => p.StepsOfRecipe)
                     .HasForeignKey(d => d.RecipeId)
                     .HasConstraintName("FK_StepsOfRecipe_RecipePost");
-            });
-
-            modelBuilder.Entity<Store>(entity =>
-            {
-                entity.HasOne(d => d.Brand)
-                    .WithMany(p => p.Store)
-                    .HasForeignKey(d => d.BrandId)
-                    .HasConstraintName("FK_Store_StoreBrand");
             });
 
             modelBuilder.Entity<StoreBrand>(entity =>

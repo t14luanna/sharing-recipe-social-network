@@ -69,7 +69,14 @@
                         </div>
 
                         <div class="about-chef"></div>
+                        <div class="recipe-set" id="suggest-recipe">
+                            <h3 class="lined">
+                                Có thể bạn thích
+                            </h3>
+                            <div class="boxed-recipes text-center" id="list-suggest-recipe">
 
+                            </div>
+                        </div>
                         <div class="related-recipes">
                             <h3 class="lined">Những công thức liên quan</h3>
                             <div class="boxed-recipes text-center" id="list-related-recipe">
@@ -295,7 +302,7 @@
     <script src="/recipepress/js/slick.min.js"></script>
     <script src="~/js/menu-widgets.js"></script>
     <script src="~/js/follow-unfollow-funtion.js"></script>
-    
+
 
     <script type="text/javascript">
 
@@ -362,6 +369,7 @@
                     await callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
                     await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));
                     await callChefRecipeApi(@(RouteData.Values["recipe_id"]));
+                    await callSuggestRecipeApi();
                     await callPopularRecipeWidgetApi();
                     await callLatestRecipeWidgetApi();
                     await callListCategoryItem();
@@ -580,7 +588,7 @@
                 var verifyUserInteresting = setInterval(function () {
                     ++verifyUserInterestingCounter;
                     console.log(`Verify at ${verifyUserInterestingCounter}`);
-                    if (verifyUserInterestingCounter === 5) {
+                    if (verifyUserInterestingCounter === 30) {
                         console.log(`Verify at Done`);
                         verifyUserInterestingCleaner();
                         var recipeId = @(RouteData.Values["recipe_id"]);

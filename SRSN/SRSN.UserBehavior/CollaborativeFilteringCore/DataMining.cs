@@ -89,7 +89,7 @@ namespace SRSN.UserBehavior.CollaborativeFilteringCore
                 var createRecipeTime = recipe.CreateTime.Value;
                 var currentTime = DateTime.Now.ToLocalTime();
                 var timeLeft = currentTime - createRecipeTime;
-                score = (ratingRecipe * 0.4 + totalView * 0.1 + totalLike * 0.3 + totalShare * 0.2) / timeLeft.TotalMinutes;
+                score = (ratingRecipe * 0.4 + totalView * 0.1 + totalLike * 0.3 + totalShare * 0.2) / timeLeft.TotalHours;
                 redisClient.AddItemToSortedSet(redisRankRecipe, recipe.Id.ToString(), score);
             }
         }

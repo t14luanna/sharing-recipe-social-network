@@ -177,7 +177,7 @@ namespace SRSN.ClientApi.Controllers
                     }
                     else
                     {
-                        return Ok();
+                        return NotFound();
                     }
                 }
                 else

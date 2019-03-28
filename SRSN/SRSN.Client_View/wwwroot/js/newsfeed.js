@@ -132,8 +132,13 @@ const callNewsfeedPageApi = async (limit = 10, page = 0) => {
      
     var data = await res.json();
     if (!data || !data.length) {
-        var newPaging = page - currentPage - 1;
-        callNewsfeedPagePopularApi(limit, newPaging);
+        var newPaging = page;
+        if (currentPage == 0) {
+            callNewsfeedPagePopularApi(limit, newPaging);
+        } else {
+            newPaging = page - currentPage - 1;
+                callNewsfeedPagePopularApi(limit, newPaging);
+        }
     } else {
         currentPage = page;
         for (var item of data) {

@@ -114,7 +114,7 @@ const createSingleRecipeOfDay = (recipe) =>
                             <div class="recipe-contents-outer">
                                 <div class="recipe-contents text-center">
                                     <div class="recipe-content-inner">
-                                        <span class="tag">Recipe of the Day</span>
+                                        <span class="tag">Công thức của hôm nay</span>
                                         <h2><a href="/recipe/${recipe.id}">${recipe.recipeName}</a></h2>
                                         <div class="short-separator"></div>
                                         <p>
@@ -156,7 +156,7 @@ const callSuggestRecipeApi = async () => {
 
 
         var token = (JSON.parse(authorization))["token"];
-        var res = await fetch(`${BASE_API_URL}/api/recipe/get-similar-recipes?limit=9&page=0`, {
+        var res = await fetch(`${BASE_API_URL}/api/recipe/get-similar-recipes`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
