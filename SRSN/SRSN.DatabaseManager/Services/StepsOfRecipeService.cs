@@ -12,21 +12,21 @@ using System.Threading.Tasks;
 
 namespace SRSN.DatabaseManager.Services
 {
-    public interface IStepsOfRecipeService: IBaseService<StepsOfRecipe, CategoryItemViewModel>
+    public interface IStepsOfRecipeService: IBaseService<StepsOfRecipe, StepsOfRecipeViewModel>
     {
-        Task<ICollection<CategoryItemViewModel>> GetStepsOfRecipe(int recipeId);
+        Task<ICollection<StepsOfRecipeViewModel>> GetStepsOfRecipe(int recipeId);
     }
-    public class StepsOfRecipeService : BaseService<StepsOfRecipe, CategoryItemViewModel>, IStepsOfRecipeService
+    public class StepsOfRecipeService : BaseService<StepsOfRecipe, StepsOfRecipeViewModel>, IStepsOfRecipeService
     {
         public StepsOfRecipeService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
 
-        public async Task<ICollection<CategoryItemViewModel>> GetStepsOfRecipe(int recipeId)
+        public async Task<ICollection<StepsOfRecipeViewModel>> GetStepsOfRecipe(int recipeId)
         {
             try
             {
-                var list = new List<CategoryItemViewModel>();
+                var list = new List<StepsOfRecipeViewModel>();
 
                 var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM StepsOfRecipe WHERE RecipeId="+recipeId +" ORDER BY Id ASC").ToList();
                 foreach (var item in listItems)

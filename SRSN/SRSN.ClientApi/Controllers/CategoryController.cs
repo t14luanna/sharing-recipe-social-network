@@ -15,10 +15,14 @@ namespace SRSN.ClientApi.Controllers
     public class CategoryController : ControllerBase
     {
         private ICategoryService categoryService;
-        public CategoryController(ICategoryService categoryService)
+        private IRecipeCategoryService recipeCategoryService;
+
+        public CategoryController(ICategoryService categoryService, IRecipeCategoryService recipeCategoryService)
         {
             this.categoryService = categoryService;
+            this.recipeCategoryService = recipeCategoryService;
         }
+
         [HttpGet("read-categoryitem")]
         [AllowAnonymous]
         public async Task<ActionResult> ReadCategory(int categoryMainId)
@@ -31,6 +35,13 @@ namespace SRSN.ClientApi.Controllers
         public ActionResult ReadCategory()
         {
             return Ok( categoryService.GetCategoryMain());
+        }
+
+        [HttpGet("read-categories-by-recipe")]
+        [AllowAnonymous]
+        public async Task<ActionResult> readCategoriesByRecipe(int recipeId)
+        {
+            return Ok(await recipeCategoryService.GetListRecipeCategory(recipeId));
         }
     }
 }

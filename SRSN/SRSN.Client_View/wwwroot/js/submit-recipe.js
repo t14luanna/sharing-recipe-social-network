@@ -115,7 +115,6 @@ function getData() {
     var stepDescription = $("textarea[name='stepsDes']");
     var stepsImages = $("input[name='stepsImage']");
     var steps = [];
-
     $(stepDescription).each(i => {
         validation = validationField('stepsDes', $(stepDescription[i]).val().trim()) && validation;
         let files = stepsImages[i].files;
