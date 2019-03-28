@@ -22,7 +22,7 @@ namespace SRSN.DatabaseManager.Identities
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //Config db context manually
-            optionsBuilder.UseSqlServer("Server=NGOCDBSE62232\\JASMINEDAO;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
+            //optionsBuilder.UseSqlServer("Server=NGOCDBSE62232\\JASMINEDAO;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
         }
     }
 }
