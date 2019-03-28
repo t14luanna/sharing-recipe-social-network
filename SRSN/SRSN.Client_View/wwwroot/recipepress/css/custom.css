@@ -331,6 +331,16 @@
     cursor: pointer
 }
 
+.icon-edit {
+    float: left;
+    font-size: 20px;
+}
+
+.icon-edit:hover {
+    color: red;
+    cursor: pointer
+}
+
 .dropdown-custom {
     float: right;
     cursor: pointer;

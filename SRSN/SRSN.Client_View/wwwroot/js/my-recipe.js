@@ -1,4 +1,5 @@
-﻿const createRecipeByUserId = (recipe) =>
+﻿const username = localStorage.getItem("username");
+const createRecipeByUserId = (recipe) =>
     `<div class="col-md-4 col-xs-6 col-xxs-12" id="${recipe.id}">
 <div class="box--item text-center" >
 <a href="/recipe/${recipe.id}" class="img" data-overlay="0.1">
@@ -15,7 +16,10 @@
                                                                     <i class="fa mr--8 fa-clock-o"></i>${ new Date(recipe.createTime).getDate()}/${new Date(recipe.createTime).getMonth() + 1}/${new Date(recipe.createTime).getFullYear()}
                                                                 </p>
                                                             </div>
-                                                            <i class="fa fa-trash icon-delete" onclick="deleteRecipeInMyRecipe(${recipe.id})" style="margin-left: 90%;" ></i>
+                                                            <div>
+                                                                <i class="fa fa-trash icon-delete" onclick="deleteRecipeInMyRecipe(${recipe.id})" style="margin-left: 85%;" ></i>
+                                                                <a href="/account/my-recipe/${username}/${recipe.id}"<i class="fa fa-pencil-square-o icon-edit"></i></a>
+                                                            </div>
                                                         </div>
 </div>
 </div>`;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SRSN.DatabaseManager.Services;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,18 @@ namespace SRSN.ClientApi.Controllers
             this.recipeIngredientService = recipeIngredientService;
         }
         
+        [HttpGet("get-recipe-ingredients")]
+        public async Task<ActionResult> readRecipeIngredients(int recipeId)
+        {
+            try
+            {
+                return Ok(await recipeIngredientService.GetRecipeIngredients(recipeId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }

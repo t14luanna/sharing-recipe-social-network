@@ -353,12 +353,13 @@ namespace SRSN.ClientApi.Controllers
 
         [HttpPut("update")]
         [Authorize]
-        public async Task<ActionResult> Update([FromBody]RequestCreateRecipeWithConstraintViewMode request)
+        public async Task<ActionResult> Update([FromBody]RequestCreateRecipeWithConstraintViewMode request, [FromQuery]int recipeId)
         {
             ClaimsPrincipal claims = this.User;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = await this.userManager.FindByIdAsync(userId);
             request.RecipeVM.UserId = int.Parse(userId);
-            await recipeService.UpdateRecipe(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+            await recipeService.UpdateRecipe(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
             return Ok(new
             {
                 message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
@@ -380,7 +381,6 @@ namespace SRSN.ClientApi.Controllers
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = await this.userManager.FindByIdAsync(userId);
                 request.RecipeVM.UserId = int.Parse(userId);
-                Console.WriteLine("kim bao:" + request.ListSORVM.Capacity);
                 var recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
                 var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.CreateNewRecipe);
                 return Ok(new

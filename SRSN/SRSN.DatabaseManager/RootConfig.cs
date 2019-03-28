@@ -69,6 +69,7 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(INotificationService), typeof(NotificationService));
             services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
             services.AddScoped(typeof(IIngredientsService), typeof(IngredientsService));
+            services.AddScoped(typeof(IRecipeIngredientService), typeof(RecipeIngredientService));
             services.AddScoped(typeof(IPostService), typeof(PostService));
             services.AddScoped(typeof(IProductService), typeof(ProductService));
             services.AddScoped(typeof(IUserFollowingService), typeof(UserFollowingService));
@@ -76,11 +77,13 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(ICollectionPostService), typeof(CollectionPostService));
             services.AddScoped(typeof(IUserReportRecipeService), typeof(UserReportRecipeService));
             services.AddScoped(typeof(IUserReportUserService), typeof(UserReportUserService));
+            services.AddScoped(typeof(IRecipeCategoryService), typeof(RecipeCategoryService));
 
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.CreateMissingTypeMaps = true;
+                mc.ValidateInlineMaps = false;
 
                 // chung ta se cau hinh ignore tai day
                 mc.CreateMap<RecipeViewModel, Recipe>();

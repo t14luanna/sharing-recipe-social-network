@@ -118,7 +118,6 @@ function getData() {
     var stepTipsDescription = $("textarea[name='stepsTips']");
     var stepsImages = $("input[name='stepsImage']");
     var steps = [];
-
     $(stepDescription).each(i => {
         var dropZoneId = $(stepDescription[i]).parent(".add-fields").siblings(".dropzone").first().attr("id");
         validation = validationField('stepsDes', $(stepDescription[i]).val().trim()) && validation;

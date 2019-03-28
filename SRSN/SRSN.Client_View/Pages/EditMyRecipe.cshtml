@@ -1,0 +1,219 @@
+﻿@page "/account/my-recipe/{username}/{recipe_id}"
+@model SRSN.Client_View.Pages.EditMyRecipeModel
+@{
+    
+    ViewData["Title"] = "EditMyRecipe";
+}
+
+@section StyleOptional{
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/submit-recipe.css" />
+}
+
+<div class="recipes-home-body inner-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-lg-9">
+                <div class="recipe-set submit-recipe-set">
+                    <h2>Đăng công thức</h2>
+                    <div class="tab-container tab-shortcode">
+                        <ul class="clearfix list-nav">
+                            <li class="active" id="congthucBtn"><a href="#">Công thức</a></li>
+                            <li id="phanloaiBtn"><a href="#">Phân loại</a></li>
+                        </ul>
+                        <div class="tabs-container">
+                            <div class="tab-content" id="congthuc" style="display: block;">
+                                <div class="submit-recipe-form">
+                                    <label for="upload-image">Ảnh đại diện cho món ăn*</label>
+                                    <span class="error" name="avatarUpload">*Hình đại diện không được để trống</span>
+                                    <div class="form-group col-sm-12">
+                                        <div class="img-picker" style="display:none"></div>
+                                    </div>
+                                    <input type="file" name="avatarUpload" id="upload-image" required />
+                                    <span class="error" name="title">*Tiêu đề không được để trống</span>
+                                    <input type="text" name="title" id="title" placeholder="Nhập tên công thứ*" required />
+                                    <br />
+                                    <span class="error" name="content">*Nội dung không được để trống</span>
+                                    <input id="recipe-active" type="hidden">
+                                    <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức*" required></textarea>
+                                    <label class="col-md-3 custom-label-submit">Số khẩu phần ăn*</label>
+                                    <input type="number" name="serving" placeholder="Serving" value="1" required />
+                                    </br>
+                                    <label class="col-md-3 custom-label-submit">Thời gian nấu (phút)*</label>
+                                    <input type="number" name="cooktime" placeholder="Cook time" value="1" required />
+                                    </br>
+                                    <div class="form-group">
+                                        <label class="col-md-3 custom-label-submit">Độ khó*</label>
+                                        <select name="level" class="form-control">
+                                            <option value="1">Dễ</option>
+                                            <option value="2">Trung bình</option>
+                                            <option value="3">Khó</option>
+                                        </select>
+                                    </div>
+                                    @*<input type="number"  placeholder="Level" value="1" required />*@
+                                    <fieldset class="ingredient-set">
+                                        <label for="ingredients">Nguyên liệu</label> </br>
+                                        <span class="error" name="ingredients">*Nguyên liệu không được để trống</span>
+                                        <ul class="list-sortable ingredients-list">
+                                            <li>
+                                                <div class="add-fields" id="ingredients-container">
+                                                   
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span class="add-ingredient">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                    </fieldset>
+                                    <fieldset class="ingredient-set">
+                                        <label for="steps">Steps</label> <br />
+                                        <span class="error" name="stepsDes">*Các bước không được để trống</span>
+                                        <ul class="list-sortable steps">
+                                            
+                                        </ul>
+                                        <span class="add-recipe-steps">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                    </fieldset>
+                                    <input type="text" name="videoCode" placeholder="Video Code" class="input-video" />
+                                    <div class="text-center">
+                                        <button type="button" id="nextBtn" class="recipe-submit-btn">Bước tiếp theo</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="tab-content" id="phanloai" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <aside>
+                    <div class="side-bar">
+                        <!--recipes search widget-->
+                        <div class="widget recipe-search">
+
+                            <div class="category-list">
+                                <!--<div class="list-inner">-->
+                                <ul id="list-category-item"></ul>
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <!--recipes search widget ends-->
+                        <!--popular recipes widget-->
+                        <div class="widget latest-news-widget">
+                            <h2>Công thức thịnh hành</h2>
+                            <ul id="list-popular-recipe-widget"></ul>
+                        </div>
+                        <!--popular recipes widget ends-->
+                        <div class="widget">
+                            <a href="#">
+                                <img src="~/recipepress/images/temp-images/add-side.jpg" alt="Add" />
+                            </a>
+                        </div>
+                        <!--latest news widget-->
+                        <div class="widget latest-news-widget">
+                            <h2>Công thức mới nhất</h2>
+                            <ul id="list-latest-recipe-widget"></ul>
+                        </div>
+                        <!--latest news widget ends-->
+                        <!--get social-->
+                        <div class="widget widget-get-social">
+                            <h2>Liên kết xã hội</h2>
+                            <ul>
+                                <li class="facebook">
+                                    <a href="#">
+                                        <i class="fa fa-facebook"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+                                <li class="twitter">
+                                    <a href="#">
+                                        <i class="fa fa-twitter"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+                                <li class="google-plus">
+                                    <a href="#">
+                                        <i class="fa fa-google-plus"></i>
+                                        <span class="count">23.5K</span>
+                                        <span class="count-type">Likes</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--get social ends-->
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script type="text/javascript" src="recipepress/js/main.js"></script>
+    <script type="text/javascript" src="~/recipepress/js/custom.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+    <script src="~/js/notification.js"></script>
+    <script src="~/js/Configuration.js"></script>
+    <script src="~/js/menu-widgets.js"></script>
+    <script src="~/js/edit-my-recipe.js"></script>
+
+    <script type="text/javascript">
+
+        const changeHeadername = async () => {
+            var someText = "Chỉnh sửa công thức";
+            $('.main-heading h1').append(document.createTextNode(someText));
+        };
+        (async () => {
+            await changeHeadername();
+            await callLatestRecipeWidgetApi();
+            await callListCategoryItem();
+            await callPopularRecipeWidgetApi();
+            await loadCategory();
+            await RedirectAPI();
+            await recipeDetailsByRecipeId(@(RouteData.Values["recipe_id"]));
+            $('#submitBtn').on("click", async function (event) {
+                $("#loading-box").show();
+                var username = localStorage.getItem("username");
+                var currentUrl = window.location.href;
+                var recipeId = currentUrl.substr(currentUrl.indexOf('account/my-recipe/' + username + '/')).replace('account/my-recipe/' + username + '/', '');
+                var results = getData();
+                console.log(results);
+                var data = results.data;
+                var authorization = localStorage.getItem("authorization");
+                var token = (JSON.parse(authorization))["token"];
+                await fetch(`https://localhost:44361/api/recipe/update?recipeId=${recipeId}`, {
+                    method: "PUT",
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                    .then(async (res) => {
+                        if (res.status === 200) {
+                            swal({
+                                title: "",
+                                text: "Bạn đã cập nhật công thức thành công",
+                                type: "success",
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Xác nhận",
+                                closeOnConfirm: false
+                            });
+                        }
+                    })
+            })
+        })();
+    </script>
+    }
