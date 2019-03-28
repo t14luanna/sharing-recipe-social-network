@@ -321,22 +321,20 @@
                                     var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
                                     var dataUser = await userRes.json();
                                     for (var user of dataUser) {
-                                        var followingMe = window.localStorage.getItem(user.username);//user is following me
-
-                                        if (followingMe) {
-                                            var myDataRef = firebase.database().ref(followingMe);
-                                            uid = myDataRef.push({
-                                                "uid": "",
-                                                "username": usernameLocal,
-                                                "content": "đã chia sẻ công thức mới",
-                                                "date": new Date().toLocaleString(),
-                                                "link": "/recipe/" + recipeId,
-                                                "isRead": "False"
-                                            });
-                                            SRSN.FIREBASE_DATABASE.ref('/' + chefUsername + "/" + uid.key).update({
-                                                "uid": uid.key
-                                            });
-                                        }
+                                        var followingMe = user.username;//user is following me
+                                        var myDataRef = firebase.database().ref(followingMe);
+                                        uid = myDataRef.push({
+                                            "uid": "",
+                                            "username": usernameLocal,
+                                            "content": "đã chia sẻ công thức mới",
+                                            "date": new Date().toLocaleString(),
+                                            "link": "/recipe/" + recipeId,
+                                            "isRead": "False"
+                                        });
+                                        SRSN.FIREBASE_DATABASE.ref('/' + chefUsername + "/" + uid.key).update({
+                                            "uid": uid.key
+                                        });
+                                        
                                     }
                                     //thông báo công điểm cho chính user
                                     var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
