@@ -305,10 +305,11 @@
                     }).then(async (res) => {
                         $("#loading-box").hide();
                         var uid;
+                        var myDataRef;
                         if (res.status === 200) {
                             swal({
                                 title: "",
-                                text: "Bạn đã chia sẻ công thức thành công",
+                                text: "Bạn đã chia sẻ công thức mới thành công",
                                 type: "success",
                                 confirmButtonColor: "#DD6B55",
                                 confirmButtonText: "Xác nhận",
@@ -324,9 +325,7 @@
                                 var dataUser = await userRes.json();
                                 for (var user of dataUser) {
                                     var followingMe = user.username;//user is following me
-
-                                    if (followingMe) {
-                                        var myDataRef = firebase.database().ref(followingMe);
+                                    myDataRef = firebase.database().ref(followingMe);
                                         uid = myDataRef.push({
                                             "uid": "",
                                             "username": usernameLocal,
@@ -335,14 +334,14 @@
                                             "link": "/recipe/" + recipeId,
                                             "isRead": "False"
                                         });
-                                        SRSN.FIREBASE_DATABASE.ref('/' + usernameLocal + "/" + uid.key).update({
+                                    SRSN.FIREBASE_DATABASE.ref('/' + followingMe + "/" + uid.key).update({
                                             "uid": uid.key
                                         });
-                                    }
+                                    
                                 }
                                 //thông báo công điểm cho chính user
                                 var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
-
+                                myDataRef = firebase.database().ref(usernameLocal);
                                 if (myDataRef != null) {
                                     uid = myDataRef.push({
                                         "uid": "",

@@ -243,6 +243,35 @@ namespace SRSN.ClientApi.Controllers
                 message = $"Ban da update thanh cong User co ten la: {currentUser.UserName}"
             });
         }
+        [HttpPost("update-activation")]
+        public async Task<ActionResult> UpdateUser(int reportedUserId)
+        {
+            try
+            {
+
+                var currentUser = await userManager.FindByIdAsync(reportedUserId.ToString());
+                if (currentUser.Active)
+                {
+                    currentUser.Active = false;
+                }
+                else
+                {
+                    currentUser.Active = true;
+                }
+                await userManager.UpdateAsync(currentUser);
+
+                return Ok(new
+                {
+                    active = currentUser.Active,
+                    message = "Cập nhật thành công!"
+                });
+
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }}
 
         [HttpPut("change-password")]
         [Authorize]

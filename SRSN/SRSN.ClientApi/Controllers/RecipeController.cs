@@ -380,7 +380,7 @@ namespace SRSN.ClientApi.Controllers
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = await this.userManager.FindByIdAsync(userId);
                 request.RecipeVM.UserId = int.Parse(userId);
-                Console.WriteLine("kim bao:" + request.ListSORVM.Capacity);
+                //Console.WriteLine("kim bao:" + request.ListSORVM.Capacity);
                 var recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
                 var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.CreateNewRecipe);
                 return Ok(new

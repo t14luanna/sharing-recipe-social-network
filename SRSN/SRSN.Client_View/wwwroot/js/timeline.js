@@ -311,7 +311,7 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
     if (res.status == 200) {
         $(".modal-share-post").css("display", "none");
         swal("", "Bạn đã chia sẻ công thức thành công", "success");
-        //thông báo chia sẽ công thức (sharing notification)
+        //thông báo chia sẻ công thức (sharing notification)
         callCountApi(id);
         var usernameLocal = window.localStorage.getItem("username");//người đang comment
         var myDataRef;
@@ -325,7 +325,7 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
                 uid = myDataRef.push({
                     "uid": "",
                     "username": usernameLocal,
-                    "content": "đã chia sẽ bài viết của bạn.",
+                    "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
                     "isRead": "False"
@@ -339,7 +339,7 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
                 uid = myDataRef.push({
                     "uid": "",
                     "username": "Bạn",
-                    "content": "đã chia sẽ bài viết và được cộng thêm <b>5 điểm</b>",
+                    "content": "đã chia sẻ bài viết và được cộng thêm <b>5 điểm</b>",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
                     "isRead": "False"
