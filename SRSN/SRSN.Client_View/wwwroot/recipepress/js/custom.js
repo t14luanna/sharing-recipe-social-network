@@ -349,6 +349,7 @@
         if ($(".advance-search").hasClass("open")){
             $(".advance-search").removeClass("open");
             $(".outer-advance-search").slideUp();
+            console.log("a");
         }
         else{
             $(".advance-search").addClass("open");
