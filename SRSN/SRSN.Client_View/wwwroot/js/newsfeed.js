@@ -2,7 +2,7 @@
 const createRecipePost = (recipe) =>
     `<li><div class="activity--item" onclick="saveToLocalStorage(${recipe.id}, '${recipe.recipeName}', '${recipe.imageCover}','${recipe.createTime.split(' ')[0]}' )">
                                                     <div class="activity--avatar">
-                                                        <a href="/MemberProfile">
+                                                        <a href="/account/information/${recipe.accountVM.username}">
                                                             <img src="${recipe.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                                         </a>
                                                     </div>
@@ -11,7 +11,7 @@ const createRecipePost = (recipe) =>
                                                         <div class="activity--meta fs--12 popular-post-item popular-item-${recipe.id}">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/MemberProfile">${recipe.accountVM.username}</a> đã đăng một công thức</p>
+                                                            <p><a href="/account/information/${recipe.accountVM.username}">${recipe.accountVM.firstName} ${recipe.accountVM.lastName}</a> đã đăng một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">
@@ -61,7 +61,7 @@ const createRecipePost = (recipe) =>
 const createShareRecipePost = (post, recipe) =>
     `<li><div class="activity--item ">
                                                     <div class="activity--avatar">
-                                                        <a href="/MemberProfile">
+                                                        <a href="/account/information/${post.accountVM.username}">
                                                             <img src="${post.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                                         </a>
                                                     </div>
@@ -70,7 +70,7 @@ const createShareRecipePost = (post, recipe) =>
 <div class="activity--meta fs--12 popular-item-${post.id}  popular-post-item ">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/MemberProfile">${post.accountVM.username}</a> đã chia sẻ một công thức</p>
+                                                            <p><a href="/account/information/${post.accountVM.username}">${post.accountVM.firstNamee} ${post.accountVM.lastName}</a> đã chia sẻ một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">
@@ -247,10 +247,11 @@ async function toggleLikeButton(x, recipeId, recipeOwner) {
             x.classList.add("fa-heart");
             //them data vao firebase
             //chủ sở hữu recipe
+            var usernameLocal = window.localStorage.getItem("username");//người đang like
             if (usernameLocal == recipeOwner) {
                 //do nothing
             } else {
-                var usernameLocal = window.localStorage.getItem("username");//người đang like
+                
                 var myDataRef = firebase.database().ref(recipeOwner);//chủ của recipe
                 var uid = myDataRef.push({
                     "uid": "",
@@ -280,14 +281,14 @@ const createShareRecipeModal = (recipe, dataUser, recipeOwner) => `<li><div clas
                         <li>
                             <div class="activity--item">
                                 <div class="activity--avatar">
-                                    <a href="/MemberProfile">
+                                    <a href="/account/information/${dataUser.username}">
                                         <img src="${dataUser.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                     </a>
                                 </div>
 
                                 <div class="activity--info fs--14">
                                     <div class="activity--header">
-                                        <p><a href="/MemberProfile">${dataUser.username}</a></p>
+                                        <p><a href="/account/information/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
                                     </div>
 
                                     <div class="activity--content">
@@ -454,7 +455,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner) => {
         if (res.status == 200) {
             await callOpenCommentPostApi(recipeId, recipeOwner);
             var usernameLocal = usernameLocal = window.localStorage.getItem("username");//người đang comment
-            if (commentOwner == "") {
+            if (commentOwner == "" && commentOwner != usernameLocal) {
 
 
                 //comment notification
@@ -475,7 +476,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner) => {
                     uid: uid.key
                 });
             } else
-                if (commentOwner != "") {//thông báo trả lời comment
+                if (commentOwner != "" && commentOwner != usernameLocal) {//thông báo trả lời comment
                     //Đánh giá (comment) công thức firebase
 
                     var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức

@@ -2,7 +2,7 @@
 const createRecipePost = (recipe) =>
     `<li class="col-md-12 timeline-post" style ="list-style-type: none"><div class="activity--item col-md-8  col-md-offset-2">
                                                     <div class="activity--avatar">
-                                                        <a href="/MemberProfile">
+                                                        <a href="/account/information/${recipe.accountVM.username}">
                                                             <img src="${recipe.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                                         </a>
                                                     </div>
@@ -11,7 +11,7 @@ const createRecipePost = (recipe) =>
                                                         <div class="activity--meta fs--12 popular-post-item popular-item-${recipe.id}">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/MemberProfile">${recipe.accountVM.username}</a> đã đăng một công thức</p>
+                                                            <p><a href="/account/information/${recipe.accountVM.username}"">${recipe.accountVM.firstName} ${recipe.accountVM.lastName}</a> đã đăng một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">
@@ -61,7 +61,7 @@ const createRecipePost = (recipe) =>
 const createShareRecipePost = (post, recipe) =>
     `<li class="col-md-12 timeline-post" style ="list-style-type: none"><div class="activity--item col-md-8  col-md-offset-2">
                                                     <div class="activity--avatar">
-                                                        <a href="/MemberProfile">
+                                                        <a href="/account/information/${post.accountVM.username}">
                                                             <img src="${post.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                                         </a>
                                                     </div>
@@ -70,7 +70,7 @@ const createShareRecipePost = (post, recipe) =>
 <div class="activity--meta fs--12 popular-item-${post.id}  popular-post-item ">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/MemberProfile">${post.accountVM.username}</a> đã chia sẻ một công thức</p>
+                                                            <p><a href="/account/information/${post.accountVM.username}">${post.accountVM.firstName} ${post.accountVM.lastName}</a> đã chia sẻ một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">
@@ -196,14 +196,24 @@ async function toggleLikeButton(x, recipeId, recipeOwner) {
             x.classList.add("fa-heart");
             //them data vao firebase
             //chủ sở hữu recipe
+            var usernameLocal = window.localStorage.getItem("username");//người đang like
+
             if (usernameLocal == recipeOwner) {
                 //do nothing
             } else {
-                var usernameLocal = window.localStorage.getItem("username");//người đang like
+                var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
+
+                var userData = await userRes.json();
                 var myDataRef = firebase.database().ref(recipeOwner);//chủ của recipe
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": usernameLocal,
+                    "username": userData.firstName + " " + userData.lastName,
                     "content": "đã thích Công Thức của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
@@ -229,14 +239,14 @@ const createShareRecipeModal = (recipe, dataUser, recipeOwner) => `<li><div clas
                         <li>
                             <div class="activity--item">
                                 <div class="activity--avatar">
-                                    <a href="/MemberProfile">
+                                    <a href="/account/information/${dataUser.username}">
                                         <img src="${dataUser.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                     </a>
                                 </div>
 
                                 <div class="activity--info fs--14">
                                     <div class="activity--header">
-                                        <p><a href="/MemberProfile">${dataUser.username}</a></p>
+                                        <p><a href="/account/information/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
                                     </div>
 
                                     <div class="activity--content">
@@ -320,11 +330,20 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
             //do nothing
         } else {
             try {
+                var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
+
+                var userData = await userRes.json();
                 console.log("Starting firebase")
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
                 uid = myDataRef.push({
                     "uid": "",
-                    "username": usernameLocal,
+                    "username": userData.firstName + " " + userData.lastName,
                     "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
@@ -386,6 +405,7 @@ const callOpenCommentPostApi = async (recipeId, recipeOwner) => {
 const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
+    
     var comment = $(`textarea[name="comment-${recipeId}"]`).val();
     if (comment != "") {
         var data = {
@@ -403,17 +423,25 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner) => {
         if (res.status == 200) {
             await callOpenCommentPostApi(recipeId, recipeOwner);
             var usernameLocal = usernameLocal = window.localStorage.getItem("username");//người đang comment
-            if (commentOwner == "") {
+            var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+           var userData = await userRes.json();
+            if (commentOwner == "" && commentOwner != usernameLocal) {
 
 
                 //comment notification
                 //Đánh giá (comment) công thức firebase
-
-
+                
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": usernameLocal,
+                    "username": userData.firstName + " " + userData.lastName,
                     "content": "đã bình luận công thức của bạn",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
@@ -423,14 +451,13 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner) => {
                 SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
                     uid: uid.key
                 });
-            } else
-                if (commentOwner != "") {//thông báo trả lời comment
+            } else if (commentOwner != "" && commentOwner != usernameLocal) {//thông báo trả lời comment
                     //Đánh giá (comment) công thức firebase
 
                     var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
                     var uid1 = myDataRef.push({
                         "uid": "",
-                        "username": usernameLocal,
+                        "username": userData.firstName + " " + userData.lastName,
                         "content": "đã trả lời bình luận về công thức của bạn",
                         "date": new Date().toLocaleString(),
                         "link": "/recipe/" + data.recipeId,
@@ -441,12 +468,11 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner) => {
                         uid: uid1.key
                     });
 
-                    var usernameLocal = window.localStorage.getItem("username");//người đang comment
 
                     var myDataRef = SRSN.FIREBASE_DATABASE.ref(commentOwner);//người sở hữu comment
                     var uid2 = myDataRef.push({
                         "uid": "",
-                        "username": usernameLocal,
+                        "username": userData.firstName + " " + userData.lastName,
                         "content": "đã trả lời bình luận của bạn",
                         "date": new Date().toLocaleString(),
                         "link": "/recipe/" + data.recipeId,
@@ -510,7 +536,7 @@ const createSingleReplyComment = (comment, recipeOwner) => {
                         
             <div class="acomment--info">
                 <div class="acomment--header">
-                    <p><a href="#">${comment.fullName}</a> trả lời</p>
+                    <p><a href="/account/information/${comment.username}">${comment.fullName}</a> trả lời</p>
                 </div>
                         
                 <div class="acomment--meta">

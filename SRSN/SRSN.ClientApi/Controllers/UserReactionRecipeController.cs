@@ -67,7 +67,7 @@ namespace SRSN.ClientApi.Controllers
                 userReactions.ForEach(x => 
                 {
                     var currentUser = userManager.FindByIdAsync(x.UserId.ToString()).Result;
-                    x.FullName = currentUser.UserName;
+                    x.FullName = $"{currentUser.FirstName} {currentUser.LastName}";
                     x.AvatarUrl = currentUser.AvatarImageUrl;
                 });
                 return Ok(new
@@ -220,6 +220,11 @@ namespace SRSN.ClientApi.Controllers
             {
                 return BadRequest();
             }
+        }
+        [HttpGet("get-userid-by-commentparentId")]
+        public async Task<ActionResult> GetUserIdFromCommentParentId(int commentParentId)
+        {
+            return Ok(new { userId = selfService.Get(p => p.Id == commentParentId).FirstOrDefault().UserId });
         }
     }
 }
