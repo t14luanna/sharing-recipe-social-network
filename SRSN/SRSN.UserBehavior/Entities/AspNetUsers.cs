@@ -56,6 +56,7 @@ namespace SRSN.UserBehavior.Entities
         public string LastName { get; set; }
         public int? Point { get; set; }
         public string AvatarImageUrl { get; set; }
+        public bool? Active { get; set; }
 
         public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }

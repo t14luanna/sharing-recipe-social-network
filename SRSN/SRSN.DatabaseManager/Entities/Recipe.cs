@@ -36,6 +36,7 @@ namespace SRSN.DatabaseManager.Entities
         public int? ViewQuantity { get; set; }
         public int? LikeQuantity { get; set; }
         public int? ShareQuantity { get; set; }
+        public bool? SaveDraft { get; set; }
 
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }

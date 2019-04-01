@@ -1,4 +1,4 @@
-﻿var apikeyFilestack = 'AVDP56XFjTE6IJhKzXLK0z';
+﻿var apikeyFilestack = 'Al19W1lGkT7C5myciCHZhz';
 var clientFilestack = filestack.init(apikeyFilestack);
 var onProgress = (evt) => {
     document.getElementById('progress').innerHTML = `${evt.totalPercent}%`;

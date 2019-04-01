@@ -1131,3 +1131,13 @@ input[name=ingredient] {
     display: contents;
     font-weight: 600;
 }
+.forgot-title {
+    color: #240cda
+}
+#level{
+    font-size: 16px!important
+}
+.dropzone .dz-preview .dz-image img{
+    width: 100%;
+    height: 100%    
+}

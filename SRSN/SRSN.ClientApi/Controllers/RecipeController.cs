@@ -166,7 +166,7 @@ namespace SRSN.ClientApi.Controllers
                     return recipeId;
                 });
                 var rand = new Random();
-                
+
                 var SelectedPost = dataIds.Skip(rand.Next(0, dataIds.Count())).Take(6);
                 var listRecipe = new List<RecipeViewModel>();
                 foreach (var recipeId in SelectedPost)
@@ -179,7 +179,7 @@ namespace SRSN.ClientApi.Controllers
                         mapper.Map(recipeUserID, recipe.AccountVM);
                         listRecipe.Add(recipe);
                     }
-                    if(listRecipe.Count() == 3)
+                    if (listRecipe.Count() == 3)
                     {
                         return Ok(listRecipe);
                     }
@@ -313,7 +313,6 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-
         [HttpGet("read-random")]
         public async Task<ActionResult> ReadRandom()
         {
@@ -350,7 +349,6 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-
         [HttpPut("update")]
         [Authorize]
         public async Task<ActionResult> Update([FromBody]RequestCreateRecipeWithConstraintViewMode request, [FromQuery]int recipeId)
@@ -365,7 +363,6 @@ namespace SRSN.ClientApi.Controllers
                 message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
             });
         }
-
         /// <summary>
         /// Api useless and duplicate with Create
         /// Should merge
@@ -398,7 +395,6 @@ namespace SRSN.ClientApi.Controllers
                 });
             }
         }
-
         [HttpGet("read-recipename")]
         public async Task<ActionResult> ReadRecipeName([FromQuery]string recipeName)
         {
@@ -411,7 +407,6 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-
         [HttpGet("read-recipename-page")]
         public async Task<ActionResult> ReadRecipeNamePage([FromQuery]string recipeName)
         {
@@ -424,7 +419,6 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-
         [HttpGet("read-recipe-by-category")]
         public async Task<ActionResult> ReadRecipeByCategory([FromQuery] string categoryName)
         {
@@ -482,6 +476,53 @@ namespace SRSN.ClientApi.Controllers
             {
                 message = $"Ban da tao thanh cong Recipe co ten la: {request.Id}"
             });
+        }
+
+        [HttpPost("draft-recipe")]
+        public async Task<ActionResult> DraftRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request)
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var user = await this.userManager.FindByIdAsync(userId);
+                request.RecipeVM.UserId = int.Parse(userId);
+
+                // if request call with Id != 0
+                // so the recipe may be exist
+                if (request.RecipeVM.Id != 0)
+                {
+                    // Find recipe if it does exist
+                    var recipeToSaveDraft = await recipeService.FirstOrDefaultAsync(x => x.Id == request.RecipeVM.Id);
+                    if(recipeToSaveDraft != null)
+                    {
+                        // Update and Save Draft
+                        await recipeService.UpdateRecipe(request.RecipeVM.Id, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                        // then return
+                        return Ok(new
+                        {
+                            recipeId = request.RecipeVM.Id,
+                            message = $"Ban da luu ban sao Recipe thanh cong ",
+                        });
+                    }
+                }
+                // anyways create
+                var recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+
+                return Ok(new
+                {
+                    recipeId,
+                    message = $"Ban da tao ban sao Recipe thanh cong",
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    message = $"Ban tao recipe that bai",
+                    error = ex.ToString()
+                });
+            }
         }
     }
     #endregion

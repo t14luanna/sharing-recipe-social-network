@@ -36,7 +36,12 @@ namespace SRSN.ClientApi.Controllers
             var result = ingredientsService.GetListStoreByIngredientName(ingredientName);
             return Ok(result);
         }
-        
 
+        [HttpGet("read-ingredients")]
+        public ActionResult GetSuggestIngredientByIngredientName()
+        {
+            var result = ingredientsService.GetListIngredientByIngredientName();
+            return Ok(result);
+        }
     }
 }

@@ -385,7 +385,7 @@ namespace SRSN.DatabaseManager.Services
                         {
                             Debug.WriteLine("New record | " + recipeCategory.RecipeId + " | " + recipeCategory.CategoryItemId);
                             var rc = this.VMToEntity<RecipeCategory, RecipeCategoryViewModel>(recipeCategory);
-                            recipeCategoryDBSet.AddAsync(rc);
+                            await recipeCategoryDBSet.AddAsync(rc);
                             this.unitOfWork.Commit();
                         }
                     }

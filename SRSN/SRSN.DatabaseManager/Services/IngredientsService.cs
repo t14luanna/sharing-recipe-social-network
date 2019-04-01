@@ -14,12 +14,20 @@ namespace SRSN.DatabaseManager.Services
     public interface IIngredientsService : IBaseService<Ingredients, IngredientsViewModel>
     {
         ICollection<StoreViewModel> GetListStoreByIngredientName(string ingredientName);
+        ICollection<IngredientsViewModel> GetListIngredientByIngredientName();
     }
 
     public class IngredientsService : BaseService<Ingredients, IngredientsViewModel>, IIngredientsService
     {
         public IngredientsService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
+        }
+
+        public ICollection<IngredientsViewModel> GetListIngredientByIngredientName()
+        {
+            //var listIngredientLikeName = this.Get(q => q.IngredientName.Contains(ingredientName)).Take(7).ToList();
+            var listIngredientLikeName = this.Get().ToList();
+            return listIngredientLikeName;
         }
 
         /// <summary>

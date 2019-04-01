@@ -5,15 +5,8 @@ namespace SRSN.DatabaseManager.Entities
 {
     public partial class Ingredients
     {
-        public Ingredients()
-        {
-            RecipeIngredient = new HashSet<RecipeIngredient>();
-        }
-
         public int Id { get; set; }
         public string IngredientName { get; set; }
-        public int? UserId { get; set; }
-
-        public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
+        public string SuggestQuantitive { get; set; }
     }
 }

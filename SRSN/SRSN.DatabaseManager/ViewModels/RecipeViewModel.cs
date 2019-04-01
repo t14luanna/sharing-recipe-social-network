@@ -22,6 +22,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public int LevelRecipe { get; set; }
         public int UserId { get; set; }
         public String VideoLink { get; set; }
+        public bool? SaveDraft { get; set; }
         public List<String> ListCategory { get; set; }
         public List<RecipeIngredientCreateViewModel> ListIngredient { get; set; }
         public List<StepsOfRecipeCreateViewModel> ListSORVM { get; set; }
@@ -48,6 +49,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public string Avarta { get; set; }
         public string Description { get; set; }
         public string SharedStatus { get; set; }
+        public bool? SaveDraft { get; set; }
         public int? ReferencedRecipeId { get; set; }
         public List<StepsOfRecipeViewModel> ListSORVM { get; set; }
         public List<RecipeIngredientViewModel> listIngredient { get; set; }

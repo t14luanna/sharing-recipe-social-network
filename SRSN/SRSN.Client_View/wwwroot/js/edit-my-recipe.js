@@ -1,5 +1,10 @@
-﻿
-
+﻿const apikey = 'Al19W1lGkT7C5myciCHZhz';
+const client = filestack.init(apikey);
+var listStepImages = {};
+var listLocalStepImages = {};
+var localStepsCount = 0;
+var countIngredient = 0;
+var countsteps = 0;
 const createRecipeImageCoverInfo = (info) =>
     `<div class="text-center"><img src=${info.imageCover} class="img-responsive img-rounded"/></div>`;
 
@@ -17,9 +22,6 @@ const createRecipeInfo = (info) => {
     $('input[name="videoCode"]').val(info.videoCode);
 };
 
-
-    
-
 const recipeDetailsByRecipeId = async (recipeId) => {
     var username = localStorage.getItem("username");
     var currentUrl = window.location.href;
@@ -27,21 +29,25 @@ const recipeDetailsByRecipeId = async (recipeId) => {
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${recipeId}`);
     var data = await res.json();
     var recipeImageCover = createRecipeImageCoverInfo(data[0]);
-    $(".img-picker").empty();
-    $(".img-picker").append(recipeImageCover);
-    $(".img-picker").css("display", "block");
+    //$(".img-picker").empty();
+    //$(".img-picker").append(recipeImageCover);
+    //$(".img-picker").css("display", "block");
+    $('.img-picker').imagePicker({ name: 'images' });
+    $("input[name='avatarUpload']").attr("data-temp-src", recipeImageCover);
+    $("input[name='avatarUpload']").trigger("change");
     createRecipeInfo(data[0]);
-    var resIngredient = await fetch(`https://localhost:44361/api/recipeingredient/get-recipe-ingredients?recipeId=${recipeId}`);
+    var resIngredient = await fetch(`${BASE_API_URL}/api/recipeingredient/get-recipe-ingredients?recipeId=${recipeId}`);
     var ingredients = await resIngredient.json();
     var ingredientContainer = "";
     for (let ingredient of ingredients) {
+        countIngredient++;
         ingredientContainer += '<li>'+
                                     '<div class="add-fields" id = "ingredients-container" >' +
                                         '<span class="ingredient-handler-list handler-list">' +
                                             '<i class="fa fa-arrows"></i>' +
             '</span>' +
-            '<input class="ingredient-weight" id="' + ingredient.id + '" type="text" value="' + ingredient.quantitative + '" name="ingredientsWeight" placeholder="1g, 1kg, 1 thìa ..." />' +
-                                        '<input class="ingredient-detail" type="text" value="' + ingredient.ingredientName + '" name="ingredients" id="ingredients" placeholder="Muối, Đường, thịt gà ..." />' +
+            `<div class="autocomplete"><input class="ingredient-detail" type="text" name="ingredients" data-suggest-quantitivie="ingredientsWeight${countIngredient}" id="ingredients${countIngredient}" value="${ingredient.ingredientName}" placeholder="Muối, Đường, thịt gà ..." onclick="SuggestIngredient(this);"/></div>` +
+            `<input class="ingredient-weight" type="text" name="ingredientsWeight" id="${ingredient.id}" placeholder="1g, 1kg, 1 thìa ..."  value="${ingredient.quantitative}" />` +
                                         '<span class="del-list"><i class="fa fa-trash"></i></span></div>' +
                                 '</li> ';
     }
@@ -50,37 +56,63 @@ const recipeDetailsByRecipeId = async (recipeId) => {
 }
 
 const readSteps = async (recipeId) => {
-    var res = await fetch(`https://localhost:44361/api/stepsofrecipe/read-steps?recipeId=${recipeId}`);
+    var res = await fetch(`${BASE_API_URL}/api/stepsofrecipe/read-steps?recipeId=${recipeId}`);
     var data = await res.json();
-    var content = '<li>';
+    
     for (let step of data) {
+        countsteps++;
         let images = String(step.imageUrl).split(';');
-        content += `<li>
-                        <div class="add-fields">
+        var content = '<li>';
+        content += `<div class="add-fields">
                             <span class="handler-list">
                                 <i class="fa fa-arrows"></i>
                             </span><textarea class="short-text" name="stepsDes" id="${step.id}" cols="30" rows="10">${step.description}</textarea>
                             <span class="del-list">
                                 <i class="fa fa-trash"></i>
                             </span>
-                        </div>`;
-        for (let img of images) {
-            content += `<img src="${img}">`;
-        }
-        content += `<div class="image-fields">
-                        <input type="file" name="stepsImage" required multiple />
-                    </div></li>`;
-    }
-    $('.list-sortable.steps').append(content);
-};
+                        </div>
+                        <div class="add-fields" style="margin-top: 20px">
+                            <textarea class="short-text" name="stepsTips" id="${step.id}" cols="30" rows="10" placeholder="Mẹo nhỏ cho bước này (có thể bỏ qua)">${step.tips}</textarea>
+                        </div>` +
+                        `<form action="/file-upload" class="dropzone drop-zone-form" id="myAwesomeDropzone${countsteps}"><div class="fallback"><input name="file" type="file" multiple /></div></form>`;
+        
+        content += `</li>`;
+        $('.list-sortable.steps').append(content);
+        try {
+            displayImage(`myAwesomeDropzone${countsteps}`, images);
 
+        } catch (e) {
+        }
+        
+    }
+};
+function GetImageRecipe() {
+    $(".drop-zone-form").each((index, value) => {
+        var id = value.getAttribute("id");
+        var index = value.querySelectorAll(".dz-preview");
+        var count = 0;
+        for (var image of index) {
+            count++;
+            var imageUrl = image.firstElementChild.firstChild.getAttribute("src");
+            if (imageUrl != null || imageUrl != "") {
+                if (listLocalStepImages[id] == null) {
+                    listLocalStepImages[id] = [];
+                }
+                listLocalStepImages[id].push({
+                    id: count,
+                    fileStackUrl: imageUrl,
+                });
+            }
+        }
+    })
+}
 async function loadCategory() {
     var username = localStorage.getItem("username");
     var currentUrl = window.location.href;
     var recipeId = currentUrl.substr(currentUrl.indexOf('account/my-recipe/' + username + '/')).replace('account/my-recipe/' + username + '/', '');
-    var res = await fetch("https://localhost:44361/api/category/read");
+    var res = await fetch(`${BASE_API_URL}/api/category/read`);
     var mains = await res.json();
-    var recipeCategoriesRes = await fetch("https://localhost:44361/api/category/read-categories-by-recipe?recipeId=" + recipeId);
+    var recipeCategoriesRes = await fetch(`${BASE_API_URL}/api/category/read-categories-by-recipe?recipeId=` + recipeId);
     var data = await recipeCategoriesRes.json();
     
     $(mains).each((i, main) => {
@@ -147,6 +179,7 @@ function getData() {
     var active = $('#recipe-active').val();
 
     var validation = true;
+    var avatar = $("#coverAvatar img").first().attr("src")
     //var imgCover = $(".text-center")[0].files[0];
     var title = $("input[name='title']").val().trim();
     validation = validationField('title', title) && validation;
@@ -162,28 +195,41 @@ function getData() {
     var ingredients = [];
     $(ingredientsName).each(i => {
         validation = validationField('ingredients', $(ingredientsName[i]).val().trim()) && validation;
-        validation = validationField('ingredients', $(ingredientsWeight[i]).val().trim()) && validation;
+        var ingredientId = Number.parseInt($(ingredientsWeight[i]).attr('id'));
         ingredients.push({
-            Id: Number.parseInt($(ingredientsWeight[i]).attr('id')),
+            Id: ingredientId ? ingredientId : 0 ,
             IngredientName: $(ingredientsName[i]).val().trim(),
             Quantitative: $(ingredientsWeight[i]).val()
         });
     });
-
+    var stepTipsDescription = $("textarea[name='stepsTips']");
     var stepDescription = $("textarea[name='stepsDes']");
-    var stepsImages = $("input[name='stepsImage']");
     var steps = [];
-    $(stepDescription).each(i => {
-        validation = validationField('stepsDes', $(stepDescription[i]).val().trim()) && validation;
-        let files = stepsImages[i].files;
+    GetImageRecipe();
+    $(stepDescription).each((index, value) => {
+        var dropZoneId = $(value).parent(".add-fields").siblings(".dropzone").first().attr("id");
+        validation = validationField('stepsDes', $(value).val().trim()) && validation;
+        var imageUrl = "";
+        if (listLocalStepImages[dropZoneId] != null) {
+            listLocalStepImages[dropZoneId].forEach(x => {
+                if (x.fileStackUrl.match("http")) {
+                    imageUrl += x.fileStackUrl + ";";
+                }
+            });
+        }
+        if (listStepImages[dropZoneId] != null) {
+            listStepImages[dropZoneId].forEach(x => {
+                imageUrl += x.fileStackUrl + ";";
+            });
+        }
+        var stepsId = Number.parseInt($(stepDescription[index]).attr('id'));
         steps.push({
-            Id: Number.parseInt($(stepDescription[i]).attr('id')),
-            Description: $(stepDescription[i]).val().trim(),
-            ImageUrl: "",
-            files: files
+            Id: stepsId ? stepsId : 0,
+            Description: value.value,
+            Tips: $(stepTipsDescription)[index].value,
+            ImageUrl: imageUrl,
         });
     });
-
     var categoriesItemList = $("input[name='categoryItem']:checked");
     var categoriesItem = [];
     $(categoriesItemList).each((i, item) => {
@@ -196,10 +242,9 @@ function getData() {
         }
         categoriesItem.push(categoryRecipeE);
     });
-
     var data = {
         recipeVM: {
-            //ImageCover: avatar,
+            ImageCover: avatar,
             Id: recipeId,
             Active: JSON.parse(active),
             ContentRecipe: content,
@@ -242,28 +287,32 @@ function bindMajesticItem() {
 
 $('.add-recipe-steps').on("click", function (event) {
     event.preventDefault();
+    countsteps++;
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields">' +
         ' <span class="handler-list"><i class="fa fa-arrows"></i></span>' +
         '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>' +
         ' <span class="del-list"><i class="fa fa-trash"></i></span>' +
-        '</div><div class="image-fields">' +
-        '<input type = "file" name = "stepsImage" multiple/>' +
-        '</div >' +
+        '</div>' +
+        `<div class="add-fields" style="margin-top: 20px"><textarea class="short-text" name="stepsTips" id="stepsTips${countsteps}" cols="30" rows="10" placeholder="Mẹo nhỏ cho bước này (có thể bỏ qua)" ></textarea></div>` +
+        `<form action="/file-upload" class="dropzone drop-zone-form" id="myAwesomeDropzone${countsteps}"><div class="fallback"><input name="file" type="file" multiple /></div></form>` +
         '</li>';
     $('.list-sortable.steps').append(newMajesticItem);
     $('.list-sortable.steps').children("li").slideDown();
+    try {
+        dropzoneForm(`myAwesomeDropzone${countsteps}`);
+    } catch (e) {
+    }
     bindMajesticItem();
 });
 
 $('.add-ingredient').on("click", function (event) {
-
+    countIngredient++;
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' +
         '<i class="fa fa-arrows"></i></span >' +
-        '<input class="ingredient-weight" type="text" name="ingredientsWeight" placeholder="1g, 1kg, 1 thìa ..."/>' +
-        '<input class="ingredient-detail" type = "text" name = "ingredients" id = "ingredients" ' +
-        'placeholder = "Muối, Đường, thịt gà ..." /> ' +
+        `<div class="autocomplete"><input class="ingredient-detail" type="text" name="ingredients" data-suggest-quantitivie="ingredientsWeight${countIngredient}" id="ingredients${countIngredient}" placeholder="Muối, Đường, thịt gà ..." onclick="SuggestIngredient(this);"/></div>` +
+        `<input class="ingredient-weight" type="text" name="ingredientsWeight" id="ingredientsWeight${countIngredient}" placeholder="1g, 1kg, 1 thìa ..."/>` +
         '<span class="del-list"><i class="fa fa-trash"></i></span></div >' +
         '</li>';
     $('.list-sortable.ingredients-list').append(newMajesticItem);
@@ -272,4 +321,223 @@ $('.add-ingredient').on("click", function (event) {
 
     event.preventDefault();
 });
+function displayImage(id, images) {
+    Dropzone.autoDiscover = false;
+    var myDropzone = new Dropzone(`#${id}`, {
+        paramName: "file", // The name that will be used to transfer the file
+        maxFilesize: 2, // MB
+        maxFiles: 6,
+        addRemoveLinks: true,
+        accept: function (file, done) {
+            var id = this.element.id;
+            uploadFile(file)
+                .then(x => {
+                    if (!listStepImages[id]) listStepImages[id] = [];
+                    listStepImages[id].push({
+                        id: file.upload.uuid,
+                        fileStackUrl: x.url,
+                    });
+                    done();
+                }).catch(err => {
+                    console.error(err);
+                    done();
+                });
+        },
+        removedfile: function (file) {
+            var name = file.name;
+            $.ajax({
+                type: 'POST',
+                url: 'delete.php',
+                data: "id=" + name,
+                dataType: 'html'
+            });
+            var _ref;
+            // clean in listStepImages
+            var stepImagesId = this.element.id;
+            if (listStepImages[stepImagesId] != null) {
+                listStepImages[stepImagesId] = listStepImages[stepImagesId].filter(function (value, index, arr) {
+                    return value.id != file.upload.uuid;
+                });
+            }
+            // remove dragzone image and return value
+            return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+        },
+        init: function () {
+            this.on('error', function (file, errorMessage) {
+                if (file.accepted) {
+                    var mypreview = document.getElementsByClassName('dz-error');
+                    mypreview = mypreview[mypreview.length - 1];
+                    mypreview.classList.toggle('dz-error');
+                    mypreview.classList.toggle('dz-success');
+                }
+            });
+        }
+        //more dropzone options here
+    });
 
+    //Add existing files into dropzone
+    var existingFiles = [];
+    var countImage = 0;
+    for (image of images) {
+        if (image != "") {
+            existingFiles.push({ id: countImage, name: image, size: 12345678 });
+        }
+        countImage++;
+    }
+
+    for (i = 0; i < existingFiles.length; i++) {
+        myDropzone.emit("addedfile", existingFiles[i]);
+        myDropzone.emit("thumbnail", existingFiles[i], existingFiles[i].name);
+        myDropzone.emit("complete", existingFiles[i]);
+    }
+}
+function dropzoneForm(id) {
+    $(`#${id}`).dropzone({
+        paramName: "file", // The name that will be used to transfer the file
+        maxFilesize: 2, // MB
+        maxFiles: 6,
+        accept: function (file, done) {
+            var id = this.element.id;
+            uploadFile(file)
+                .then(x => {
+                    if (!listStepImages[id]) listStepImages[id] = [];
+                    listStepImages[id].push({
+                        id: file.upload.uuid,
+                        fileStackUrl: x.url,
+                    });
+                    done();
+                }).catch(err => {
+                    console.error(err);
+                    done();
+                });
+        },
+        success: function (file, response) {
+            obj = JSON.parse(response);
+            console.log(obj.filename); // <---- here is your filename
+        },
+        addRemoveLinks: true,
+        dictDefaultMessage: "Upload hình ảnh (tối đa 6 ảnh)",
+        removedfile: function (file) {
+            var name = file.name;
+            $.ajax({
+                type: 'POST',
+                url: 'delete.php',
+                data: "id=" + name,
+                dataType: 'html'
+            });
+            var _ref;
+            // clean in listStepImages
+            var stepImagesId = this.element.id;
+
+            if (listStepImages[stepImagesId] != null) {
+                listStepImages[stepImagesId] = listStepImages[stepImagesId].filter(function (value, index, arr) {
+                    return value.id != file.upload.uuid;
+                });
+            }
+            // remove dragzone image and return value
+            return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+        },
+        init: function () {
+            this.on('error', function (file, errorMessage) {
+                if (file.accepted) {
+                    var mypreview = document.getElementsByClassName('dz-error');
+                    mypreview = mypreview[mypreview.length - 1];
+                    mypreview.classList.toggle('dz-error');
+                    mypreview.classList.toggle('dz-success');
+                }
+            });
+            this.on("success", function (file, responseText) {
+                console.log(responseText);
+            });
+        }
+    });
+}
+function uploadFile(file) {
+    return new Promise((resolve, reject) => {
+        client.upload(file)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    })
+}
+
+(function ($) {
+
+    $.fn.imagePicker = function (options) {
+
+        // Define plugin options
+        var settings = $.extend({
+            // Input name attribute
+            name: "",
+            // Classes for styling the input
+            class: "form-control btn btn-default btn-block",
+            // Icon which displays in center of input
+            icon: "glyphicon glyphicon-plus"
+        }, options);
+
+        // Create an input inside each matched element
+        return this.each(function () {
+            $(this).html(create_btn(this, settings));
+        });
+
+    };
+
+    // Private function for creating the input element
+    function create_btn(that, settings) {
+        // The input icon element
+        var picker_btn_icon = $('<i class="' + settings.icon + '"></i>');
+
+        // The actual element displayed
+        var picker_btn = $('<div class="' + settings.class + ' img-upload-btn"></div>')
+            .append(picker_btn_icon)
+        var picker_btn_input = $("input[name='avatarUpload']")
+        // File load listener
+        picker_btn_input.change(async function () {
+            var eleJquery = $(this);
+            if (eleJquery.prop('files')[0]) {
+                // Use FileReader to get file
+                var reader = new FileReader();
+                // Create a preview once image has loaded
+                reader.onload = async function (e) {
+                    var preview = await create_preview(that, e.target.result, settings);
+                    $(that).html(preview);
+                    // update data temp src, later
+                }
+                // Load image
+                reader.readAsDataURL(picker_btn_input.prop('files')[0]);
+                $(that).css('display', 'block');
+            }
+            else if (eleJquery.attr("data-temp-src")) {
+                var tempSrc = eleJquery.attr("data-temp-src");
+                var preview = await create_preview(that, tempSrc, settings);
+                $(that).html(preview);
+                $(that).css('display', 'block');
+            }
+        });
+
+        return picker_btn
+    };
+
+    // Private function for creating a preview element
+    async function create_preview(that, src, settings) {
+        var image;
+        // upload
+        if (src.indexOf("http") !== -1) {
+            image = src;
+        }
+        else {
+            var fileStackImage = await uploadFile(src);
+            image = fileStackImage.url;
+        }
+        // The preview image
+        var picker_preview_image = $('<img src="' + image + '" class="img-responsive img-rounded" />');
+        // The preview element
+        var picker_preview = $('<div class="text-center"></div>')
+            .append(picker_preview_image)
+        return picker_preview;
+    };
+
+}(jQuery));

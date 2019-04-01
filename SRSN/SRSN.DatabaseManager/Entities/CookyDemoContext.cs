@@ -53,7 +53,7 @@ namespace SRSN.DatabaseManager.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=123456789;Trusted_Connection=False;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
 
@@ -135,6 +135,10 @@ namespace SRSN.DatabaseManager.Entities
                     .HasName("UserNameIndex")
                     .IsUnique()
                     .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Email).HasMaxLength(256);
 
@@ -259,7 +263,7 @@ namespace SRSN.DatabaseManager.Entities
 
             modelBuilder.Entity<Ingredients>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.SuggestQuantitive).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -345,6 +349,8 @@ namespace SRSN.DatabaseManager.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.SaveDraft).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
                 entity.HasOne(d => d.User)
@@ -379,11 +385,6 @@ namespace SRSN.DatabaseManager.Entities
                 entity.Property(e => e.IngredientName).HasMaxLength(100);
 
                 entity.Property(e => e.Quantitative).HasMaxLength(100);
-
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.RecipeIngredient)
-                    .HasForeignKey(d => d.IngredientId)
-                    .HasConstraintName("FK_Recipe_Ingredient_Ingredients");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeIngredient)

@@ -136,6 +136,10 @@ namespace SRSN.UserBehavior.Entities
                     .IsUnique()
                     .HasFilter("([NormalizedUserName] IS NOT NULL)");
 
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Email).HasMaxLength(256);
 
                 entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
@@ -259,7 +263,7 @@ namespace SRSN.UserBehavior.Entities
 
             modelBuilder.Entity<Ingredients>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.SuggestQuantitive).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Message>(entity =>
@@ -379,11 +383,6 @@ namespace SRSN.UserBehavior.Entities
                 entity.Property(e => e.IngredientName).HasMaxLength(100);
 
                 entity.Property(e => e.Quantitative).HasMaxLength(100);
-
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.RecipeIngredient)
-                    .HasForeignKey(d => d.IngredientId)
-                    .HasConstraintName("FK_Recipe_Ingredient_Ingredients");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeIngredient)

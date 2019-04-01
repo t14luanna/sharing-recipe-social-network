@@ -8,6 +8,69 @@
     <link rel="stylesheet" href="~/css/submit-recipe.css" />
     <link rel="stylesheet" href="~/recipepress/css/basic.css" />
     <link rel="stylesheet" href="~/recipepress/css/dropzone.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 16px Arial;
+        }
+
+        /*the container must be positioned relative:*/
+        .autocomplete {
+            position: relative;
+            display: inline-block;
+        }
+
+        input {
+            border: 1px solid transparent;
+            /*background-color: #f1f1f1;*/
+            padding: 10px;
+            font-size: 16px;
+        }
+
+            input[type=text] {
+                /*background-color: #f1f1f1;*/
+                width: 100%;
+            }
+
+            input[type=submit] {
+                background-color: DodgerBlue;
+                color: #fff;
+                cursor: pointer;
+            }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            left: 0;
+            right: 0;
+        }
+
+            .autocomplete-items div {
+                padding: 10px;
+                cursor: pointer;
+                background-color: #fff;
+                border-bottom: 1px solid #d4d4d4;
+            }
+
+                /*when hovering an item:*/
+                .autocomplete-items div:hover {
+                    background-color: #e9e9e9;
+                }
+
+        /*when navigating through the items using the arrow keys:*/
+        .autocomplete-active {
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
+    </style>
 }
 
 <div class="recipes-home-body inner-page">
@@ -23,27 +86,28 @@
                         </ul>
                         <div class="tabs-container">
                             <div class="tab-content" id="congthuc" style="display: block;">
-                                <div class="submit-recipe-form">
+                                <div class="submit-recipe-form" id="submit-recipe-form">
+                                    <input type="hidden" name="recipeId" id="recipeId" value="0" />
                                     <label for="upload-image">Ảnh đại diện cho món ăn*</label>
                                     <span class="error" name="avatarUpload">*Hình đại diện không được để trống</span>
                                     <div class="form-group col-sm-12">
-                                        <div class="img-picker" style="display:none"></div>
+                                        <div class="img-picker" id="coverAvatar" style="display:none"></div>
                                     </div>
-                                    <input type="file" name="avatarUpload" id="upload-image" required />
+                                    <input type="file" name="avatarUpload" data-temp-src="" id="upload-image" required />
                                     <span class="error" name="title">*Tiêu đề không được để trống</span>
                                     <input type="text" name="title" id="title" placeholder="Nhập tên công thức*" required />
                                     <br />
                                     <span class="error" name="content">*Nội dung không được để trống</span>
                                     <textarea name="content" id="recipe-content" cols="30" rows="10" placeholder="Nhập nội dung công thức*" required></textarea>
                                     <label class="col-md-3 custom-label-submit">Số khẩu phần ăn*</label>
-                                    <input type="number" name="serving" placeholder="Serving" value="1" required />
-                                    </br>
+                                    <input type="number" name="serving" id="serving" placeholder="Serving" value="1" required />
+                                    <br />
                                     <label class="col-md-3 custom-label-submit">Thời gian nấu (phút)*</label>
-                                    <input type="number" name="cooktime" placeholder="Cook time" value="1" required />
-                                    </br>
+                                    <input type="number" name="cooktime" id="cooktime" placeholder="Cook time" value="1" required />
+                                    <br />
                                     <div class="form-group">
                                         <label class="col-md-3 custom-label-submit">Độ khó*</label>
-                                        <select name="level" class="form-control">
+                                        <select name="level" id="level" class="form-control">
                                             <option value="1">Dễ</option>
                                             <option value="2">Trung bình</option>
                                             <option value="3">Khó</option>
@@ -57,10 +121,13 @@
                                             <li>
                                                 <div class="add-fields">
                                                     <span class="ingredient-handler-list handler-list">
-                                                    <i class="fa fa-arrows"></i>
+                                                        <i class="fa fa-arrows"></i>
                                                     </span>
-                                                    <input class="ingredient-detail" type="text" name="ingredients" id="ingredients" placeholder="Muối, Đường, thịt gà ..." />
-                                                    <input class="ingredient-weight" type="text" name="ingredientsWeight" placeholder="1g, 1kg, 1 thìa ..." />
+                                                    <div class="autocomplete">
+                                                        <input class="ingredient-detail" type="text" name="ingredients" id="ingredients1" data-suggest-quantitivie="ingredientsWeight1"
+                                                               onclick="SuggestIngredient(this);" placeholder="Muối, Đường, thịt gà ..." />
+                                                    </div>
+                                                    <input class="ingredient-weight" type="text" name="ingredientsWeight" id="ingredientsWeight1" placeholder="1g, 1kg, 1 thìa ..." />
                                                     <span class="del-list">
                                                         <i class="fa fa-trash"></i>
                                                     </span>
@@ -80,15 +147,15 @@
                                                     <span class="handler-list">
                                                         <i class="fa fa-arrows"></i>
                                                     </span>
-                                                    <textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>
+                                                    <textarea class="short-text" name="stepsDes" id="stepsDes1" cols="30" rows="10">    </textarea>
                                                     <span class="del-list">
                                                         <i class="fa fa-trash"></i>
                                                     </span>
                                                 </div>
                                                 <div class="add-fields" style="margin-top: 20px">
-                                                    <textarea class="short-text" name="stepsTips" id="stepsTips" cols="30" rows="10" placeholder="Mẹo nhỏ cho bước này (có thể bỏ qua)"></textarea>
+                                                    <textarea class="short-text" name="stepsTips" id="stepsTips1" cols="30" rows="10" placeholder="Mẹo nhỏ cho bước này (có thể bỏ qua)"></textarea>
                                                 </div>
-                                                <form action="/file-upload" class="dropzone drop-zone-form" id="myAwesomeDropzone">
+                                                <form action="/file-upload" class="dropzone drop-zone-form" id="myAwesomeDropzone1">
                                                     <div class="fallback">
                                                         <input name="file" type="file" multiple />
                                                     </div>
@@ -99,7 +166,7 @@
                                             <i class="fa fa-plus"></i>
                                         </span>
                                     </fieldset>
-                                    <input type="text" name="videoCode" placeholder="Video Code" class="input-video" />
+                                    <input type="text" name="videoCode" id="video-code" placeholder="Video Code" class="input-video" />
                                     <div class="text-center">
                                         <button type="button" id="nextBtn" class="recipe-submit-btn">Bước tiếp theo</button>
                                     </div>
@@ -197,75 +264,93 @@
     <script src="~/js/menu-widgets.js"></script>
 
     <script type="text/javascript">
-        //{
-        //    // id ste images - value (delimeter ;)
-        //    "myAwesomeDropzone": "http://filestack.com/images/url;http://filestack.com/images/url2;",
-        //    "myAwesomeDropzone2": "http://filestack.com/images/url;http://filestack.com/images/url2;"
-        //}
-        var listStepImages = {};
 
+        
+        async function SuggestIngredient(e) {
+            var res = await fetch(`${BASE_API_URL}/api/ingredients/read-ingredients`);
+            var ingredients = await res.json();
+            var arrayingreName = new Array();;
+            if (ingredients.length > 0) {
+                for (var item of ingredients) {
+                    arrayingreName.push(item.ingredientName)
+
+                }
+                autocomplete(document.getElementById(`${e.id}`), ingredients);
+            }
+        }
+        function autocomplete(inp, arr) {
+            var currentFocus;
+            var item = inp.getAttribute("data-suggest-quantitivie");
+            inp.addEventListener("input", function (e) {
+                var a, b, i, val = this.value;
+                closeAllLists();
+                if (!val) { return false; }
+                currentFocus = -1;
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                this.parentNode.appendChild(a);
+                for (i = 0; i < arr.length; i++) {
+                    if (arr[i].ingredientName.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        b = document.createElement("DIV");
+                        b.innerHTML = "<strong>" + arr[i].ingredientName.substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].ingredientName.substr(val.length);
+                        b.innerHTML += `<input type='hidden' name="${arr[i].suggestQuantitive}" id='${arr[i].id}' value='${arr[i].ingredientName}'>`;
+                        b.addEventListener("click", function (e) {
+                            inp.value = this.getElementsByTagName("input")[0].value;
+                            $(`input[id='${item}']`).val(e.currentTarget.childNodes[2].name);
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+            });
+            inp.addEventListener("keydown", function (e) {
+                var x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    currentFocus++;
+                    addActive(x);
+                } else if (e.keyCode == 38) {
+                    currentFocus--;
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        if (x) x[currentFocus].click();
+                    }
+                }
+            });
+            function addActive(x) {
+                if (!x) return false;
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                x[currentFocus].classList.add("autocomplete-active");
+            }
+            function removeActive(x) {
+                for (var i = 0; i < x.length; i++) {
+                    x[i].classList.remove("autocomplete-active");
+                }
+            }
+            function closeAllLists(elmnt) {
+                var x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                    if (elmnt != x[i] && elmnt != inp) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
+                }
+            }
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+            });
+        }
         const changeHeadername = async () => {
             var someText = "Đăng công thức";
             $('.main-heading h1').append(document.createTextNode(someText));
         };
-        const dropzoneForm = async (id) => {
-            $(`#${id}`).dropzone({
-                paramName: "file", // The name that will be used to transfer the file
-                maxFilesize: 2, // MB
-                maxFiles: 6,
-                accept: function (file, done) {
-                    var id = this.element.id;
-                    uploadFile(file)
-                        .then(x => {
-                            if (!listStepImages[id]) listStepImages[id] = [];
-                            listStepImages[id].push({
-                                id: file.upload.uuid,
-                                fileStackUrl: x.url,
-                            });
-                            done();
-                        }).catch(err => {
-                            console.error(err);
-                            done();
-                        });
-                },
-                addRemoveLinks: true,
-                dictDefaultMessage: "Upload hình ảnh (tối đa 6 ảnh)",
-                removedfile: function (file) {
-                    debugger;
-                    var name = file.name;
-                    $.ajax({
-                        type: 'POST',
-                        url: 'delete.php',
-                        data: "id=" + name,
-                        dataType: 'html'
-                    });
-                    var _ref;
-                    // clean in listStepImages
-                    var stepImagesId = this.element.id;
-
-                    if (listStepImages[stepImagesId] != null) {
-                        listStepImages[stepImagesId] = listStepImages[stepImagesId].filter(function (value, index, arr) {
-                            return value.id != file.upload.uuid;
-                        });
-                    }
-                    // remove dragzone image and return value
-                    return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
-                },
-                init: function () {
-                    this.on('error', function (file, errorMessage) {
-                        if (file.accepted) {
-                            var mypreview = document.getElementsByClassName('dz-error');
-                            mypreview = mypreview[mypreview.length - 1];
-                            mypreview.classList.toggle('dz-error');
-                            mypreview.classList.toggle('dz-success');
-                        }
-                    });
-                }
-            });
-        }
-
         (async () => {
-            await dropzoneForm('myAwesomeDropzone');
+            //await dropzoneForm('myAwesomeDropzone1');
             await changeHeadername();
             await callLatestRecipeWidgetApi();
             await callListCategoryItem();
@@ -274,7 +359,8 @@
             await RedirectAPI();
             $('#submitBtn').on("click", async function (event) {
                 $("#loading-box").show();
-                var results = getData();
+                var currentDraftedRecipe = JSON.parse(window.localStorage.getItem("darftedRecipe"));
+                var results = getData(currentDraftedRecipe, false);
                 console.log(results)
                 if (results.validation === false) {
                     window.scrollTo(0, 400);
@@ -287,9 +373,8 @@
                     $("#loading-box").hide();
                     return;
                 } else {
-                    debugger;
                     var data = results.data;
-                    data = await uploadImageSubmit(data);
+                    //data = await uploadImageSubmit(data);
                     var recipeId;
                     var authorization = localStorage.getItem("authorization");
                     var token = (JSON.parse(authorization))["token"];
@@ -357,6 +442,7 @@
                                     });
                                 }
                                 window.location.href = `/recipe/${recipeId}`
+                                window.localStorage.removeItem("darftedRecipe");
                             }, 1500);
 
 
@@ -370,5 +456,7 @@
 
             });
         })();
+        
+       
     </script>
 }

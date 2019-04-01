@@ -35,7 +35,7 @@ const createContentRecipe = (recipe) =>
         <p>${recipe.contentRecipe}</p>`;
 
 const createSingleIngredientOfRecipe = (ingredient) =>
-    ` <li class="col-sm-3">
+    ` <li class="col-sm-4">
         <label>
             <input type="checkbox" value="${ingredient.recipeId}-${ingredient.ingredientName}" name="ori-ingredient"/><h4 class="title-ingredients">${ingredient.ingredientName}</h4> ${ingredient.quantitative} 
         </label>

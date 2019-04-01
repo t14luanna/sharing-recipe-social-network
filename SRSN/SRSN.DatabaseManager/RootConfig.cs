@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,6 +79,7 @@ namespace SRSN.DatabaseManager
             services.AddScoped(typeof(IUserReportRecipeService), typeof(UserReportRecipeService));
             services.AddScoped(typeof(IUserReportUserService), typeof(UserReportUserService));
             services.AddScoped(typeof(IRecipeCategoryService), typeof(RecipeCategoryService));
+            services.AddScoped(typeof(IIngredientsService), typeof(IngredientsService));
 
             // cau hinh AutoMapper
             var mapperConfig = new MapperConfiguration(mc =>
@@ -170,9 +172,15 @@ namespace SRSN.DatabaseManager
                 mc.CreateMap<CollectionPostViewModel, CollectionPost>()
                     .ForMember(x => x.Collection, y => y.Ignore())
                     .ForMember(x => x.RecipePost, y => y.Ignore());
+                mc.CreateMap<IngredientsViewModel, Ingredients>();
+                mc.CreateMap<Ingredients, IngredientsViewModel>();
             });
+            
             var mapper = mapperConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);
+
+            services.AddTransient<IEmailSender, EmailSender>();
+
         }
     }
 }
