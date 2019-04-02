@@ -16,6 +16,7 @@ namespace SRSN.DatabaseManager.Entities
             RecipeIngredient = new HashSet<RecipeIngredient>();
             StepsOfRecipe = new HashSet<StepsOfRecipe>();
             UserReactionRecipe = new HashSet<UserReactionRecipe>();
+            UserReportRecipe = new HashSet<UserReportRecipe>();
         }
 
         public int Id { get; set; }
@@ -48,5 +49,6 @@ namespace SRSN.DatabaseManager.Entities
         public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
         public virtual ICollection<StepsOfRecipe> StepsOfRecipe { get; set; }
         public virtual ICollection<UserReactionRecipe> UserReactionRecipe { get; set; }
+        public virtual ICollection<UserReportRecipe> UserReportRecipe { get; set; }
     }
 }

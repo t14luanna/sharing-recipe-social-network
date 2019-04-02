@@ -5,6 +5,7 @@ var listLocalStepImages = {};
 var localStepsCount = 0;
 const client = filestack.init(apikey);
 var countIngredient = 1;
+Dropzone.autoDiscover = false;
 $('.add-recipe-steps').on("click", function (event) {
     event.preventDefault();
     countsteps++;
@@ -458,6 +459,8 @@ function GetImageDraftedRecipe(currentStep, dropZoneId) {
                 $(".add-recipe-steps").trigger("click");
                 countsteps = localStepsCount;
             }
+            
+
             if (images.length > 0) {
                 try {
                     displayImage(`myAwesomeDropzone${localStepsCount}`, images);
@@ -491,10 +494,10 @@ function GetImageDraftedRecipe(currentStep, dropZoneId) {
         }
         else {
             ++countToServerSaveDraft;
-            // local save draft
-            DraftRecie(currentRecipe);
         }
-    }, 5000);
+        // local save draft
+        DraftRecie(currentRecipe);
+    }, 2000);
 })();
 
 function LoadCheckedCategory() {
@@ -512,91 +515,96 @@ function LoadCheckedCategory() {
         }
     }
 }
+
 function displayImage(id, images) {
-    Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone(`#${id}`, {
-        paramName: "file", // The name that will be used to transfer the file
-        maxFilesize: 2, // MB
-        maxFiles: 6,
-        addRemoveLinks: true,
-        accept: function (file, done) {
-            var id = this.element.id;
-            uploadFile(file)
-                .then(x => {
-                    if (!listStepImages[id]) listStepImages[id] = [];
-                    listStepImages[id].push({
-                        id: file.upload.uuid,
-                        fileStackUrl: x.url,
+    try {
+        var myDropzone = new Dropzone(`#${id}`,{
+            paramName: "file", // The name that will be used to transfer the file
+            maxFiles: 6,
+            addRemoveLinks: true,
+            dictDefaultMessage: "Upload hình ảnh (tối đa 6 ảnh)",
+            url: "/file/post",
+            accept: function (file, done) {
+                var id = this.element.id;
+                uploadFile(file)
+                    .then(x => {
+                        if (!listStepImages[id]) listStepImages[id] = [];
+                        listStepImages[id].push({
+                            id: file.upload.uuid,
+                            fileStackUrl: x.url,
+                        });
+                        done();
+                    }).catch(err => {
+                        console.error(err);
+                        done();
                     });
-                    done();
-                }).catch(err => {
-                    console.error(err);
-                    done();
+            },
+            removedfile: function (file) {
+                var name = file.name;
+                $.ajax({
+                    type: 'POST',
+                    url: 'delete.php',
+                    data: "id=" + name,
+                    dataType: 'html'
                 });
-        },
-        removedfile: function (file) {
-            var name = file.name;
-            $.ajax({
-                type: 'POST',
-                url: 'delete.php',
-                data: "id=" + name,
-                dataType: 'html'
-            });
-            var _ref;
-            // clean in listStepImages
-            var stepImagesId = this.element.id;
-            if (listStepImages[stepImagesId] != null) {
-                listStepImages[stepImagesId] = listStepImages[stepImagesId].filter(function (value, index, arr) {
-                    return value.id != file.upload.uuid;
-                });
-            }
-            removeImageLocal();
-            if (listLocalStepImages[stepImagesId] != null) {
-                listLocalStepImages[stepImagesId] = listLocalStepImages[stepImagesId].filter(function (value, index, arr) {
-                    return index != file.id;
-                });
-                var imageUrl = "";
-                listLocalStepImages[stepImagesId].forEach(x => {
-                    imageUrl += x.fileStackUrl + ";";
-                })
-                $(".drop-zone-form").each((index, value) => {
-                    if (value.id == stepImagesId) {
-                        var draftRep = JSON.parse(window.localStorage.getItem("darftedRecipe"));
-                        draftRep.data.listSORVM[index].ImageUrl = imageUrl;
-                        window.localStorage.setItem("darftedRecipe", JSON.stringify(draftRep));
-                    }
-                })
-            }
-            // remove dragzone image and return value
-            return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
-        },
-        init: function () {
-            this.on('error', function (file, errorMessage) {
-                if (file.accepted) {
-                    var mypreview = document.getElementsByClassName('dz-error');
-                    mypreview = mypreview[mypreview.length - 1];
-                    mypreview.classList.toggle('dz-error');
-                    mypreview.classList.toggle('dz-success');
+                var _ref;
+                // clean in listStepImages
+                var stepImagesId = this.element.id;
+                if (listStepImages[stepImagesId] != null) {
+                    listStepImages[stepImagesId] = listStepImages[stepImagesId].filter(function (value, index, arr) {
+                        return value.id != file.upload.uuid;
+                    });
                 }
-            });
-        }
-        //more dropzone options here
-    });
+                removeImageLocal();
+                if (listLocalStepImages[stepImagesId] != null) {
+                    listLocalStepImages[stepImagesId] = listLocalStepImages[stepImagesId].filter(function (value, index, arr) {
+                        return index != file.id;
+                    });
+                    var imageUrl = "";
+                    listLocalStepImages[stepImagesId].forEach(x => {
+                        imageUrl += x.fileStackUrl + ";";
+                    })
+                    $(".drop-zone-form").each((index, value) => {
+                        if (value.id == stepImagesId) {
+                            var draftRep = JSON.parse(window.localStorage.getItem("darftedRecipe"));
+                            draftRep.data.listSORVM[index].ImageUrl = imageUrl;
+                            window.localStorage.setItem("darftedRecipe", JSON.stringify(draftRep));
+                        }
+                    })
+                }
+                // remove dragzone image and return value
+                return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+            },
+            init: function () {
+                this.on('error', function (file, errorMessage) {
+                    if (file.accepted) {
+                        var mypreview = document.getElementsByClassName('dz-error');
+                        mypreview = mypreview[mypreview.length - 1];
+                        mypreview.classList.toggle('dz-error');
+                        mypreview.classList.toggle('dz-success');
+                    }
+                });
+            }
+            //more dropzone options here
+        });
 
-    //Add existing files into dropzone
-    var existingFiles = [];
-    var countImage = 0;
-    for (image of images) {
-        if (image != "") {
-            existingFiles.push({ id: countImage, name: image, size: 12345678 });
+        //Add existing files into dropzone
+        var existingFiles = [];
+        var countImage = 0;
+        for (image of images) {
+            if (image != "") {
+                existingFiles.push({ id: countImage, name: image, size: 12345678 });
+            }
+            countImage++;
         }
-        countImage++;
-    }
 
-    for (i = 0; i < existingFiles.length; i++) {
-        myDropzone.emit("addedfile", existingFiles[i]);
-        myDropzone.emit("thumbnail", existingFiles[i], existingFiles[i].name);
-        myDropzone.emit("complete", existingFiles[i]);
+        for (i = 0; i < existingFiles.length; i++) {
+            myDropzone.emit("addedfile", existingFiles[i]);
+            myDropzone.emit("thumbnail", existingFiles[i], existingFiles[i].name);
+            myDropzone.emit("complete", existingFiles[i]);
+        }
+    } catch (e) {
+        console.err("Display image error: ", e);
     }
 }
 function dropzoneForm(id) {

@@ -53,7 +53,7 @@ namespace SRSN.DatabaseManager.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=12345678;Trusted_Connection=False;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=baongoc1997;Trusted_Connection=False;");
             }
         }
 
@@ -511,6 +511,12 @@ namespace SRSN.DatabaseManager.Entities
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("isActive");
+
+                entity.HasOne(d => d.RecipeReported)
+                    .WithMany(p => p.UserReportRecipe)
+                    .HasForeignKey(d => d.RecipeReportedId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Report_Recipe_Recipe");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserReportRecipe)

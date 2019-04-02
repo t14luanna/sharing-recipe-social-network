@@ -255,7 +255,7 @@
     <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
 
 
-    <script type="text/javascript" src="~/recipepress//js/dropzone.js"></script>
+    <script type="text/javascript" src="~/recipepress/js/dropzone.js"></script>
     @*<script type="text/javascript" src="~/recipepress//js/dropzone-amd-module.js"></script>*@
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
     <script src="~/js/notification.js"></script>
@@ -264,8 +264,6 @@
     <script src="~/js/menu-widgets.js"></script>
 
     <script type="text/javascript">
-
-        
         async function SuggestIngredient(e) {
             var res = await fetch(`${BASE_API_URL}/api/ingredients/read-ingredients`);
             var ingredients = await res.json();
@@ -350,8 +348,10 @@
             $('.main-heading h1').append(document.createTextNode(someText));
         };
         (async () => {
-            //await dropzoneForm('myAwesomeDropzone1');
             await changeHeadername();
+            if (JSON.parse(window.localStorage.getItem("darftedRecipe")) == null) {
+                await dropzoneForm('myAwesomeDropzone1');
+            }
             await callLatestRecipeWidgetApi();
             await callListCategoryItem();
             await callPopularRecipeWidgetApi();
