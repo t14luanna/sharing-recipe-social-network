@@ -7,18 +7,15 @@ namespace SRSN.Service.Entities
     {
         public StoreBrand()
         {
-            Store = new HashSet<Store>();
+            Products = new HashSet<Products>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public int? PriceRating { get; set; }
-        public int? QuantityRating { get; set; }
         public string Description { get; set; }
-        public string Fanpage { get; set; }
         public string Website { get; set; }
-        public string Email { get; set; }
+        public string Phone { get; set; }
 
-        public virtual ICollection<Store> Store { get; set; }
+        public virtual ICollection<Products> Products { get; set; }
     }
 }

@@ -515,6 +515,12 @@ namespace SRSN.DatabaseManager.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("isActive");
 
+                entity.HasOne(d => d.RecipeReported)
+                    .WithMany(p => p.UserReportRecipe)
+                    .HasForeignKey(d => d.RecipeReportedId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Report_Recipe_Recipe");
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserReportRecipe)
                     .HasForeignKey(d => d.UserId)

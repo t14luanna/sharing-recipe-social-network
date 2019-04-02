@@ -54,7 +54,7 @@ $("#report-user-form").on("submit", function (e) {
                 'reportedUserId': userReportedId,
                 'description': description
         }); /* tim theo user name*/
-            fetch(`${BASE_API_URL}/userreportuser/create-report-user`, {
+            fetch(`${BASE_API_URL}/api/userreportuser/create-report-user`, {
                 method: 'POST',
                 body: data,
                 headers: {

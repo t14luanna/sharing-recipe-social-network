@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
 
@@ -16,10 +18,12 @@ namespace SRSN.ClientApi.Controllers
     public class UserReportRecipeController : ControllerBase
     {
         private IUserReportRecipeService userReportRecipeService;
+        private UserManager<SRSNUser> userManager;
 
-        public UserReportRecipeController(IUserReportRecipeService userReportRecipeService)
+        public UserReportRecipeController(IUserReportRecipeService userReportRecipeService, UserManager<SRSNUser> userManager)
         {
             this.userReportRecipeService = userReportRecipeService;
+            this.userManager = userManager;
         }
 
         [HttpPost("create-report-recipe")]
@@ -41,5 +45,32 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("get-all-reported-recipe")]
+        public async Task<ActionResult> GetAllReportedUser()
+        {
+            try
+            {
+                return Ok(await userReportRecipeService.GetAllReportedRecipe(this.userManager));//them await chổ này để trả về json ko có chữ result 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("deactive-report-recipe")]
+        public async Task<ActionResult> DeActiveRecipeReport(int id)
+        {
+            try
+            {
+                await userReportRecipeService.DeActiveRecipeReport(id);
+                return Ok(Boolean.TrueString);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
     }
 }
