@@ -8,10 +8,11 @@ namespace SRSN.Service.Entities
         public Post()
         {
             Comment = new HashSet<Comment>();
+            UserReactionPost = new HashSet<UserReactionPost>();
         }
 
         public int Id { get; set; }
-        public string UserId { get; set; }
+        public int? UserId { get; set; }
         public double? Price { get; set; }
         public string ImageUrl { get; set; }
         public int? LevelRecipe { get; set; }
@@ -19,9 +20,13 @@ namespace SRSN.Service.Entities
         public int? RecipeId { get; set; }
         public string ContentPost { get; set; }
         public string VideoUrl { get; set; }
+        public DateTime? CreateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
+        public bool? Active { get; set; }
 
         public virtual Recipe Recipe { get; set; }
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }
+        public virtual ICollection<UserReactionPost> UserReactionPost { get; set; }
     }
 }

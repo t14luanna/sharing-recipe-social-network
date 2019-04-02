@@ -53,8 +53,8 @@ $("#report-user-form").on("submit", function (e) {
             var data = JSON.stringify({
                 'reportedUserId': userReportedId,
                 'description': description
-            }); /* tim theo user name*/
-            fetch(`${BASE_API_URL}/${USER_REPORT_USER}/create-report-user`, {
+        }); /* tim theo user name*/
+            fetch(`${BASE_API_URL}/api/userreportuser/create-report-user`, {
                 method: 'POST',
                 body: data,
                 headers: {

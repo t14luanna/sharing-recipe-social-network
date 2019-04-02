@@ -9,6 +9,8 @@ namespace SRSN.DatabaseManager.ViewModels
     {
         public int Id { get; set; }
         public int UserId { get; set; }
+        public string Username { get; set; }
+        public string RecipeReported { get; set; }
         public int RecipeReportedId { get; set; }
         public string Description { get; set; }
         public DateTime? CreateTime { get; set; }

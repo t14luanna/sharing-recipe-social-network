@@ -119,6 +119,8 @@
             $(".close-share-recipe").on("click", function (e) {
                 $(".modal-share-post").css("display", "none");
             });
+            await attachInputSearchCallback();
+            
         })();
 
         var newsFeedGetMorePage = 0;
