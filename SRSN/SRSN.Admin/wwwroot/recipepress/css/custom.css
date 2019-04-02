@@ -1060,3 +1060,6 @@ input[name=ingredient] {
     background: url(https://www.cooky.vn/content/img/gradient.png) left bottom repeat-x;
     opacity: .6;
 }
+.icon-action:hover {
+    color: RGB(110,190,59);
+}

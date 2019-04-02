@@ -34,10 +34,11 @@ namespace SRSN.DatabaseManager.Services
                 var username = userManager.FindByIdAsync(item.UserId.ToString()).Result.UserName;
                 var reportedUser = userManager.FindByIdAsync(item.ReportedUserId.ToString()).Result;
                 var reportedUsername = reportedUser.UserName;
-                //var statusOfReportedUser = reportedUser.isActive;
+                var statusOfReportedUser = reportedUser.Active;
                 var userReportedUserVM = this.EntityToVM(item);
                 userReportedUserVM.Username = username;
                 userReportedUserVM.ReportedUsername = reportedUsername;
+                userReportedUserVM.Active = statusOfReportedUser;
                 listReport.Add(userReportedUserVM);
             }
             return listReport;

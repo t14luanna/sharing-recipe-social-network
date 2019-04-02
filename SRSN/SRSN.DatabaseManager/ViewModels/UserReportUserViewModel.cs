@@ -12,7 +12,7 @@ namespace SRSN.DatabaseManager.ViewModels
         public int ReportedUserId { get; set; }
         public string ReportedUsername { get; set; }
         public string Description { get; set; }
-        public Boolean Status{ get; set; }
+        public Boolean Active{ get; set; }
         public DateTime? CreateTime { get; set; }
     }
 }

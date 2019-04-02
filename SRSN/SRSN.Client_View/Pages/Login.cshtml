@@ -108,7 +108,7 @@
             //$.map(formData, function (n, i) {
             //    data[n['name']] = n['value'];
             //});
-            fetch(`${BASE_API_URL}/api/account/login`, {
+            fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/login`, {
                 method: 'POST', // or 'PUT'
                 body: JSON.stringify({
                     'usernameVM': $('#usernameVM').val(),

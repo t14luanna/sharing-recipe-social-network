@@ -37,7 +37,7 @@
                                    onfocus="this.removeAttribute('readonly');" />
                             <label for="title">Xác nhận mật khẩu*</label>
                             <input type="password" name="confirmPassword" placeholder="Ví dụ: abC@@1234" required autocomplete="off" readonly
-                                   onfocus="this.removeAttribute('readonly');" />
+                                   onfocus="this.removeAttribute('readonly');"/>
                             <label for="birthdateStr">Ngày sinh</label>
                             <input type="text" name="birthdateStr" id="birthdateStr" required />
                             <input type="hidden" name="birthdate" id="birthdate" />
@@ -202,12 +202,14 @@
                             SRSN.FIREBASE_DATABASE.ref("/" + response.username + "/" + uid.key).update({
                                 uid: uid.key
                             });
+                        } else {
+                            $('.error-area').html(response.message);
                         }
                     })
                     .catch(error => console.error('Error:', error));
             }
             else {
-                alert("Đăng ký thất bại")
+                $('.error-area').html("Đăng ký thất bại");
             }
         });
 

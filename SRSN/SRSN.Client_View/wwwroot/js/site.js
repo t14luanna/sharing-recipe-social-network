@@ -5,15 +5,27 @@
 
 
 // Check signed user
-(() => {
+(async () => {
     var username = window.localStorage.getItem("username");
     var authorization = window.localStorage.getItem("authorization");
+    if (authorization != null) {
 
+        var token = (JSON.parse(authorization))["token"];
+        var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        var data = await res.json();
+    }
     if (authorization && username) {
         $(".authorized-group").css("display", "inline-table");//index, recipe page
         $(".noti-message-icon").css("display", "inline-table");//index, recipe page
         $("#noti-message-icon").css("display", "inline-table");//member profile page
-        $("#authorized-group-username").text(username);
+        $("#authorized-group-username").text(data.firstName + " " + data.lastName);
         $("#authorized-group-username").attr("href", "/account/timeline/" + username);
         $(".unauthorized-group").css("display", "none");
         $("#noti-color").css("color", "red");
@@ -21,6 +33,7 @@
         $(".authorized-group").css("display", "none");
         $(".unauthorized-group").css("display", "inline-table");
     }
+
     $("#logoutBtn>.login").on("click", function (e) {
         localStorage.clear();
         window.location.href = '/';

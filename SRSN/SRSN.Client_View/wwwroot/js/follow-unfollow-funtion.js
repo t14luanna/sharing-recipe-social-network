@@ -21,13 +21,23 @@
 };
 
 const callNotification = async (userId) => {
-    var userNameLocalStorage = localStorage.getItem("username");
     var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
     var userData = await userRes.json();
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    var userInfo = await res.json();
     var myDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
     var uid = myDataRef.push({
         "uid": "",
-        "username": userNameLocalStorage,
+        "username": userInfo.firstName + " " + userInfo.lastName,
         "content": "đang theo dõi bạn",
         "date": new Date().toLocaleString(),
         "link": "/account/information/" + userData.username,

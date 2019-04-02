@@ -8210,3 +8210,6 @@ input:-webkit-autofill:active {
     height: 100px;
     margin-left: 15%
 }
+.icon-action:hover {
+    color: #1ab394;
+}

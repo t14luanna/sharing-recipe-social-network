@@ -76,7 +76,7 @@ const createStepImage = (imageUrl, count) => `<div class=" col-md-${count} img-s
 const createStepOneImage = imageUrl => `<div class="col-md-12">
 <img class="one-img-step-recipe" src="${imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
 </div>`
-const createSingleRelatedRecipe = (recipe, ratingStarElement) =>
+const createSingleRelatedRecipe = (recipe) =>
     `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',
                                                                                         '${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}')">
         <div class="recipe-image">
@@ -224,14 +224,8 @@ const callRelatedRecipeApi = async (id) => {
     var data = (await res.json());
 
     for (var item of data) {
-        var ratingStarElement = "";
-        var numStar = item.evRating % 10;
-        if (parseInt(numStar) > 0) {
-            for (var j = 0; j < parseInt(numStar); j++) {
-                ratingStarElement += `<i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
-            }
-        }
-        let element = createSingleRelatedRecipe(item, ratingStarElement);
+        
+        let element = createSingleRelatedRecipe(item);
 
         $("#list-related-recipe").append(element);
         
@@ -451,7 +445,10 @@ const callChefRecipeApi = async (recipeId) => {
     
     chefUsername = window.localStorage.setItem("chefusername", chefUsername);
     $(".about-chef").append(chefView);
-   
+
+    var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${chef.id}`);
+    var userData = await userRes.json();
+    $(".countFollowing-" + chef.id).text(userData.length);
 };
 const callReadNearByStoresApi = async (userLat, userLong, ingredientName) => {
     setMapOnAll(null);
@@ -587,6 +584,14 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
         callReadRatingCommentApi(recipeId);
         //thông báo
         //Đánh giá (comment) công thức firebase
+        var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        var userData = await resUser.json();
         var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
         var usernameLocal = window.localStorage.getItem("username");//người đang comment
         var myDataRef;
@@ -597,7 +602,7 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
              myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
             uid = myDataRef.push({
                 "uid": "",
-                "username": usernameLocal,
+                "username": userData.firstName + " " + userData.lastName,
                 "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
                 "date": new Date().toLocaleString(),
                 "link": "/recipe/" + data.recipeId,
@@ -607,21 +612,22 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
             SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
                 uid: uid.key
             });
-            //thông báo cộng điểm
-            myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
-            uid = myDataRef.push({
-                "uid": "",
-                "username": "Bạn",
-                "content": "đã đánh giá công thức và được cộng thêm <b>5 điểm</b>",
-                "date": new Date().toLocaleString(),
-                "link": "/recipe/" + data.recipeId,
-                "isRead": "False"
-            });
-            //update uid into firebase
-            SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
-                uid: uid.key
-            });
+            
         }
+        //thông báo cộng điểm
+        myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+        uid = myDataRef.push({
+            "uid": "",
+            "username": "Bạn",
+            "content": "đã đánh giá công thức và được cộng thêm <b>5 điểm</b>",
+            "date": new Date().toLocaleString(),
+            "link": "/recipe/" + data.recipeId,
+            "isRead": "False"
+        });
+        //update uid into firebase
+        SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+            uid: uid.key
+        });
         
     } else if (res.status == 400) {
         removeAlert();
@@ -635,7 +641,7 @@ const createReplyView = (replyUser, cmtId, recipeId) => `<ul class="reply-${repl
                         <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                     <div class="comment">
-                        <h5><a href="#">${replyUser.username}</a></h5>
+                        <h5><a href="#">${replyUser.firstName} ${replyUser.lastName}</a></h5>
                         <div class="comment-form">
                             <textarea class="reply-comment" name="reply-${cmtId}" id="message" cols="3" rows="3"></textarea>
                                         <a onclick="callCreateReplyCommentApi(${recipeId}, ${cmtId})" class="reply-button">Đăng</a>
@@ -761,11 +767,19 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
                 //do nothing
             } else {
                 try {
-                    console.log("Starting firebase")
+                    console.log("Starting firebase");
+                    var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+                        method: "GET",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    var userData = await resUser.json();
                     var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                     var uid = myDataRef.push({
                         "uid": "",
-                        "username": usernameLocal,
+                        "username": userData.firstName + " " + userData.lastName,
                         "content": "đã trả lời bình luận về bài viết của bạn.",
                         "date": new Date().toLocaleString(),
                         "link": "/recipe/" + data.recipeId,
@@ -792,22 +806,31 @@ const notifyDependencyCommentedUser = async function (commentParentId) {
 
     try {
         // thong bao cho nguoi chủ comment
-        var ratingRecipeRes = await fetch(`${BASE_API_URL}/${RATING_RECIPE_API_URL}/get-ratingrecipe-by-id?commentParentId=${commentParentId}`);
+        var ratingRecipeRes = await fetch(`${BASE_API_URL}/${USER_REACTION_RECIPE_API_URL}/get-userid-by-commentparentId?commentParentId=${commentParentId}`);
         var userRes = await ratingRecipeRes.json();
-        if (userRes.length) {
-            var userId = userRes[0].userId;
+       
+            var userId = userRes.userId;
             //thông báo
             var user = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
             var userParentCommentRes = await user.json();
-            var userParentComment = userParentCommentRes.username;//chủ comment
+            var usernameParentComment = userParentCommentRes.username;//chủ comment
             var usernameLocal = window.localStorage.getItem("username");//người đang trả lời comment
-            if (usernameLocal == userParentComment) {
+            if (usernameLocal == usernameParentComment) {
                 // do nothing
             } else {
-                var myDataRef = SRSN.FIREBASE_DATABASE.ref(userParentComment);
+
+                var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                var userData = await resUser.json();//nguoi dang comment
+                var myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameParentComment);
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": usernameLocal,
+                    "username": userData.firstName + " " + userData.lastName,
                     "content": "đã trả lời bình luận của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
@@ -818,8 +841,7 @@ const notifyDependencyCommentedUser = async function (commentParentId) {
                     uid: uid.key
                 });
             }
-        }
-        return;
+      
     } catch (e) {
         console.error("Exception notifyDependencyComments: ", e);
         return;
@@ -831,14 +853,14 @@ const createShareRecipeModal = (recipe, dataUser) => `<div class="activity--list
                         <li>
                             <div class="activity--item">
                                 <div class="activity--avatar">
-                                    <a href="/MemberProfile">
+                                    <a href="/account/information/${dataUser.username}">
                                         <img src="${dataUser.avatarImageUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                     </a>
                                 </div>
 
                                 <div class="activity--info fs--14">
                                     <div class="activity--header">
-                                        <p><a href="/MemberProfile">${dataUser.username}</a></p>
+                                        <p><a href="/account/information/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
                                     </div>
 
                                     <div class="activity--content">
@@ -913,7 +935,15 @@ const callCreateShareRecipeModalApi = async (id) => {
     if (res.status == 200) {
         $("#modal-share-recipe").css("display", "none");
         swal("", "Bạn đã chia sẻ công thức thành công", "success")
-        //thông báo chia sẽ công thức (sharing notification)
+        //thông báo chia sẻ công thức (sharing notification)
+        var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        var userData = await resUser.json();
         var chefUsername = window.localStorage.getItem("chefusername");//chủ sở hữu recipe
         var usernameLocal = window.localStorage.getItem("username");//người đang chia sẻ
         var myDataRef, uid;
@@ -925,8 +955,8 @@ const callCreateShareRecipeModalApi = async (id) => {
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                 uid = myDataRef.push({
                     "uid": "",
-                    "username": usernameLocal,
-                    "content": "đã chia sẽ bài viết của bạn.",
+                    "username": userData.firstName + " " + userData.lastName,
+                    "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.referencedRecipeId,
                     "isRead": "False"
