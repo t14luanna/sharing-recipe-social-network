@@ -16,6 +16,7 @@ namespace SRSN.UserBehavior.Entities
             RecipeIngredient = new HashSet<RecipeIngredient>();
             StepsOfRecipe = new HashSet<StepsOfRecipe>();
             UserReactionRecipe = new HashSet<UserReactionRecipe>();
+            UserReportRecipe = new HashSet<UserReportRecipe>();
         }
 
         public int Id { get; set; }
@@ -36,6 +37,7 @@ namespace SRSN.UserBehavior.Entities
         public int? ViewQuantity { get; set; }
         public int? LikeQuantity { get; set; }
         public int? ShareQuantity { get; set; }
+        public bool? SaveDraft { get; set; }
 
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }
@@ -47,5 +49,6 @@ namespace SRSN.UserBehavior.Entities
         public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }
         public virtual ICollection<StepsOfRecipe> StepsOfRecipe { get; set; }
         public virtual ICollection<UserReactionRecipe> UserReactionRecipe { get; set; }
+        public virtual ICollection<UserReportRecipe> UserReportRecipe { get; set; }
     }
 }
