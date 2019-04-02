@@ -37,7 +37,7 @@ namespace SRSN.ClientApi.Controllers
             var existedUsername = await userManager.FindByNameAsync(data.UsernameVM);
             if (existedUsername != null)
             {
-                return Ok(new { message = "Username da ton tai" });
+                return Ok(new { message = "Tên đăng nhập đã tồn tại, vui lòng nhập tên khác!" });
             }
 
             var user = new SRSNUser();
@@ -78,8 +78,11 @@ namespace SRSN.ClientApi.Controllers
         public async Task<ActionResult> Login([FromBody] AccountEditViewModel data)
         {
             var user = await userManager.FindByNameAsync(data.UsernameVM);
-            if (user != null)
+            string messg = "";
+
+            if (user != null && userManager.FindByNameAsync(data.UsernameVM).Result.Active == true)
             {
+
                 var isCorrect = await userManager.CheckPasswordAsync(user, data.Password);
                 if (isCorrect)
                 {
@@ -94,10 +97,19 @@ namespace SRSN.ClientApi.Controllers
                     });
                 }
             }
+            else if (user != null && userManager.FindByNameAsync(data.UsernameVM).Result.Active == false)
+            {
+                messg = "Tài khoảng đã bị khóa!";
+            }
+            else
+            {
+                messg = "Đăng nhập thất bại, tên đăng nhập hoặc mật khẩu không chính xác.";
+            }
+
 
             return Ok(new
             {
-                message = "Đăng nhập thất bại, tên đăng nhập hoặc mật khẩu không chính xác.",
+                message = messg,
                 success = false,
             });
         }
@@ -141,7 +153,8 @@ namespace SRSN.ClientApi.Controllers
         public async Task<IEnumerable<AccountViewModel>> GetAllUser(int limit = 23, int page = 0)
         {
             var list = new List<AccountViewModel>();
-            foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point))
+            var listUserEntity = userManager.Users.ToList().OrderByDescending(u => u.Point).Where(p => p.Active == true);
+            foreach (var u in listUserEntity)
             {
                 var user = u;
                 var userVM = new AccountViewModel();
@@ -250,14 +263,7 @@ namespace SRSN.ClientApi.Controllers
             {
 
                 var currentUser = await userManager.FindByIdAsync(reportedUserId.ToString());
-                if (currentUser.Active)
-                {
-                    currentUser.Active = false;
-                }
-                else
-                {
-                    currentUser.Active = true;
-                }
+                currentUser.Active = currentUser.Active ? false : true;
                 await userManager.UpdateAsync(currentUser);
 
                 return Ok(new
@@ -271,7 +277,8 @@ namespace SRSN.ClientApi.Controllers
             {
 
                 return BadRequest();
-            }}
+            }
+        }
 
         [HttpPut("change-password")]
         [Authorize]

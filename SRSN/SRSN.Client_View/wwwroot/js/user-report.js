@@ -44,7 +44,7 @@ $("#report-user-form").on("submit", function (e) {
     }
     var currentUrl = window.location.href;
     var userName = currentUrl.substr(currentUrl.indexOf('account/information/')).replace('account/information/', '');
-    fetch(`${BASE_API_URL}/api/account/read-username?userName=` + userName)
+    fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?userName=` + userName)
         .then(res => res.json())
         .then(response => {
             var userReportedId = response.id;
@@ -53,8 +53,8 @@ $("#report-user-form").on("submit", function (e) {
             var data = JSON.stringify({
                 'reportedUserId': userReportedId,
                 'description': description
-        }); /* tim theo user name*/
-            fetch(`${BASE_API_URL}/userreportuser/create-report-user`, {
+            }); /* tim theo user name*/
+            fetch(`${BASE_API_URL}/${USER_REPORT_USER}/create-report-user`, {
                 method: 'POST',
                 body: data,
                 headers: {

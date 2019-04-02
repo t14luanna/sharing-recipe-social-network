@@ -72,7 +72,7 @@ const createAvatarContainer = (user, count) =>
     `<div class="cover--avatar online profile-pic" data-overlay="0.3" data-overlay-color="primary">
         <input type="hidden" name="avatarUrl"/>
                                 <img class="" id="imgAvatar" src="${user.avatarImageUrl}" alt="" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
-<div class="edit"><a href="javascript:void()" onclick="document.getElementById('avatarPicker').click()"><i class="fa fa-pencil fa-lg"></i><input type="file" id="avatarPicker" onchange="avatarPickerChange(this)" style="display:none;" /></a></div>
+<div class="edit"><a href="javascript:void()" onclick="document.getElementById('avatarPicker').click()"><i class="fa fa-pencil fa-lg"></i><input type="file" id="avatarPicker" onchange="avatarPickerChange(this, user)" style="display:none;" /></a></div>
                             </div>
 
                             <div class="cover--user-name">
@@ -226,9 +226,11 @@ const loadAvatarContainer = async (username) => {
     }
 };
 
-function avatarPickerChange(elePicker) {
+function avatarPickerChange(elePicker, user) {
     var elePreview = $("#imgAvatar");
     var reader = new FileReader();
+    var userNameLocalStorage = localStorage.getItem("username");
+
     reader.onload = function (e) {
         elePreview.attr("src", e.target.result);
         // if change src
@@ -240,7 +242,7 @@ function avatarPickerChange(elePicker) {
     }
 
 
-    if (data.username == userNameLocalStorage) {
+    if (user.username == userNameLocalStorage) {
         $(".dropdown").css("display", "none");
         //$(".follow-btn").css("display", "none");
         //$(".unfollow-btn").css("display", "none");

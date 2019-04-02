@@ -494,10 +494,11 @@
     <script src="js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom and plugin javascript -->
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <script src="js/inspinia.js"></script>
     <script src="js/plugins/pace/pace.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script src="~/js/Configuration.js"></script>
     <script src="~/js/manage-report-user.js"></script>
 
@@ -509,7 +510,7 @@
             var res = await fetch(`${BASE_API_URL}/${USER_REPORT_USER_API_URL}/get-reported-user`);
             var data = await res.json();
 
-            
+
 
             $('.dataTables-example').DataTable({
                 data: data,
@@ -568,7 +569,7 @@
 
             });
 
-            
+
         })();
 
         function blockUserFunction(reportedUserId) {
