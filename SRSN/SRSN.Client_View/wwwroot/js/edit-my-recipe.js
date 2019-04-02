@@ -6,7 +6,7 @@ var localStepsCount = 0;
 var countIngredient = 0;
 var countsteps = 0;
 const createRecipeImageCoverInfo = (info) =>
-    `<div class="text-center"><img src=${info.imageCover} class="img-responsive img-rounded"/></div>`;
+    `<div class="text-center"><img src="${info.imageCover}" class="img-responsive img-rounded"/></div>`;
 
 const createRecipeInfo = (info) => {
     $('#title').val(`${info.recipeName}`);
@@ -20,6 +20,7 @@ const createRecipeInfo = (info) => {
         }
     });
     $('input[name="videoCode"]').val(info.videoCode);
+    $('input[name="createTime"]').val(info.createTime);
 };
 
 const recipeDetailsByRecipeId = async (recipeId) => {
@@ -189,7 +190,7 @@ function getData() {
     var cooktime = $("input[name='cooktime']").val();
     var level = $("select[name='level']").val();
     var videoCode = $("input[name='videoCode']").val();
-
+    var createTime = $('input[name="createTime"]').val();
     var ingredientsWeight = $("input[name='ingredientsWeight']");
     var ingredientsName = $("input[name='ingredients']");
     var ingredients = [];
@@ -246,6 +247,7 @@ function getData() {
         recipeVM: {
             ImageCover: avatar,
             Id: recipeId,
+            CreateTime: createTime,
             Active: JSON.parse(active),
             ContentRecipe: content,
             RecipeName: title,
@@ -533,7 +535,7 @@ function uploadFile(file) {
             image = fileStackImage.url;
         }
         // The preview image
-        var picker_preview_image = $('<img src="' + image + '" class="img-responsive img-rounded" />');
+        var picker_preview_image = image;
         // The preview element
         var picker_preview = $('<div class="text-center"></div>')
             .append(picker_preview_image)
