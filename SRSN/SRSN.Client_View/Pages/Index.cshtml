@@ -90,7 +90,19 @@
                                                                 </a>
                                                                 <ul id="list-notification" class="scroll-notification"></ul>
                                                             </li>
-                                                            <li><a href="/MessageChat"><i class="fa fa-envelope"></i></a></li>
+                                                            <li>
+                                                            <a href="/MessageChat">
+                                                                <i class="fa fa-envelope">
+                                                                    <span style="
+                                                                          position: absolute;
+                                                                          top: 5px;
+                                                                          right: -4px;
+                                                                          padding: 0px 5px;
+                                                                          border-radius: 50%;
+                                                                          background-color: red;
+                                                                          color: white; font-size: 12px" id="number-of-message-notification"></span>
+                                                                </i>
+                                                                </a></li>
                                                         </ul>
                                                     </nav>
                                                 </li>
@@ -388,7 +400,8 @@
 <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
 <script type="text/javascript" src="~/js/Configuration.js"></script>
 <script src="~/js/notification.js"></script>
-    
+<script src="~/js/notification-message.js"></script>
+
 <script src="~/js/index.js"></script>
 <script src="~/js/site.js"></script>
 <script src="~/js/recipe.js"></script>
@@ -417,7 +430,7 @@
     if (authorization == null) {
         $("#suggest-recipe").css("display", "none");
     }
-    
+
     $("#searchBtn").on("click", function (e) {
         e.preventDefault();
         var searchValue = $('#custom-input-search').val();

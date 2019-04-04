@@ -18,8 +18,21 @@
     height: 100%;
 }
 
+.forum-home-body .row{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.forum-home-body .msg-list{
+    height: 95%;
+}
+
+.search__container{
+    padding: 5px;
+}
+
 .search-bar {
-    background: none!important;
+    background: none !important;
     width: 100%;
     border-radius: 20px;
     border: 1px solid gray;
@@ -37,4 +50,13 @@
 
 .right-chat ..inbox_chat{
     height: 100%;
+}
+
+.not-seen .name-user, .not-seen .chat-message-wrap{
+    font-weight: 1000;
+    color: black;
+}
+
+.not-seen .date {
+    color: #0084FF;
 }
