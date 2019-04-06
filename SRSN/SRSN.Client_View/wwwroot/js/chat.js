@@ -117,10 +117,10 @@ let listener = (id) => {
                                     last_message = 'Bạn : ' + messages[messages.length - 1].content
                                 } else {
                                     last_message = messages[messages.length - 1].content
+                                    $('#' + change.doc.id).addClass('not-seen')
                                 }
 
                                 $('#' + change.doc.id + ' .chat-message-wrap').text(last_message)
-                                $('#' + change.doc.id).addClass('not-seen')
                                 chat.messages = messages
                             }
                         })
@@ -463,9 +463,7 @@ let showMessageContent = (id) => {
 
     $(messages).each((i, mess) => {
         appendMessage(mess, opposite_user);
-    });
-    $(message_content).scrollTop($(message_content).height() + 10000)
-   
+    });   
 };
 
 let appendMessage = (message, opposite_user) => {
@@ -481,6 +479,8 @@ let appendMessage = (message, opposite_user) => {
     }
 
     message_content.innerHTML += user_message_item;
+    $(message_content).scrollTop($(message_content).height() + 10000)
+
 };
 //----------------------------------------------------------------------------------
 
