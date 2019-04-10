@@ -110,6 +110,7 @@ function getData(currentRecipe,saveDraft) {
     var cooktime = $("input[name='cooktime']").val();
     var level = $("select[name='level']").val();
     var videoCode = $("input[name='videoCode']").val();
+    var recipeId = $("#recipeId").val();
 
     var ingredientsWeight = $("input[name='ingredientsWeight']");
     var ingredientsName = $("input[name='ingredients']");
@@ -181,7 +182,8 @@ function getData(currentRecipe,saveDraft) {
             Serving: serving,
             Cooktime: cooktime,
             LevelRecipe: level,
-            VideoLink: videoCode
+            VideoLink: videoCode,
+            Id: recipeId
         },
         listCategory: categoriesItem,
         listSORVM: steps,
@@ -477,6 +479,7 @@ function GetImageDraftedRecipe(currentStep, dropZoneId) {
         }
         
     }
+
     const draftedRecipe = GetDraftedRecipe();
     if (draftedRecipe) {
         RecoveryRecipe(draftedRecipe.data);
@@ -486,16 +489,17 @@ function GetImageDraftedRecipe(currentStep, dropZoneId) {
     // call to render
     var countToServerSaveDraft = 0;
     var saveDraftThread = setInterval(function () {
-        var currentDraftedRecipe = GetDraftedRecipe();
-        const currentRecipe = getData(currentDraftedRecipe, true);
         if (countToServerSaveDraft == 5) {
             // do nothing
             countToServerSaveDraft = 0;
+            saveDraft(true);
         }
         else {
             ++countToServerSaveDraft;
         }
         // local save draft
+        var currentDraftedRecipe = GetDraftedRecipe();
+        const currentRecipe = getData(currentDraftedRecipe, true);
         DraftRecie(currentRecipe);
     }, 2000);
 })();

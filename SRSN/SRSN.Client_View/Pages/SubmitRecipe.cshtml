@@ -260,9 +260,154 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
     <script src="~/js/notification.js"></script>
     <script src="~/js/Configuration.js"></script>
+    <script type="text/javascript">
+
+        async function saveDraft(isSystemSaveDraft) {
+            if (!isSystemSaveDraft) $("#loading-box").show();
+            var currentDraftedRecipe = JSON.parse(window.localStorage.getItem("darftedRecipe"));
+            var results = getData(currentDraftedRecipe, true);
+            var data = results.data;
+            data.recipeVM.SaveDraft = true;
+            data.recipeVM.Id = $("#recipeId").val() ? $("#recipeId").val() : 0;
+
+            var authorization = localStorage.getItem("authorization");
+            var token = (JSON.parse(authorization))["token"];
+            fetch(`${BASE_API_URL}/api/recipe/save-draft?recipeId=${data.recipeVM.Id}`, {
+                method: "PUT",
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(async (res) => {
+                $("#loading-box").hide();
+                if (res.status === 200) {
+                    if (!isSystemSaveDraft) {
+                        swal({
+                            title: "",
+                            text: "Bạn đã lưu nháp công thức thành công",
+                            type: "success",
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Xác nhận",
+                            closeOnConfirm: false
+                        });
+                        setTimeout(async function () {
+                            var data = (await res.json());
+                            recipeId = data.recipeId;
+                            window.location.href = `/recipe/${recipeId}`
+                            window.localStorage.removeItem("darftedRecipe");
+                        }, 1500);
+                    }
+                    else {
+                        var data = (await res.json());
+                        $("#recipeId").val(data.recipeId);
+                    }
+
+                }
+            }).catch(function (e) {
+                $("#loading-box").hide();
+            })
+        };
+
+        async function submitRecipe() {
+            $("#loading-box").show();
+            var currentDraftedRecipe = JSON.parse(window.localStorage.getItem("darftedRecipe"));
+            var results = getData(currentDraftedRecipe, false);
+            console.log(results)
+            if (results.validation === false) {
+                window.scrollTo(0, 400);
+                $("#congthucBtn").click();
+                Swal.fire({
+                    type: 'error',
+                    title: 'Thông báo',
+                    text: 'Các nội dung không được để trống!',
+                });
+                $("#loading-box").hide();
+                return;
+            } else {
+                var data = results.data;
+                //data = await uploadImageSubmit(data);
+                var recipeId;
+                var authorization = localStorage.getItem("authorization");
+                var token = (JSON.parse(authorization))["token"];
+                await fetch(`${BASE_API_URL}/api/recipe/submit-recipe`, {
+                    method: "POST",
+                    //body: JSON.stringify({ request: data }),
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }).then(async (res) => {
+                    $("#loading-box").hide();
+                    var uid;
+                    var myDataRef;
+                    if (res.status === 200) {
+                        swal({
+                            title: "",
+                            text: "Bạn đã chia sẻ công thức mới thành công",
+                            type: "success",
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Xác nhận",
+                            closeOnConfirm: false
+                        });
+                        setTimeout(async function () {
+                            var data = (await res.json());
+                            recipeId = data.recipeId;
+                            //add data to firebase to notification with users who are following me
+                            //them data vao firebase
+                            var usernameLocal = window.localStorage.getItem("username");//người đang comment
+                            var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
+                            var dataUser = await userRes.json();
+                            for (var user of dataUser) {
+                                var followingMe = user.username;//user is following me
+                                myDataRef = firebase.database().ref(followingMe);
+                                uid = myDataRef.push({
+                                    "uid": "",
+                                    "username": usernameLocal,
+                                    "content": "đã chia sẻ công thức mới",
+                                    "date": new Date().toLocaleString(),
+                                    "link": "/recipe/" + recipeId,
+                                    "isRead": "False"
+                                });
+                                SRSN.FIREBASE_DATABASE.ref('/' + followingMe + "/" + uid.key).update({
+                                    "uid": uid.key
+                                });
+
+                            }
+                            //thông báo công điểm cho chính user
+                            var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
+                            myDataRef = firebase.database().ref(usernameLocal);
+                            if (myDataRef != null) {
+                                uid = myDataRef.push({
+                                    "uid": "",
+                                    "username": "Bạn",
+                                    "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>",
+                                    "date": new Date().toLocaleString(),
+                                    "link": "/recipe/" + recipeId,
+                                    "isRead": "False"
+                                });
+                                //update uid into firebase
+                                SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                                    "uid": uid.key
+                                });
+                            }
+                            window.location.href = `/recipe/${recipeId}`
+                            window.localStorage.removeItem("darftedRecipe");
+                        }, 1500);
+
+
+
+                    }
+                })
+                    .catch(function (e) {
+                        $("#loading-box").hide();
+                    });
+            }
+        }
+    </script>
     <script src="~/js/submit-recipe.js"></script>
     <script src="~/js/menu-widgets.js"></script>
-    
 
     <script type="text/javascript">
         async function SuggestIngredient(e) {
@@ -359,104 +504,37 @@
             await loadCategory();
             await RedirectAPI();
             $('#submitBtn').on("click", async function (event) {
-                $("#loading-box").show();
-                var currentDraftedRecipe = JSON.parse(window.localStorage.getItem("darftedRecipe"));
-                var results = getData(currentDraftedRecipe, false);
-                console.log(results)
-                if (results.validation === false) {
-                    window.scrollTo(0, 400);
-                    $("#congthucBtn").click();
-                    Swal.fire({
-                        type: 'error',
-                        title: 'Thông báo',
-                        text: 'Các nội dung không được để trống!',
+                swal("Bạn chắc chắn muốn công khai công thức?", {
+                    buttons: {
+                        cancel: "Quay về",
+                        draft: {
+                            text: "Lưu nháp",
+                            value: "draft",
+                        },
+                        submit: {
+                            text: "Công khai",
+                            value: "submit",
+                        },
+                    },
+                })
+                    .then((value) => {
+                        switch (value) {
+                            case "submit":
+                                submitRecipe();
+                                break;
+                            case "draft":
+                                saveDraft(false);
+                                break;
+                            case "cancel":
+                                break;
+                        }
                     });
-                    $("#loading-box").hide();
-                    return;
-                } else {
-                    var data = results.data;
-                    //data = await uploadImageSubmit(data);
-                    var recipeId;
-                    var authorization = localStorage.getItem("authorization");
-                    var token = (JSON.parse(authorization))["token"];
-                    await fetch(`${BASE_API_URL}/api/recipe/submit-recipe`, {
-                        method: "POST",
-                        //body: JSON.stringify({ request: data }),
-                        body: JSON.stringify(data),
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    }).then(async (res) => {
-                        $("#loading-box").hide();
-                        var uid;
-                        var myDataRef;
-                        if (res.status === 200) {
-                            swal({
-                                title: "",
-                                text: "Bạn đã chia sẻ công thức mới thành công",
-                                type: "success",
-                                confirmButtonColor: "#DD6B55",
-                                confirmButtonText: "Xác nhận",
-                                closeOnConfirm: false
-                            });
-                            setTimeout(async function () {
-                                var data = (await res.json());
-                                recipeId = data.recipeId;
-                                //add data to firebase to notification with users who are following me
-                                //them data vao firebase
-                                var usernameLocal = window.localStorage.getItem("username");//người đang comment
-                                var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
-                                var dataUser = await userRes.json();
-                                for (var user of dataUser) {
-                                    var followingMe = user.username;//user is following me
-                                    myDataRef = firebase.database().ref(followingMe);
-                                        uid = myDataRef.push({
-                                            "uid": "",
-                                            "username": usernameLocal,
-                                            "content": "đã chia sẻ công thức mới",
-                                            "date": new Date().toLocaleString(),
-                                            "link": "/recipe/" + recipeId,
-                                            "isRead": "False"
-                                        });
-                                    SRSN.FIREBASE_DATABASE.ref('/' + followingMe + "/" + uid.key).update({
-                                            "uid": uid.key
-                                        });
-                                    
-                                }
-                                //thông báo công điểm cho chính user
-                                var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
-                                myDataRef = firebase.database().ref(usernameLocal);
-                                if (myDataRef != null) {
-                                    uid = myDataRef.push({
-                                        "uid": "",
-                                        "username": "Bạn",
-                                        "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>",
-                                        "date": new Date().toLocaleString(),
-                                        "link": "/recipe/" + recipeId,
-                                        "isRead": "False"
-                                    });
-                                    //update uid into firebase
-                                    SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
-                                        "uid": uid.key
-                                    });
-                                }
-                                window.location.href = `/recipe/${recipeId}`
-                                window.localStorage.removeItem("darftedRecipe");
-                            }, 1500);
-
-
-
-                        }
-                    })
-                        .catch(function (e) {
-                            $("#loading-box").hide();
-                        });
-                }
-
             });
+
+            
+
         })();
-        
-       
+
+
     </script>
 }
