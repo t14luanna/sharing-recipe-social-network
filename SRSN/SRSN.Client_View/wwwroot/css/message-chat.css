@@ -1,4 +1,8 @@
-﻿.header{
+﻿body{
+    overflow-y: hidden;
+}
+
+.header{
     padding: 10px;
     height: 64px;
 }
@@ -10,7 +14,7 @@
 
 .forum-home-body{
     padding: 0!important;
-    height: calc(100vh - 84px);
+    height: calc(100vh - 78px);
 }
 
 .forum-home-body .container{
@@ -18,8 +22,21 @@
     height: 100%;
 }
 
+.forum-home-body .row{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.forum-home-body .msg-list{
+    height: 95%;
+}
+
+.search__container{
+    padding: 5px;
+}
+
 .search-bar {
-    background: none!important;
+    background: none !important;
     width: 100%;
     border-radius: 20px;
     border: 1px solid gray;
@@ -30,11 +47,34 @@
     outline: none;
 }
 
-.right-chat, .left-chat{
+.right-chat, .left-chat {
     padding-bottom: 0;
+    height: calc(100vh - 100px);
+}
+
+.right-chat .inbox_chat{
+    height: 100%;
+    overflow-y: auto;
+}
+
+.main--content-inner{
     height: 100%;
 }
 
-.right-chat ..inbox_chat{
+.main--content-inner .mesgs {
     height: 100%;
+}
+
+.main--content-inner .msg_history{
+    height: 90%;
+    margin-bottom: 0;
+}
+
+.not-seen .name-user, .not-seen .chat-message-wrap {
+    font-weight: 1000;
+    color: black;
+}
+
+.not-seen .date {
+    color: #0084FF;
 }

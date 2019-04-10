@@ -28,10 +28,10 @@ let message_content = $('.msg-list')[0];
 let message_user_title = $('.name-header-mesgs')[0];
 let send_btn = $('.msg_send_btn')[0];
 let search_bar = $('.search-bar')[0];
+let message_input = $('.write_msg')[0];
 
 $(send_btn).on('click', () => {
-    let message_text = $('.write_msg')[0];
-    sendMessage($(message_text).val());
+    sendMessage($(message_input).val());
     $(message_text).val('');
 });
 
@@ -102,13 +102,15 @@ let createChat = (oppositeUser) => {
                             user_id: user_id,
                             user_image: current_user.avatarImageUrl,
                             user_name: current_user.firstName + ' ' + current_user.lastName,
-                            isTyping: false
+                            isTyping: false,
+                            isSeen: true
                         },
                         {
                             user_id: oppositeUser.id,
                             user_image: oppositeUser.avatarImageUrl,
                             user_name: oppositeUser.firstName + ' ' + oppositeUser.lastName,
-                            isTyping: false
+                            isTyping: false,
+                            isSeen: true
                         }
                     ],
                     users_id: [
@@ -310,6 +312,31 @@ let updateChatList = (id, message) => {
 let pushToTop = (id) => {
     //let $(message_list).children('#' + id)
 }
+
+$(message_input).keydown(async () => {
+    let text = $(message_input).val();
+    let usersArr = current_chat.data.users;
+    if (text.length > 3) {
+        await $(usersArr).each((i, user) => {
+            if (user.user_id === user_id) {
+                usersArr[i].isTyping = true;
+            }
+        });
+        db.collection('chats').doc(current_chat.id).update({
+            users: usersArr
+        })
+    } else {
+        await $(usersArr).each((i, user) => {
+            if (user.user_id === user_id) {
+                usersArr[i].isTyping = false;
+            }
+        });
+        console.log(usersArr)
+        db.collection('chats').doc(current_chat.id).update({
+            users: usersArr
+        })
+    }
+})
 //-----------------------------End User Chat List--------------------------------------
 
 //-----------------------------Search Bar----------------------------------------------
