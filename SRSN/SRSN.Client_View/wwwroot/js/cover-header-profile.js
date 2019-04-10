@@ -1,4 +1,4 @@
-﻿const apikey = 'Al19W1lGkT7C5myciCHZhz';
+﻿const apikey = 'A1p11nq0RoGb8BRod5sOgz';
 const client = filestack.init(apikey);
 function uploadFile(file) {
     return new Promise((resolve, reject) => {

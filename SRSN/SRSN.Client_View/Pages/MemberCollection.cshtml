@@ -336,10 +336,7 @@
     <script src="~/js/member-collection.js"></script>
     <script type="text/javascript">
     // fetch and render element to html
-    $("#btn-create-new-collection").on("click", function (e) {
-        $("#modal-create-new-collection").css("display", "block")
-
-        });
+    
     $("#close-modal-create-new-collection").on("click", function (e) {
         $("#modal-create-new-collection").css("display", "none");
 
@@ -353,8 +350,11 @@
         await callAccountInforApi('@(RouteData.Values["userName"])');
         await loadAvatarContainer('@(RouteData.Values["userName"])');
         await callReadCollectionApi('@(RouteData.Values["userName"])');
-    })();
 
+        $("#btn-create-new-collection").on("click", function (e) {
+            $("#modal-create-new-collection").css("display", "block");
+        });
+    })();
     </script>
     <script src="~/js/site.js"></script>
 </body>

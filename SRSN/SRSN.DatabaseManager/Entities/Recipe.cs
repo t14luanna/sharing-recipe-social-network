@@ -9,8 +9,6 @@ namespace SRSN.DatabaseManager.Entities
         {
             CollectionPost = new HashSet<CollectionPost>();
             Comment = new HashSet<Comment>();
-            IngredientList = new HashSet<IngredientList>();
-            Post = new HashSet<Post>();
             RatingRecipe = new HashSet<RatingRecipe>();
             RecipeCategory = new HashSet<RecipeCategory>();
             RecipeIngredient = new HashSet<RecipeIngredient>();
@@ -42,8 +40,6 @@ namespace SRSN.DatabaseManager.Entities
         public virtual AspNetUsers User { get; set; }
         public virtual ICollection<CollectionPost> CollectionPost { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }
-        public virtual ICollection<IngredientList> IngredientList { get; set; }
-        public virtual ICollection<Post> Post { get; set; }
         public virtual ICollection<RatingRecipe> RatingRecipe { get; set; }
         public virtual ICollection<RecipeCategory> RecipeCategory { get; set; }
         public virtual ICollection<RecipeIngredient> RecipeIngredient { get; set; }

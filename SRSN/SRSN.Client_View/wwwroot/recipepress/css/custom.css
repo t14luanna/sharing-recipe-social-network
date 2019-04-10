@@ -1144,3 +1144,6 @@ input[name=ingredient] {
 #list-of-ingredients li{
     height: 40px
 }
+#btn-create-new-collection {
+    cursor: pointer;
+}
