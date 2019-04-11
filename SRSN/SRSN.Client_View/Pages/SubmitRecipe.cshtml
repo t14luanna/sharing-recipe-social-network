@@ -405,15 +405,27 @@
                                 recipeId = data.recipeId;
                                 //add data to firebase to notification with users who are following me
                                 //them data vao firebase
+                                //thông báo
+
+                                //đọc full name
+                                var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+                                    method: "GET",
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
+                                    }
+                                });
+                                var userData = await resUser.json();
+
                                 var usernameLocal = window.localStorage.getItem("username");//người đang comment
                                 var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
                                 var dataUser = await userRes.json();
                                 for (var user of dataUser) {
-                                    var followingMe = user.username;//user is following me
+                                    var followingMe = user.username;//thông báo cho người đang theo dõi tôi
                                     myDataRef = firebase.database().ref(followingMe);
                                         uid = myDataRef.push({
                                             "uid": "",
-                                            "username": usernameLocal,
+                                            "username": userData.firstName + " " + userData.lastName,
                                             "content": "đã chia sẻ công thức mới",
                                             "date": new Date().toLocaleString(),
                                             "link": "/recipe/" + recipeId,
@@ -422,7 +434,16 @@
                                     SRSN.FIREBASE_DATABASE.ref('/' + followingMe + "/" + uid.key).update({
                                             "uid": uid.key
                                         });
-                                    
+                                    //update count notifi
+                                    var countNoti = 0;
+                                    var countDataRef = SRSN.FIREBASE_DATABASE.ref(followingMe);
+
+                                    countDataRef.once('value', function (snapshot) {
+                                        countNoti = snapshot.val().numberOfLatestNotis;
+                                        countNoti++;
+                                        SRSN.FIREBASE_DATABASE.ref(followingMe).update({ "numberOfLatestNotis": countNoti });
+                                    });
+
                                 }
                                 //thông báo công điểm cho chính user
                                 var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
@@ -440,6 +461,16 @@
                                     SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
                                         "uid": uid.key
                                     });
+                                    //update count notifi
+                                    var countNoti = 0;
+                                    var countDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+
+                                    countDataRef.once('value', function (snapshot) {
+                                        countNoti = snapshot.val().numberOfLatestNotis;
+                                        countNoti++;
+                                        SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
+                                    });
+
                                 }
                                 window.location.href = `/recipe/${recipeId}`
                                 window.localStorage.removeItem("darftedRecipe");

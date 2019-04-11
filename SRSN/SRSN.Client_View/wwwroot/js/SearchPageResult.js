@@ -16,7 +16,7 @@
                                             <li class="calendar" id="createTime">${ new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</li>
                                         </ul>
                                         <div class="rating-box">
-                                            <span class="rating-figure" id="evRating"><i class="fa fa-star-half-o" aria-hidden="true" style="
+                                            <span class="rating-figure" id="evRating"><i class="fa fa-star" aria-hidden="true" style="
                                                     font-size: 20px;
                                                     color: green;"></i>&nbsp&nbsp
                                                      (${recipe.evRating} / 5)

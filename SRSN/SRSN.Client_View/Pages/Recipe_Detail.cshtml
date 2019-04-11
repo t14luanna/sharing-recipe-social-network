@@ -78,7 +78,7 @@
                             </div>
                         </div>
                         <div class="related-recipes">
-                            <h3 class="lined">Những công thức liên quan</h3>
+                            <h3 class="lined">Công thức khác của người nấu</h3>
                             <div class="boxed-recipes text-center" id="list-related-recipe">
 
                             </div>
@@ -122,14 +122,7 @@
                                 </div>
 
                                 <button class="submit-comment">Đánh giá</button>
-                                <div class="dropdown" style="display: inline-block;">
-                                    <button class="dropdown-toggle" type="button" data-toggle="dropdown" style="margin-bottom: 5px; padding: 10px">
-                                        ...
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo công thức này</a></li>
-                                    </ul>
-                                </div>
+                               
                             </div>
                         </div>
                         <div class="modal fade" id="myModal" role="dialog">
@@ -139,16 +132,16 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Gửi phản hồi về người dùng này</h4>
+                                        <h4 class="modal-title">Gửi phản hồi về công thức này</h4>
                                     </div>
                                     <div class="modal-body">
                                         <form style="display:flex; flex-direction:column;" method="post" id="report-recipe-form">
-                                            <label for="reportDescription">Description</label>
-                                            <textarea class="form-text text-muted" id="reportDescription" placeholder="Description" aria-describedby="description"></textarea>
-                                            <small id="emailHelp" class="form-text text-muted">Hãy cho chúng tôi biết lý do bạn tố cáo người dùng này</small>
+                                            <label for="reportDescription">Mô tả</label>
+                                            <textarea class="form-text text-muted" id="reportDescription" placeholder="Nhập mô tả" aria-describedby="description"></textarea>
+                                            <small id="emailHelp" class="form-text text-muted">Hãy cho chúng tôi biết lý do bạn tố cáo công thức này</small>
                                             <div>
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-default">Submit</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                                <button type="submit" class="btn btn-default">Gửi phản hồi</button>
                                             </div>
                                         </form>
                                     </div>
@@ -536,10 +529,20 @@
                             if (chefUsername == usernameLocal) {
                                 //do nothing
                             } else {
+                                //đọc full name
+                                var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+                                    method: "GET",
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
+                                    }
+                                });
+                                var userData = await resUser.json();
+
                                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                                 var uid = myDataRef.push({
                                     "uid": "",
-                                    "username": usernameLocal,
+                                    "username": userData.firstName + " " + userData.lastName,
                                     "content": "đã thích Công Thức của bạn.",
                                     "date": new Date().toLocaleString(),
                                     "link": "/recipe/" + data.recipeId,
@@ -549,6 +552,16 @@
                                 SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
                                     uid: uid.key
                                 });
+                                //update count notifi
+                                var countNoti = 0;
+                                var countDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+
+                                countDataRef.once('value', function (snapshot) {
+                                    countNoti = snapshot.val().numberOfLatestNotis;
+                                    countNoti++;
+                                    SRSN.FIREBASE_DATABASE.ref(chefUsername).update({ "numberOfLatestNotis": countNoti });
+                                });
+
                             }
                         }
                         else {

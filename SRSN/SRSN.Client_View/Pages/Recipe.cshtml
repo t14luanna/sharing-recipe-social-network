@@ -21,8 +21,12 @@
                     <div class="recipe-listing listing-list" id="list-latest-recipe-page"></div>
 
 
-                    <div id="pagination-container" class="page-nav"></div>
-
+                    @*<div id="pagination-container" class="page-nav"></div>*@
+                    <div class="recipe-more" style="cursor:pointer">
+                        <div class="latest-recipe-more-inner" onclick="getMoreTopRecipes()">
+                            <a>Xem thêm</a>
+                        </div>
+                    </div>
                     <div class="banner-header text-center">
                         <a href="#">
                             <img src="recipepress/images/temp-images/header-banner.jpg" alt="banner">
@@ -112,52 +116,60 @@
             await callPopularRecipeWidgetApi();
             await callListCategoryItem();
             await loadRecipeSmallLocalStorage();
+            await callAllLatestRecipes();
             await RedirectAPI();
         })();
-        $("#pagination-container").pagination({
-            dataSource: `${BASE_API_URL}/api/recipe/read-latest-page`,
-            locator: '',// array
-            totalNumberLocator: function (response) {
-                return response.length;
-            },
-            //totalNumber: 40,
-            pageSize: 9,
-            ajax: {
-                beforeSend: function () {
-                    $('#list-latest-recipe-page').html('Đang tải dữ liệu ...');
-                }
-            },
-            callback: function (data, pagination) {
-                // template method of yourself
-                var html = template(data, pagination);
-                $('#list-latest-recipe-page').html(html);
-            }
-        });
-        var template = function (data, pagination) {
-            var pageSize = pagination.pageSize;
-            var currentPageNumber = pagination.pageNumber - 1;
-            var s = "";
-
-            var count = 0;
-            while (count < pageSize) {
-                var i = currentPageNumber * pageSize + count;
-                if (i >= data.length) {
-                    break;
-                }
-
-                var numStar = data[i].evRating % 10;
-                var ratingStarElement = "";
-                if (numStar > 0) {
-                    for (var j = 0; j < parseInt(numStar); j++) {
-                        ratingStarElement += `<i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
-                    }
-                }
-                s += createSingleLatestRecipeElementPage(data[i], ratingStarElement);
-                ratingStarElement = "";
-                count++;
-            }
-            return s;
+        var topRecipesGetMorePage = 0;
+        var topRecipesGetMoreLimit = 18;
+        function getMoreTopRecipes() {
+            callAllLatestRecipes(topRecipesGetMoreLimit, ++topRecipesGetMorePage);
         };
+
+        //phân trang trên view
+        //$("#pagination-container").pagination({
+        //    dataSource: `${BASE_API_URL}/api/recipe/read-latest-page`,
+        //    locator: '',// array
+        //    totalNumberLocator: function (response) {
+        //        return response.length;
+        //    },
+        //    //totalNumber: 40,
+        //    pageSize: 9,
+        //    ajax: {
+        //        beforeSend: function () {
+        //            $('#list-latest-recipe-page').html('Đang tải dữ liệu ...');
+        //        }
+        //    },
+        //    callback: function (data, pagination) {
+        //        // template method of yourself
+        //        var html = template(data, pagination);
+        //        $('#list-latest-recipe-page').html(html);
+        //    }
+        //});
+        //var template = function (data, pagination) {
+        //    var pageSize = pagination.pageSize;
+        //    var currentPageNumber = pagination.pageNumber - 1;
+        //    var s = "";
+
+        //    var count = 0;
+        //    while (count < pageSize) {
+        //        var i = currentPageNumber * pageSize + count;
+        //        if (i >= data.length) {
+        //            break;
+        //        }
+
+        //        var numStar = data[i].evRating % 10;
+        //        var ratingStarElement = "";
+        //        if (numStar > 0) {
+        //            for (var j = 0; j < parseInt(numStar); j++) {
+        //                ratingStarElement += `<i class="fa fa-star" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
+        //            }
+        //        }
+        //        s += createSingleLatestRecipeElementPage(data[i], ratingStarElement);
+        //        ratingStarElement = "";
+        //        count++;
+        //    }
+        //    return s;
+        //};
 
     </script>
 }

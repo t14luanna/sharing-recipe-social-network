@@ -3,7 +3,7 @@
 var listNotification = [];
 var usernameLocal = window.localStorage.getItem("username");//username của mõi người đều khác nhau, nó là unique key, nên dùng username lưu ở fire. và nó sẽ ko thay đổi sau mõi lần đăng nhập
 if (usernameLocal != null) {
-    var countNoti = 0;
+    //var countNoti = 0;
 
     var myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
    
@@ -22,7 +22,7 @@ if (usernameLocal != null) {
             } else
                 if (childSnapshot.key == "isRead") {
                     if (childSnapshot.val() != "True") {// read status is true
-                        countNoti++;
+                        //countNoti++;
 
                     }
                 } else if (childSnapshot.key == "link") {
@@ -40,46 +40,48 @@ if (usernameLocal != null) {
             "link": link,
         }
         
-        var flag = false;
-        for (var itemNoti of listNotification) {
-            if (itemNoti.uid == uid) {
-                flag = true;
-                break;
+     
+        if (noti.uid != "") {
+            var flag = false;
+            for (var itemNoti of listNotification) {
+                if (itemNoti.uid == uid) {
+                    flag = true;
+                    break;
+                }
             }
+
+            if (flag != true) {//không tồn tại trong list
+                listNotification.push(noti);
+
+            }
+            displayNotifi(); 
         }
-        if (flag != true) {//không tồn tại trong list
-            listNotification.push(noti);
-            
-        }
-        displayNotifi();
+           
     });
+    
 
 }
 
 //update all child isRead = True
 function changeStatusNoti() {
-
-    //firebase.initializeApp(config);//goi lai firebase
-    var dbCon = firebase.database().ref("/" + usernameLocal + "/");
-    dbCon.on("value", function (snapshot) {
-        snapshot.forEach(function (child) {
-            child.ref.update({
-                isRead: "True"
-            });
-        });
-    });
+    
+    SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({"numberOfLatestNotis":"0"});
     $("#number-of-notification").text("");
 }
 var createSingleNoti = (noti) =>
     `<li><a href="${noti.link}"><b>${noti.username}</b> ${noti.content}</a></li>`;
 function displayNotifi() {
-    $(`#list-notification`).text("");//xóa cái củ, để vào cái mới
-    
+    $(`#list-notification`).html("");//xóa cái củ, để vào cái mới
+    var countNoti = 0;
+    var dataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+    dataRef.on('value', function (snapshot) {
+        countNoti = snapshot.val().numberOfLatestNotis;
+    });
     for (var itemNoti of listNotification) {
         var element = createSingleNoti(itemNoti);
         $("#list-notification").prepend(element);
     }
-
+    
     if (countNoti > 0 && countNoti <= 9) {
         $("#number-of-notification").text(countNoti);
     } else if (countNoti > 9) {

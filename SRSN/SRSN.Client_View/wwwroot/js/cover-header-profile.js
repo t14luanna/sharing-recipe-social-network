@@ -13,7 +13,15 @@ function uploadFile(file) {
 }
 
 const createAvatarContainerUnfollow = (user, count) =>
-    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
+    `
+<div class="dropdown col-md-offset-12">
+                    <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo người dùng</a></li>
+                    </ul>
+                </div>
+<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
                                 <img src="${user.avatarImageUrl}" alt=""/>
                             </div>
 
@@ -69,7 +77,15 @@ const createAvatarContainerUnfollow = (user, count) =>
 //    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
 //                                <img src="${user.avatarImageUrl}" alt=""/>`;
 const createAvatarContainer = (user, count) =>
-    `<div class="cover--avatar online profile-pic" data-overlay="0.3" data-overlay-color="primary">
+    `
+<div class="dropdown col-md-offset-12" id="btnReportUser">
+                    <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo người dùng</a></li>
+                    </ul>
+                </div>
+<div class="cover--avatar online profile-pic" data-overlay="0.3" data-overlay-color="primary">
         <input type="hidden" name="avatarUrl"/>
                                 <img class="" id="imgAvatar" src="${user.avatarImageUrl}" alt="" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
 <div class="edit"><a href="javascript:void()" onclick="document.getElementById('avatarPicker').click()"><i class="fa fa-pencil fa-lg"></i><input type="file" id="avatarPicker" onchange="avatarPickerChange(this, user)" style="display:none;" /></a></div>
@@ -223,6 +239,10 @@ const loadAvatarContainer = async (username) => {
         $("#rankchefee").attr("class", "chefee active");
         $("#rankmastee").attr("class", "mastee active");
         $(".headline").text("mastee").css("color", "#ff0834");
+    }
+    if (isFollowed == false) {
+        $("#btnReportUser").remove();
+
     }
 };
 

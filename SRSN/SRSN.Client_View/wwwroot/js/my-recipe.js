@@ -36,17 +36,54 @@ const callRecipeByUserId = async (username) => {
     });
     var userData = await userRes.json();
     var userId = userData.id;
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read-orderby-time?userId=` + userId);
-    var data = await res.json();
-    var count = 0;
-    for (var item of data) {
-        count++;
-        if (item.referencedRecipeId == null) {
-            var element = createRecipeByUserId(item);
-            $("#my-recipe-box").append(element);
+    $("#pagination-container").pagination({
+        dataSource: `${BASE_API_URL}/api/recipe/read-orderby-time?userId=${userId}`,
+        locator: '',// array
+        totalNumberLocator: function (response) {
+            return response.length;
+        },
+        //totalNumber: 40,
+        pageSize: 9,
+        ajax: {
+            beforeSend: function () {
+                $('#my-recipe-box').html('Đang tải dữ liệu ...');
+            }
+        },
+        callback: function (data, pagination) {
+            // template method of yourself
+            var html = template(data, pagination);
+            $('#my-recipe-box').html(html);
             $("#my-recipe-box").css('height', 'auto');
         }
+    });
+    //var res = await fetch(`${BASE_API_URL}/api/recipe/read-orderby-time?userId=` + userId);
+    //var data = await res.json();
+    //var count = 0;
+    //for (var item of data) {
+    //    count++;
+    //    if (item.referencedRecipeId == null) {
+    //        var element = createRecipeByUserId(item);
+    //        $("#my-recipe-box").append(element);
+    //        $("#my-recipe-box").css('height', 'auto');
+    //    }
+    //}
+};
+
+var template = function (data, pagination) {
+    var pageSize = pagination.pageSize;
+    var currentPageNumber = pagination.pageNumber - 1;
+    var s = "";
+
+    var count = 0;
+    while (count < pageSize) {
+        var i = currentPageNumber * pageSize + count;
+        if (i >= data.length) {
+            break;
+        }
+        s += createRecipeByUserId(data[i]);
+        count++;
     }
+    return s;
 };
 async function deleteRecipeInMyRecipe(recipeId) {
     swal({

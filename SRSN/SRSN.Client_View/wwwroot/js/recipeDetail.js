@@ -5,6 +5,13 @@ const createSingleBannerRecipeDetail = (recipe) =>
             <h2>${recipe.recipeName}</h2>
         </div>
     </div>
+<div class="dropdown col-md-offset-12" id="btnReportUser">
+                    <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo công thức</a></li>
+                    </ul>
+                </div>
     <div class="slider-recipe-detail2">
         <div class="wrapper-slider-detail">
             <div class="recipe-slider">
@@ -13,11 +20,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
                         <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                 </div>
-
-                <span class="custom-arrows wider">
-                    <span class="left-arrow slick-arrow" data-direction="prev" style="display: table-cell;"><i class="fa fa-arrow-left"></i></span>
-                    <span class="right-arrow slick-arrow" data-direction="next" style="display: table-cell;"><i class="fa fa-arrow-right"></i></span>
-                </span>
+              
             </div>
             <ul class="recipe-specs-2">
                 <li><span>Khẩu phần : </span>${recipe.serving}</li>
@@ -30,6 +33,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
 const createContentRecipe = (recipe) =>
     `<span class="rating-figure" id="evRating"><u>Đánh giá: </u><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>&nbsp&nbsp(${recipe.evRating != 0 ? recipe.evRating : "Chưa có đánh giá nào"} ${recipe.evRating != 0 ? "/ 5" : ""}) 
     <i class="rating-figure" style="float: right;">Lượt xem: ${recipe.viewQuantity != null ? recipe.viewQuantity : "0"}</i>
+    <i class="rating-figure" style="float:right; margin-right:20%">Ngày tạo: ${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</i>
     </span>
         <div class="separator-post"></div>
         <p>${recipe.contentRecipe}</p>`;
@@ -268,7 +272,7 @@ const callRecipeDetailApi = async (id) => {
         var numStar = item.evRating % 10;
         $("#number-of-star-" + item.id).text("");
         for (var i = 0; i < parseInt(numStar); i++) {
-            $("#number-of-star-" + item.id).append(`<i class="fa fa-star-half-o" aria-hidden="true"></i>`);
+            $("#number-of-star-" + item.id).append(`<i class="fa fa-star" aria-hidden="true"></i>`);
         }
     }
 
@@ -609,8 +613,17 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
                 "isRead": "False"
             });
             //update uid into firebase 
-            SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+            SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
                 uid: uid.key
+            });
+            //update count notifi
+            var countNoti = 0;
+            var countDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+
+            countDataRef.once('value', function (snapshot) {
+                countNoti = snapshot.val().numberOfLatestNotis;
+                countNoti++;
+                SRSN.FIREBASE_DATABASE.ref(chefUsername).update({ "numberOfLatestNotis": countNoti });
             });
             
         }
@@ -628,6 +641,16 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
         SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
             uid: uid.key
         });
+        //update count notifi
+        var countNoti = 0;
+        var countDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+
+        countDataRef.once('value', function (snapshot) {
+            countNoti = snapshot.val().numberOfLatestNotis;
+            countNoti++;
+            SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
+        });
+
         
     } else if (res.status == 400) {
         removeAlert();
@@ -789,6 +812,16 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
                     SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
                         uid: uid.key
                     });
+                    //update count notifi
+                    var countNoti = 0;
+                    var countDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+
+                    countDataRef.once('value', function (snapshot) {
+                        countNoti = snapshot.val().numberOfLatestNotis;
+                        countNoti++;
+                        SRSN.FIREBASE_DATABASE.ref(chefUsername).update({ "numberOfLatestNotis": countNoti });
+                    });
+
                     
                 } catch (e) {
                     console.error("Exception create rely comment: ", e);
@@ -837,9 +870,20 @@ const notifyDependencyCommentedUser = async function (commentParentId) {
                     "isRead": "False"
                 });
                 //update uid into firebase 
-                SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
+                SRSN.FIREBASE_DATABASE.ref("/" + usernameParentComment + "/" + uid.key).update({
                     uid: uid.key
                 });
+
+                //update count notifi
+                var countNoti = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(usernameParentComment);
+
+                countDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref(usernameParentComment).update({ "numberOfLatestNotis": countNoti });
+                });
+
             }
       
     } catch (e) {
@@ -965,6 +1009,25 @@ const callCreateShareRecipeModalApi = async (id) => {
                 SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
                     uid: uid.key
                 });
+                //update count notifi
+                var countNoti = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+
+                countDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref(chefUsername).update({ "numberOfLatestNotis": countNoti });
+                });
+                //update count notifi
+                var countNoti = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+
+                countDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
+                });
+
                 //thông báo cộng điểm
                 myDataRef  = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
                 uid = myDataRef.push({
@@ -979,6 +1042,8 @@ const callCreateShareRecipeModalApi = async (id) => {
                 SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
                     uid: uid.key
                 });
+
+                
 
             } catch (e) {
                 console.error("Exception create rely comment: ", e);
