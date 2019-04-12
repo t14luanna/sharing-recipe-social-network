@@ -18,7 +18,7 @@ const createRecipeByUserId = (recipe) =>
                                                             </div>
                                                             <div>
                                                                 <i class="fa fa-trash icon-delete" onclick="deleteRecipeInMyRecipe(${recipe.id})" style="margin-left: 85%;" ></i>
-                                                                <a href="/account/my-recipe/${username}/${recipe.id}/edit"<i class="fa fa-pencil-square-o icon-edit"></i></a>
+                                                                <a href="/account/my-recipe/${username}/${recipe.id}/draft"<i class="fa fa-pencil-square-o icon-edit"></i></a>
                                                             </div>
                                                         </div>
 </div>
@@ -31,12 +31,12 @@ const callRecipeByUserId = async (username) => {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` 
+            'Authorization': `Bearer ${token}`
         },
     });
     var userData = await userRes.json();
     var userId = userData.id;
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read-orderby-time?userId=` + userId);
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-draft-recipe?userId=` + userId);
     var data = await res.json();
     var count = 0;
     for (var item of data) {
@@ -75,7 +75,7 @@ const deactivateRecipe = async (recipeId) => {
         },
     });
     if (recipeRes.status == 200) {
-        swal("Bạn đã xóa thành công Công Thức này!", {
+        swal("Bạn đã xóa thành công công thức này!", {
             icon: "success",
         });
         $(`#${recipeId}`).remove();

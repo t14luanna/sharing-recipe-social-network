@@ -128,6 +128,7 @@
                                                                onclick="SuggestIngredient(this);" placeholder="Muối, Đường, thịt gà ..." />
                                                     </div>
                                                     <input class="ingredient-weight" type="text" name="ingredientsWeight" id="ingredientsWeight1" placeholder="1g, 1kg, 1 thìa ..." />
+                                                    <input type="hidden" name="ingredientId" value="0" />
                                                     <span class="del-list">
                                                         <i class="fa fa-trash"></i>
                                                     </span>
@@ -148,6 +149,7 @@
                                                         <i class="fa fa-arrows"></i>
                                                     </span>
                                                     <textarea class="short-text" name="stepsDes" id="stepsDes1" cols="30" rows="10">    </textarea>
+                                                    <input type="hidden" name="stepsId" value="0" />
                                                     <span class="del-list">
                                                         <i class="fa fa-trash"></i>
                                                     </span>
@@ -246,13 +248,13 @@
 
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+   <script src="~/recipepress/js/sweetalertv1.js"></script>
     <script type="text/javascript" src="recipepress/js/main.js"></script>
     @*<script type="text/javascript" src="~/recipepress/js/custom.js"></script>*@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-    <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+    <script src="https://static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
 
 
     <script type="text/javascript" src="~/recipepress/js/dropzone.js"></script>
@@ -300,7 +302,17 @@
                     }
                     else {
                         var data = (await res.json());
-                        $("#recipeId").val(data.recipeId);
+                        for (var item of data.recipe) {
+                            $("#recipeId").val(item.id);
+                            var ingredientIds = $("input[name='ingredientId']");
+                            var stepIds = $("input[name='stepsId']");
+                            $(ingredientIds).each(i => {
+                                $(ingredientIds[i]).val(item.listIngredient[i].id)
+                            });
+                            $(stepIds).each(i => {
+                                $(stepIds[i]).val(item.listSORVM[i].id)
+                            })
+                        }
                     }
 
                 }
@@ -313,6 +325,7 @@
             $("#loading-box").show();
             var currentDraftedRecipe = JSON.parse(window.localStorage.getItem("darftedRecipe"));
             var results = getData(currentDraftedRecipe, false);
+            var data = results.data;
             console.log(results)
             if (results.validation === false) {
                 window.scrollTo(0, 400);
@@ -326,12 +339,14 @@
                 return;
             } else {
                 var data = results.data;
+                data.recipeVM.SaveDraft = false;
+                data.recipeVM.Id = $("#recipeId").val() ? $("#recipeId").val() : 0;
                 //data = await uploadImageSubmit(data);
                 var recipeId;
                 var authorization = localStorage.getItem("authorization");
                 var token = (JSON.parse(authorization))["token"];
-                await fetch(`${BASE_API_URL}/api/recipe/submit-recipe`, {
-                    method: "POST",
+                await fetch(`${BASE_API_URL}/api/recipe/submit-recipe?recipeId=${data.recipeVM.Id}`, {
+                    method: "PUT",
                     //body: JSON.stringify({ request: data }),
                     body: JSON.stringify(data),
                     headers: {
@@ -356,48 +371,45 @@
                             recipeId = data.recipeId;
                             //add data to firebase to notification with users who are following me
                             //them data vao firebase
-                            var usernameLocal = window.localStorage.getItem("username");//người đang comment
-                            var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
-                            var dataUser = await userRes.json();
-                            for (var user of dataUser) {
-                                var followingMe = user.username;//user is following me
-                                myDataRef = firebase.database().ref(followingMe);
-                                uid = myDataRef.push({
-                                    "uid": "",
-                                    "username": usernameLocal,
-                                    "content": "đã chia sẻ công thức mới",
-                                    "date": new Date().toLocaleString(),
-                                    "link": "/recipe/" + recipeId,
-                                    "isRead": "False"
-                                });
-                                SRSN.FIREBASE_DATABASE.ref('/' + followingMe + "/" + uid.key).update({
-                                    "uid": uid.key
-                                });
+                            //var usernameLocal = window.localStorage.getItem("username");//người đang comment
+                            //var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
+                            //var dataUser = await userRes.json();
+                            //for (var user of dataUser) {
+                            //    var followingMe = user.username;//user is following me
+                            //    myDataRef = firebase.database().ref(followingMe);
+                            //    uid = myDataRef.push({
+                            //        "uid": "",
+                            //        "username": usernameLocal,
+                            //        "content": "đã chia sẻ công thức mới",
+                            //        "date": new Date().toLocaleString(),
+                            //        "link": "/recipe/" + recipeId,
+                            //        "isRead": "False"
+                            //    });
+                            //    SRSN.FIREBASE_DATABASE.ref('/' + followingMe + "/" + uid.key).update({
+                            //        "uid": uid.key
+                            //    });
 
-                            }
-                            //thông báo công điểm cho chính user
-                            var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
-                            myDataRef = firebase.database().ref(usernameLocal);
-                            if (myDataRef != null) {
-                                uid = myDataRef.push({
-                                    "uid": "",
-                                    "username": "Bạn",
-                                    "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>",
-                                    "date": new Date().toLocaleString(),
-                                    "link": "/recipe/" + recipeId,
-                                    "isRead": "False"
-                                });
-                                //update uid into firebase
-                                SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
-                                    "uid": uid.key
-                                });
-                            }
+                            //}
+                            ////thông báo công điểm cho chính user
+                            //var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
+                            //myDataRef = firebase.database().ref(usernameLocal);
+                            //if (myDataRef != null) {
+                            //    uid = myDataRef.push({
+                            //        "uid": "",
+                            //        "username": "Bạn",
+                            //        "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>",
+                            //        "date": new Date().toLocaleString(),
+                            //        "link": "/recipe/" + recipeId,
+                            //        "isRead": "False"
+                            //    });
+                            //    //update uid into firebase
+                            //    SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                            //        "uid": uid.key
+                            //    });
+                            //}
                             window.location.href = `/recipe/${recipeId}`
                             window.localStorage.removeItem("darftedRecipe");
                         }, 1500);
-
-
-
                     }
                 })
                     .catch(function (e) {
@@ -530,9 +542,6 @@
                         }
                     });
             });
-
-            
-
         })();
 
 

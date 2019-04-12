@@ -94,6 +94,18 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("read-draft-recipe")]
+        public async Task<ActionResult> ReadDraftRecipe(int userId)
+        {
+            try
+            {
+                return Ok(await recipeService.GetAllDraftRecipeByUserIdOrderbyTime(userId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpGet("read-recipe")]
         public async Task<ActionResult> ReadRecipe(int recipeId)
         {
@@ -337,6 +349,18 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("read-edit-recipeid")]
+        public async Task<ActionResult> ReadRecipeWithIdToEdit(int recipeId)
+        {
+            try
+            {
+                return Ok(await recipeService.GetDraftRecipeWithID(this.userManager, recipeId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpGet("read-lastest")]
         public async Task<ActionResult> ReadLastest()
         {
@@ -381,6 +405,7 @@ namespace SRSN.ClientApi.Controllers
                 // beautify data 
                 if (request.RecipeVM.SaveDraft == null || request.RecipeVM.SaveDraft == true) request.RecipeVM.SaveDraft = false;
                 // update
+                request.RecipeVM.Active = true;
                 await recipeService.UpdateRecipe(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
                 var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.CreateNewRecipe);
 
@@ -427,13 +452,15 @@ namespace SRSN.ClientApi.Controllers
                 // beautify data 
                 if (request.RecipeVM.SaveDraft == null || request.RecipeVM.SaveDraft == false) request.RecipeVM.SaveDraft = true;
                 request.RecipeVM.CreateTime = currentRecipe.CreateTime;
-                request.RecipeVM.Active = currentRecipe.Active;
+                request.RecipeVM.Active = false;
+
 
                 // update
-                await recipeService.UpdateRecipe(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                await recipeService.UpdateRecipeSaveDraft(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                var recipe = await recipeService.GetRecipeById(recipeId);
                 return Ok(new
                 {
-                    recipeId,
+                    recipe,
                     success = true,
                     message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
                 });
@@ -443,9 +470,10 @@ namespace SRSN.ClientApi.Controllers
                 // draft new recipe
                 if (request.RecipeVM.SaveDraft == null || request.RecipeVM.SaveDraft == false) request.RecipeVM.SaveDraft = true;
                 var createdRecipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                var recipe = await recipeService.GetRecipeById(createdRecipeId);
                 return Ok(new
                 {
-                    recipeId = createdRecipeId,
+                    recipe,
                     success = true,
                     message = $"Ban da draft thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
                 });
@@ -458,8 +486,8 @@ namespace SRSN.ClientApi.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("submit-recipe")]
-        public async Task<ActionResult> SubmitRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request)
+        [HttpPut("submit-recipe")]
+        public async Task<ActionResult> SubmitRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request, [FromQuery]int recipeId)
         {
             try
             {
@@ -467,7 +495,18 @@ namespace SRSN.ClientApi.Controllers
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = await this.userManager.FindByIdAsync(userId);
                 request.RecipeVM.UserId = int.Parse(userId);
-                var recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                var currentRecipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
+                if (recipeId == 0)
+                {
+                    recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                }
+                else
+                {
+                    request.RecipeVM.Active = true;
+                    request.RecipeVM.CreateTime = currentRecipe.CreateTime;
+                    request.RecipeVM.SaveDraft = false;
+                    await recipeService.UpdateRecipeSaveDraft(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                }
                 var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.CreateNewRecipe);
                 return Ok(new
                 {

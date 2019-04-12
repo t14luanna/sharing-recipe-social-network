@@ -24,10 +24,10 @@ const createRecipeInfo = (info) => {
 };
 
 const recipeDetailsByRecipeId = async (recipeId) => {
-    var username = localStorage.getItem("username");
-    var currentUrl = window.location.href;
-    var recipeId = currentUrl.substr(currentUrl.indexOf('account/my-recipe/' + username + '/')).replace('account/my-recipe/' + username + '/', '');
-    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${recipeId}`);
+    //var username = localStorage.getItem("username");
+    //var currentUrl = window.location.href;
+    //var recipeId = currentUrl.substr(currentUrl.indexOf('account/my-recipe/' + username + '/')).replace('account/my-recipe/' + username + '/', '');
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-edit-recipeid?recipeId=${recipeId}`);
     var data = await res.json();
     var recipeImageCover = createRecipeImageCoverInfo(data[0]);
     //$(".img-picker").empty();
@@ -36,6 +36,7 @@ const recipeDetailsByRecipeId = async (recipeId) => {
     $('.img-picker').imagePicker({ name: 'images' });
     $("input[name='avatarUpload']").attr("data-temp-src", recipeImageCover);
     $("input[name='avatarUpload']").trigger("change");
+    $("input[name='recipeId']").val(data[0].id);
     createRecipeInfo(data[0]);
     var resIngredient = await fetch(`${BASE_API_URL}/api/recipeingredient/get-recipe-ingredients?recipeId=${recipeId}`);
     var ingredients = await resIngredient.json();
@@ -48,12 +49,13 @@ const recipeDetailsByRecipeId = async (recipeId) => {
                                             '<i class="fa fa-arrows"></i>' +
             '</span>' +
             `<div class="autocomplete"><input class="ingredient-detail" type="text" name="ingredients" data-suggest-quantitivie="ingredientsWeight${countIngredient}" id="ingredients${countIngredient}" value="${ingredient.ingredientName}" placeholder="Muối, Đường, thịt gà ..." onclick="SuggestIngredient(this);"/></div>` +
-            `<input class="ingredient-weight" type="text" name="ingredientsWeight" id="${ingredient.id}" placeholder="1g, 1kg, 1 thìa ..."  value="${ingredient.quantitative}" />` +
+            `<input class="ingredient-weight" type="text" name="ingredientsWeight" id="${ingredient.id}" placeholder="1g, 1kg, 1 thìa ..."  value="${ingredient.quantitative}" /><input type="hidden" name="ingredientId" value="${ingredient.id}" />` +
                                         '<span class="del-list"><i class="fa fa-trash"></i></span></div>' +
                                 '</li> ';
     }
     $('.ingredients-list').append(ingredientContainer);
     readSteps(recipeId);
+    bindMajesticItem();
 }
 
 const readSteps = async (recipeId) => {
@@ -68,6 +70,7 @@ const readSteps = async (recipeId) => {
                             <span class="handler-list">
                                 <i class="fa fa-arrows"></i>
                             </span><textarea class="short-text" name="stepsDes" id="${step.id}" cols="30" rows="10">${step.description}</textarea>
+                            <input type="hidden" name="stepsId" value="${step.id}" />
                             <span class="del-list">
                                 <i class="fa fa-trash"></i>
                             </span>
@@ -81,11 +84,11 @@ const readSteps = async (recipeId) => {
         $('.list-sortable.steps').append(content);
         try {
             displayImage(`myAwesomeDropzone${countsteps}`, images);
-
         } catch (e) {
         }
-        
+        bindMajesticItem()
     }
+
 };
 function GetImageRecipe() {
     $(".drop-zone-form").each((index, value) => {
@@ -96,9 +99,9 @@ function GetImageRecipe() {
             count++;
             var imageUrl = image.firstElementChild.firstChild.getAttribute("src");
             if (imageUrl != null || imageUrl != "") {
-                if (listLocalStepImages[id] == null) {
+                //if (listLocalStepImages[id] == null) {
                     listLocalStepImages[id] = [];
-                }
+                //}
                 listLocalStepImages[id].push({
                     id: count,
                     fileStackUrl: imageUrl,
@@ -107,10 +110,10 @@ function GetImageRecipe() {
         }
     })
 }
-async function loadCategory() {
-    var username = localStorage.getItem("username");
-    var currentUrl = window.location.href;
-    var recipeId = currentUrl.substr(currentUrl.indexOf('account/my-recipe/' + username + '/')).replace('account/my-recipe/' + username + '/', '');
+async function loadCategory(recipeId) {
+    //var username = localStorage.getItem("username");
+    //var currentUrl = window.location.href;
+    //var recipeId = currentUrl.substr(currentUrl.indexOf('account/my-recipe/' + username + '/')).replace('account/my-recipe/' + username + '/', '');
     var res = await fetch(`${BASE_API_URL}/api/category/read`);
     var mains = await res.json();
     var recipeCategoriesRes = await fetch(`${BASE_API_URL}/api/category/read-categories-by-recipe?recipeId=` + recipeId);
@@ -173,10 +176,10 @@ $tabsNavLis.on('click', function (e) {
     e.preventDefault();
 });
 
-function getData() {
-    var username = localStorage.getItem("username");
-    var currentUrl = window.location.href;
-    var recipeId = currentUrl.substr(currentUrl.indexOf('account/my-recipe/' + username + '/')).replace('account/my-recipe/' + username + '/', '');
+function getData(recipeId) {
+    //var username = localStorage.getItem("username");
+    //var currentUrl = window.location.href;
+    //var recipeId = currentUrl.substr(currentUrl.indexOf('account/my-recipe/' + username + '/')).replace('account/my-recipe/' + username + '/', '');
     var active = $('#recipe-active').val();
 
     var validation = true;
@@ -277,9 +280,7 @@ function validationField(name, value) {
 }
 
 function bindMajesticItem() {
-
     /* Bind click event to remove detail icon button */
-
     $('.del-list').on("click", function (event) {
         event.preventDefault();
         var $this = $(this);
@@ -293,7 +294,7 @@ $('.add-recipe-steps').on("click", function (event) {
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields">' +
         ' <span class="handler-list"><i class="fa fa-arrows"></i></span>' +
-        '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea>' +
+        '<textarea class="short-text" name="stepsDes" id="stepsDes" cols="30" rows="10">    </textarea><input type="hidden" name="stepsId" value="0" />' +
         ' <span class="del-list"><i class="fa fa-trash"></i></span>' +
         '</div>' +
         `<div class="add-fields" style="margin-top: 20px"><textarea class="short-text" name="stepsTips" id="stepsTips${countsteps}" cols="30" rows="10" placeholder="Mẹo nhỏ cho bước này (có thể bỏ qua)" ></textarea></div>` +
@@ -314,7 +315,7 @@ $('.add-ingredient').on("click", function (event) {
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' +
         '<i class="fa fa-arrows"></i></span >' +
         `<div class="autocomplete"><input class="ingredient-detail" type="text" name="ingredients" data-suggest-quantitivie="ingredientsWeight${countIngredient}" id="ingredients${countIngredient}" placeholder="Muối, Đường, thịt gà ..." onclick="SuggestIngredient(this);"/></div>` +
-        `<input class="ingredient-weight" type="text" name="ingredientsWeight" id="ingredientsWeight${countIngredient}" placeholder="1g, 1kg, 1 thìa ..."/>` +
+        `<input class="ingredient-weight" type="text" name="ingredientsWeight" id="ingredientsWeight${countIngredient}" placeholder="1g, 1kg, 1 thìa ..."/><input type="hidden" name="ingredientId" value="0" />` +
         '<span class="del-list"><i class="fa fa-trash"></i></span></div >' +
         '</li>';
     $('.list-sortable.ingredients-list').append(newMajesticItem);
@@ -543,3 +544,4 @@ function uploadFile(file) {
     };
 
 }(jQuery));
+

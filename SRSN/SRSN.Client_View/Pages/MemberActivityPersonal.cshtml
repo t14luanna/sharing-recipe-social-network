@@ -201,6 +201,7 @@
                                                 <li><a href="/account/my-recipe/@(RouteData.Values["userName"])">Công thức của tôi</a></li>
                                                 <li><a href="/account/my-favorite-recipe/@(RouteData.Values["userName"])">Công thức yêu thích</a></li>
                                                 <li><a href="/account/collection/@(RouteData.Values["userName"])">Bộ sưu tập của tôi</a></li>
+                                                <li id="save-draft-li"><a href="/account/savedraft/@(RouteData.Values["userName"])">Lưu nháp</a></li>
                                             </ul>
                                         </div>
                                         <!-- Content Nav End -->
@@ -366,7 +367,7 @@
     <script src="~/js/member-profile.js"></script>
     <script src="~/js/cover-header-profile.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+   <script src="~/recipepress/js/sweetalertv1.js"></script>
     <script src="~/js/moment.min.js"></script>
     <script src="~/js/daterangepicker.min.js"></script>
     <script src="~/js/member-collection.js"></script>
