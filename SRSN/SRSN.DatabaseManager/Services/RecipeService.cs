@@ -43,7 +43,7 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<RecipeViewModel>> GetRecipeById(int recipeId);
         Task<ICollection<RecipeViewModel>> GetPopularRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> GetLatestRecipes(UserManager<SRSNUser> userManager);
-        Task<ICollection<RecipeViewModel>> Get1000LatestRecipes(UserManager<SRSNUser> userManager);
+        Task<ICollection<RecipeViewModel>> GetAllLatestRecipes(UserManager<SRSNUser> userManager, int limit, int page);
         Task<ICollection<RecipeViewModel>> GetRandomRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> GetRecipeWithID(UserManager<SRSNUser> userManager, int recipeId);
         Task<ICollection<RecipeViewModel>> GetDraftRecipeWithID(UserManager<SRSNUser> userManager, int recipeId);
@@ -287,7 +287,7 @@ namespace SRSN.DatabaseManager.Services
                 return null;
             }
         }
-        public async Task<ICollection<RecipeViewModel>> Get1000LatestRecipes(UserManager<SRSNUser> userManager)
+        public async Task<ICollection<RecipeViewModel>> GetAllLatestRecipes(UserManager<SRSNUser> userManager, int limit, int page)
         {
             try
             {
@@ -299,7 +299,8 @@ namespace SRSN.DatabaseManager.Services
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 1000 * FROM RECIPE WHERE Active='1'AND ReferencedRecipeId IS NULL ORDER BY CreateTime DESC").ToList();
+                //var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 1000 * FROM RECIPE WHERE Active='1'AND ReferencedRecipeId IS NULL ORDER BY CreateTime DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().Where(r => r.Active == true && r.ReferencedRecipeId == null).OrderByDescending(p => p.CreateTime).ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
@@ -313,7 +314,19 @@ namespace SRSN.DatabaseManager.Services
                     list.Add(recipeViewModel);
 
                 }
+                list = list.Skip(page * limit).Take(limit).ToList();
                 return list;
+                //var list = new List<RecipeViewModel>();
+                //var listItems = this.Get().AsNoTracking().Where(r => r.Active == true && r.UserId == userId).OrderByDescending(x => x.CreateTime).ToList();
+                //foreach (var item in listItems)
+                //{
+                //    var recipeUserID = await userManager.FindByIdAsync(userId.ToString());
+                //    item.AccountVM = new AccountViewModel();
+                //    mapper.Map(recipeUserID, item.AccountVM);
+                //    list.Add(item);
+                //}
+                //list = list.Skip(page * limit).Take(limit).ToList();
+                //return list;
 
 
             }

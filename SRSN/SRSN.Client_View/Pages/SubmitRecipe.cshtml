@@ -248,7 +248,7 @@
 
 
 @section Scripts {
-   <script src="~/recipepress/js/sweetalertv1.js"></script>
+    <script src="~/recipepress/js/sweetalertv1.js"></script>
     <script type="text/javascript" src="recipepress/js/main.js"></script>
     @*<script type="text/javascript" src="~/recipepress/js/custom.js"></script>*@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -369,44 +369,67 @@
                         setTimeout(async function () {
                             var data = (await res.json());
                             recipeId = data.recipeId;
-                            //add data to firebase to notification with users who are following me
-                            //them data vao firebase
-                            //var usernameLocal = window.localStorage.getItem("username");//người đang comment
-                            //var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
-                            //var dataUser = await userRes.json();
-                            //for (var user of dataUser) {
-                            //    var followingMe = user.username;//user is following me
-                            //    myDataRef = firebase.database().ref(followingMe);
-                            //    uid = myDataRef.push({
-                            //        "uid": "",
-                            //        "username": usernameLocal,
-                            //        "content": "đã chia sẻ công thức mới",
-                            //        "date": new Date().toLocaleString(),
-                            //        "link": "/recipe/" + recipeId,
-                            //        "isRead": "False"
-                            //    });
-                            //    SRSN.FIREBASE_DATABASE.ref('/' + followingMe + "/" + uid.key).update({
-                            //        "uid": uid.key
-                            //    });
+                            var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+                                method: "GET",
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                }
+                            });
+                            var userData = await resUser.json();
 
-                            //}
-                            ////thông báo công điểm cho chính user
-                            //var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
-                            //myDataRef = firebase.database().ref(usernameLocal);
-                            //if (myDataRef != null) {
-                            //    uid = myDataRef.push({
-                            //        "uid": "",
-                            //        "username": "Bạn",
-                            //        "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>",
-                            //        "date": new Date().toLocaleString(),
-                            //        "link": "/recipe/" + recipeId,
-                            //        "isRead": "False"
-                            //    });
-                            //    //update uid into firebase
-                            //    SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
-                            //        "uid": uid.key
-                            //    });
-                            //}
+                            var usernameLocal = window.localStorage.getItem("username");//người đang comment
+                            var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me?userName=${usernameLocal}`);
+                            var dataUser = await userRes.json();
+                            for (var user of dataUser) {
+                                var followingMe = user.username;//thông báo cho người đang theo dõi tôi
+                                myDataRef = firebase.database().ref(followingMe);
+                                uid = myDataRef.push({
+                                    "uid": "",
+                                    "username": userData.firstName + " " + userData.lastName,
+                                    "content": "đã chia sẻ công thức mới",
+                                    "date": new Date().toLocaleString(),
+                                    "link": "/recipe/" + recipeId,
+                                    "isRead": "False"
+                                });
+                                SRSN.FIREBASE_DATABASE.ref('/' + followingMe + "/" + uid.key).update({
+                                    "uid": uid.key
+                                });
+                                //update count notifi
+                                var countNoti = 0;
+                                var countDataRef = SRSN.FIREBASE_DATABASE.ref(followingMe);
+
+                                countDataRef.once('value', function (snapshot) {
+                                    countNoti = snapshot.val().numberOfLatestNotis;
+                                    countNoti++;
+                                    SRSN.FIREBASE_DATABASE.ref(followingMe).update({ "numberOfLatestNotis": countNoti });
+                                });
+                            }
+                            //thông báo công điểm cho chính user
+                            var usernameLocal = window.localStorage.getItem("username");//người đang đăng công thức
+                            myDataRef = firebase.database().ref(usernameLocal);
+                            if (myDataRef != null) {
+                                uid = myDataRef.push({
+                                    "uid": "",
+                                    "username": "Bạn",
+                                    "content": "đã chia sẻ công thức mới và được cộng thêm <b>10 điểm</b>",
+                                    "date": new Date().toLocaleString(),
+                                    "link": "/recipe/" + recipeId,
+                                    "isRead": "False"
+                                });
+                                //update uid into firebase
+                                SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                                    "uid": uid.key
+                                });
+                                //update count notifi
+                                var countNoti = 0;
+                                var countDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+                                countDataRef.once('value', function (snapshot) {
+                                    countNoti = snapshot.val().numberOfLatestNotis;
+                                    countNoti++;
+                                    SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
+                                });
+                            }
                             window.location.href = `/recipe/${recipeId}`
                             window.localStorage.removeItem("darftedRecipe");
                         }, 1500);
@@ -539,6 +562,7 @@
                                 break;
                             case "cancel":
                                 break;
+
                         }
                     });
             });

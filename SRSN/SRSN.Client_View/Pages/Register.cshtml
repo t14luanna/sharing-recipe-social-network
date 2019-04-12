@@ -189,12 +189,13 @@
                             window.location.href = '/';
 
                             //thông báo cộng điểm
+                            SRSN.FIREBASE_DATABASE.ref("/" + response.username).set({ "numberOfLatestNotis": "1" });//number of notification to show on web
                             var myDataRef = SRSN.FIREBASE_DATABASE.ref(response.username);
                             var uid = myDataRef.push({
                                 "uid": "",
                                 "username": "",
                                 "content": "Chúc mừng bạn là thành viên mới và được cộng thêm <b>10 điểm</b>",
-                                "date": new Date().toLocaleString(),
+                                "date": new Date().toLocaleString(),    
                                 "link": "/account/information/" + response.username,
                                 "isRead": "False"
                             });
@@ -202,6 +203,8 @@
                             SRSN.FIREBASE_DATABASE.ref("/" + response.username + "/" + uid.key).update({
                                 uid: uid.key
                             });
+                            
+                            
                         } else {
                             $('.error-area').html(response.message);
                         }

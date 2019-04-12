@@ -314,11 +314,11 @@ namespace SRSN.ClientApi.Controllers
             }
         }
         [HttpGet("read-latest-page")]
-        public async Task<ActionResult> Read1000Latest()
+        public async Task<ActionResult> ReadAllLatest(int limit = 10, int page = 0)
         {
             try
             {
-                return Ok(await recipeService.Get1000LatestRecipes(this.userManager));
+                return Ok(await recipeService.GetAllLatestRecipes(this.userManager, limit, page));
             }
             catch (Exception ex)
             {

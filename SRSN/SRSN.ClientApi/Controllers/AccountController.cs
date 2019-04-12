@@ -44,6 +44,7 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(data, user);
             user.SecurityStamp = Guid.NewGuid().ToString();
             user.UserName = data.UsernameVM;
+            user.Active = true;
 
             if (data.Password != data.ConfirmPassword)
             {

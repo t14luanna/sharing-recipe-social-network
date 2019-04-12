@@ -34,19 +34,30 @@ const callNotification = async (userId) => {
     });
 
     var userInfo = await res.json();
+    //update count notifi
+    var countNoti = 0;
+    var countDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
+
+    countDataRef.once('value', function (snapshot) {
+        countNoti = snapshot.val().numberOfLatestNotis;
+        countNoti++;
+        SRSN.FIREBASE_DATABASE.ref(userData.username).update({ "numberOfLatestNotis": countNoti });
+    });
+
     var myDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
     var uid = myDataRef.push({
         "uid": "",
         "username": userInfo.firstName + " " + userInfo.lastName,
         "content": "đang theo dõi bạn",
         "date": new Date().toLocaleString(),
-        "link": "/account/information/" + userData.username,
+        "link": "/account/information/" + userInfo.username,
         "isRead": "False"
     });
     //update uid into firebase
     SRSN.FIREBASE_DATABASE.ref("/" + userData.username + "/" + uid.key).update({
         uid: uid.key
     });
+    
 };
 async function unfollowUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
