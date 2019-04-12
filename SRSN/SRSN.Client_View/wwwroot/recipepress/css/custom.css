@@ -1159,3 +1159,7 @@ input[name=ingredient] {
 #list-of-ingredients li{
     height: 40px
 }
+#list-notification {
+    width: 400px;
+    top: 50px;
+}
