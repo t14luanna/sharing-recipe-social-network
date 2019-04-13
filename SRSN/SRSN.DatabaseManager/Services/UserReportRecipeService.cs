@@ -17,7 +17,7 @@ namespace SRSN.DatabaseManager.Services
     public interface IUserReportRecipeService : IBaseService<UserReportRecipe, UserReportRecipeViewModel>
     {
         Task<ICollection<UserReportRecipeViewModel>> GetAllReportedRecipe(UserManager<SRSNUser> userManager);
-        Task DeActiveRecipeReport(int id);
+        Task<UserReportRecipeViewModel> DeActiveRecipeReport(int id);
     }
 
     public class UserReportRecipeService : 
@@ -76,12 +76,13 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-        public async Task DeActiveRecipeReport(int id)
+        public async Task<UserReportRecipeViewModel> DeActiveRecipeReport(int id)
         {
             var recipe = await this.selfDbSet.FindAsync(id);
-            recipe.IsActive = false;
+            recipe.IsActive = !recipe.IsActive;
             this.selfDbSet.Update(recipe);
             await this.unitOfWork.CommitAsync();
+            return this.EntityToVM(recipe);
         }
 
     }
