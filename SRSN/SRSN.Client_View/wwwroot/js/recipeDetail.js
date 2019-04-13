@@ -193,7 +193,7 @@ const followElement = (userId) =>
 const unfollowElement = (userId) =>
     ` <!--follow area-->
                                 <div class="follow-area-${userId}">
-                                            <div class="follow-btn-custom" onclick="followUserFuntion(${userId})">
+                                            <div class="follow-btn-custom" onclick="unfollowUserFuntion(${userId})">
                                             <div class="favourite clearfix">
                                                <div id="friend-status-div" class="btn-friend-stat">
                                                 <div data-bind="visible:true" style="">
@@ -422,9 +422,8 @@ const callChefRecipeApi = async (recipeId) => {
 
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var userFollowingRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/check-following-user`, {
-        method: "POST",
-        body: JSON.stringify({ followingUserId: chef.id }),
+    var userFollowingRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/check-following-user?followingUserId=${chef.id}`, {
+        method: "GET",
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -433,11 +432,9 @@ const callChefRecipeApi = async (recipeId) => {
     var userFollowingData = await userFollowingRes.json();
 
     var isFollow;
-    if (userFollowingData.length > 0) {
-        isFollow = userFollowingData.active;
-    } else {
-        isFollow = false;
-    }
+
+    isFollow = userFollowingData.active;
+    
     var chefUsername = chef.username;
     var btnFollow;
     if (chefUsername == usernameLocal) {

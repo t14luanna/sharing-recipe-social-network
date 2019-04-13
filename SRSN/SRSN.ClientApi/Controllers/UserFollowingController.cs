@@ -22,7 +22,7 @@ namespace SRSN.ClientApi.Controllers
             this.userFollowingService = userFollowingService ;
             this.userManager = userManager ;
         }
-        [HttpPost("check-following-user")]
+        [HttpGet("check-following-user")]
         public async Task<ActionResult> CheckFollowingUser(int followingUserId)
         {
             try
