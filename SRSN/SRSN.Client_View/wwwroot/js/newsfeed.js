@@ -385,7 +385,7 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
         swal("", "Bạn đã chia sẻ công thức thành công", "success");
         //thông báo chia sẻ công thức (sharing notification)
         callCountApi(id);
-        var usernameLocal = window.localStorage.getItem("username");//người đang comment
+        var usernameLocal = window.localStorage.getItem("username");//người đang share
         res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
             method: "GET",
             headers: {
@@ -438,13 +438,13 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
                     uid: uid.key
                 });
                 ///update count notifi
-                var countNoti = 0;
-                var countDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+                var countNoti2 = 0;
+                var countDataRef2 = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
 
-                countDataRef.once('value', function (snapshot) {
-                    countNoti = snapshot.val().numberOfLatestNotis;
-                    countNoti++;
-                    SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
+                countDataRef2.once('value', function (snapshot) {
+                    countNoti2 = snapshot.val().numberOfLatestNotis;
+                    countNoti2++;
+                    SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti2 });
                 });
             } catch (e) {
                 console.error("Exception create rely comment: ", e);
