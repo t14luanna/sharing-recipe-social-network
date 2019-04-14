@@ -64,8 +64,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                await userReportRecipeService.DeActiveRecipeReport(id);
-                return Ok(Boolean.TrueString);
+                return Ok(await userReportRecipeService.DeActiveRecipeReport(id));
             } catch (Exception ex)
             {
                 return BadRequest(ex);

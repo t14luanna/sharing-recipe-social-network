@@ -1,4 +1,4 @@
-﻿var getAllRecipeReport = async () => {
+﻿/*var getAllRecipeReport = async () => {
     var res = await fetch(`${BASE_API_URL}/api/userreportrecipe/get-all-reported-recipe`);
     var data = await res.json();
     if (data && data.length > 0) {
@@ -33,3 +33,4 @@ const reportRecipeElement = (item) =>
                                     <td class="deactive"> <em class="fa fa-lock" style="cursor: pointer"></em></td>
                                     <input type="hidden" value="${item.id}">
                                 </tr>`;
+                                */
