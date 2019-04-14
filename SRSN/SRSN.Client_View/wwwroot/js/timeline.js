@@ -433,7 +433,7 @@ const callOpenCommentPostApi = async (recipeId, recipeOwner) => {
     var elementComment = openCommentPost(data, recipeId, recipeOwner, );
     $(`.container-${recipeId}`).append(elementComment)
 };
-const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, commentParentId) => {
+const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, commentParentId) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
 
@@ -469,12 +469,23 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, comment
                     'Authorization': `Bearer ${token}`
                 },
             });
-
+            //commentParentOwner :  comment cha
+            //username local: người đang login
+            //comment parent id : có đang tl cho comment nào ko
             var userData = await userRes.json();
-            if (commentOwner == "" && commentOwner != usernameLocal) {
+            if (recipeOwner != usernameLocal && commentParentId == 0) {
                 
                 //comment notification
                 //Đánh giá (comment) công thức firebase
+                //thông báo cho chủ bài viết
+                var countNoti = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
+
+                countDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref(recipeOwner).update({ "numberOfLatestNotis": countNoti });
+                });
 
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu bài viết
                 var uid = myDataRef.push({
@@ -489,7 +500,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, comment
                 SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
                     uid: uid.key
                 });
-            } else if (commentOwner != "" && commentOwner != usernameLocal) {//thông báo trả lời comment
+            } else if (commentParentOwner != usernameLocal && commentParentId != 0) {//thông báo trả lời comment
                 //Đánh giá (comment) công thức firebase
                 //update count notifi
                 var countNoti = 0;
@@ -517,16 +528,16 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, comment
                
 
                 //update count notifi
-                var countNoti = 0;
-                var countDataRef = SRSN.FIREBASE_DATABASE.ref(commentOwner);
+                var countNoti2 = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(commentParentOwner);
 
                 countDataRef.once('value', function (snapshot) {
-                    countNoti = snapshot.val().numberOfLatestNotis;
-                    countNoti++;
-                    SRSN.FIREBASE_DATABASE.ref(recipeOwner).update({ "numberOfLatestNotis": countNoti });
+                    countNoti2 = snapshot.val().numberOfLatestNotis;
+                    countNoti2++;
+                    SRSN.FIREBASE_DATABASE.ref(recipeOwner).update({ "numberOfLatestNotis": countNoti2 });
                 });
 
-                var myDataRef = SRSN.FIREBASE_DATABASE.ref(commentOwner);//người sở hữu comment
+                var myDataRef = SRSN.FIREBASE_DATABASE.ref(commentParentOwner);//người sở hữu comment
                 var uid2 = myDataRef.push({
                     "uid": "",
                     "username": userData.firstName + " " + userData.lastName,
@@ -536,7 +547,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, comment
                     "isRead": "False"
                 });
                 //update uid into firebase 
-                SRSN.FIREBASE_DATABASE.ref("/" + commentOwner + "/" + uid2.key).update({
+                SRSN.FIREBASE_DATABASE.ref("/" + commentParentOwner + "/" + uid2.key).update({
                     uid: uid2.key
                 });
                 

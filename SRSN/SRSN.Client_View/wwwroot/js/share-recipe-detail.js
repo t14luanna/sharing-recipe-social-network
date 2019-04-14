@@ -1,7 +1,7 @@
 ﻿const createShareRecipePostElement = (post, recipe) =>
     `<li><div class="activity--item ">
                                                     <div class="activity--avatar">
-                                                        <a href="/MemberProfile">
+                                                        <a href="/account/timeline/${post.accountVM.username}">
                                                             <img src="${post.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                                         </a>
                                                     </div>
@@ -10,7 +10,7 @@
 <div class="activity--meta fs--12 popular-item-${post.id}  popular-post-item ">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/MemberProfile">${post.accountVM.username}</a> đã chia sẻ một công thức</p>
+                                                            <p><a href="/account/timeline/${post.accountVM.username}">${post.accountVM.firstName} ${post.accountVM.lastName} </a> đã chia sẻ một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">
