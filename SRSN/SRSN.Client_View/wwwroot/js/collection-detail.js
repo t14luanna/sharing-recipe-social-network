@@ -143,7 +143,7 @@ const deactivateCollection = async (collectionId) => {
     }
 };
 async function deleteRecipeInMyCollection(collectionId, recipePostId ) {
-    Swal.fire({
+    swal.fire({
         title: "Bạn muốn xóa?",
         text: "Sau khi xóa, bạn sẽ không thấy Công Thức này!",
         icon: "warning",
@@ -162,7 +162,7 @@ const deactivateRecipe = async (collectionId, recipePostId) => {
     var res = await fetch(`${BASE_API_URL}/${COLLECTION_POST_API_URL}/delete-recipepost?collectionId=${collectionId}&recipePostId=${recipePostId}`);
 
     if (res.status == 200) {//delete successfully
-        Swal.fire({
+        swal.fire({
             type: 'success',
             title: 'Thông báo',
             text: 'Xóa công thức khỏi bộ sưu tập thành công!',
@@ -187,7 +187,7 @@ const callAddCollectionApi = async (collectionId) => {
         }
     });
     if (res.status == 200) {
-        Swal.fire({
+        swal.fire({
             type: 'success',
             title: 'Thông báo',
             text: 'Lưu bộ sưu tập thành công!',
@@ -208,7 +208,7 @@ const callUnSaveCollectionApi = async (collectionId, currentUserId) => {
         }
     });
     if (res.status == 200) {
-        Swal.fire({
+        swal.fire({
             title: "",
             text: "Bạn đã bỏ lưu bộ sưu tập thành công",
             type: "success",

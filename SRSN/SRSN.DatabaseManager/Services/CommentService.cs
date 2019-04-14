@@ -85,6 +85,7 @@ namespace SRSN.DatabaseManager.Services
                     var commentViewModel = this.EntityToVM(item);
                     // da co duoc du lieu cua entity trong view model cap nhat them vai field dac biet nhu la fullname chi viewmodel moi co
                     commentViewModel.FullName = fullName;
+                    commentViewModel.Username = currentUser.UserName;
                     commentViewModel.AvatarUrl = currentUser.AvatarImageUrl;
                     list.Add(commentViewModel);
 
