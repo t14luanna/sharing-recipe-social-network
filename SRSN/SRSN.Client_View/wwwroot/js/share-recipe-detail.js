@@ -350,7 +350,7 @@ const createRecipePostElement = (recipe) =>
                                                         <div class="activity--meta fs--12 popular-post-item popular-item-${recipe.id}">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/MemberProfile">${recipe.accountVM.username}</a> đã đăng một công thức</p>
+                                                            <p><a href="/account/timeline/${recipe.accountVM.username}">${recipe.accountVM.firstName} ${recipe.accountVM.lastName}</a> đã đăng một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">

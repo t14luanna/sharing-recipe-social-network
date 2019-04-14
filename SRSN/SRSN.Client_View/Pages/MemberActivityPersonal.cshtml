@@ -402,7 +402,8 @@
         };
         function openShareModal(e) {
             var recipeId = e.getAttribute("data-recipe-id");
-            callShareRecipeModalApi(recipeId);
+            var recipeOwner = e.getAttribute("data-recipeOwner-name");
+            callShareRecipeModalApi(recipeId, recipeOwner);
             $(".modal-share-post").css("display", "block");
         }
 

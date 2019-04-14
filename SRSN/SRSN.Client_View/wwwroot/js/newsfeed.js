@@ -408,7 +408,7 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
                     "username": userInfo.firstName + " " + userInfo.lastName,
                     "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
-                    "link": "/recipe/" + data.referencedRecipeId,
+                    "link": "/sharerecipe/" + data.referencedRecipeId,
                     "isRead": "False"
                 });
                 //update uid into firebase 
@@ -431,7 +431,7 @@ const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
                     "username": "Bạn",
                     "content": "đã chia sẻ bài viết và được cộng thêm <b>5 điểm</b>",
                     "date": new Date().toLocaleString(),
-                    "link": "/recipe/" + data.referencedRecipeId,
+                    "link": "/sharerecipe/" + data.referencedRecipeId,
                     "isRead": "False"
                 });
                 //update uid into firebase 
@@ -531,7 +531,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, comment
                     "username": userInfo.firstName + " " + userInfo.lastName,
                     "content": "đã bình luận công thức của bạn",
                     "date": new Date().toLocaleString(),
-                    "link": "/recipe/" + data.recipeId,
+                    "link": "/sharerecipe/" + data.recipeId,
                     "isRead": "False"
                 });
                 //update uid into firebase 
@@ -557,7 +557,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, comment
                         "username": userInfo.firstName + " " + userInfo.lastName,
                         "content": "đã trả lời bình luận về công thức của bạn",
                         "date": new Date().toLocaleString(),
-                        "link": "/recipe/" + data.recipeId,
+                        "link": "/sharerecipe/" + data.recipeId,
                         "isRead": "False"
                     });
                     //update uid into firebase 
@@ -580,7 +580,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, comment
                         "username": userInfo.firstName + " " + userInfo.lastName,
                         "content": "đã trả lời bình luận của bạn",
                         "date": new Date().toLocaleString(),
-                        "link": "/recipe/" + data.recipeId,
+                        "link": "/sharerecipe/" + data.recipeId,
                         "isRead": "False"
                     });
                     //update uid into firebase 
