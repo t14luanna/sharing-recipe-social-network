@@ -191,10 +191,7 @@ namespace SRSN.ClientApi.Controllers
                         mapper.Map(recipeUserID, recipe.AccountVM);
                         listRecipe.Add(recipe);
                     }
-                    if (listRecipe.Count() == 3)
-                    {
-                        return Ok(listRecipe);
-                    }
+                    
                 }
                 return Ok(listRecipe);
             }
