@@ -148,13 +148,13 @@ const createChefByRecipeId = (chef, btnActionFollow) => `<h3 class="lined">Thôn
     <div class="listing">
         <div class="image">
             <div class="image-inner">
-                <a href="/account/information/${chef.username}"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
+                <a href="/account/timeline/${chef.username}"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
             </div>
         </div>
         <div class="detail">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4><a href="/account/information/${chef.username}">${chef.firstName} ${chef.lastName}</a></h4>
+                    <h4><a href="/account/timeline/${chef.username}">${chef.firstName} ${chef.lastName}</a></h4>
 
                 </div>
                 <div class="col-sm-4" >
@@ -168,7 +168,7 @@ const createChefByRecipeId = (chef, btnActionFollow) => `<h3 class="lined">Thôn
             <p>
                ${ chef.description}
             </p>
-            <a href="/account/information/${chef.username}" class="read-more-angle">Xem thêm...</a>
+            <a href="/account/timeline/${chef.username}" class="read-more-angle">Xem thêm...</a>
         </div>
     </div>`;
 const followElement = (userId) => 
@@ -648,10 +648,19 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
             SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
         });
 
+
+        $(".close-alert").on("click", function () {
+            $(this).parent(".alert").slideUp();
+        });
         
     } else if (res.status == 400) {
         removeAlert();
         $(".form-rating-recipe").append(alertRatedWarning);
+
+
+        $(".close-alert").on("click", function () {
+            $(this).parent(".alert").slideUp();
+        });
         return;
     }
 };
@@ -894,14 +903,14 @@ const createShareRecipeModal = (recipe, dataUser) => `<div class="activity--list
                         <li>
                             <div class="activity--item">
                                 <div class="activity--avatar">
-                                    <a href="/account/information/${dataUser.username}">
+                                    <a href="/account/timeline/${dataUser.username}">
                                         <img src="${dataUser.avatarImageUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                     </a>
                                 </div>
 
                                 <div class="activity--info fs--14">
                                     <div class="activity--header">
-                                        <p><a href="/account/information/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
+                                        <p><a href="/account/timeline/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
                                     </div>
 
                                     <div class="activity--content">

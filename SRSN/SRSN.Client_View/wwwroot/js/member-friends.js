@@ -55,14 +55,14 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                     <!-- Member Item Start -->
                                                     <div class="member--item online">
                                                         <div class="img img-circle">
-                                                            <a href="/account/information/${followingUser.username}" class="btn-link">
+                                                            <a href="/account/timeline/${followingUser.username}" class="btn-link">
                                                                 <img src="${followingUser.avatarImageUrl}" alt="">
                                                             </a>
                                                         </div>
 
                                                         <div class="name">
                                                             <h3 class="h6 fs--12">
-                                                                <a href="/account/information/${followingUser.username}" class="btn-link">${followingUser.firstName} ${followingUser.lastName} </a>
+                                                                <a href="/account/timeline/${followingUser.username}" class="btn-link">${followingUser.firstName} ${followingUser.lastName} </a>
                                                             </h3>
                                                         </div>
                                                         <div class="actions">

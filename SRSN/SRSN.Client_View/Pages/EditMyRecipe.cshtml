@@ -268,7 +268,8 @@
                         setTimeout(async function () {
                             var resData = (await res.json());
                             recipeId = resData.recipe[0].id;
-                            window.location.href = `/recipe/${recipeId}`
+                            //window.location.href = `/recipe/${recipeId}`
+                            history.back();
                             window.localStorage.removeItem("darftedRecipe");
                         }, 1500);
                     }
@@ -301,7 +302,7 @@
             if (results.validation === false) {
                 window.scrollTo(0, 400);
                 $("#congthucBtn").click();
-                Swal.fire({
+                swal({
                     type: 'error',
                     title: 'Thông báo',
                     text: 'Các nội dung không được để trống!',

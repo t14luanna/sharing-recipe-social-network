@@ -18,6 +18,9 @@ namespace SRSN.DatabaseManager.ViewModels
         public int? RecipeCommentParentId { get; set; }
         public int? RecipeId { get; set; }
         public string FullName { get; set; }
+        public string FullNameOwnerComment { get; set; }
+        public string UsernameOwnerComment { get; set; }
+        public string Username { get; set; }
         public string AvatarUrl { get; set; }
     }
 }

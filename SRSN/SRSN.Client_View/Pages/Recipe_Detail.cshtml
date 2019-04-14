@@ -122,7 +122,7 @@
                                 </div>
 
                                 <button class="submit-comment">Đánh giá</button>
-                               
+
                             </div>
                         </div>
                         <div class="modal fade" id="myModal" role="dialog">
@@ -368,23 +368,7 @@
                     await callListCategoryItem();
                     await RedirectAPI();
 
-                    // Init products on modal list product item
-                    // Get ingredient names
-                    //$('input[name=ingredient]').each(async function (index, element) {
-                    //    // Get name
-                    //    var value = element.getAttribute("value");
-                    //    if (value) {
-                    //        var ingredientName = value.split('-')[1];
-                    //        await callReadProductByIngredientNameApi(ingredientName);
-                    //    }
-                    //});
-
-                    //callListCategoryItemDetailPage();
-                    // Recipe slider variation two
-                    //$('.slider-detail2').swipebox();
-                    //if (jQuery().swipebox) {
-                    //    $('.slider-detail2').swipebox();
-                    //}
+                    
                     $('.slider-detail2').slick({
                         autoplay: true,
                         infinite: true,
@@ -505,9 +489,6 @@
                     var comment = $("textarea[name='comment']").val();
                     callCreateRatingRecipe2Api(@(RouteData.Values["recipe_id"]), star, comment);
                 });
-                $(".other").on("click", function () {
-
-                });
                 async function toggleLikeButton(x) {
                     try {
                         var token = JSON.parse(localStorage.getItem('authorization')).token;
@@ -612,7 +593,6 @@
                 var verifyUserInterestingCleaner = function () {
                     clearInterval(verifyUserInteresting);
                 }
-
     </script>
     <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
     <script src="~/js/recipe.js"></script>

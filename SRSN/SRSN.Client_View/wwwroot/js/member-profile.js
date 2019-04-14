@@ -102,14 +102,14 @@ const callAccountInforApi = async (username) => {
             }
         });
         if (res.status == 200) {
-            Swal.fire({
+            swal({
                 type: 'success',
                 title: 'Thông báo',
                 text: 'Cập nhật thông tin thành công!',
             })
             setTimeout(async function () {
                 var username = localStorage.getItem("username");
-                window.location.href = `/account/information/${username}`
+                location.reload();
             }, 1500);
         }
     });
@@ -137,14 +137,14 @@ const callAccountInforApi = async (username) => {
         });
         var data = await res.json();
         if (res.status == 200) {
-            Swal.fire({
+            swal({
                 type: 'success',
                 title: 'Thông báo',
                 text: 'Cập nhật thông tin thành công!',
             })
             setTimeout(async function () {
                 var username = localStorage.getItem("username");
-                //window.location.href = `/account/information/${username}`
+                location.reload();
             }, 1500);
         }
     });
@@ -175,14 +175,14 @@ const callAccountInforApi = async (username) => {
             }
         }); 
         if (res.status == 200) {
-            Swal.fire({
+            swal({
                 type: 'success',
                 title: 'Thông báo',
                 text: 'Cập nhật thông tin thành công!',
             })
             setTimeout(async function () {
                 var username = localStorage.getItem("username");
-                //window.location.href = `/account/information/${username}`
+                location.reload();
             }, 1500);
         }
     });

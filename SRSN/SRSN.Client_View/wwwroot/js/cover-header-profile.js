@@ -185,12 +185,12 @@ const loadAvatarContainer = async (username) => {
                 'Authorization': `Bearer ${token}`
             },
         });
-
         data = await res.json();
     } else {
         res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?userName=${username}`); /* tim theo user name*/
         data = await res.json();//do 2 cach trả về giá trị khác nhau, data[0] là vị trí đầu tiên trong chuổi json
-        $("#save-draft-li").hide()
+        $("#save-draft-li").hide();
+        
     }
 
     const checkFollow = (id, listFollowed) => {
@@ -208,8 +208,14 @@ const loadAvatarContainer = async (username) => {
     data.description = data.description == null ? "" : data.description;
 
     var element = isFollowed ? createAvatarContainerUnfollow(data, userData.length) : createAvatarContainer(data, userData.length);
-
+   
     $("#avatar-container").append(element);
+    if (username == userNameLocalStorage) {
+        $(".edit").show();
+    } else {
+        $(".edit").hide();
+
+    }
     if (username == userNameLocalStorage) {
         $(".follow-area-" + data.id).hide();
     }
@@ -290,14 +296,14 @@ async function btnUpdateAvatar_Click(btnUpdateAvatar) {
         method: 'PUT',
         body: JSON.stringify({
             'avatarImageUrl': $("input[name=avatarUrl]").val(),
-            'firstName': $('#firstName').val(),
-            'lastName': $('#lastName').val(),
-            'gender': $('#gender>option:selected').val(),
-            'birthdate': $('#birthdate').val(),
-            'description': $('#hiddenDescription').val(),
-            'phone': $('#hiddenPhone').val(),
-            'email': $('#hiddenEmail').val(),
-            'address': $('#hiddenAddress').val()
+            'firstName': data.firstName,
+            'lastName': data.lastName,
+            'gender': data.gender,
+            'birthdate': data.birthdate,
+            'description': data.description,
+            'phone': data.phone,
+            'email': data.email,
+            'address': data.address
         }),
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -305,14 +311,14 @@ async function btnUpdateAvatar_Click(btnUpdateAvatar) {
         }
     });
     if (res.status == 200) {
-        Swal.fire({
+        swal({
             type: 'success',
             title: 'Thông báo',
             text: 'Cập nhật thông tin thành công!',
         })
         setTimeout(async function () {
             var username = localStorage.getItem("username");
-            window.location.href = `/account/information/${username}`
+            location.reload();
         }, 1500);
     }
 }

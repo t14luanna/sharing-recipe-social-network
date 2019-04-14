@@ -16,7 +16,7 @@ const createSingleRecipeElement = (singeRecipe) =>
                 </h3>
                 <div class="short-separator"></div>
                 <ul class="news-post-meta post-meta">
-                   <li class="author"><a href="/account/information/${singeRecipe.username}">${singeRecipe.fullName}</a></li>
+                   <li class="author"><a href="/account/timeline/${singeRecipe.username}">${singeRecipe.fullName}</a></li>
                    <li class="date">${ new Date(singeRecipe.createTime).getDay() + "/" + new Date(singeRecipe.createTime).getMonth() + "/" + new Date(singeRecipe.createTime).getFullYear()}</li >
                    
                 </ul>

@@ -1,8 +1,9 @@
 ﻿var currentPage = 0;
+var indexUser;
 const createRecipePost = (recipe) =>
     `<li class="col-md-12 timeline-post" style ="list-style-type: none"><div class="activity--item col-md-8  col-md-offset-2">
                                                     <div class="activity--avatar">
-                                                        <a href="/account/information/${recipe.accountVM.username}">
+                                                        <a href="/account/timeline/${recipe.accountVM.username}">
                                                             <img src="${recipe.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                                         </a>
                                                     </div>
@@ -11,7 +12,7 @@ const createRecipePost = (recipe) =>
                                                         <div class="activity--meta fs--12 popular-post-item popular-item-${recipe.id}">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/account/information/${recipe.accountVM.username}"">${recipe.accountVM.firstName} ${recipe.accountVM.lastName}</a> đã đăng một công thức</p>
+                                                            <p><a href="/account/timeline/${recipe.accountVM.username}"">${recipe.accountVM.firstName} ${recipe.accountVM.lastName}</a> đã đăng một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">
@@ -61,7 +62,7 @@ const createRecipePost = (recipe) =>
 const createShareRecipePost = (post, recipe) =>
     `<li class="col-md-12 timeline-post" style ="list-style-type: none"><div class="activity--item col-md-8  col-md-offset-2">
                                                     <div class="activity--avatar">
-                                                        <a href="/account/information/${post.accountVM.username}">
+                                                        <a href="/account/timeline/${post.accountVM.username}">
                                                             <img src="${post.accountVM.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                                         </a>
                                                     </div>
@@ -70,7 +71,7 @@ const createShareRecipePost = (post, recipe) =>
 <div class="activity--meta fs--12 popular-item-${post.id}  popular-post-item ">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/account/information/${post.accountVM.username}">${post.accountVM.firstName} ${post.accountVM.lastName}</a> đã chia sẻ một công thức</p>
+                                                            <p><a href="/account/timeline/${post.accountVM.username}">${post.accountVM.firstName} ${post.accountVM.lastName}</a> đã chia sẻ một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">
@@ -239,14 +240,14 @@ const createShareRecipeModal = (recipe, dataUser, recipeOwner) => `<li><div clas
                         <li>
                             <div class="activity--item">
                                 <div class="activity--avatar">
-                                    <a href="/account/information/${dataUser.username}">
+                                    <a href="/account/timeline/${dataUser.username}">
                                         <img src="${dataUser.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                     </a>
                                 </div>
 
                                 <div class="activity--info fs--14">
                                     <div class="activity--header">
-                                        <p><a href="/account/information/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
+                                        <p><a href="/account/timeline/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
                                     </div>
 
                                     <div class="activity--content">
@@ -404,7 +405,7 @@ const openCommentPost = (user, recipeId, recipeOwner, commentOwner) => `<li clas
                     <div class="comment comment-newsfeeds">
                         <div class="comment-form">
                             <textarea class="reply-comment" name="comment-${recipeId}" id="message" cols="3" rows="3">${commentOwner ? `@${commentOwner} ` : ``}</textarea>
-                             <a onclick="callCreateCommentApi(${recipeId},'${recipeOwner}','${commentOwner}' )" class="reply-button">Đăng</a>
+                             <a onclick="callCreateCommentApi(${recipeId},'${recipeOwner}','${commentOwner}', '${0}' )" class="reply-button">Đăng</a>
                         </div>
                     </div>
                 </li>
@@ -421,19 +422,28 @@ const callOpenCommentPostApi = async (recipeId, recipeOwner) => {
         }
     });
     var data = await res.json();
+    indexUser = data;
     var elementComment = openCommentPost(data, recipeId, recipeOwner);
     $(`.container-${recipeId}`).append(elementComment)
 };
-const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner) => {
+const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, commentParentId) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
 
     var comment = $(`textarea[name="comment-${recipeId}"]`).val();
     if (comment != "") {
-        var data = {
-            recipeId: recipeId,
-            commentContent: comment
-        };
+        if (commentParentId != 0) {
+            var data = {
+                recipeId: recipeId,
+                commentContent: comment,
+                commentParentID: commentParentId
+            };
+        } else {
+            var data = {
+                recipeId: recipeId,
+                commentContent: comment
+            };
+        }
         var res = await fetch(`${BASE_API_URL}/api/comment/createComment`, {
             method: "POST",
             body: JSON.stringify(data),
@@ -562,24 +572,24 @@ const callCountApi = async (recipeId) => {
 };
 const createCountLine = (count, recipeId) => `<p class="update-like-${recipeId}">${count.likeCount} lượt thích, ${count.shareCount} lượt chia sẻ</p>`;
 const createSingleReplyComment = (comment, recipeOwner) => {
-    var tagUserContents = comment.commentContent.match(/@(\w+)/gm);
+    var tagUserContents = comment.commentContent.match('@' + comment.fullNameOwnerComment);
     if (tagUserContents) {
         for (var item of tagUserContents) {
-            comment.commentContent = comment.commentContent.replace(item, `<a href="/account/information/${item}">${item}</a>`);
+            comment.commentContent = comment.commentContent.replace(item, `<a class="username-mention" href="/account/timeline/${comment.usernameOwnerComment}">${item}</a>`);
             console.log(comment.commentContent);
         }
     }
     var element = `<li class="comment-newsfeed-li">
         <div class="acomment--item clearfix acomment--item-newsfeed">
             <div class="acomment--avatar">
-                <a href="member-activity-personal.html">
+                <a href="/account/timeline/${comment.username}">
                     <img src="${comment.avatarUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                 </a>
             </div>
                         
             <div class="acomment--info">
                 <div class="acomment--header">
-                    <p><a href="/account/information/${comment.username}">${comment.fullName}</a> trả lời</p>
+                    <p><a href="/account/timeline/${comment.username}">${comment.fullName}</a> trả lời</p>
                 </div>
                         
                 <div class="acomment--meta">
@@ -597,7 +607,20 @@ const createSingleReplyComment = (comment, recipeOwner) => {
 
 function openReplyView(commentId, commentRecipeId, commentOwner, recipeOwner) {
     $(".comment-post-li").remove();
-    var elementComment = openCommentPost(commentId, commentRecipeId, recipeOwner, commentOwner);
+    var elementComment = openReplyComment(commentId, commentRecipeId, recipeOwner, commentOwner);
     $(`.container-${commentRecipeId}`).append(elementComment)
 };
+const openReplyComment = (commentId, recipeId, recipeOwner, commentOwner) => `<li class="comment-newsfeed-li comment-post-li"><div class="recipe-comments comment-post-container"><ul class="reply-baongoc">
+                <li>
+                    <div class="acomment--avatar">
+                        <a href="#"><img class="user-reply-comment user-comment" src="${indexUser.avatarImageUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"></a>
+                    </div>
+                    <div class="comment comment-newsfeeds">
+                        <div class="comment-form">
+                            <textarea class="reply-comment" name="comment-${recipeId}" id="message" cols="3" rows="3">${commentOwner ? `@${commentOwner} ` : ``}</textarea>
+                             <a onclick="callCreateCommentApi(${recipeId},'${recipeOwner}','${commentOwner}', '${commentId}' )" class="reply-button">Đăng</a>
+                        </div>
+                    </div>
+                </li>
+            </ul></div></li>`;
 

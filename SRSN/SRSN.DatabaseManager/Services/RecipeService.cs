@@ -51,7 +51,7 @@ namespace SRSN.DatabaseManager.Services
         ICollection<RecipeViewModel> GetPopularRecipes();
         ICollection<RecipeViewModel> GetLastestRecipes();
         Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName);
-        Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
+        Task<ICollection<RecipeViewModel>> GetRecipeName(UserManager<SRSNUser> userManager, string recipeName);
         Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(UserManager<SRSNUser> userManager, string categoryName);
         Task UpdateIsShareReaction(int recipeId, int userId);
         Task<RecipeViewModel> getBestRecipeOfUser(int userId);
@@ -576,7 +576,7 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName)
+        public async Task<ICollection<RecipeViewModel>> GetRecipeName(UserManager<SRSNUser> userManager, string recipeName)
         {
             try
             {
@@ -586,8 +586,10 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     //apply automapper
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
                     var recipeViewModel = this.EntityToVM(item);
-
+                    recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
 
                 }

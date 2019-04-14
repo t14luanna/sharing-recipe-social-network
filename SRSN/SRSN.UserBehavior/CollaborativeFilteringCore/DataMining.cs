@@ -86,8 +86,16 @@ namespace SRSN.UserBehavior.CollaborativeFilteringCore
                 var totalShare = recipe.ShareQuantity.Value;
                 var totalLike = recipe.LikeQuantity.Value;
                 var ratingRecipe = recipe.EvRating.Value;
-                var createRecipeTime = recipe.CreateTime.Value;
+                var createRecipeTime = DateTime.Now.ToLocalTime();
                 var currentTime = DateTime.Now.ToLocalTime();
+                if (recipe.CreateTime != null)
+                {
+                    createRecipeTime = recipe.CreateTime.Value;
+                }
+                else if (recipe.UpdateTime != null)
+                {
+                    createRecipeTime = recipe.UpdateTime.Value;
+                }
                 var timeLeft = currentTime - createRecipeTime;
                 score = (ratingRecipe * 0.4 + totalView * 0.1 + totalLike * 0.3 + totalShare * 0.2) / timeLeft.TotalHours;
                 redisClient.AddItemToSortedSet(redisRankRecipe, recipe.Id.ToString(), score);

@@ -30,7 +30,7 @@ $("#comment-form").submit(function (e) {
             }).then(res => {
                 if (res.status == 200) {
                     $("#modal-create-new-collection").hide();
-                    Swal.fire({
+                    swal({
                         type: 'success',
                         title: 'Thông báo',
                         text: 'Tạo bộ sưu tập thành công!',

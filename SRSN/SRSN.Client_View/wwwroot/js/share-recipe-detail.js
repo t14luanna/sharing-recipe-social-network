@@ -210,7 +210,7 @@ const createSingleReplyComment = (comment, recipeOwner) => {
     var tagUserContents = comment.commentContent.match(/@(\w+)/gm);
     if (tagUserContents) {
         for (var item of tagUserContents) {
-            comment.commentContent = comment.commentContent.replace(item, `<a href="/account/information/${item}">${item}</a>`);
+            comment.commentContent = comment.commentContent.replace(item, `<a href="/account/timeline/${item}">${item}</a>`);
             console.log(comment.commentContent);
         }
     }

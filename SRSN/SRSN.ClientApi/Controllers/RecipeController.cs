@@ -232,7 +232,7 @@ namespace SRSN.ClientApi.Controllers
                     var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true);
                     if (recipe != null)
                     {
-                        if (listUserFollowingId.Contains(recipe.UserId.Value))
+                        if (listUserFollowingId.Contains(recipe.UserId.Value) || recipe.UserId.Value == userId)
                         {
                             var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
                             recipe.AccountVM = new AccountViewModel();
@@ -540,7 +540,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(await recipeService.GetRecipeName(recipeName));
+                return Ok(await recipeService.GetRecipeName(userManager, recipeName));
             }
             catch (Exception ex)
             {

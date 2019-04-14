@@ -1166,3 +1166,7 @@ input[name=ingredient] {
 #btn-create-new-collection {
     cursor: pointer;
 }
+.username-mention {
+    font-weight: 600!important;
+    color: rgb(27, 149, 224)!important
+}
