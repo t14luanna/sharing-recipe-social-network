@@ -8,6 +8,7 @@ namespace SRSN.DatabaseManager.ViewModels
     {
         public int Id { get; set; }
         public int? UserId { get; set; }
+        public string Username { get; set; }
         public int? PostId { get; set; }
         public DateTime? CreateTime { get; set; }
         public DateTime? UpdateTime { get; set; }
@@ -20,7 +21,6 @@ namespace SRSN.DatabaseManager.ViewModels
         public string FullName { get; set; }
         public string FullNameOwnerComment { get; set; }
         public string UsernameOwnerComment { get; set; }
-        public string Username { get; set; }
         public string AvatarUrl { get; set; }
     }
 }
