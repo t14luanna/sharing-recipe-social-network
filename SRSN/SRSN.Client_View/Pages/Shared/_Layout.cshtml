@@ -300,9 +300,9 @@
             fetch(`${BASE_API_URL}/api/recipe/read-recipename?recipeName=${searchValue}`,
                 {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    //headers: {
+                  //      'Content-Type': 'application/json'
+                  //  }
                 })
                 .then(res => res.json())
                 .then(response => {

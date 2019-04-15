@@ -565,7 +565,7 @@ namespace SRSN.DatabaseManager.Services
             {
                 var list = new List<RecipeViewModel>();
 
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE N'%" + recipeName + "%' order by Id DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE N'%" + recipeName + "%' order by Id DESC AND Active='1'").ToList();
                 foreach (var item in listItems)
                 {
                     //apply automapper
