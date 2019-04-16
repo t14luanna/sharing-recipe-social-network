@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package data;
+package crawler;
 
 import org.json.simple.JSONObject;
 
@@ -11,19 +11,19 @@ import org.json.simple.JSONObject;
  *
  * @author LUANNA
  */
-public class ButtonClickDTO {
+public class ButtonClick {
     private String selector;
     private boolean hasMore;
 
-    public ButtonClickDTO() {
+    public ButtonClick() {
     }
 
-    public ButtonClickDTO(JSONObject dto){
+    public ButtonClick(JSONObject dto){
         this.selector = (String) dto.get("selector");
         this.hasMore = (boolean) dto.get("hasMore");
     }
     
-    public ButtonClickDTO(String selector, boolean hasMore) {
+    public ButtonClick(String selector, boolean hasMore) {
         this.selector = selector;
         this.hasMore = hasMore;
     }

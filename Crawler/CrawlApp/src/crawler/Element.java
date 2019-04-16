@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package data;
+package crawler;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,56 +15,56 @@ import org.json.simple.JSONObject;
  *
  * @author LUANNA
  */
-public class ElementDTO {
+public class Element {
     private String title;
     private String type;
     private String selector;
     private String valueSelector;
-    private List<ElementDTO> elements;
-    private List<ButtonClickDTO> beforeLoad;
-    private ElementDTO nextPage;
+    private List<Element> elements;
+    private List<ButtonClick> beforeLoad;
+    private Element nextPage;
 
-    public ElementDTO() {
+    public Element() {
     }
     
-    public ElementDTO(JSONObject dto){
+    public Element(JSONObject dto){
         this.title = (String) dto.get("title");
         this.type = (String) dto.get("type");
         this.selector = (String) dto.get("selector");
         this.valueSelector = (String) dto.get("value");
-        this.elements = new ArrayList<ElementDTO>();
+        this.elements = new ArrayList<Element>();
         
         JSONArray listElement = (JSONArray) dto.get("elements");
         if(listElement!= null && listElement.size() > 0){
             for (Iterator iterator = listElement.iterator(); iterator.hasNext();) {
                 JSONObject element = (JSONObject) iterator.next();
-                this.elements.add(new ElementDTO(element));
+                this.elements.add(new Element(element));
             }
         }
         
-        this.beforeLoad = new ArrayList<ButtonClickDTO>();
+        this.beforeLoad = new ArrayList<ButtonClick>();
 
         JSONArray btns = (JSONArray) dto.get("beforeLoad");
         if(btns!=null && btns.size() > 0){
             for (Iterator iterator = btns.iterator(); iterator.hasNext();) {
                 JSONObject btn = (JSONObject) iterator.next();
-                this.beforeLoad.add(new ButtonClickDTO(btn));
+                this.beforeLoad.add(new ButtonClick(btn));
             }
         }
         
         JSONObject nextPage = (JSONObject) dto.get("nextPage");
         if(nextPage != null){
-            this.nextPage = new ElementDTO(nextPage);
+            this.nextPage = new Element(nextPage);
         }
     }
 
-    public ElementDTO(String title, String type, String selector) {
+    public Element(String title, String type, String selector) {
         this.title = title;
         this.type = type;
         this.selector = selector;
     }
 
-    public ElementDTO(String title, String type, String selector, String valueSelector, List<ElementDTO> elements, List<ButtonClickDTO> beforeLoad) {
+    public Element(String title, String type, String selector, String valueSelector, List<Element> elements, List<ButtonClick> beforeLoad) {
         this.title = title;
         this.type = type;
         this.selector = selector;
@@ -97,11 +97,11 @@ public class ElementDTO {
         this.selector = selector;
     }
 
-    public List<ElementDTO> getElements() {
+    public List<Element> getElements() {
         return elements;
     }
 
-    public void setElements(List<ElementDTO> elements) {
+    public void setElements(List<Element> elements) {
         this.elements = elements;
     }
 
@@ -113,19 +113,19 @@ public class ElementDTO {
         this.valueSelector = valueSelector;
     }
 
-    public List<ButtonClickDTO> getBeforeLoad() {
+    public List<ButtonClick> getBeforeLoad() {
         return beforeLoad;
     }
 
-    public void setBeforeLoad(List<ButtonClickDTO> beforeLoad) {
+    public void setBeforeLoad(List<ButtonClick> beforeLoad) {
         this.beforeLoad = beforeLoad;
     }
 
-    public ElementDTO getNextPage() {
+    public Element getNextPage() {
         return nextPage;
     }
 
-    public void setNextPage(ElementDTO nextPage) {
+    public void setNextPage(Element nextPage) {
         this.nextPage = nextPage;
     }
     

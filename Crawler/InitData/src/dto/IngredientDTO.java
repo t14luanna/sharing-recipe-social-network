@@ -5,22 +5,20 @@
  */
 package dto;
 
+import org.json.simple.JSONObject;
+
 /**
  *
  * @author LUANNA
  */
-public class IngredientDTO {
-    private String name;
+public class IngredientDTO extends IDTO {
 
     public IngredientDTO(String name) {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    protected IDTO parseFromJSON(JSONObject json) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
