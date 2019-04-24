@@ -38,7 +38,7 @@ namespace SRSN.DatabaseManager.Services
         Task UpdateRecipe(int recipeId, RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task UpdateRecipeSaveDraft(int recipeId, RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId);
-        Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId);
+        Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId, int limit, int page);
         Task<ICollection<RecipeViewModel>> GetAllDraftRecipeByUserIdOrderbyTime(int userId);
         Task<ICollection<RecipeViewModel>> GetRecipeById(int recipeId);
         Task<ICollection<RecipeViewModel>> GetPopularRecipes(UserManager<SRSNUser> userManager);
@@ -738,14 +738,15 @@ namespace SRSN.DatabaseManager.Services
             return recipeVM;
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId)
+        public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId, int limit, int page)
         {
             try
             {
                 var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
                 var ingredientRepo = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
                 var categoryRepo = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
-                var recipes = await this.Get(p => p.UserId == userId && p.Active == true).OrderByDescending(p => p.CreateTime).ToListAsync();
+                var recipes = await this.Get(p => p.UserId == userId && p.Active == true && p.ReferencedRecipeId == null).OrderByDescending(p => p.CreateTime).ToListAsync();
+                recipes = recipes.Skip(page * limit).Take(limit).ToList();
                 foreach (var recipe in recipes)
                 {
                     var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);

@@ -203,6 +203,11 @@
                                             <div class="row gutter--15 MasonryRow" id="my-recipe-box">
 
                                             </div>
+                                            <div class="recipe-more" style="cursor:pointer">
+                                                <div class="latest-recipe-more-inner" onclick="getMoreFavoriteRecipe()">
+                                                    <a>Xem thêm</a>
+                                                </div>
+                                            </div>
                                         </div>
                                         <!-- Box Items End -->
                                         <!-- Page Count Start -->
@@ -355,8 +360,12 @@
             await callAccountInforApi('@(RouteData.Values["userName"])');
             await loadAvatarContainer('@(RouteData.Values["userName"])');
             await callFavoriteRecipeByUserId('@(RouteData.Values["userName"])');
-    })();
-
+        })();
+        var limit = 9;
+        var page = 0;
+        function getMoreFavoriteRecipe() {
+            callFavoriteRecipeByUserId('@(RouteData.Values["userName"])', limit, ++page);
+        }
     </script>
 </body>
 

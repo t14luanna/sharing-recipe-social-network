@@ -184,20 +184,29 @@
                                         <!-- Profile Details Start -->
                                         <div class="filter--nav pb--50 clearfix">
                                             <div class="filter--options float--right btn-create-collection-container">
-                                               
+
                                             </div>
                                         </div>
                                         <!-- Filter Nav End -->
                                         <!-- Member Items Start -->
                                         <div class="member--items">
-                                            <div class="row gutter--15 AdjustRow main-contain-collection">
-
-                                                <!-- Member Item Start -->
-                                                <!-- Member Item End -->
+                                            <div style="height: 100%;position: relative;">
+                                               <div class="row gutter--15 AdjustRow main-contain-collection" >
+                                                    
+                                               </div>
+                                            </div>
+                                            <div id="pagination-container" class="page-nav">
+                                                <div class="recipe-more" style="cursor:pointer">
+                                                    <div class="latest-recipe-more-inner" onclick="getMoreCollection()">
+                                                        <a>Xem thêm</a>
+                                                    </div>
+                                                </div>
 
                                             </div>
                                         </div>
+                                        
                                     </div>
+
 
                                 </div>
                             </div>
@@ -355,7 +364,12 @@
         $("#btn-create-new-collection").on("click", function (e) {
             $("#modal-create-new-collection").css("display", "block");
         });
-    })();
+        })();
+        var limit = 9; 
+        var page = 0;
+        function getMoreCollection() {
+            callReadCollectionApi('@(RouteData.Values["userName"])', limit, ++page);
+        }
     </script>
     <script src="~/js/site.js"></script>
 </body>

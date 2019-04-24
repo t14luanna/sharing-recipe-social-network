@@ -24,67 +24,30 @@ const createRecipeByUserId = (recipe) =>
 </div>
 </div>`;
 
-const callRecipeByUserId = async (username) => {
+const callRecipeByUserId = async (username, limit = 9, page = 0) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var userRes = await fetch(`${BASE_API_URL}/api/account/read-username?username=${username}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` 
+            'Authorization': `Bearer ${token}`
         },
     });
     var userData = await userRes.json();
     var userId = userData.id;
-    $("#pagination-container").pagination({
-        dataSource: `${BASE_API_URL}/api/recipe/read-orderby-time?userId=${userId}`,
-        locator: '',// array
-        totalNumberLocator: function (response) {
-            return response.length;
-        },
-        //totalNumber: 40,
-        pageSize: 9,
-        ajax: {
-            beforeSend: function () {
-                $('#my-recipe-box').html('Đang tải dữ liệu ...');
-            }
-        },
-        callback: function (data, pagination) {
-            // template method of yourself
-            var html = template(data, pagination);
-            $('#my-recipe-box').html(html);
-            $("#my-recipe-box").css('height', 'auto');
-        }
-    });
-    //var res = await fetch(`${BASE_API_URL}/api/recipe/read-orderby-time?userId=` + userId);
-    //var data = await res.json();
-    //var count = 0;
-    //for (var item of data) {
-    //    count++;
-    //    if (item.referencedRecipeId == null) {
-    //        var element = createRecipeByUserId(item);
-    //        $("#my-recipe-box").append(element);
-    //        $("#my-recipe-box").css('height', 'auto');
-    //    }
-    //}
-};
-
-var template = function (data, pagination) {
-    var pageSize = pagination.pageSize;
-    var currentPageNumber = pagination.pageNumber - 1;
-    var s = "";
-
-    var count = 0;
-    while (count < pageSize) {
-        var i = currentPageNumber * pageSize + count;
-        if (i >= data.length) {
-            break;
-        }
-        s += createRecipeByUserId(data[i]);
-        count++;
+    var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-orderby-time?userId=${userId}&limit=${limit}&page=${page}`);
+    var recipeData = await recipeRes.json();
+    if (recipeData.length < limit) {
+        $(".recipe-more").css("display", "none");
     }
-    return s;
+    for (var item of recipeData) {
+        var element = createRecipeByUserId(item);
+        $('#my-recipe-box').append(element);
+        $("#my-recipe-box").css('height', 'auto');
+    }
 };
+
 async function deleteRecipeInMyRecipe(recipeId) {
     swal({
         title: "Bạn muốn xóa?",
@@ -104,18 +67,18 @@ async function deleteRecipeInMyRecipe(recipeId) {
 const deactivateRecipe = async (recipeId) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/delete?recipeId=${recipeId}`, {
+    var recipeRes = await fetch(`${BASE_API_URL} /${RECIPE_API_URL}/delete ? recipeId = ${recipeId} `, {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token} `
         },
     });
     if (recipeRes.status == 200) {
         swal("Bạn đã xóa thành công Công Thức này!", {
             icon: "success",
         });
-        $(`#${recipeId}`).remove();
+        $(`#${recipeId} `).remove();
     } else {
         alert("Bạn không thể xóa thành công Công Thức này, vui lòng thử lại!!!");
     }

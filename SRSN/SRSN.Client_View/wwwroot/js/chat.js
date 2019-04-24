@@ -1,26 +1,4 @@
 ﻿//----------------------------------Initialization----------------------------------
-let config = {
-    apiKey: "AIzaSyCDGlhTCqi5fJMRnR3h-EXyTL_n1LEc6ws",
-    authDomain: "srsn-b8ff2.firebaseapp.com",
-    databaseURL: "https://srsn-b8ff2.firebaseio.com/",
-    projectId: "srsn-b8ff2",
-    storageBucket: "srsn-b8ff2.appspot.com",
-    messagingSenderId: "AIzaSyDIdwkwxOp4FJ3sOiYYZonBgoxJ74nY1FI",
-};
-firebase.initializeApp(config);
-
-//Sign-in with Anonymous account
-firebase.auth().signInAnonymously();
-firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-        // User is signed in.
-        let isAnonymous = user.isAnonymous;
-        //user_id = user.uid;
-    } else {
-        // User is signed out.
-    }
-});
-
 let db = firebase.firestore();
 var user
 let chats = []

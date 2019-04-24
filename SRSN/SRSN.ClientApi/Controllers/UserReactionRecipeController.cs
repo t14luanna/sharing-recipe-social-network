@@ -204,7 +204,7 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpGet("get-favorite-recipes")]
-        public async Task<ActionResult> GetFavoriteRecipe([FromQuery]string username)
+        public async Task<ActionResult> GetFavoriteRecipe([FromQuery]string username, int limit, int page)
         {
             try
             {
@@ -214,7 +214,7 @@ namespace SRSN.ClientApi.Controllers
                 //int.TryParse(userIdStr, out userId);
                 var user = await userManager.FindByNameAsync(username);
                 int userId = user.Id;
-                return Ok(await selfService.GetAllFavoriteRecipeByUserId(userId));
+                return Ok(await selfService.GetAllFavoriteRecipeByUserId(userId, limit, page));
             }
             catch (Exception ex)
             {

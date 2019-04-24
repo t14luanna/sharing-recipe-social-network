@@ -267,6 +267,7 @@ async function toggleLikeButton(x, recipeId, recipeOwner) {
                 var countDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
 
                 countDataRef.once('value', function (snapshot) {
+
                     countNoti = snapshot.val().numberOfLatestNotis;
                     countNoti++;
                     SRSN.FIREBASE_DATABASE.ref(recipeOwner).update({ "numberOfLatestNotis": countNoti });
@@ -278,7 +279,7 @@ async function toggleLikeButton(x, recipeId, recipeOwner) {
                     "username": userInfo.firstName + " " + userInfo.lastName,
                     "content": "đã thích Công Thức của bạn.",
                     "date": new Date().toLocaleString(),
-                    "link": "/recipe/" + data.recipeId,
+                    "link": "/sharerecipe/" + data.recipeId,
                     "isRead": "False"
                 });
                 //update uid into firebase

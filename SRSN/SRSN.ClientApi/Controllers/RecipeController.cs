@@ -83,11 +83,11 @@ namespace SRSN.ClientApi.Controllers
             }
         }
         [HttpGet("read-orderby-time")]
-        public async Task<ActionResult> ReadOrderByTime(int userId)
+        public async Task<ActionResult> ReadOrderByTime(int userId, int limit = 9, int page = 0)
         {
             try
             {
-                return Ok(await recipeService.GetAllRecipeByUserIdOrderbyTime(userId));
+                return Ok(await recipeService.GetAllRecipeByUserIdOrderbyTime(userId, limit, page));
             }
             catch (Exception ex)
             {

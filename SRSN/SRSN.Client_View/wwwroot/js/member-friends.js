@@ -1,47 +1,23 @@
-﻿const callFollowingUserApi = async (userName) => {
-        $('#pagination-container').pagination({
-        dataSource: `${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userName,
-        locator: '',// array
-        totalNumberLocator: function (response) {
-            return response.length;
-        },
-        //totalNumber: 40,
-        pageSize: 16,
-        ajax: {
-            beforeSend: function () {
-                $('#list-following-user').html('Đang tải dữ liệu ...');
-            }
-        },
-        callback: function (data, pagination) {
-            // template method of yourself
-            var html = template(data, pagination);
-            $('#list-following-user').html(html);
-            $('#list-following-user').css('height', '');
-            $('#count-friends').html(data.length);
-            $('.unfollow-btn').on('click', function (e) {
-                var followingUserId = $(e.target).siblings('input').val();;
-                var userName = localStorage.getItem('username');
-                unfollowUserFunction(userName, followingUserId);
-            });
-        }
-    });
-    var template = function (data, pagination) {
-        var pageSize = pagination.pageSize;
-        var currentPageNumber = pagination.pageNumber - 1;
-        var s = "";
-        console.log(data);
-        console.log(pagination);
-        var count = 0;
-        while (count < pageSize) {
-            var i = currentPageNumber * pageSize + count;
-            if (i >= data.length) {
-                break;
-            }
-            s += createSingleFollowingUserElement(data[i]);
-            count++;
-        }
-        return s;
-    };
+﻿
+const CallGetAllFollowUser = async (userName, limit = 16, page = 0) => {
+    var res = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-following-user?userName=${userName}&limit=${limit}&page=${page}`);
+    var data = await res.json();
+    if (data.length < limit) {
+        $(".recipe-more").css("display", "none");
+    }
+    for (var item of data) {
+        var element = createSingleFollowingUserElement(item);
+        $('#list-following-user').append(element);
+        $('#list-following-user').css('height', '');
+        $('#count-friends').html(data.length);
+        $('.unfollow-btn').on('click', function (e) {
+            var followingUserId = $(e.target).siblings('input').val();;
+            var userName = localStorage.getItem('username');
+            unfollowUserFunction(userName, followingUserId);
+        });
+
+    }
+    //location.reload();
 };
 
 const unfollowUserFunction = async (userName, followingUserId) => {

@@ -207,7 +207,14 @@
                                             <div class="row gutter--15 AdjustRow" id="list-following-user">
                                             </div>
 
-                                            <div id="pagination-container" class="page-nav"></div>
+                                            <div id="pagination-container" class="page-nav">
+                                                <div class="recipe-more" style="cursor:pointer">
+                                                    <div class="latest-recipe-more-inner" onclick="getMoreUser()">
+                                                        <a>Xem thêm</a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                         </div>
 
                                     </div>
@@ -358,12 +365,15 @@
 
     // fetch and render element to html
     (async () => {
-
-
         await loadAvatarContainer("@(RouteData.Values["userName"])");
-        await callFollowingUserApi("@(RouteData.Values["userName"])");
+        await CallGetAllFollowUser("@(RouteData.Values["userName"])");
 
-    })();
+        })();
+        var userGetMoreLimit = 16;
+        var userGetMorePage = 0;
+        function getMoreUser() {
+            CallGetAllFollowUser("@(RouteData.Values["userName"])",userGetMoreLimit, ++userGetMorePage);
+        };
 
     </script>
     <script src="~/js/site.js"></script>
