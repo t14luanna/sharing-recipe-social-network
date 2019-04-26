@@ -38,7 +38,7 @@ namespace SRSN.DatabaseManager.Services
         Task UpdateRecipe(int recipeId, RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task UpdateRecipeSaveDraft(int recipeId, RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId);
-        Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId);
+        Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId, int limit, int page);
         Task<ICollection<RecipeViewModel>> GetAllDraftRecipeByUserIdOrderbyTime(int userId);
         Task<ICollection<RecipeViewModel>> GetRecipeById(int recipeId);
         Task<ICollection<RecipeViewModel>> GetPopularRecipes(UserManager<SRSNUser> userManager);
@@ -738,7 +738,7 @@ namespace SRSN.DatabaseManager.Services
             return recipeVM;
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId)
+        public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId, int limit, int page)
         {
             try
             {

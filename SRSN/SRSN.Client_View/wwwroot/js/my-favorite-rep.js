@@ -19,10 +19,10 @@
 </div>
 </div>`;
 
-const callFavoriteRecipeByUserId = async (username) => {
+const callFavoriteRecipeByUserId = async (username, limit = 9, page = 0) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var res = await fetch(`${BASE_API_URL}/api/userreactionrecipe/get-favorite-recipes?username=${username}`, {
+    var res = await fetch(`${BASE_API_URL}/api/userreactionrecipe/get-favorite-recipes?username=${username}&limit=${limit}&page=${page}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
@@ -30,11 +30,12 @@ const callFavoriteRecipeByUserId = async (username) => {
         },
     });
     var data = await res.json();
+    if (data.length < limit) {
+        $(".recipe-more").css("display", "none");
+    }
     for (var item of data) {
-        if (item.referencedRecipeId == null) {
             var element = createRecipeByUserId(item);
             $("#my-recipe-box").append(element);
             $("#my-recipe-box").css('height', 'auto');
-        }
     }
 };

@@ -267,6 +267,7 @@ async function toggleLikeButton(x, recipeId, recipeOwner) {
                 var countDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
 
                 countDataRef.once('value', function (snapshot) {
+
                     countNoti = snapshot.val().numberOfLatestNotis;
                     countNoti++;
                     SRSN.FIREBASE_DATABASE.ref(recipeOwner).update({ "numberOfLatestNotis": countNoti });

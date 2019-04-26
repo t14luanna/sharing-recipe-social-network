@@ -20,7 +20,7 @@ namespace SRSN.DatabaseManager.Services
         Task<int> CommentCount( int recipeId);
         Task<Object> LikeShareCount( int recipeId);
         Task UpdateRecipeRating(int recipeId, double ratingRecipe);
-        Task<ICollection<RecipeViewModel>> GetAllFavoriteRecipeByUserId(int userId);
+        Task<ICollection<RecipeViewModel>> GetAllFavoriteRecipeByUserId(int userId, int limit,int page);
     }
     public class UserReactionRecipeService : BaseService<UserReactionRecipe, UserReactionRecipeViewModel>, IUserReactionRecipeService
     {
@@ -203,18 +203,23 @@ namespace SRSN.DatabaseManager.Services
             return true;
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetAllFavoriteRecipeByUserId(int userId)
+        public async Task<ICollection<RecipeViewModel>> GetAllFavoriteRecipeByUserId(int userId, int limit, int page)
         {
             var list = new List<RecipeViewModel>();
             var listItems = this.Get().AsNoTracking().Where(r => r.IsLike == true && r.UserId == userId).ToList();
             var recipeDbset = this.unitOfWork.GetDbContext().Set<Recipe>();
+            //listItems = listItems.Skip(page * limit).Take(limit).ToList();
             foreach (var item in listItems)
             {
                 var recipe = await recipeDbset.FindAsync(item.RecipeId);
-                var recipeVM = new RecipeViewModel();
-                mapper.Map(recipe, recipeVM);
-                list.Add(recipeVM);
+                if (recipe.ReferencedRecipeId == null)
+                {
+                    var recipeVM = new RecipeViewModel();
+                    mapper.Map(recipe, recipeVM);
+                    list.Add(recipeVM);
+                }
             }
+            list = list.Skip(page * limit).Take(limit).ToList();
             return list;
         }
     }

@@ -377,18 +377,13 @@
     <script type="text/javascript">
 
     // fetch and render element to html
-    (async () => {
-
-
-        await loadAvatarContainer("@(RouteData.Values["userName"])");
-        await callFollowingUserApi("@(RouteData.Values["userName"])");
-
-    })();
+  
 
     </script>
     <script src="~/js/site.js"></script>
     <script type="text/javascript">
         (async () => {
+              await loadAvatarContainer("@(RouteData.Values["userName"])");
             await callTimeLineApi("@(RouteData.Values["userName"])");
             $(".close-share-recipe").on("click", function (e) {
                 $(".modal-share-post").css("display", "none");
@@ -402,7 +397,8 @@
         };
         function openShareModal(e) {
             var recipeId = e.getAttribute("data-recipe-id");
-            callShareRecipeModalApi(recipeId);
+            var recipeOwner = e.getAttribute("data-recipeOwner-name");
+            callShareRecipeModalApi(recipeId, recipeOwner);
             $(".modal-share-post").css("display", "block");
         }
 

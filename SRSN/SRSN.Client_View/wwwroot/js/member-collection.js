@@ -91,10 +91,10 @@ const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-
 const createButtonNewCollection = () => ` <label>
                                                     <a id="btn-create-new-collection" class="default-btn min-width-button theme-color">Tạo mới Bộ sưu tập</a>
                                                 </label>`;
-const callReadCollectionApi = async (userName) => {
+const callReadCollectionApi = async (userName, limit = 9, page = 0) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read-by-userName?userName=${userName}`, {
+    var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read-by-userName?userName=${userName}&limit=${limit}&page=${page}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',

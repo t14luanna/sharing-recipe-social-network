@@ -210,7 +210,13 @@
                                         </div>
                                         <!-- Box Items End -->
                                         <!-- Page Count Start -->
-                                        <div id="pagination-container" class="page-nav"></div>
+                                        <div id="pagination-container" class="page-nav">
+                                            <div class="recipe-more" style="cursor:pointer">
+                                                <div class="latest-recipe-more-inner" onclick="getMoreRecipe()">
+                                                    <a>Xem thêm</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <!-- Page Count End -->
                                     </div>
                                 </div>
@@ -361,7 +367,12 @@
         await callAccountInforApi('@(RouteData.Values["userName"])');
         await loadAvatarContainer('@(RouteData.Values["userName"])');
         await callRecipeByUserId('@(RouteData.Values["userName"])');
-    })();
+        })();
+        var limit = 9;
+        var page = 0
+        function getMoreRecipe() {
+            callRecipeByUserId('@(RouteData.Values["userName"])', limit, ++page);
+        }
 
     </script>
 </body>

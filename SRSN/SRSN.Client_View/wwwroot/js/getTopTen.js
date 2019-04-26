@@ -26,10 +26,11 @@ const callGetAllUserApi = async (limit = 23, page = 0) => {
             rankUser = "mastee";
         }
         var isFollowed = checkFollow(item.id, dataCheck);
+        //lấy số follower mà người dùng theo dõi
         var followStatus = isFollowed ? btnFollowed_OnNewsfeed(item.id) : btnFollow_OnNewsfeed(item.id);
         var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${item.id}`);
         var userData = await userRes.json();
-
+        //lấy tổng số recipe của người dùng tạo
         var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read?userId=${item.id}`);
         var recipeData = await recipeRes.json();
         var bestRecipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/get-best-recipe-of-user?userId=${item.id}`);

@@ -11,8 +11,8 @@ if (usernameLocal != null) {
     //var countNoti = 0;
 
     var myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
-
-    myDataRef.on('child_added', function (snapshot) {//Handle khi có một child mới
+    //load tất cả data đã dc add vào trong firebase, chạy 1 lần duy nhất
+    myDataRef.on('child_added', function (snapshot) {//Handle khi có một child mới, 
 
         var link = "";
         var username = "";
@@ -60,6 +60,7 @@ if (usernameLocal != null) {
         } displayCountNotifi();
 
     });
+    //load dử liệu vừa dc thay đổi trên firebase, chạy nhiều lần khi data trên firebase thay đổi
     myDataRef.on('child_changed', function (snapshot) {
         var link = "";
         var username = "";

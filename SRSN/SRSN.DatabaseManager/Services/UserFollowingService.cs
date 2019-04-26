@@ -18,7 +18,7 @@ namespace SRSN.DatabaseManager.Services
     {
         Task<ICollection<int>> GetAllFollowingUser(int userid);
 
-        Task<ICollection<AccountViewModel>> getAllFollowingUser(UserManager<SRSNUser> userManager, int userid);
+        Task<ICollection<AccountViewModel>> getAllFollowUser(UserManager<SRSNUser> userManager, int userid, int limit, int page);
         Task<UserFollowingViewModel> checkFollowingUser(int userId, int followingUserId);
         Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
         Task<ICollection<AccountViewModel>> getAllUserFollowingMe(UserManager<SRSNUser> userManager, int followingUserId);//get all user who is following me
@@ -30,13 +30,13 @@ namespace SRSN.DatabaseManager.Services
         {
         }
 
-        public async Task<ICollection<AccountViewModel>> getAllFollowingUser(UserManager<SRSNUser> userManager, int userid)
+        public async Task<ICollection<AccountViewModel>> getAllFollowUser(UserManager<SRSNUser> userManager, int userid, int limit, int page)
         {
             var listAccount = new List<AccountViewModel>();
 
             var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active= 1 AND UserId=" + userid).ToListAsync();
 
-
+            listItems = listItems.Skip(page * limit).Take(limit).ToList();
             foreach (var item in listItems)
             {
                 var user = await userManager.FindByIdAsync(item.FollowingUserId.ToString());

@@ -141,7 +141,7 @@ namespace SRSN.ClientApi.Controllers
         }
         [HttpGet("read-by-userName")]
         [AllowAnonymous]
-        public ActionResult ReadByUserName(string userName)
+        public ActionResult ReadByUserName(string userName, int limit, int page)
         {
             ClaimsPrincipal claims = this.User;
             var userTokenName = claims.FindFirst(ClaimTypes.Name).Value;
@@ -150,6 +150,7 @@ namespace SRSN.ClientApi.Controllers
                 var collectionReturnList = new List<CollectionViewModel>();
                 var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
                 var collectionList = collectionService.Get(u => u.UserId == int.Parse(userId) && u.Active == true);
+                collectionList = collectionList.Skip(page * limit).Take(limit);
                 foreach ( var item in collectionList)
                 {
                     if(item.CollectionRefId != null)
@@ -163,12 +164,14 @@ namespace SRSN.ClientApi.Controllers
                     }
                     
                 }
+
                 return Ok(collectionReturnList);
             }
             else
             {
                 var user = this.userManager.FindByNameAsync(userName).Result;
                 var collectionList = collectionService.Get(u => u.UserId == user.Id && u.Active == true);
+                collectionList = collectionList.Skip(page * limit).Take(limit);
                 var collectionReturnList = new List<CollectionViewModel>();
                 foreach (var item in collectionList)
                 {
