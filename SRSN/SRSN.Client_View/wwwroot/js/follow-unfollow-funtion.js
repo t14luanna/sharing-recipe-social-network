@@ -113,11 +113,11 @@ const btnFollowed = (userId) => `
                               </div>
                             </div>`;
 const btnFollowed_OnNewsfeed = (userId) =>
-    `                                                            <button title="Hủy theo dõi" class="btn-follow ng-isolate-scope btn-followed" onclick="unfollowUserFuntion(${userId})">
-                                                                <span>Đang theo dõi</span>
-                                                            </button>`;
+    `<button title="Hủy theo dõi" class="btn-follow ng-isolate-scope btn-followed" onclick="unfollowUserFuntion(${userId})">
+             <span>Đang theo dõi</span>
+     </button>`;
 const btnFollow_OnNewsfeed = (userId) =>
     `<button title="Theo dõi" class="btn-follow ng-isolate-scope btn-followed" ng-class="itemClass()" onclick="followUserFuntion(${userId})">
-                                                                <span>Theo dõi</span>
-                                                            </button>`;
+             <span>Theo dõi</span>
+     </button>`;
 
