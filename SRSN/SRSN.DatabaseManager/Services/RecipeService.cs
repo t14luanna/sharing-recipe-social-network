@@ -231,7 +231,7 @@ namespace SRSN.DatabaseManager.Services
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
                     var username = currentUser.UserName;
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
@@ -269,7 +269,7 @@ namespace SRSN.DatabaseManager.Services
                     if (item.UserId != null)
                     {
                         var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                        var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                        var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                         // apply automapper 
                         var recipeViewModel = this.EntityToVM(item);
@@ -305,7 +305,7 @@ namespace SRSN.DatabaseManager.Services
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
@@ -426,7 +426,7 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
@@ -452,7 +452,7 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                     var accountVM = new AccountViewModel();
                     mapper.Map(currentUser, accountVM);
@@ -582,12 +582,12 @@ namespace SRSN.DatabaseManager.Services
             {
                 var list = new List<RecipeViewModel>();
 
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE N'%" + recipeName + "%' order by Id DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE N'%" + recipeName + "%' order by Id DESC AND Active='1'").ToList();
                 foreach (var item in listItems)
                 {
                     //apply automapper
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
                     var recipeViewModel = this.EntityToVM(item);
                     recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
@@ -614,7 +614,7 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
                     var recipeViewModel = this.EntityToVM(item);
                     recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
@@ -746,7 +746,6 @@ namespace SRSN.DatabaseManager.Services
                 var ingredientRepo = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
                 var categoryRepo = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
                 var recipes = await this.Get(p => p.UserId == userId && p.Active == true && p.ReferencedRecipeId == null).OrderByDescending(p => p.CreateTime).ToListAsync();
-                recipes = recipes.Skip(page * limit).Take(limit).ToList();
                 foreach (var recipe in recipes)
                 {
                     var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
@@ -927,7 +926,7 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                     var accountVM = new AccountViewModel();
                     mapper.Map(currentUser, accountVM);

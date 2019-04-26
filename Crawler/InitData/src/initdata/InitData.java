@@ -8,9 +8,13 @@ package initdata;
 import dao.CategoryItemDAO;
 import dao.CategoryMainDAO;
 import dao.IngredientDAO;
+import dao.ProductDAO;
+import dao.StoreDAO;
 import dto.CategoryItemDTO;
 import dto.CategoryMainDTO;
 import dto.IngredientDTO;
+import dto.ProductDTO;
+import dto.StoreDTO;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -30,8 +34,10 @@ public class InitData {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        initIngredients();
-        initCategories();
+        initIngredients();  
+        //initCategories();
+        //initStores();
+        //initProducts();
     }
     
     public static void initCategories(){
@@ -42,11 +48,13 @@ public class InitData {
                 String mainName = (String) next.get("Main");
                 try {
                     CategoryMainDTO dto = new CategoryMainDTO(mainName);
-                    int mainId = CategoryMainDAO.findOrCreate(dto);
+                    CategoryMainDAO dao = new CategoryMainDAO();
+                    int mainId = dao.findOrCreate(dto);
 
                     String name = (String) next.get("Item");
                     CategoryItemDTO item = new CategoryItemDTO(name, mainId);
-                    CategoryItemDAO.create(item);
+                    CategoryItemDAO daoItem = new CategoryItemDAO();
+                    daoItem.create(item);
                 } catch (SQLException ex) {
                     Logger.getLogger(InitData.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
@@ -68,6 +76,34 @@ public class InitData {
         }
     }
     
+    public static void initStores(){
+        File directory = new File("./data/coopmart_stores");
+        //get all the files from a directory
+        File[] fList = directory.listFiles();
+        for (File file : fList){
+            if (file.isFile()){
+                JSONArray result = FileUtils.readCSV(file.getAbsolutePath());
+                for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+                    JSONObject next = (JSONObject) iterator.next();
+                    String name = (String) next.get("Name");
+                    String address = (String) next.get("Address");
+                    
+                    if (!address.equals("")) {
+                        try {
+                            StoreDTO dto = new StoreDTO(name, address, 5);
+                            StoreDAO dao = new StoreDAO();
+                            dao.create(dto);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(InitData.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ClassNotFoundException ex) {
+                            Logger.getLogger(InitData.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public static void initBachhoaxanh(String directoryName) throws SQLException, ClassNotFoundException{
         File directory = new File(directoryName);
         //get all the files from a directory
@@ -87,7 +123,8 @@ public class InitData {
                     if (!name.equals("null")) {
                         name = name.replaceAll("\"", "");
                         IngredientDTO dto = new IngredientDTO(name);
-                        IngredientDAO.create(dto);
+                        IngredientDAO dao = new IngredientDAO();
+                        dao.create(dto);
                     }
                 }
             }
@@ -128,7 +165,8 @@ public class InitData {
                             }
                         }
                         IngredientDTO dto = new IngredientDTO(name);
-                        IngredientDAO.create(dto);
+                        IngredientDAO dao = new IngredientDAO();
+                        dao.create(dto);
                     }
                 }
             }

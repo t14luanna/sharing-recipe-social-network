@@ -10,29 +10,30 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.json.simple.JSONObject;
+import utils.Constants;
 import utils.DBUtils;
 
 /**
  *
  * @author LUANNA
  */
-public class IngredientDAO {
+public class IngredientDAO  implements IDAO<IngredientDTO>{
+    private String table = Constants.TABLE_INGREDIENTS;
+
     public void create(IngredientDTO dto) throws SQLException, ClassNotFoundException{
         if(check(dto.getName())){
             return;
         }
         Connection connection = DBUtils.getConnection();
-        String sql = "Insert into Products (Name, Price, ImageUrl,BrandId) "
-                + " values (?, ?, ?, ?) ";
+        String sql = "Insert into " + table + " (IngredientName) "
+                + " values (?) ";
 
         PreparedStatement statement = connection.prepareStatement(sql);
         try{
 
 
             statement.setString(1, dto.getName());
-            statement.setString(2, dto.getPrice());
-            statement.setString(3, dto.getImage());
-            statement.setInt(4, dto.getBrandId());
 
             int rowCount = statement.executeUpdate();
         } finally{
@@ -43,7 +44,7 @@ public class IngredientDAO {
     
     public boolean check(String name) throws SQLException, ClassNotFoundException{
         Connection connection = DBUtils.getConnection();
-        String sql = "SELECT *  FROM Products WHERE Name = ?";
+        String sql = "SELECT *  FROM " + table + " WHERE IngredientName = ?";
 
         PreparedStatement statement = connection.prepareStatement(sql);
         try{
@@ -61,5 +62,12 @@ public class IngredientDAO {
             statement.close();
             connection.close();
         }
+    }
+
+    @Override
+    public void create(JSONObject data) throws SQLException, ClassNotFoundException {
+        IngredientDTO dto = new IngredientDTO();
+        dto = (IngredientDTO) dto.parseFromJSON(data);
+        create(dto);
     }
 }

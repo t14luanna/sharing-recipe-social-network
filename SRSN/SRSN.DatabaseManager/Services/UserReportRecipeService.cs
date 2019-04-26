@@ -24,10 +24,10 @@ namespace SRSN.DatabaseManager.Services
         BaseService<UserReportRecipe, UserReportRecipeViewModel>,
         IUserReportRecipeService
     {
-
-        public UserReportRecipeService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        private IRecipeService recipeService;
+        public UserReportRecipeService(IUnitOfWork unitOfWork, IMapper mapper, IRecipeService recipeService) : base(unitOfWork, mapper)
         {
-
+            this.recipeService = recipeService;
         }
 
         public async Task<ICollection<UserReportRecipeViewModel>> GetAllReportedRecipe(UserManager<SRSNUser> userManager)
@@ -82,6 +82,8 @@ namespace SRSN.DatabaseManager.Services
             recipe.IsActive = !recipe.IsActive;
             this.selfDbSet.Update(recipe);
             await this.unitOfWork.CommitAsync();
+            var reportRecipeId = recipe.RecipeReportedId;
+            var recipeEntity = recipeService.DeActiveRecipe(reportRecipeId);
             return this.EntityToVM(recipe);
         }
 

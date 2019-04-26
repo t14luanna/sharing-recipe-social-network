@@ -67,7 +67,7 @@ namespace SRSN.ClientApi.Controllers
                 userReactions.ForEach(x => 
                 {
                     var currentUser = userManager.FindByIdAsync(x.UserId.ToString()).Result;
-                    x.FullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    x.FullName = $"{currentUser.LastName} {currentUser.FirstName}";
                     x.AvatarUrl = currentUser.AvatarImageUrl;
                 });
                 return Ok(new

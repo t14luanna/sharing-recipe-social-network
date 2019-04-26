@@ -58,6 +58,7 @@ namespace SRSN.DatabaseManager.Services
             foreach (var item in listItems)
             {
                 item.Active = false;
+                item.CreateTime = DateTime.UtcNow.AddHours(7);
                 this.selfDbSet.Update(item);
                 await this.unitOfWork.CommitAsync();
             }
@@ -75,6 +76,7 @@ namespace SRSN.DatabaseManager.Services
             {
                 var item = listItems[0];
                 item.Active = true;
+                item.CreateTime = DateTime.UtcNow.AddHours(7);
                 this.selfDbSet.Update(item);
             } 
             else
@@ -82,6 +84,7 @@ namespace SRSN.DatabaseManager.Services
                 UserFollowing userFollowing = new UserFollowing();
                 userFollowing.UserId = userId;
                 userFollowing.FollowingUserId = followingUserId;
+                userFollowing.CreateTime = DateTime.UtcNow.AddHours(7);
                 userFollowing.Active = true;
                 await this.selfDbSet.AddAsync(userFollowing);
             }

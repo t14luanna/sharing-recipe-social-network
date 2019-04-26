@@ -1,4 +1,17 @@
-﻿//----------------------------------Initialization----------------------------------
+﻿
+
+//Sign-in with Anonymous account
+firebase.auth().signInAnonymously();
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        // User is signed in.
+        let isAnonymous = user.isAnonymous;
+        //user_id = user.uid;
+    } else {
+        // User is signed out.
+    }
+});
+
 let db = firebase.firestore();
 var user
 let chats = []
@@ -207,14 +220,14 @@ let createChat = (oppositeUser) => {
                         {
                             user_id: user.id,
                             user_image: user.avatarImageUrl,
-                            user_name: user.firstName + ' ' + user.lastName,
+                            user_name: user.lastName + ' ' + user.firstName,
                             isTyping: false,
                             isSeen: true
                         },
                         {
                             user_id: oppositeUser.id,
                             user_image: oppositeUser.avatarImageUrl,
-                            user_name: oppositeUser.firstName + ' ' + oppositeUser.lastName,
+                            user_name: oppositeUser.lastName + ' ' + oppositeUser.firstName,
                             isTyping: false,
                             isSeen: true
                         }
@@ -367,7 +380,7 @@ let createSearchUI = (user) => {
         '<div class="avatar" data-overlay="0.3" data-overlay-color="primary">' +
         '<a><img src="' + user.avatarImageUrl + '" alt=""></a></div></div>' +
         '<div class="content fs--14 ov--h"><div class="name text-darkest">' +
-        '<p><a href="#" class="name-user">' + user.firstName + ' ' + user.lastName + '</a></p></div></div></div></div>';
+        '<p><a href="#" class="name-user">' + user.lastName + ' ' + user.firstName + '</a></p></div></div></div></div>';
 
     $(user_chat_item).on('mousedown', () => {
         createChat(user);

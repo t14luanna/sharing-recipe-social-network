@@ -12,7 +12,7 @@ const createRecipePost = (recipe) =>
                                                         <div class="activity--meta fs--12 popular-post-item popular-item-${recipe.id}">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/account/timeline/${recipe.accountVM.username}"">${recipe.accountVM.firstName} ${recipe.accountVM.lastName}</a> đã đăng một công thức</p>
+                                                            <p><a href="/account/timeline/${recipe.accountVM.username}"">${recipe.accountVM.lastName} ${recipe.accountVM.firstName}</a> đã đăng một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">
@@ -71,7 +71,7 @@ const createShareRecipePost = (post, recipe) =>
 <div class="activity--meta fs--12 popular-item-${post.id}  popular-post-item ">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/account/timeline/${post.accountVM.username}">${post.accountVM.firstName} ${post.accountVM.lastName}</a> đã chia sẻ một công thức</p>
+                                                            <p><a href="/account/timeline/${post.accountVM.username}">${post.accountVM.lastName} ${post.accountVM.firstName}</a> đã chia sẻ một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">
@@ -227,7 +227,7 @@ async function toggleLikeButton(x, recipeId, recipeOwner) {
                 var myDataRef = firebase.database().ref(recipeOwner);//chủ của recipe
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": userData.firstName + " " + userData.lastName,
+                    "username": userInfo.lastName + " " + userInfo.firstName,
                     "content": "đã thích Công Thức của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + data.recipeId,
@@ -260,7 +260,7 @@ const createShareRecipeModal = (recipe, dataUser, recipeOwner) => `<li><div clas
 
                                 <div class="activity--info fs--14">
                                     <div class="activity--header">
-                                        <p><a href="/account/timeline/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
+                                        <p><a href="/account/timeline/${dataUser.username}">${dataUser.lastName} ${dataUser.firstName}</a></p>
                                     </div>
 
                                     <div class="activity--content">
@@ -367,7 +367,7 @@ const callCreateShareRecipeModalApi = async (id, postOwner) => {
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(postOwner);
                 uid = myDataRef.push({
                     "uid": "",
-                    "username": userData.firstName + " " + userData.lastName,
+                    "username": userInfo.lastName + " " + userInfo.firstName,
                     "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + id,
@@ -496,7 +496,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu bài viết
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": userData.firstName + " " + userData.lastName,
+                    "username": userInfo.lastName + " " + userInfo.firstName,
                     "content": "đã bình luận công thức của bạn",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + data.recipeId,
@@ -521,7 +521,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
                 var uid1 = myDataRef.push({
                     "uid": "",
-                    "username": userData.firstName + " " + userData.lastName,
+                    "username": userInfo.lastName + " " + userInfo.firstName,
                     "content": "đã trả lời bình luận về công thức của bạn",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + data.recipeId,
@@ -546,7 +546,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(commentParentOwner);//người sở hữu comment
                 var uid2 = myDataRef.push({
                     "uid": "",
-                    "username": userData.firstName + " " + userData.lastName,
+                    "username": userInfo.lastName + " " + userInfo.firstName,
                     "content": "đã trả lời bình luận của bạn",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + data.recipeId,

@@ -5,27 +5,24 @@
  */
 package dto;
 
+import dao.StoreDAO;
+import org.json.simple.JSONObject;
+
 /**
  *
  * @author LUANNA
  */
-public class StoreDTO {
-    private String name;
+public class StoreDTO extends IDTO {
     private String address;
     private int brandId;
+
+    public StoreDTO() {
+    }
 
     public StoreDTO(String name, String address, int brandId) {
         this.name = name;
         this.address = address;
         this.brandId = brandId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAddress() {
@@ -42,6 +39,19 @@ public class StoreDTO {
 
     public void setBrandId(int brandId) {
         this.brandId = brandId;
+    }
+
+    @Override
+    public IDTO parseFromJSON(JSONObject data) {
+        String name = (String) data.get("Name");
+        String address = (String) data.get("Address");
+        int brandId = Integer.parseInt((String) data.get("BrandId"));
+        
+        if(name != null && address != null){
+            return new StoreDTO(name, address, brandId);
+        }
+        
+        return null;
     }
     
 }

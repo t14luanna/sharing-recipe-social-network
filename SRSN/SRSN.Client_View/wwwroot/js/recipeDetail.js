@@ -154,7 +154,7 @@ const createChefByRecipeId = (chef, btnActionFollow) => `<h3 class="lined">Thôn
         <div class="detail">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4><a href="/account/timeline/${chef.username}">${chef.firstName} ${chef.lastName}</a></h4>
+                    <h4><a href="/account/timeline/${chef.username}">${chef.lastName} ${chef.firstName}</a></h4>
 
                 </div>
                 <div class="col-sm-4" >
@@ -670,7 +670,7 @@ const createReplyView = (replyUser, cmtId, recipeId) => `<ul class="reply-${repl
                         <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                     <div class="comment">
-                        <h5><a href="#">${replyUser.firstName} ${replyUser.lastName}</a></h5>
+                        <h5><a href="#">${replyUser.lastName} ${replyUser.firstName}</a></h5>
                         <div class="comment-form">
                             <textarea class="reply-comment" name="reply-${cmtId}" id="message" cols="3" rows="3"></textarea>
                                         <a onclick="callCreateReplyCommentApi(${recipeId}, ${cmtId})" class="reply-button">Đăng</a>
@@ -808,7 +808,7 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
                     var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                     var uid = myDataRef.push({
                         "uid": "",
-                        "username": userData.firstName + " " + userData.lastName,
+                        "username": userInfo.lastName + " " + userInfo.firstName,
                         "content": "đã trả lời bình luận về bài viết của bạn.",
                         "date": new Date().toLocaleString(),
                         "link": "/recipe/" + data.recipeId,
@@ -869,7 +869,7 @@ const notifyDependencyCommentedUser = async function (commentParentId) {
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameParentComment);
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": userData.firstName + " " + userData.lastName,
+                    "username": userInfo.lastName + " " + userInfo.firstName,
                     "content": "đã trả lời bình luận của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
@@ -910,7 +910,7 @@ const createShareRecipeModal = (recipe, dataUser) => `<div class="activity--list
 
                                 <div class="activity--info fs--14">
                                     <div class="activity--header">
-                                        <p><a href="/account/timeline/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
+                                        <p><a href="/account/timeline/${dataUser.username}">${dataUser.lastName} ${dataUser.firstName}</a></p>
                                     </div>
 
                                     <div class="activity--content">
@@ -1005,7 +1005,7 @@ const callCreateShareRecipeModalApi = async (id) => {
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                 uid = myDataRef.push({
                     "uid": "",
-                    "username": userData.firstName + " " + userData.lastName,
+                    "username": userInfo.lastName + " " + userInfo.firstName,
                     "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.referencedRecipeId,
@@ -1209,6 +1209,9 @@ const callSuggestRecipeApi = async () => {
             }
         });
         var data = await res.json();
+        if (data.length == 0) {
+            $("#title-maybe-like").hide();
+        }
         for (var item of data) {
             let element = createSingleSuggestRecipeElement(item);
             $("#list-suggest-recipe").append(element);

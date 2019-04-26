@@ -37,6 +37,7 @@ namespace SRSN.UserBehavior.Entities
         public virtual DbSet<StepsOfRecipe> StepsOfRecipe { get; set; }
         public virtual DbSet<Store> Store { get; set; }
         public virtual DbSet<StoreBrand> StoreBrand { get; set; }
+        public virtual DbSet<StoreBrandIngredient> StoreBrandIngredient { get; set; }
         public virtual DbSet<UserBlock> UserBlock { get; set; }
         public virtual DbSet<UserFollowing> UserFollowing { get; set; }
         public virtual DbSet<UserReactionRecipe> UserReactionRecipe { get; set; }
@@ -336,6 +337,25 @@ namespace SRSN.UserBehavior.Entities
                 entity.Property(e => e.Phone).HasMaxLength(50);
 
                 entity.Property(e => e.Website).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<StoreBrandIngredient>(entity =>
+            {
+                entity.HasKey(e => new { e.StoreBrandId, e.IngredientId });
+
+                entity.ToTable("StoreBrand_Ingredient");
+
+                entity.HasOne(d => d.Ingredient)
+                    .WithMany(p => p.StoreBrandIngredient)
+                    .HasForeignKey(d => d.IngredientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_StoreBrand_Ingredient_Ingredients");
+
+                entity.HasOne(d => d.StoreBrand)
+                    .WithMany(p => p.StoreBrandIngredient)
+                    .HasForeignKey(d => d.StoreBrandId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_StoreBrand_Ingredient_StoreBrand");
             });
 
             modelBuilder.Entity<UserBlock>(entity =>

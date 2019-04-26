@@ -20,12 +20,12 @@
         });
 
         var data = await res.json();
-    }
+    } 
     if (authorization && username) {
         $(".authorized-group").css("display", "inline-table");//index, recipe page
         $(".noti-message-icon").css("display", "inline-table");//index, recipe page
         $("#noti-message-icon").css("display", "inline-table");//member profile page
-        $("#authorized-group-username").text(data.firstName + " " + data.lastName);
+        $("#authorized-group-username").text(data.lastName + " " + data.firstName);
         $("#authorized-group-username").attr("href", "/account/timeline/" + username);
         $(".unauthorized-group").css("display", "none");
         $("#noti-color").css("color", "red");

@@ -165,6 +165,9 @@ const callSuggestRecipeApi = async () => {
         });
 
         var data = await res.json();
+        if (data.length == 0) {
+            $("#title-maybe-like").hide();
+        }
         for (var item of data) {
             let element = createSingleSuggestRecipeElement(item);
             $("#list-suggest-recipe").append(element);

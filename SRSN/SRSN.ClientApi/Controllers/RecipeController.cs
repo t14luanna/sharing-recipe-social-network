@@ -42,7 +42,6 @@ namespace SRSN.ClientApi.Controllers
             this.redisDatabase = RedisUtil.Connection.GetDatabase();
             this.mapper = mapper;
         }
-
         [HttpPost("create")]
         [Authorize]
         public async Task<ActionResult> Create([FromBody]RequestCreateRecipeWithConstraintViewMode request)
@@ -177,19 +176,24 @@ namespace SRSN.ClientApi.Controllers
                     int.TryParse(x.Element, out recipeId);
                     return recipeId;
                 });
-                var rand = new Random();
-
-                var SelectedPost = dataIds.Skip(rand.Next(0, dataIds.Count())).Take(6);
+                Random rand = new Random();
+                var count = 0;
+                var SelectedPost = dataIds.OrderBy(item => rand.Next()).ToList();
                 var listRecipe = new List<RecipeViewModel>();
                 foreach (var recipeId in SelectedPost)
                 {
                     var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true && x.ReferencedRecipeId == null);
                     if (recipe != null)
                     {
+                        count++;
                         var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
                         recipe.AccountVM = new AccountViewModel();
                         mapper.Map(recipeUserID, recipe.AccountVM);
                         listRecipe.Add(recipe);
+                        if(count == 6)
+                        {
+                            break;
+                        }
                     }
                     
                 }
@@ -450,8 +454,6 @@ namespace SRSN.ClientApi.Controllers
                 if (request.RecipeVM.SaveDraft == null || request.RecipeVM.SaveDraft == false) request.RecipeVM.SaveDraft = true;
                 request.RecipeVM.CreateTime = currentRecipe.CreateTime;
                 request.RecipeVM.Active = false;
-
-
                 // update
                 await recipeService.UpdateRecipeSaveDraft(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
                 var recipe = await recipeService.GetRecipeById(recipeId);

@@ -17,8 +17,8 @@ import utils.DBUtils;
  *
  * @author LUANNA
  */
-public class CategoryItemDAO {
-    public static void create(CategoryItemDTO dto) throws SQLException, ClassNotFoundException{
+public class CategoryItemDAO implements IDAO<CategoryItemDTO>{
+    public void create(CategoryItemDTO dto) throws SQLException, ClassNotFoundException{
         if(check(dto.getName())){
             return;
         }
@@ -39,7 +39,7 @@ public class CategoryItemDAO {
         }
     }
     
-    public static boolean check(String name) throws SQLException, ClassNotFoundException{
+    public boolean check(String name) throws SQLException, ClassNotFoundException{
         Connection connection = DBUtils.getConnection();
         String sql = "SELECT *  FROM CategoryItem WHERE CategoryItemName = ?";
 

@@ -5,19 +5,7 @@
  */
 package crawlapp;
 
-import dao.IngredientDAO;
-import dao.StoreDAO;
-import data.BrandDTO;
-import dto.IngredientDTO;
-import dto.StoreDTO;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import java.util.*;
 
 /**
  *
@@ -29,59 +17,25 @@ public class CrawlApp {
      * @param args the command line arguments
      */
     
-    private static List<BrandDTO> brands;
-    
+    private static Crawler crawler;
+        
     public static void main(String[] args) {
-        init();
-        crawlAll();
-    }
-    
-    public static void init(){
-        try{
-            setDriverProperty();
-            
-            brands = new ArrayList<>();
-            
-            JSONParser parser = new JSONParser();
+        crawler = new Crawler("config.json");
+        Timer timer = new Timer();
+  
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date time = calendar.getTime();
 
-            JSONObject config = (JSONObject) parser.parse(new FileReader("config.json"));
-
-            JSONArray brandsArr = (JSONArray) config.get("brands");            
-
-            JSONObject results = new JSONObject();
-            for (Iterator it = brandsArr.iterator(); it.hasNext();) {
-                JSONObject brandObj = (JSONObject) it.next();
-                BrandDTO brand = new BrandDTO(brandObj);
-                brands.add(brand);
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
+        timer.schedule(new CrawlTask(),time);
     }
     
-    public static void setDriverProperty(){
-        File file = new File("chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
-    }
-    
-    public static void crawlStore(int pos){
-        Crawler crawler = new Crawler(1, brands.get(pos).getId());
-        crawler.start(brands.get(pos).getStores());
-        crawler.close();
-    }
-    
-    public static void crawlProduct(int pos){
-        Crawler crawler = new Crawler(0, brands.get(pos).getId());
-        crawler.start(brands.get(pos).getProducts());
-            
-        crawler.close();
-    }
-    
-    public static void crawlAll(){
-        for (int i = 1; i < brands.size(); i++) {
-            
-            crawlStore(i);
-            crawlProduct(i);
-        }
-    }
+    static class CrawlTask extends TimerTask {
+      public void run() {
+         crawler.crawlAll();
+      }
+   }
 }

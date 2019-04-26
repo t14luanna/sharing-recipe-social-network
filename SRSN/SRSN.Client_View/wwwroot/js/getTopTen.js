@@ -63,7 +63,7 @@ const userWithRecipeElement = (user, recipe, rankUser, num, countRecipe, countFo
                             <img class="img-responsive img-circle" src="${user.avatarImageUrl}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                         </div>
                         <div class="profile">
-                            <a class="cooky-user-link name ng-binding"  href="/account/timeline/${user.username}">${user.firstName} ${user.lastName}</a>
+                            <a class="cooky-user-link name ng-binding"  href="/account/timeline/${user.username}">${user.lastName} ${user.firstName}</a>
                             <span class="stats-text user-lvl ${rankUser}">${rankUser} </span>
                             <div class="stats">
                                 <span class="stats-item">
@@ -100,7 +100,7 @@ const userElement = (user, rankUser, countRecipe, countFollower) =>
                             <img  class="img-responsive img-circle" src="${user.avatarImageUrl}" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                         </div>
                         <div class="profile">
-                            <a ng-href="/thanh-vien/hellie1207" class="cooky-user-link name ng-binding"  href="/account/timeline/${user.username}">${user.firstName} ${user.lastName}</a>
+                            <a ng-href="/thanh-vien/hellie1207" class="cooky-user-link name ng-binding"  href="/account/timeline/${user.username}">${user.lastName} ${user.firstName}</a>
                             <span class="stats-text user-lvl ${rankUser}">${rankUser} </span>
                             <div class="stats">
                                 <span class="stats-item">
