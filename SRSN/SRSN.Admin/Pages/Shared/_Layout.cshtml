@@ -25,7 +25,7 @@
                             </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-                                <li><a class="dropdown-item" href="login.html">Logout</a></li>
+                                <li><a class="dropdown-item" id="logoutBtn">Đăng xuất</a></li>
                             </ul>
                         </div>
                         <div class="logo-element">
@@ -85,7 +85,7 @@
         (function () {
             var currentUserLogin = srsn.Utils.GetCurrentLogin();
             if (!currentUserLogin) {
-                window.location.href = "/login";
+                window.location.href = "/Login";
             }
         })();
         $(document).ready(function () {
@@ -94,7 +94,10 @@
                 radioClass: 'iradio_square-green',
             });
         });
-       
+        $("#logoutBtn>.login").on("click", function (e) {
+            localStorage.clear();
+            window.location.href = '/';
+        });
     </script>
     @RenderSection("Scripts", required: false)
 </body>

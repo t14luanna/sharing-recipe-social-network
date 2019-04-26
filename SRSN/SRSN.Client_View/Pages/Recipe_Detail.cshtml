@@ -70,7 +70,7 @@
 
                         <div class="about-chef"></div>
                         <div class="recipe-set" id="suggest-recipe">
-                            <h3 class="lined">
+                            <h3 class="lined"  id="title-maybe-like">
                                 Có thể bạn thích
                             </h3>
                             <div class="boxed-recipes text-center" id="list-suggest-recipe">
@@ -333,7 +333,6 @@
                         handleLocationError(false, infoWindow, map.getCenter());
                     }
                     if ($("input[name='currentPosition']:checked").length > 0) {
-
                         setPositionMap(pos, currentString);
                     } else {
                         if (indexPosition != null) {
@@ -345,7 +344,7 @@
                     marker.setPosition(index);
                     marker.setMap(map);
                     infoWindow.setPosition(index);
-                       infoWindow.setContent(stringPosition);
+                    infoWindow.setContent(stringPosition);
                     infoWindow.open(map, marker);
                     map.setCenter(index);
                 };
@@ -523,7 +522,7 @@
                                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                                 var uid = myDataRef.push({
                                     "uid": "",
-                                    "username": userData.firstName + " " + userData.lastName,
+                                    "username": userInfo.lastName + " " + userInfo.firstName,
                                     "content": "đã thích Công Thức của bạn.",
                                     "date": new Date().toLocaleString(),
                                     "link": "/recipe/" + data.recipeId,

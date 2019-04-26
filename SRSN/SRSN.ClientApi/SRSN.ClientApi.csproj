@@ -51,6 +51,7 @@
     <Compile Include="Entities\StepsOfRecipe.cs" />
     <Compile Include="Entities\Store.cs" />
     <Compile Include="Entities\StoreBrand.cs" />
+    <Compile Include="Entities\StoreBrandIngredient.cs" />
     <Compile Include="Entities\UserBlock.cs" />
     <Compile Include="Entities\UserFollowing.cs" />
     <Compile Include="Entities\UserReactionPost.cs" />

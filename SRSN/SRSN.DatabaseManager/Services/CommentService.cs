@@ -44,7 +44,7 @@ namespace SRSN.DatabaseManager.Services
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                     // apply automapper 
                     var commentViewModel = this.EntityToVM(item);
@@ -79,13 +79,13 @@ namespace SRSN.DatabaseManager.Services
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
                     var commentViewModel = this.EntityToVM(item);
                     if (item.CommentParentId != null)
                     {
                        var commentParent = this.selfDbSet.AsNoTracking().Where(p => p.Id == item.CommentParentId).FirstOrDefault();
                        var ownerUser = userManager.FindByIdAsync(commentParent.UserId.ToString()).Result;
-                       var fullNameOwner = $"{ownerUser.FirstName} {ownerUser.LastName}";
+                       var fullNameOwner = $"{ownerUser.LastName} {ownerUser.FirstName}";
                         commentViewModel.FullNameOwnerComment = fullNameOwner;
                         commentViewModel.UsernameOwnerComment = ownerUser.UserName;
                     }

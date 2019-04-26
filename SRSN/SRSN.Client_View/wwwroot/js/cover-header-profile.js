@@ -32,7 +32,7 @@ const createAvatarContainerUnfollow = (user, count) =>
                                 <div>
                                     <span class="headline">Newbee</span>
 
-                                    <div class="val">
+                                    <div class="val title-point">
                                         <span class="newbee" id="ranknewbee"></span>
                                         <span class="tastee" id="ranktastee"></span>
                                         <span class="cookee" id="rankcookee"></span>
@@ -98,7 +98,7 @@ const createAvatarContainer = (user, count) =>
                                 <div>
                                     <span class="headline">Newbee</span>
 
-                                    <div class="val">
+                                    <div class="val title-point">
                                         <span class="newbee" id="ranknewbee"></span>
                                         <span class="tastee" id="ranktastee"></span>
                                         <span class="cookee" id="rankcookee"></span>
@@ -219,6 +219,7 @@ const loadAvatarContainer = async (username) => {
     if (username == userNameLocalStorage) {
         $(".follow-area-" + data.id).hide();
     }
+    $(".title-point").attr("title", "Số điểm của bạn: " + data.point);
     if (data.point >= 0 && data.point <= 99) {
         $("#ranknewbee").attr("class", "newbee active");
     } else if (data.point >= 100 && data.point <= 499) {

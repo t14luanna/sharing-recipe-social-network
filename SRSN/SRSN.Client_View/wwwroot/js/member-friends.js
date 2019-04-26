@@ -62,7 +62,7 @@ const createSingleFollowingUserElement = (followingUser) =>
 
                                                         <div class="name">
                                                             <h3 class="h6 fs--12">
-                                                                <a href="/account/timeline/${followingUser.username}" class="btn-link">${followingUser.firstName} ${followingUser.lastName} </a>
+                                                                <a href="/account/timeline/${followingUser.username}" class="btn-link">${followingUser.lastName} ${followingUser.firstName} </a>
                                                             </h3>
                                                         </div>
                                                         <div class="actions">

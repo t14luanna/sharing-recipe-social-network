@@ -9,6 +9,7 @@ namespace SRSN.UserBehavior.Entities
         {
             Products = new HashSet<Products>();
             Store = new HashSet<Store>();
+            StoreBrandIngredient = new HashSet<StoreBrandIngredient>();
         }
 
         public int Id { get; set; }
@@ -19,5 +20,6 @@ namespace SRSN.UserBehavior.Entities
 
         public virtual ICollection<Products> Products { get; set; }
         public virtual ICollection<Store> Store { get; set; }
+        public virtual ICollection<StoreBrandIngredient> StoreBrandIngredient { get; set; }
     }
 }

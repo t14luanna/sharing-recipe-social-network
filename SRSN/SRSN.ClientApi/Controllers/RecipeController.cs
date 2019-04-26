@@ -450,8 +450,6 @@ namespace SRSN.ClientApi.Controllers
                 if (request.RecipeVM.SaveDraft == null || request.RecipeVM.SaveDraft == false) request.RecipeVM.SaveDraft = true;
                 request.RecipeVM.CreateTime = currentRecipe.CreateTime;
                 request.RecipeVM.Active = false;
-
-
                 // update
                 await recipeService.UpdateRecipeSaveDraft(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
                 var recipe = await recipeService.GetRecipeById(recipeId);

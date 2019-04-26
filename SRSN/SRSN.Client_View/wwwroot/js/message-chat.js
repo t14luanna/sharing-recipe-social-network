@@ -101,14 +101,14 @@ let createChat = (oppositeUser) => {
                         {
                             user_id: user_id,
                             user_image: current_user.avatarImageUrl,
-                            user_name: current_user.firstName + ' ' + current_user.lastName,
+                            user_name: current_user.lastName + ' ' + current_user.firstName,
                             isTyping: false,
                             isSeen: true
                         },
                         {
                             user_id: oppositeUser.id,
                             user_image: oppositeUser.avatarImageUrl,
-                            user_name: oppositeUser.firstName + ' ' + oppositeUser.lastName,
+                            user_name: oppositeUser.lastName + ' ' + oppositeUser.firstName,
                             isTyping: false,
                             isSeen: true
                         }
@@ -384,7 +384,7 @@ let showSearchItem = (user) => {
         '<div class="avatar" data-overlay="0.3" data-overlay-color="primary">' +
         '<a><img src="' + user.avatarImageUrl + '" alt=""></a></div></div>' +
         '<div class="content fs--14 ov--h"><div class="name text-darkest">' +
-        '<p><a href="member-activity-personal.html">' + user.firstName + ' ' + user.lastName + '</a></p></div></div>' +
+        '<p><a href="member-activity-personal.html">' + user.lastName + ' ' + user.firstName + '</a></p></div></div>' +
         '</div></div></li>';
     search_list.innerHTML += user_item;
 }

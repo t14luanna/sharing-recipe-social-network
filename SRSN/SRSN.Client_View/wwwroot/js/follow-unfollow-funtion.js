@@ -47,7 +47,7 @@ const callNotification = async (userId) => {
     var myDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
     var uid = myDataRef.push({
         "uid": "",
-        "username": userInfo.firstName + " " + userInfo.lastName,
+        "username": userInfo.lastName + " " + userInfo.firstName,
         "content": "đang theo dõi bạn",
         "date": new Date().toLocaleString(),
         "link": "/account/information/" + userInfo.username,
