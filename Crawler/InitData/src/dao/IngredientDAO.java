@@ -16,8 +16,8 @@ import utils.DBUtils;
  *
  * @author LUANNA
  */
-public class IngredientDAO {
-    public static void create(IngredientDTO dto) throws SQLException, ClassNotFoundException{
+public class IngredientDAO  implements IDAO<IngredientDTO>{
+    public void create(IngredientDTO dto) throws SQLException, ClassNotFoundException{
         if(check(dto.getName())){
             return;
         }
@@ -38,7 +38,7 @@ public class IngredientDAO {
         }
     }
     
-    public static boolean check(String name) throws SQLException, ClassNotFoundException{
+    public boolean check(String name) throws SQLException, ClassNotFoundException{
         Connection connection = DBUtils.getConnection();
         String sql = "SELECT *  FROM Ingredients WHERE IngredientName = ?";
 

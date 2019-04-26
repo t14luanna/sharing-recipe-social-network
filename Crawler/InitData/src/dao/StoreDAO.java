@@ -1,5 +1,6 @@
 package dao;
 
+import dto.IDTO;
 import dto.StoreDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +18,8 @@ import utils.DBUtils;
  *
  * @author LUANNA
  */
-public class StoreDAO {
+public class StoreDAO implements IDAO<StoreDTO>{
+    
     public void create(StoreDTO dto) throws SQLException, ClassNotFoundException{
         if(check(dto.getName())){
             return;

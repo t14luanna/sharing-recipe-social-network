@@ -6,7 +6,6 @@
 package dao;
 
 import dto.CategoryMainDTO;
-import dto.IngredientDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,8 +16,8 @@ import utils.DBUtils;
  *
  * @author LUANNA
  */
-public class CategoryMainDAO {
-    public static void create(CategoryMainDTO dto) throws SQLException, ClassNotFoundException{
+public class CategoryMainDAO implements IDAO<CategoryMainDTO>{
+    public void create(CategoryMainDTO dto) throws SQLException, ClassNotFoundException{
         if(check(dto.getName())){
             return;
         }
@@ -39,7 +38,7 @@ public class CategoryMainDAO {
         }
     }
     
-    public static boolean check(String name) throws SQLException, ClassNotFoundException{
+    public boolean check(String name) throws SQLException, ClassNotFoundException{
         Connection connection = DBUtils.getConnection();
         String sql = "SELECT *  FROM CategoryMain WHERE CategoryName = ?";
 
@@ -61,7 +60,7 @@ public class CategoryMainDAO {
         }
     }
 
-    public static int findOrCreate(CategoryMainDTO dto) throws SQLException, ClassNotFoundException{
+    public int findOrCreate(CategoryMainDTO dto) throws SQLException, ClassNotFoundException{
         Connection connection = DBUtils.getConnection();
         String sql = "SELECT *  FROM CategoryMain WHERE CategoryName = ?";
 

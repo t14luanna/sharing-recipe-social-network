@@ -37,13 +37,13 @@ public class FileUtils {
         JSONArray result = new JSONArray();
         
         String line = "";
-        String cvsSplitBy = ",";
+        String cvsSplitBy = "\",\"";
 
         try (BufferedReader br = new BufferedReader(new FileReader(uri))) {
 
             line = br.readLine();
 
-            String[] names = line.split(cvsSplitBy);
+            String[] names = line.split(",");
 
             while ((line = br.readLine()) != null) {
 

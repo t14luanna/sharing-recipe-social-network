@@ -5,7 +5,7 @@
  */
 package dao;
 
-import dto.IngredientDTO;
+import dto.ProductDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,8 +16,8 @@ import utils.DBUtils;
  *
  * @author LUANNA
  */
-public class IngredientDAO {
-    public void create(IngredientDTO dto) throws SQLException, ClassNotFoundException{
+public class ProductDAO implements IDAO<ProductDTO>{
+    public void create(ProductDTO dto) throws SQLException, ClassNotFoundException{        
         if(check(dto.getName())){
             return;
         }

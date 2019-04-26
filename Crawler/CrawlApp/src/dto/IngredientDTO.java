@@ -5,53 +5,49 @@
  */
 package dto;
 
+import org.json.simple.JSONObject;
+
 /**
  *
  * @author LUANNA
  */
-public class IngredientDTO {
-    private String name;
-    private String price;
-    private String image;
-    private int brandId;
+public class IngredientDTO extends IDTO {
 
-    public IngredientDTO(String name, String price, String image, int brandId) {
-        this.name = name;
-        this.price = price;
-        this.image = image;
-        this.brandId = brandId;
+    public IngredientDTO() {
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public IngredientDTO(String name) {                
         this.name = name;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public int getBrandId() {
-        return brandId;
-    }
-
-    public void setBrandId(int brandId) {
-        this.brandId = brandId;
+    @Override
+    public IDTO parseFromJSON(JSONObject data) {
+        String name = validationName((String) data.get("Name"));
+        
+        if(name != null){
+            return new IngredientDTO(name);
+        }
+        
+        return null;
     }
     
+    private String validationName(String name){
+        name = name.replaceAll("\"", "");
+        if (name.contains("-")) {
+            name = name.substring(0, name.indexOf("-")).trim();
+        }
+
+        if (name.endsWith("ml")) {
+            name = name.substring(0, name.lastIndexOf(" "));
+        } else if (name.endsWith("Lít") || name.endsWith("gram")) {
+            name = name.substring(0, name.lastIndexOf(" "));
+            name = name.substring(0, name.lastIndexOf(" "));
+        } else if (name.endsWith("g") || name.endsWith("G")) {
+            String quantity = name.substring(name.lastIndexOf(" ") + 1, name.length());
+            if (quantity.matches("-?\\d+(\\.\\d+)?g") || quantity.matches("-?\\d+(\\.\\d+)?kg") || quantity.matches("-?\\d+(\\.\\d+)?G")) {
+                name = name.substring(0, name.lastIndexOf(" "));
+            }
+        }
+        return name;
+    }
 }

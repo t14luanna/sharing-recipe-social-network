@@ -5,25 +5,18 @@
  */
 package dto;
 
+import org.json.simple.JSONObject;
+
 /**
  *
  * @author LUANNA
  */
-public class CategoryItemDTO {
-    private String name;
+public class CategoryItemDTO extends IDTO{
     private int mainId;
 
     public CategoryItemDTO(String name, int mainId) {
         this.name = name;
         this.mainId = mainId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getMainId() {
@@ -32,5 +25,10 @@ public class CategoryItemDTO {
 
     public void setMainId(int mainId) {
         this.mainId = mainId;
+    }
+
+    @Override
+    protected IDTO parseFromJSON(JSONObject json) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
