@@ -830,12 +830,13 @@ input[name=ingredient] {
 }
 .scroll-notification {
     display: none;
-    height: 400px;
+    max-height: 400px;
     overflow: auto;
     padding-top: 20px;
     padding-bottom: 20px;
     margin-bottom: 0px;
     margin-top: 0px;
+    height: initial
 }
 /*top user style newsfeed*/
 .top-chefee .member-item-wrapper {
