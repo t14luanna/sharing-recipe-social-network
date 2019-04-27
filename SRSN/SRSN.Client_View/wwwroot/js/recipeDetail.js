@@ -603,7 +603,7 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
              myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
             uid = myDataRef.push({
                 "uid": "",
-                "username": userData.firstName + " " + userData.lastName,
+                "username": userData.lastName + " " +  userData.firstName ,
                 "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
                 "date": new Date().toLocaleString(),
                 "link": "/recipe/" + data.recipeId,
@@ -808,7 +808,7 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
                     var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                     var uid = myDataRef.push({
                         "uid": "",
-                        "username": userInfo.lastName + " " + userInfo.firstName,
+                        "username": userData.lastName + " " + userData.firstName,
                         "content": "đã trả lời bình luận về bài viết của bạn.",
                         "date": new Date().toLocaleString(),
                         "link": "/recipe/" + data.recipeId,
@@ -869,7 +869,7 @@ const notifyDependencyCommentedUser = async function (commentParentId) {
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameParentComment);
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã trả lời bình luận của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
@@ -1005,7 +1005,7 @@ const callCreateShareRecipeModalApi = async (id) => {
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                 uid = myDataRef.push({
                     "uid": "",
-                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.referencedRecipeId,
