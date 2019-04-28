@@ -604,7 +604,7 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
             uid = myDataRef.push({
                 "uid": "",
                 "username": userData.lastName + " " +  userData.firstName ,
-                "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
+                "content": "đã đánh giá công thức của bạn: " + data.ratingContent + " - " + data.ratingRecipe + " sao",
                 "date": new Date().toLocaleString(),
                 "link": "/recipe/" + data.recipeId,
                 "isRead": "False"
@@ -621,8 +621,40 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
                 countNoti = snapshot.val().numberOfLatestNotis;
                 countNoti++;
                 SRSN.FIREBASE_DATABASE.ref(chefUsername).update({ "numberOfLatestNotis": countNoti });
+                countNoti = 0;
             });
-            
+
+            //thong bao cho nhung người đang follow tôi để họ biết tôi đã đánh giá công thức này
+            var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${userData.id}`);
+            var userFollowingData = await userRes.json();
+            var chefRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?username=${chefUsername}`);
+            var chefData = await chefRes.json();
+            var chefFullname = chefData.lastName + " " + chefData.firstName;
+            for (var user of userFollowingData) {
+                myDataRef = SRSN.FIREBASE_DATABASE.ref(user.username);
+                uid = myDataRef.push({
+                    "uid": "",
+                    "username": userData.lastName + " " + userData.firstName,
+                    "content": "đã đánh giá công thức của <b>" + chefFullname + "</b>",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.recipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase 
+                SRSN.FIREBASE_DATABASE.ref("/" + user.username + "/" + uid.key).update({
+                    uid: uid.key
+                });
+                
+            }
+            //update count notifi
+                countNoti = 0;
+                //myDataRef = SRSN.FIREBASE_DATABASE.ref(user.username);
+
+                myDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref("/" + user.username).update({ numberOfLatestNotis: countNoti });
+                });
         }
         //thông báo cộng điểm
         myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
@@ -646,9 +678,10 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
             countNoti = snapshot.val().numberOfLatestNotis;
             countNoti++;
             SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
+            countNoti = 0;
         });
-
-
+        
+        
         $(".close-alert").on("click", function () {
             $(this).parent(".alert").slideUp();
         });
