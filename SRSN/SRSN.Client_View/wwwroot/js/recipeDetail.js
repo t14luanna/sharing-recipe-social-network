@@ -312,7 +312,7 @@ const callReadRatingCommentApi = async (recipeId) => {
         }
     }
     $("#numOfComment").append(count);
-    $(`.comment-owner-${userId}`).css("display", "block");
+    $(`#delete-comment-${userId}`).css("display", "block");
 };
 const callCountCommentsApi = async (recipeId, recipeParentId) => {
     var countReply = await fetch(`${BASE_API_URL}/api/comment/get-count-reply-comment?recipeId=${recipeId}&recipeParentId=${recipeParentId}`);
@@ -743,11 +743,11 @@ const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied
                         <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="avatar"/></a>
                     </div>
                     <div class="comment">
-                    <div class="dropdown dropdown-custom">
+                    <div class="dropdown dropdown-custom" id="delete-comment-${replyComment.userId}" style="display:none">
                         <span class="fa fa-ellipsis-v dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"></span>
-                            <ul class="dropdown-menu dropdown-menu-custom"  role="menu" aria-labelledby="menu1">
-                                <li class="comment-owner-${replyComment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${replyComment.id},${replyComment.recipeId}, ${parentId})">Xóa</a></li>
-                                <li><a href="#">Báo cáo</a></li>
+                            <ul class="dropdown-menu dropdown-menu-custom"  role="menu" aria-labelledby="menu1" >
+                                <li class="comment-owner-${replyComment.userId}" ><a href="#" onclick="deactivateComment(${replyComment.id},${replyComment.recipeId}, ${parentId})">Xóa</a></li>
+                                
                             </ul>
                     </div>
                     
@@ -771,6 +771,7 @@ const callGetReplyComtApi = async (parentId, recipeId) => {
         var itemReply = createSingleReplyComment(item, parentId);
 
         $(`li[data-user-id=${parentId}]`).append(itemReply);
+        
     }
     //tim user dựa theo userid để biết comment của ai, thì người đó có thể xóa comment
     var authorization = localStorage.getItem("authorization");
@@ -784,7 +785,7 @@ const callGetReplyComtApi = async (parentId, recipeId) => {
     });
     var user = await resUser.json();
     var userId = user.id;
-    $(`.comment-owner-${userId}`).css("display", "block");
+    $(`#delete-comment-${userId}`).css("display", "block");
 };
 
 //This function to handle create reply comment
