@@ -65,6 +65,12 @@
                             </div>
                         </div>
                         <div class="col-md-8">
+                            <div class="soundDiv" hidden>
+                                <audio id="myAudio">
+                                    <source src="~/recipepress/audio/notitficationSound.mp3" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
                             <div class="banner-login-wrapper">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -91,9 +97,9 @@
                                                                 <ul id="list-notification" class="scroll-notification"></ul>
                                                             </li>
                                                             <li>
-                                                            <a href="/MessageChat">
-                                                                <i class="fa fa-envelope">
-                                                                    <span style="
+                                                                <a href="/MessageChat">
+                                                                    <i class="fa fa-envelope">
+                                                                        <span style="
                                                                           position: absolute;
                                                                           top: 5px;
                                                                           right: -4px;
@@ -101,8 +107,9 @@
                                                                           border-radius: 50%;
                                                                           background-color: red;
                                                                           color: white; font-size: 12px" id="number-of-message-notification"></span>
-                                                                </i>
-                                                                </a></li>
+                                                                    </i>
+                                                                </a>
+                                                            </li>
                                                         </ul>
                                                     </nav>
                                                 </li>
@@ -399,6 +406,8 @@
 
 <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
 <script type="text/javascript" src="~/js/Configuration.js"></script>
+<script src="~/recipepress/js/audio.min.js"></script>
+
 <script src="~/js/notification.js"></script>
 <script src="~/js/notification-message.js"></script>
 
@@ -407,6 +416,11 @@
 <script src="~/js/recipe.js"></script>
 <script src="~/js/menu-widgets.js"></script>
 <script src="~/js/SearchPageResult.js"></script>
+<script>
+    audiojs.events.ready(function () {
+        var as = audiojs.createAll();
+    });
+</script>
 
 <script type="text/javascript">
 

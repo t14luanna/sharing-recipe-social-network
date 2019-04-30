@@ -144,7 +144,7 @@ namespace SRSN.DatabaseManager.Services
                 var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
                 var ingredientRepo = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
                 var categoryRepo = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
-                var recipes = await this.Get(p => p.UserId == userId && p.Active == true).ToListAsync();
+                var recipes = await this.Get(p => p.UserId == userId && p.Active == true && p.ReferencedRecipeId == null).ToListAsync();
                 foreach (var recipe in recipes)
                 {
                     var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
@@ -981,6 +981,7 @@ namespace SRSN.DatabaseManager.Services
                 return null;
             }
         }
+
     }
 }
 

@@ -10,7 +10,7 @@ const CallGetAllFollowUser = async (userName, limit = 16, page = 0) => {
         var element = createSingleFollowingUserElement(item);
         $('#list-following-user').append(element);
         $('#list-following-user').css('height', '');
-        $('#count-friends').html(data.length);
+        
         $('.unfollow-btn').on('click', function (e) {
             swal({
                 text: "Bạn có chắc chắn muốn bỏ theo dõi?",
@@ -31,17 +31,33 @@ const CallGetAllFollowUser = async (userName, limit = 16, page = 0) => {
         });
 
     }
+    
+    
     //location.reload();
 };
 
 const unfollowUserFunction = async (userName, followingUserId) => {
     var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userFollowingId=" + followingUserId);
     var data = await res.json();
+    if (data.success) {
+        $(`#user-${followingUserId}`).remove();
+        var authorization = localStorage.getItem("authorization");
+        var token = (JSON.parse(authorization))["token"];
+        var followingUserRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/get-count-following-user`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        var followingUserData = await followingUserRes.json();
+        $('#count-friends').html(followingUserData.countFollowingUser);
+    }
     //location.reload();
 };
 
 const createSingleFollowingUserElement = (followingUser) =>
-    `<div class="col-md-3 col-xs-6 col-xxs-12">
+    `<div class="col-md-3 col-xs-6 col-xxs-12" id="user-${followingUser.id}">
                                                     <!-- Member Item Start -->
                                                     <div class="member--item online">
                                                         <div class="img img-circle">

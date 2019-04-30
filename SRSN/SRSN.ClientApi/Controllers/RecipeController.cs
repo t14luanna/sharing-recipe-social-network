@@ -81,6 +81,17 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("get-count-my-recipe")]
+        public async Task<ActionResult> CountMyRecipes(string username)
+        {
+            var user = await this.userManager.FindByNameAsync(username);
+            var userId = user.Id;
+            int count = recipeService.Get(p => p.UserId == int.Parse(userId.ToString()) && p.Active == true && p.ReferencedRecipeId == null).ToList().Count;
+            return Ok(new
+            {
+                count = count
+            });
+        }
         [HttpGet("read-orderby-time")]
         public async Task<ActionResult> ReadOrderByTime(int userId, int limit = 9, int page = 0)
         {

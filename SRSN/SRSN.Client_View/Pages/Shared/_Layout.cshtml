@@ -124,9 +124,16 @@
 
                                     </ul>
                                     <div class="noti-message-icon" style="display:none;">
+                                        <div class="soundDiv" hidden>
+                                            <audio id="myAudio">
+                                                <source src="~/recipepress/audio/notitficationSound.mp3" type="audio/mpeg">
+                                                Your browser does not support the audio element.
+                                            </audio>
+                                        </div>
                                         <nav class="nav-collapse header-social-icons">
                                             <ul>
                                                 <li>
+
                                                     <a href="#" onclick="changeStatusNoti()"><i class="fa fa-bell"></i></a>
                                                     <span style="
                                                           position: absolute;
@@ -289,12 +296,17 @@
     @*<script src="/js/firebase.js"></script>*@
 
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
-    <script type="text/javascript" src="/js/Configuration.js"></script>
-    <script src="/js/notification.js"></script>
+    <script type="text/javascript" src="~/js/Configuration.js"></script>
+    <script src="~/recipepress/js/audio.min.js"></script>
+    <script src="~/js/notification.js"></script>
 
     @RenderSection("Scripts", required: false)
     <script src="/js/site.js"></script>
-
+    <script>
+        audiojs.events.ready(function () {
+            var as = audiojs.createAll();
+        });
+    </script>
     <script>
 
         $("#searchBtn").on("click", function (e) {

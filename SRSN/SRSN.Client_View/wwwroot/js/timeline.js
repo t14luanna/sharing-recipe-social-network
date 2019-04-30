@@ -120,10 +120,7 @@ const createShareRecipePost = (post, recipe) =>
                                             </li>`;
 
 const callTimeLineApi = async (username, limit = 10, page = 0) => {
-    var friendsRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-following-user?userName=` + username);
-    var friendData = await friendsRes.json();
-    var countFriends = friendData.length;
-    $("#count-friends").text(countFriends);
+   
 
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
@@ -227,7 +224,7 @@ async function toggleLikeButton(x, recipeId, recipeOwner) {
                 var myDataRef = firebase.database().ref(recipeOwner);//chủ của recipe
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã thích Công Thức của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + data.recipeId,
@@ -367,7 +364,7 @@ const callCreateShareRecipeModalApi = async (id, postOwner) => {
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(postOwner);
                 uid = myDataRef.push({
                     "uid": "",
-                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + id,
@@ -496,7 +493,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu bài viết
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã bình luận công thức của bạn",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + data.recipeId,
@@ -521,7 +518,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
                 var uid1 = myDataRef.push({
                     "uid": "",
-                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã trả lời bình luận về công thức của bạn",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + data.recipeId,
@@ -546,7 +543,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(commentParentOwner);//người sở hữu comment
                 var uid2 = myDataRef.push({
                     "uid": "",
-                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã trả lời bình luận của bạn",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + data.recipeId,

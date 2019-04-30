@@ -312,7 +312,7 @@ const callReadRatingCommentApi = async (recipeId) => {
         }
     }
     $("#numOfComment").append(count);
-    $(`.comment-owner-${userId}`).css("display", "block");
+    $(`#delete-comment-${userId}`).css("display", "block");
 };
 const callCountCommentsApi = async (recipeId, recipeParentId) => {
     var countReply = await fetch(`${BASE_API_URL}/api/comment/get-count-reply-comment?recipeId=${recipeId}&recipeParentId=${recipeParentId}`);
@@ -603,8 +603,8 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
              myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
             uid = myDataRef.push({
                 "uid": "",
-                "username": userData.firstName + " " + userData.lastName,
-                "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
+                "username": userData.lastName + " " +  userData.firstName ,
+                "content": "đã đánh giá công thức của bạn: " + data.ratingContent + " - " + data.ratingRecipe + " sao",
                 "date": new Date().toLocaleString(),
                 "link": "/recipe/" + data.recipeId,
                 "isRead": "False"
@@ -621,8 +621,40 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
                 countNoti = snapshot.val().numberOfLatestNotis;
                 countNoti++;
                 SRSN.FIREBASE_DATABASE.ref(chefUsername).update({ "numberOfLatestNotis": countNoti });
+                countNoti = 0;
             });
-            
+
+            //thong bao cho nhung người đang follow tôi để họ biết tôi đã đánh giá công thức này
+            var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${userData.id}`);
+            var userFollowingData = await userRes.json();
+            var chefRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?username=${chefUsername}`);
+            var chefData = await chefRes.json();
+            var chefFullname = chefData.lastName + " " + chefData.firstName;
+            for (var user of userFollowingData) {
+                myDataRef = SRSN.FIREBASE_DATABASE.ref(user.username);
+                uid = myDataRef.push({
+                    "uid": "",
+                    "username": userData.lastName + " " + userData.firstName,
+                    "content": "đã đánh giá công thức của <b>" + chefFullname + "</b>",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.recipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase 
+                SRSN.FIREBASE_DATABASE.ref("/" + user.username + "/" + uid.key).update({
+                    uid: uid.key
+                });
+                
+            }
+            //update count notifi
+                countNoti = 0;
+                //myDataRef = SRSN.FIREBASE_DATABASE.ref(user.username);
+
+                myDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref("/" + user.username).update({ numberOfLatestNotis: countNoti });
+                });
         }
         //thông báo cộng điểm
         myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
@@ -646,9 +678,10 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
             countNoti = snapshot.val().numberOfLatestNotis;
             countNoti++;
             SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
+            countNoti = 0;
         });
-
-
+        
+        
         $(".close-alert").on("click", function () {
             $(this).parent(".alert").slideUp();
         });
@@ -710,11 +743,11 @@ const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied
                         <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="avatar"/></a>
                     </div>
                     <div class="comment">
-                    <div class="dropdown dropdown-custom">
+                    <div class="dropdown dropdown-custom" id="delete-comment-${replyComment.userId}" style="display:none">
                         <span class="fa fa-ellipsis-v dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"></span>
-                            <ul class="dropdown-menu dropdown-menu-custom"  role="menu" aria-labelledby="menu1">
-                                <li class="comment-owner-${replyComment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${replyComment.id},${replyComment.recipeId}, ${parentId})">Xóa</a></li>
-                                <li><a href="#">Báo cáo</a></li>
+                            <ul class="dropdown-menu dropdown-menu-custom"  role="menu" aria-labelledby="menu1" >
+                                <li class="comment-owner-${replyComment.userId}" ><a href="#" onclick="deactivateComment(${replyComment.id},${replyComment.recipeId}, ${parentId})">Xóa</a></li>
+                                
                             </ul>
                     </div>
                     
@@ -738,6 +771,7 @@ const callGetReplyComtApi = async (parentId, recipeId) => {
         var itemReply = createSingleReplyComment(item, parentId);
 
         $(`li[data-user-id=${parentId}]`).append(itemReply);
+        
     }
     //tim user dựa theo userid để biết comment của ai, thì người đó có thể xóa comment
     var authorization = localStorage.getItem("authorization");
@@ -751,7 +785,7 @@ const callGetReplyComtApi = async (parentId, recipeId) => {
     });
     var user = await resUser.json();
     var userId = user.id;
-    $(`.comment-owner-${userId}`).css("display", "block");
+    $(`#delete-comment-${userId}`).css("display", "block");
 };
 
 //This function to handle create reply comment
@@ -808,7 +842,7 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
                     var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                     var uid = myDataRef.push({
                         "uid": "",
-                        "username": userInfo.lastName + " " + userInfo.firstName,
+                        "username": userData.lastName + " " + userData.firstName,
                         "content": "đã trả lời bình luận về bài viết của bạn.",
                         "date": new Date().toLocaleString(),
                         "link": "/recipe/" + data.recipeId,
@@ -869,7 +903,7 @@ const notifyDependencyCommentedUser = async function (commentParentId) {
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameParentComment);
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã trả lời bình luận của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
@@ -1005,7 +1039,7 @@ const callCreateShareRecipeModalApi = async (id) => {
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                 uid = myDataRef.push({
                     "uid": "",
-                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.referencedRecipeId,

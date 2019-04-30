@@ -251,6 +251,41 @@ const loadAvatarContainer = async (username) => {
         $("#btnReportUser").remove();
 
     }
+    //count friends
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var followingUserRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/get-count-following-user`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var followingUserData = await followingUserRes.json();
+    $('#count-friends').html(followingUserData.countFollowingUser);
+    //count my recipe
+    var countRecipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/get-count-my-recipe?username=${username}`);
+    var countRecipes = await countRecipeRes.json();
+    $("#count-recipes").text(countRecipes.count);
+
+    //count draft recipe
+    var userIdRes = await fetch(`${BASE_API_URL}/api/account/read-username?username=${username}`);
+    var userIdData = await userIdRes.json();
+    var userId = userIdData.id;
+     res = await fetch(`${BASE_API_URL}/api/recipe/read-draft-recipe?userId=` + userId);
+    data = await res.json();
+    $("#count-draft").text(data.length);
+
+    //count collections
+    var collectionRes = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/count-collections?username=${username}`);
+    var collectionData = await collectionRes.json();
+    $("#count-collections").text(collectionData.count);
+
+    //count favorite recipes
+    var favoriteRes = await fetch(`${BASE_API_URL}/${USER_REACTION_RECIPE_API_URL}/get-count-favorite-recipe?username=${username}`);
+    var favoriteData = await favoriteRes.json();
+    $("#count-favorite").text(favoriteData.count);
+
 };
 
 function avatarPickerChange(elePicker, user) {

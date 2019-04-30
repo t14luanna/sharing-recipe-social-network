@@ -67,7 +67,7 @@ async function deleteRecipeInMyRecipe(recipeId) {
 const deactivateRecipe = async (recipeId) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var recipeRes = await fetch(`${BASE_API_URL} /${RECIPE_API_URL}/delete ? recipeId = ${recipeId} `, {
+    var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/delete?recipeId=${recipeId}`, {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
@@ -78,7 +78,12 @@ const deactivateRecipe = async (recipeId) => {
         swal("Bạn đã xóa thành công Công Thức này!", {
             icon: "success",
         });
-        $(`#${recipeId} `).remove();
+        $(`#${recipeId}`).remove();
+        //count my recipe
+       
+        var countRecipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/get-count-my-recipe?username=${username}`);
+        var countRecipes = await countRecipeRes.json();
+        $("#count-recipes").text(countRecipes.count);
     } else {
         alert("Bạn không thể xóa thành công Công Thức này, vui lòng thử lại!!!");
     }
