@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SRSN.DatabaseManager.Entities;
@@ -19,6 +20,8 @@ namespace SRSN.DatabaseManager.Services
         Task<ICollection<int>> GetAllFollowingUser(int userid);
 
         Task<ICollection<AccountViewModel>> getAllFollowUser(UserManager<SRSNUser> userManager, int userid, int limit, int page);
+        IQueryable<AccountViewModel> GetAllFollowUser(int userId, int limit, int page);
+        Task<ICollection<AccountViewModel>> GetAllFollowUser(UserManager<SRSNUser> userManager, int userId, string followedUsername, int limit, int page);
         Task<UserFollowingViewModel> checkFollowingUser(int userId, int followingUserId);
         Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
         Task<ICollection<AccountViewModel>> getAllUserFollowingMe(UserManager<SRSNUser> userManager, int followingUserId);//get all user who is following me
@@ -30,11 +33,12 @@ namespace SRSN.DatabaseManager.Services
         {
         }
 
-        public async Task<ICollection<AccountViewModel>> getAllFollowUser(UserManager<SRSNUser> userManager, int userid, int limit, int page)
+
+        public async Task<ICollection<AccountViewModel>> getAllFollowUser(UserManager<SRSNUser> userManager, int userId, int limit, int page)
         {
             var listAccount = new List<AccountViewModel>();
 
-            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active= 1 AND UserId=" + userid).ToListAsync();
+            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active= 1 AND UserId=" + userId).ToListAsync();
 
             listItems = listItems.Skip(page * limit).Take(limit).ToList();
             foreach (var item in listItems)
@@ -42,19 +46,59 @@ namespace SRSN.DatabaseManager.Services
                 var user = await userManager.FindByIdAsync(item.FollowingUserId.ToString());
                 var userVM = new AccountViewModel();
                 mapper.Map(user, userVM);
-                                
+
                 listAccount.Add(userVM);
             }
 
             return listAccount;
         }
-        
+
+
+        public IQueryable<AccountViewModel> GetAllFollowUser(int userId, int limit, int page)
+        {
+            var listAccount = new List<AccountViewModel>();
+
+            var listItems = this.selfDbSet
+                                        .AsNoTracking()
+                                        .Where(x => x.Active.Value
+                                                    && x.UserId == userId)
+                                        .OrderByDescending(x => x.CreateTime.GetValueOrDefault())
+                                        .Skip(page * limit)
+                                        .Take(limit);
+
+            var result = listItems
+                .Select(x => x.FollowingUser)
+                .ProjectTo<AccountViewModel>(this.mapper.ConfigurationProvider);
+
+            return result;
+        }
+        public async Task<ICollection<AccountViewModel>> GetAllFollowUser(UserManager<SRSNUser> userManager, int userId, string followedUsername, int limit, int page)
+        {
+            var listAccount = new List<AccountViewModel>();
+
+            var listItems = this.selfDbSet
+                                        .AsNoTracking()
+                                        .Where(x => x.Active.Value
+                                                    && x.UserId == userId
+                                                    && ($"{x.FollowingUser.LastName} {x.FollowingUser.FirstName}").Contains(followedUsername, StringComparison.OrdinalIgnoreCase))
+                                        .OrderByDescending(x => x.CreateTime.GetValueOrDefault())
+                                        .Skip(page * limit)
+                                        .Take(limit);
+
+            var result = await listItems
+                .Select(x => x.FollowingUser)
+                .ProjectTo<AccountViewModel>(this.mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return result;
+        }
+
         public async Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId)
         {
-            
+
 
             var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE UserId=" + userId + " AND FollowingUserId=" + followingUserId).ToListAsync();
-            
+
             foreach (var item in listItems)
             {
                 item.Active = false;
@@ -68,7 +112,7 @@ namespace SRSN.DatabaseManager.Services
 
         public async Task<ICollection<UserFollowing>> followUser(UserManager<SRSNUser> userManager, int userId, int followingUserId)
         {
-           
+
 
             var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE UserId=" + userId + " AND FollowingUserId=" + followingUserId).ToListAsync();
 
@@ -78,7 +122,7 @@ namespace SRSN.DatabaseManager.Services
                 item.Active = true;
                 item.CreateTime = DateTime.UtcNow.AddHours(7);
                 this.selfDbSet.Update(item);
-            } 
+            }
             else
             {
                 UserFollowing userFollowing = new UserFollowing();
@@ -96,7 +140,7 @@ namespace SRSN.DatabaseManager.Services
         public async Task<ICollection<AccountViewModel>> getAllUserFollowingMe(UserManager<SRSNUser> userManager, int followingUserId)
         {
             var listAccount = new List<AccountViewModel>();
-             
+
             var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active='True' AND FollowingUserId=" + followingUserId).ToListAsync();
 
             foreach (var item in listItems)

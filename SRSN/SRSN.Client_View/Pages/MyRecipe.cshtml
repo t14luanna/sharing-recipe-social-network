@@ -92,13 +92,13 @@
                                 <nav class="nav-collapse">
                                     <ul class="main-menu left">
                                         <li>
-                                            <a href="/index">Trang chủ</a>
+                                             <a href="/Index" class="href-homepage">Trang chủ</a>
                                         </li>
                                         <li>
                                             <a href="/recipe">Công thức</a>
                                         </li>
                                         <li>
-                                            <a href="/newsfeed">Cộng đồng</a>
+                                            <a href="/Newsfeed" class="nav-display-none">Cộng đồng</a>
                                         </li>
                                         <li><a href="/topUsers">Top Thành viên</a></li>
                                     </ul>
@@ -144,7 +144,7 @@
                                 <nav class="nav-collapse">
                                     <ul class="main-menu right">
                                         <li>
-                                            <a href="blog.html">blog</a>
+                                            <a href="blog.html" class="nav-display-none">blog</a>
                                             <ul>
                                                 <li>
                                                     <a href="single.html">Single post</a>
@@ -320,7 +320,12 @@
         </div>
     </div>
     <!--footer ends-->
-
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
     <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="~/recipepress/js/jquery-ui.js"></script>
     <script src="~/recipepress/js/slick.min.js"></script>

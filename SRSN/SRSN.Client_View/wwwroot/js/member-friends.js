@@ -5,15 +5,29 @@ const CallGetAllFollowUser = async (userName, limit = 16, page = 0) => {
     if (data.length < limit) {
         $(".recipe-more").css("display", "none");
     }
+    $('#list-following-user').html("");
     for (var item of data) {
         var element = createSingleFollowingUserElement(item);
         $('#list-following-user').append(element);
         $('#list-following-user').css('height', '');
         $('#count-friends').html(data.length);
         $('.unfollow-btn').on('click', function (e) {
-            var followingUserId = $(e.target).siblings('input').val();;
-            var userName = localStorage.getItem('username');
-            unfollowUserFunction(userName, followingUserId);
+            swal({
+                text: "Bạn có chắc chắn muốn bỏ theo dõi?",
+                icon: "warning",
+                buttons: ["Huỷ", "Đồng ý!"],
+                dangerMode: true,
+            })
+                .then( async (willDelete) => {
+                    if (willDelete) {
+                        var followingUserId = $(e.target).siblings('input').val();;
+                        var userName = localStorage.getItem('username');
+                        await unfollowUserFunction(userName, followingUserId);
+                        CallGetAllFollowUser(userName);
+                        $("#count-friends").text(Number.parseInt($("#count-friends").text()) - 1);
+                    } else {
+                    }
+                });
         });
 
     }
@@ -49,7 +63,7 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#" title="Bỏ theo dõi" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
+                                                                    <a href="javascript:void(0)" title="Bỏ theo dõi" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
                                                                         <input type="hidden" value="${followingUser.id}">
                                                                         <i class="fa fa-user-times"></i>
                                                                     </a>

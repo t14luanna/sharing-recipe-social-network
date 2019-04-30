@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="logo-wrapper">
-                                <a href="/index"><img src="/recipepress/images/logo.png" alt="logo" /></a>
+                                 <a href="/Index" class="href-homepage"><img src="/recipepress/images/logo.png" alt="logo" /></a>
                             </div>
                         </div>
                         <div class="col-md-8">
@@ -145,12 +145,12 @@
 
                             </li>
                             <li>
-                                <a href="/Newsfeed">Cộng đồng</a>
+                                <a href="/Newsfeed" class="nav-display-none">Cộng đồng</a>
 
                             </li>
                             <li><a href="/TopUsers">Top thành viên</a></li>
                             <li>
-                                <a href="blog.html">Blog</a>
+                                <a href="blog.html" class="nav-display-none">Blog</a>
 
                             </li>
                             <li><a href="/Collection">Bộ sưu tập</a></li>
@@ -429,6 +429,9 @@
     var authorization = JSON.parse(localStorage.getItem('authorization'));
     if (authorization == null) {
         $("#suggest-recipe").css("display", "none");
+    }
+    else {
+        window.location.href = "/Newsfeed"
     }
 
     $("#searchBtn").on("click", function (e) {

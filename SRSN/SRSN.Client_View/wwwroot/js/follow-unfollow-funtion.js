@@ -11,6 +11,7 @@
                 $(".btnFollow-" + userId).html(btnFollowed_OnNewsfeed(userId));
 
                 check = true;
+                callTopSuggestUserApi();
             }
         });
     if (check) {
@@ -39,7 +40,7 @@ const callNotification = async (userId) => {
     var countDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
 
     countDataRef.once('value', function (snapshot) {
-        countNoti = snapshot.val().numberOfLatestNotis;
+        countNoti = snapshot.val().numberOfLatestNotis || 0;
         countNoti++;
         SRSN.FIREBASE_DATABASE.ref(userData.username).update({ "numberOfLatestNotis": countNoti });
     });
@@ -66,7 +67,6 @@ async function unfollowUserFuntion(userId) {
         .then(res => res.json())
         .then(response => {
             if (response.success) {
-                //location.reload();
                 $(".follow-area-" + userId).html(btnFollow(userId));
                 $(".btnFollow-" + userId).html(btnFollow_OnNewsfeed(userId));
 

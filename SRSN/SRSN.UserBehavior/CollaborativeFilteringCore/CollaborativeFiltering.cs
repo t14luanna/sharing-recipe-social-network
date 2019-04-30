@@ -10,6 +10,7 @@ using MathNet.Numerics;
 using SRSN.UserBehavior.Entities;
 using ServiceStack.Redis;
 using SRSN.UserBehavior.CollaborativeFilteringCore;
+using ServiceStack;
 
 namespace SRSN.UserBehavior
 {
@@ -17,6 +18,7 @@ namespace SRSN.UserBehavior
     {
         private static string redisRecommenderItemBased = "RCS_Recipe_";
         private static string redisRecommenderUserBased = "RCS_User_";
+        private static string redisListRecommendFriends = "RCS_Friends_";
 
         private UserReactionRecipe[] data;
         private Matrix<double> normalizedMatrix;
@@ -37,7 +39,7 @@ namespace SRSN.UserBehavior
             this.users = data.Select(x => x.UserId).ToArray();
             this.items = data.Select(x => x.RecipeId).ToArray();
             this.numberOfUsers = users.Distinct().Max() + 1;
-            this.numberOfItems = items.Distinct().Max() +1;
+            this.numberOfItems = items.Distinct().Max() + 1;
             this.k = k;
             this.isUucf = isUucf;
         }
@@ -261,6 +263,7 @@ namespace SRSN.UserBehavior
             {
                 for (int userIndex = 0; userIndex < numberOfUsers; userIndex++)
                 {
+                    redisClient.RemoveRangeFromSortedSet(redisRecommenderUserBased + userIndex,0, -1);
                     var recommended_items = new List<double>();
                     for (int itemIndex = 0; itemIndex < numberOfItems; itemIndex++)
                     {
@@ -295,7 +298,7 @@ namespace SRSN.UserBehavior
                             this.Predict(userIndex, itemIndex);
                             if (this.normalizedMatrix[itemIndex, userIndex] > 0)
                             {
-                                redisClient.AddItemToSortedSet(redisRecommenderItemBased+ itemIndex, userIndex.ToString(), this.normalizedMatrix[itemIndex, userIndex]);
+                                redisClient.AddItemToSortedSet(redisRecommenderItemBased + itemIndex, userIndex.ToString(), this.normalizedMatrix[itemIndex, userIndex]);
                                 recommended_users.Add(userIndex);
                             }
                         }
@@ -310,13 +313,50 @@ namespace SRSN.UserBehavior
                 Console.WriteLine(this.normalizedMatrix);
             }
         }
+        public void SuggestFriends(IRedisClient redisClient)
+        {
+            
+            Console.WriteLine("Suggest Friends");
+            for (int x = 0; x < numberOfUsers; x++)
+            {
+                // user id
+                var userId = x + 1;
+                redisClient.RemoveRangeFromSortedSet(redisListRecommendFriends + userId, 0, -1);
+                Console.Write($"Calculate user id {userId}: ");
+                var userKey = $"{redisRecommenderUserBased}{userId}";
+                var userData = redisClient.GetAllItemsFromSortedSet(userKey);
+                userData.OrderBy(uD => uD).ToList().ForEach(uD => Console.Write(uD + ", "));
+                Console.WriteLine();
+                var listRecommendedFriends = new List<string>();
+                for (int y = 0; y < numberOfUsers; y++)
+                {
+                    // friend id
+                    var friendId = y + 1;
+                    if (friendId != userId)
+                    {
+                        var friendKey = $"{redisRecommenderUserBased}{friendId}";
+                        var friendData = redisClient.GetAllItemsFromSortedSet(friendKey);
+                        var duplicateData = friendData.Where(fD => userData.Contains(fD)).ToList();
+                        if (((double)duplicateData.Count() / (double)userData.Count()) >= ((double)1 / 2))
+                        {
+                            redisClient.AddItemToSortedSet(redisListRecommendFriends + userId, friendId.ToString());
+                            Console.Write($"Calculate frie id {friendId}: ");
+                            duplicateData.OrderBy(fD => fD).ToList().ForEach(fD => Console.Write(fD + ", "));
+                            Console.WriteLine();
+                        }
+                    }
+                }
+
+                Console.WriteLine();
+            }
+        }
         private double Rounding2DecimalPlace(double number)
         {
             var output = Math.Round(number * 100) / 100;
             return output;
         }
     }
-  
+
 
 
 }

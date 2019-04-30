@@ -39,6 +39,16 @@
         window.location.href = '/';
     });
 })();
+
+$(document).ready((e) => {
+    var username = window.localStorage.getItem("username");
+    var authorization = window.localStorage.getItem("authorization");
+    if (authorization && username) {
+        $(".href-homepage").attr("href", "/Newsfeed")
+    } else {
+        $(".href-homepage").attr("href", "/Index")
+    }
+})
 const notifiElement = () =>
     ` <li>
                                                     <a href="#" onclick="changeStatusNoti()"><i class="fa fa-bell"></i></a>

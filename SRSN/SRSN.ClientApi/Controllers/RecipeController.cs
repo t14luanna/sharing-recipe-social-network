@@ -546,6 +546,20 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("read-recipe-by-name")]
+        public async Task<ActionResult> ReadRecipeByName([FromQuery]string recipeName,[FromQuery] int limit = 20, [FromQuery] int page = 0)
+        {
+            try
+            {
+                var result = await recipeService.GetRecipeName(userManager, recipeName, page, limit);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpGet("read-recipe-by-category")]
         public async Task<ActionResult> ReadRecipeByCategory([FromQuery] string categoryName)
         {

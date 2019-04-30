@@ -223,7 +223,13 @@
 </div>
 
 @section Scripts {
-   <script src="~/recipepress/js/sweetalertv1.js"></script>
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
+    <script src="~/recipepress/js/sweetalertv1.js"></script>
     <script type="text/javascript" src="~/recipepress/js/main.js"></script>
     <script type="text/javascript" src="~/recipepress/js/custom.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>

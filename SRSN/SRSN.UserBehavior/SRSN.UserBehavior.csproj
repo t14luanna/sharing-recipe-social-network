@@ -18,7 +18,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NumSharp" Version="0.7.3" />
-    <PackageReference Include="ServiceStack.Redis.Core" Version="5.4.0" />
+    <PackageReference Include="ServiceStack.Common" Version="3.9.71" />
+    <PackageReference Include="ServiceStack.Redis" Version="3.9.71" />
+    <PackageReference Include="ServiceStack.Text" Version="3.9.71" />
   </ItemGroup>
 
   <ItemGroup>

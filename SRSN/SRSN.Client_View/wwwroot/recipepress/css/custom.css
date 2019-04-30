@@ -275,7 +275,7 @@
 
 .custom-listing {
     /*width: 262.725px !important;*/
-    height: 350.725px !important;
+    height: 371.725px !important
     /*margin-left: 20px;*/
 }
 
@@ -1170,4 +1170,28 @@ input[name=ingredient] {
 .username-mention {
     font-weight: 600!important;
     color: rgb(27, 149, 224)!important
+}
+.nav-display-none{
+    display: none!important
+}
+.cke_top{
+    display: none!important
+}
+.cke_reset{
+    height:100px!important
+}
+.cke_chrome {
+    border: none !important;
+    border-bottom: 1px solid #d1d1d1!important;
+}
+.href-mention-fullname {
+    font-weight: 600 !important;
+    color: rgb(27, 149, 224) !important;
+}
+.acomment--content > p > a, .acomment--content > a {
+    font-weight: 600 !important;
+    color: rgb(27, 149, 224) !important;
+}
+.cke_autocomplete_panel{
+    width: 500px!important
 }

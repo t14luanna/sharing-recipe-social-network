@@ -124,7 +124,7 @@
                                                         <i class="fa fa-arrows"></i>
                                                     </span>
                                                     <div class="autocomplete">
-                                                        <input class="ingredient-detail" type="text" name="ingredients" id="ingredients1" data-suggest-quantitivie="ingredientsWeight1"
+                                                        <input class="ingredient-detail"autocomplete="off" type="text" name="ingredients" id="ingredients1" data-suggest-quantitivie="ingredientsWeight1"
                                                                onclick="SuggestIngredient(this);" placeholder="Muối, Đường, thịt gà ..." />
                                                     </div>
                                                     <input class="ingredient-weight" type="text" name="ingredientsWeight" id="ingredientsWeight1" placeholder="1g, 1kg, 1 thìa ..." />
@@ -248,6 +248,12 @@
 
 
 @section Scripts {
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
     <script src="~/recipepress/js/sweetalertv1.js"></script>
     <script type="text/javascript" src="recipepress/js/main.js"></script>
     @*<script type="text/javascript" src="~/recipepress/js/custom.js"></script>*@

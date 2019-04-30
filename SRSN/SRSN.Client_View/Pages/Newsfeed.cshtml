@@ -58,9 +58,9 @@
                             <div class="main--sidebar col-md-4 pb--60">
                                 <!-- Widget Start -->
                                 <div class="widget main-content-custom">
-                                    <h3>Top thành viên</h3>
+                                    <h3>Người cùng sở thích với bạn</h3>
                                     <div class="top-chefee-list" id="top-user-list">
-                                        
+
                                     </div>
                                 </div>
                                 <div class="widget main-content-custom recipe-seen-content">
@@ -103,9 +103,12 @@
     <script type="text/javascript" src="/recipepress/js/main.js"></script>
     <script type="text/javascript" src="~/js/menu-widgets.js"></script>
     <script type="text/javascript" src="~/js/follow-unfollow-funtion.js"></script>
-
-
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/recipepress/js/ckeditor/ckeditor.js"></script>
+    <script src="~/recipepress/js/ckeditor/adapters/jquery.js"></script>
+    <script src="~/recipepress/js/ckeditor/config.js"></script>
+    <script src="~/recipepress/js/ckeditor/styles.js"></script>
+
     <script type="text/javascript">
         const changeHeadername = async () => {
             var someText = "Cộng đồng";
@@ -115,12 +118,11 @@
             await changeHeadername();
             await callNewsfeedPageApi();
             await loadRecipeLocalStorage();
-            await callTopUserApi();
+            await callTopSuggestUserApi();
             $(".close-share-recipe").on("click", function (e) {
                 $(".modal-share-post").css("display", "none");
             });
-            //await attachInputSearchCallback();
-            
+
         })();
 
         var newsFeedGetMorePage = 0;

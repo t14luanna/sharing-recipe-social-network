@@ -1,4 +1,4 @@
-﻿const apikey = 'A1p11nq0RoGb8BRod5sOgz';
+﻿const apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
 var countsteps = 1;
 var listStepImages = {};
 var listLocalStepImages = {};
@@ -34,7 +34,7 @@ $('.add-ingredient').on("click", function (event) {
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' +
         '<i class="fa fa-arrows"></i></span >' +
-        `<div class="autocomplete"><input class="ingredient-detail" type="text" name="ingredients" data-suggest-quantitivie="ingredientsWeight${countIngredient}" id="ingredients${countIngredient}" placeholder="Muối, Đường, thịt gà ..." onclick="SuggestIngredient(this);"/></div>` +
+        `<div class="autocomplete"><input class="ingredient-detail" autocomplete="off" type="text" name="ingredients" data-suggest-quantitivie="ingredientsWeight${countIngredient}" id="ingredients${countIngredient}" placeholder="Muối, Đường, thịt gà ..." onclick="SuggestIngredient(this);"/></div>` +
         `<input class="ingredient-weight" type="text" name="ingredientsWeight" id="ingredientsWeight${countIngredient}" placeholder="1g, 1kg, 1 thìa ..."/><input type="hidden" name="ingredientId" value="0" />` +
         '<span class="del-list"><i class="fa fa-trash"></i></span></div >' +
         '</li>';

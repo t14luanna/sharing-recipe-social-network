@@ -88,13 +88,13 @@
                                 <nav class="nav-collapse">
                                     <ul class="main-menu left">
                                         <li>
-                                            <a href="/index">Trang chủ</a>
+                                             <a href="/Index" class="href-homepage">Trang chủ</a>
                                         </li>
                                         <li>
                                             <a href="/recipe">Công thức</a>
                                         </li>
                                         <li>
-                                            <a href="/newsfeed">Cộng đồng</a>
+                                            <a href="/Newsfeed" class="nav-display-none">Cộng đồng</a>
                                         </li>
                                         <li><a href="/topUsers">Top Thành viên</a></li>
                                     </ul>
@@ -104,7 +104,7 @@
 
                         <div class="col-md-2">
                             <div class="logo-wrapper">
-                                <a href="/index"><img src="~/recipepress/images/logo.png" alt="logo" /></a>
+                                 <a href="/Index" class="href-homepage"><img src="~/recipepress/images/logo.png" alt="logo" /></a>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -127,15 +127,18 @@
                                     <span class="sign-in-buttons authorized-group" style="display: none;" id="user">
                                         <a class="information" href="/account/information" id="authorized-group-username">Username</a>
                                     </span>
+                                    <span class="sign-in-buttons authorized-group" id="logoutBtn">
+                                        <a class="login" href="">Đăng xuất</a>
+                                    </span>
                                     <span class="sign-in-buttons unauthorized-group">
-                                        <a class="login" href="/login">Login</a>
-                                        <a class="register" href="/register">Register</a>
+                                        <a class="login" href="/login">Đăng nhập</a>
+                                        <a class="register" href="/register">Đăng ký</a>
                                     </span>
                                 </div>
                                 <nav class="nav-collapse">
                                     <ul class="main-menu right">
                                         <li>
-                                            <a href="blog.html">blog</a>
+                                            <a href="blog.html" class="nav-display-none">blog</a>
                                         </li>
                                         <li><a href="/collection">Bộ sưu tập</a></li>
                                         <li><a href="/contact">Liên hệ</a></li>
@@ -272,7 +275,12 @@
         </div>
     </div>
     <!--footer ends-->
-
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
     <script src="~/recipepress/js/jquery-1.11.3.min.js"></script>
     <script src="~/recipepress/js/jquery-ui.js"></script>
     <script src="~/recipepress/js/slick.min.js"></script>

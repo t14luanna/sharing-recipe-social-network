@@ -21,7 +21,7 @@ namespace SRSN.UserBehavior
                 Console.WriteLine($"Collaborative Filtering User-User System, start at {currentTime}");
                 Console.WriteLine($"Time to started: {++count}");
                 using (var unitOfWork = new UnitOfWork())
-                using (var redisClient = RedisUtil.GetDatabase().GetClient())
+                using (var redisClient = RedisUtil.GetRedisClient())
                 {
                     var userRecipePointService = new UserRecipePointService(unitOfWork);
                     var recipeService = new RecipeService(unitOfWork);
@@ -41,10 +41,11 @@ namespace SRSN.UserBehavior
                     collaborativeSystem.Normalize();
                     collaborativeSystem.Similarity();
                     collaborativeSystem.RecommendItems(redisClient);
+                    collaborativeSystem.SuggestFriends(redisClient);
                 }
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine($"Done, tool collaborative filter system will start after 3 minutes, current time: {currentTime}");
-                Thread.Sleep(1000*3);
+                Thread.Sleep(1000*5);
                 Console.Clear();
             } while (true);
         }

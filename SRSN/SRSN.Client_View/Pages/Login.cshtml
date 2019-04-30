@@ -125,7 +125,7 @@
                         localStorage.setItem("authorization", JSON.stringify(response.token));
                         localStorage.setItem("username", $("#usernameVM").val());
                         localStorage.setItem("userId", response.userId);
-                        window.location.href = '/';
+                        window.location.href = '/Newsfeed';
                     } else {
                         var errorP = document.createElement("p");
                         errorP.append(response.message);

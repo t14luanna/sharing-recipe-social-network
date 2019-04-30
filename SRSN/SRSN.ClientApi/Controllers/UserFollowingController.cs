@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
@@ -51,6 +52,25 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("read-following-user-autocomplete")]
+        public async Task<ActionResult> ReadFollowingUserForAutocomplete(string currentUsername, string term, int limit = 16, int page = 0)
+        {
+            try
+            {
+                var user = await userManager.FindByNameAsync(currentUsername);
+                int userId = user.Id;
+               var listUserFollowing = await userFollowingService.GetAllFollowUser(userManager, userId, term, limit, page);
+                
+
+                return Ok(listUserFollowing);   
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
 
         [HttpGet("read-user-following-me")]
         public async Task<ActionResult> ReadUserFollowingMe(string userName)

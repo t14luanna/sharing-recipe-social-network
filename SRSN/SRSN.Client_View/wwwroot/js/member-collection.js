@@ -68,7 +68,7 @@ const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-
 
                                                         <div class="name">
                                                             <h3 class="h6 fs--12">
-                                                                <a href="member-activity-personal.html" class="btn-link">${collection.collectionName}</a>
+                                                                <a href="/account/collection-detail/${collection.id}" class="btn-link">${collection.collectionName}</a>
                                                             </h3>
                                                         </div>
                                                         <div class="actions">
@@ -88,10 +88,10 @@ const createCollectionItem = (collection) => `<div class="col-md-3 col-xs-6 col-
                                                     </div>
                                                     </div>
                                                 </div>`;
-const createButtonNewCollection = () => ` <label>
+const createButtonNewCollection = () => ` <label class="btn-action-collection">
                                                     <a id="btn-create-new-collection" class="default-btn min-width-button theme-color">Tạo mới Bộ sưu tập</a>
                                                 </label>`;
-const callReadCollectionApi = async (userName, limit = 9, page = 0) => {
+const callReadCollectionApi = async (userName, limit = 8, page = 0) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var res = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/read-by-userName?userName=${userName}&limit=${limit}&page=${page}`, {
@@ -101,18 +101,23 @@ const callReadCollectionApi = async (userName, limit = 9, page = 0) => {
             'Authorization': `Bearer ${token}`
         }
     });
+    
     if (userName == localStorage.getItem("username")) {
+        var actionBtn = $(`.btn-action-collection`);
+        if (actionBtn[0]) {
+            actionBtn.remove();
+        }
         var btnCreateCollection = createButtonNewCollection();
         $(".btn-create-collection-container").append(btnCreateCollection);
     }
     var elements = $(`.collection-item-container`);
-
     if (elements[0]) {
-
         elements.remove();
-
     }
     var data = await res.json();
+    if (data.length < limit) {
+        $(".recipe-more").css("display", "none");
+    }
     for (var item of data) {
         var content = createCollectionItem(item);
         $(".main-contain-collection").append(content);
