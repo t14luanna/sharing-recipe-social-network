@@ -22,6 +22,22 @@ namespace SRSN.ClientApi.Controllers
             this.userFollowingService = userFollowingService ;
             this.userManager = userManager ;
         }
+        [HttpGet("get-count-following-user")]
+        public async Task<ActionResult> CountFollowingUser()
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var id = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                int userId = int.Parse(id);
+                int count = userFollowingService.Get(p => p.UserId == userId && p.Active == true).ToList().Count;
+                return Ok(new { countFollowingUser = count});
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpGet("check-following-user")]
         public async Task<ActionResult> CheckFollowingUser(int followingUserId)
         {

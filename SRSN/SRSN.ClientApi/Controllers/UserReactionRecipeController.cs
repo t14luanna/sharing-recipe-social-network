@@ -221,6 +221,21 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("get-count-favorite-recipe")]
+        public async Task<ActionResult> CountFavoriteRecipe(string username)
+        {
+            try
+            {   var user = await userManager.FindByNameAsync(username);
+                int userId = user.Id;
+                int count = selfService.Get(p => p.UserId == userId && p.IsLike == true).ToList().Count;
+                return Ok(new { count = count});
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("get-userid-by-commentparentId")]
         public async Task<ActionResult> GetUserIdFromCommentParentId(int commentParentId)
         {

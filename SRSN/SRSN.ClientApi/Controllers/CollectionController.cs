@@ -71,9 +71,17 @@ namespace SRSN.ClientApi.Controllers
                 message = $"Ban xoa thanh con Bo Suu Tap: {request.CollectionName}"
             });
         }
-
-        [HttpGet("read-by-Id")]
+        [HttpGet("count-collections")]
         [AllowAnonymous]
+        public async Task<ActionResult> CountCollections(string username)
+        {
+            var user = await this.userManager.FindByNameAsync(username);
+            int userId = user.Id;
+            int count = collectionService.Get(p => p.UserId == userId && p.Active == true).ToList().Count;
+            return Ok(new { count = count });
+        }
+        [HttpGet("read-by-Id")]
+        [AllowAnonymous]    
         public async Task<ActionResult> ReadByCollectionId(int collectionId)
         {
             try

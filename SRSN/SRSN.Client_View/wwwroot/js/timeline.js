@@ -120,10 +120,7 @@ const createShareRecipePost = (post, recipe) =>
                                             </li>`;
 
 const callTimeLineApi = async (username, limit = 10, page = 0) => {
-    var friendsRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-following-user?userName=` + username);
-    var friendData = await friendsRes.json();
-    var countFriends = friendData.length;
-    $("#count-friends").text(countFriends);
+   
 
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];

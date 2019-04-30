@@ -118,6 +118,9 @@ const callReadCollectionApi = async (userName, limit = 9, page = 0) => {
         $(".main-contain-collection").append(content);
         callReadRecipeCountApi(item.id);
     }
+
+    if (data.length < limit)
+        $(".recipe-more").remove();
 };
 const callReadRecipeCountApi = async (collectionId) => {
     var authorization = localStorage.getItem("authorization");

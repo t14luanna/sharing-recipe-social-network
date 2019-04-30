@@ -113,12 +113,11 @@ if (usernameLocal != null) {
 }
 //update all child isRead = True
 function changeStatusNoti() {
-
     SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": "0" });
     $("#number-of-notification").text("");
 }
 var createSingleNoti = (noti, isRead) =>
-    `<li style="width: 100%;${isRead}"><a href="${noti.link}"><b>${noti.username}</b> ${noti.content}</a></li>`;
+    `<li style="width: 100%;${isRead}"><a href="${noti.link}" onclick="isReadNotication('${noti.uid}')"><b>${noti.username}</b> ${noti.content}</a></li>`;
 function displayNotifi() {
     $(`#list-notification`).html("");//xóa cái củ, để vào cái mới
 
@@ -129,6 +128,12 @@ function displayNotifi() {
     }
 
 
+};
+function isReadNotication(uidKey) {
+    //update uid into firebase 
+    SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uidKey).update({
+        isRead : "True"
+    });
 };
 function displayCountNotifi() {
     var countNoti = 0;
