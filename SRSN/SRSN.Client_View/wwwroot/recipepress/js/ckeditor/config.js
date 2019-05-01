@@ -29,6 +29,7 @@ CKEDITOR.editorConfig = function (config) {
     config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
     // Dialog windows are also simplified.
     config.removeDialogTabs = 'link:advanced';
+    config.entities_latin = false;
     config.mentions = [
         {
             feed: `${BASE_API_URL}/${RECIPE_API_URL}/read-recipe-by-name?recipeName={encodedQuery}`,
@@ -48,4 +49,8 @@ CKEDITOR.editorConfig = function (config) {
 
         }
     ];
+    config.basicEntities = false;
+    config.entities_greek = false;
+    config.entities_latin = false;
+    config.entities_additional = '';
 }

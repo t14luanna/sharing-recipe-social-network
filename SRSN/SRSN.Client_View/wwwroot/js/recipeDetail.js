@@ -1252,3 +1252,55 @@ const callSuggestRecipeApi = async () => {
         }
     }
 };
+var apikeyFilestack = 'A1p11nq0RoGb8BRod5sOgz';
+var clientFilestack = filestack.init(apikeyFilestack);
+var onProgress = (evt) => {
+    document.getElementById('progress').innerHTML = `${evt.totalPercent}%`;
+};
+$('#upload-image').on("change", function (e) {
+    const files = event.target.files;
+    const file = files.item(0);
+    if (files && file) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#fileUploadedPreview').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(file);
+    }
+});
+$("#comment-form").submit(function (e) {
+    e.preventDefault();
+    const token = {};
+    var file = $('#fileUploadedPreview').attr('src');
+    var authorization = localStorage.getItem("authorization");
+    var username = localStorage.getItem("username");
+    var tokenAuthorize = (JSON.parse(authorization))["token"];
+    clientFilestack.upload(file, {}, {}, token)
+        .then(res => {
+            $('#fileUploadedLink').val(res.url);
+            $('#fileUploadedPreview').attr('src', res.url);
+            var formData = $('#comment-form').serializeArray();
+            var data = {};
+            $.map(formData, function (n, i) {
+                data[n['name']] = n['value'];
+            });
+            fetch(`${BASE_API_URL}/api/collection/create`, {
+                method: 'POST', // or 'PUT'
+                body: JSON.stringify(data), // data can be `string` or {object}!
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokenAuthorize}`
+                }
+            }).then(res => {
+                if (res.status == 200) {
+                    $("#modal-create-new-collection").hide();
+                    $("#modal-body-add-collection").html("");
+                    callReadCollectionModalApi();
+                }
+            }).catch(error => console.error('Error:', error));
+
+        })
+        .catch(err => {
+            console.log(err)
+        });
+});

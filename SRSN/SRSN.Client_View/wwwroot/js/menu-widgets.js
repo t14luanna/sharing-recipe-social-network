@@ -113,6 +113,7 @@ const createSingleSmallRecentRecipeElement = (recipe) =>
 const loadRecipeLocalStorage = async () => {
     if (localStorage.getItem('recentRecipe') == null) {
         $("#list-recent-recipe").html("Chưa có thông tin!");
+        $("#recipe-seen-content").hide();
     } else {
         var array = JSON.parse(localStorage.getItem('recentRecipe'));
         for (var i = 0; i < array.length; i++) {
@@ -124,6 +125,7 @@ const loadRecipeLocalStorage = async () => {
 const loadRecipeSmallLocalStorage = async () => {
     if (localStorage.getItem('recentRecipe') == null) {
         $("#list-recent-recipe").html("Chưa có thông tin!");
+        
     } else {
         var array = JSON.parse(localStorage.getItem('recentRecipe'));
         for (var i = 0; i < array.length; i++) {
