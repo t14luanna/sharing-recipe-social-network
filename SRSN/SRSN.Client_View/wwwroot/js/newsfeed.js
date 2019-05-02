@@ -529,6 +529,8 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentOwner, comment
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var comment = $(`textarea[name="comment-${recipeId}"]`).val();
+    
+    
     if (comment != "") {
         if (commentParentID != 0) {
             var data = {
