@@ -185,7 +185,7 @@ const callOpenCommentPostApi = async (postRecipeId, recipeOwner) => {
     indexUser = data;
     var elementComment = openCommentPost(data, postRecipeId, recipeOwner);
     $(`.container-${postRecipeId}`).append(elementComment);
-    $(`textarea[name=comment-${recipeId}]`).ckeditor();
+    $(`textarea[name=comment-${postRecipeId}]`).ckeditor();
 };
 
 const createCountLine = (count, recipeId) => `<p class="update-like-${recipeId}">${count.likeCount} lượt thích, ${count.shareCount} lượt chia sẻ</p>`;
