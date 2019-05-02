@@ -442,6 +442,45 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
     var token = (JSON.parse(authorization))["token"];
 
     var comment = $(`textarea[name="comment-${recipeId}"]`).val();
+    var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    });
+    var userInfo = await userRes.json();
+    var commentTmp = comment.split(`timeline/`);
+    var username;
+    for (var i = 0; i < commentTmp.length; i++) {
+        if (i >= 1) {
+            var cmt = commentTmp[i].split(`"`);
+            username = cmt[0];
+            var myDataRef = SRSN.FIREBASE_DATABASE.ref(username);//người sở hữu công thức
+            var uid = myDataRef.push({
+                "uid": "",
+                "username": userInfo.lastName + " " + userInfo.firstName,
+                "content": " đã nhắc đến bạn trong một bình luận",
+                "date": new Date().toLocaleString(),
+                "link": "/sharerecipe/" + recipeId,
+                "isRead": "False"
+            });
+            //update uid into firebase 
+            SRSN.FIREBASE_DATABASE.ref("/" + username + "/" + uid.key).update({
+                uid: uid.key
+            });
+            //update count notifi
+            var countNoti = 0;
+            var countDataRef = SRSN.FIREBASE_DATABASE.ref(username);
+
+            countDataRef.once('value', function (snapshot) {
+                countNoti = snapshot.val().numberOfLatestNotis;
+                countNoti++;
+                SRSN.FIREBASE_DATABASE.ref(username).update({ "numberOfLatestNotis": countNoti });
+            });
+        }
+
+    }
     if (comment != "") {
         if (commentParentId != 0) {
             var data = {
@@ -477,7 +516,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
             //username local: người đang login
             //comment parent id : có đang tl cho comment nào ko
             var userData = await userRes.json();
-            if (recipeOwner != usernameLocal && commentParentId == 0) {
+            if (commentOwner == "" && recipeOwner != usernameLocal && commentParentId == 0) {
                 
                 //comment notification
                 //Đánh giá (comment) công thức firebase
@@ -504,7 +543,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
                 SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
                     uid: uid.key
                 });
-            } else if (commentParentOwner != usernameLocal && commentParentId != 0) {//thông báo trả lời comment
+            } else if (commentParentOwner != "" && commentParentOwner != recipeOwner && commentParentId != 0) {//thông báo trả lời comment
                 //Đánh giá (comment) công thức firebase
                 //update count notifi
                 var countNoti = 0;
@@ -533,7 +572,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
 
                 //update count notifi
                 var countNoti2 = 0;
-                var countDataRef = SRSN.FIREBASE_DATABASE.ref(commentParentOwner);
+                countDataRef = SRSN.FIREBASE_DATABASE.ref(commentParentOwner);
 
                 countDataRef.once('value', function (snapshot) {
                     countNoti2 = snapshot.val().numberOfLatestNotis;
@@ -541,7 +580,7 @@ const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, c
                     SRSN.FIREBASE_DATABASE.ref(recipeOwner).update({ "numberOfLatestNotis": countNoti2 });
                 });
 
-                var myDataRef = SRSN.FIREBASE_DATABASE.ref(commentParentOwner);//người sở hữu comment
+                myDataRef = SRSN.FIREBASE_DATABASE.ref(commentParentOwner);//người sở hữu comment
                 var uid2 = myDataRef.push({
                     "uid": "",
                     "username": userData.lastName + " " + userData.firstName,
@@ -644,7 +683,7 @@ const openReplyComment = (commentId, recipeId, recipeOwner, commentOwner, commen
                     <div class="comment comment-newsfeeds">
                         <div class="comment-form">
                             <textarea class="reply-comment" name="comment-${recipeId}" id="message" cols="3" rows="3">${commentOwner ? `<p><a href="/account/timeline/${commentUsername}" data-user-id="{id}" class="href-mention-fullname">${commentOwner}</a><p> ` : ``}</textarea>
-                             <a onclick="callCreateCommentApi(${recipeId},'${recipeOwner}','${commentOwner}', '${commentId}' )" class="reply-button">Đăng</a>
+                             <a onclick="callCreateCommentApi(${recipeId},'${recipeOwner}','${commentUsername}', '${commentId}' )" class="reply-button">Đăng</a>
                         </div>
                     </div>
                 </li>
