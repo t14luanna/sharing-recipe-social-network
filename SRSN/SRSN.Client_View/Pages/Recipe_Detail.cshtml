@@ -70,7 +70,7 @@
 
                         <div class="about-chef"></div>
                         <div class="recipe-set" id="suggest-recipe">
-                            <h3 class="lined"  id="title-maybe-like">
+                            <h3 class="lined" id="title-maybe-like">
                                 Có thể bạn thích
                             </h3>
                             <div class="boxed-recipes text-center" id="list-suggest-recipe">
@@ -272,7 +272,41 @@
             <div class="col-md-12 modal-header">
                 <h4 class="title-modal-collection">Thêm vào bộ sưu tập<span id="close-add-collection" class="close">&times;</span></h4>
             </div>
-            <div class="col-md-12 modal-body" id="modal-body-add-collection">
+            <div class="col-md-12 modal-body">
+                <div class="col-md-12">
+                    <label class="btn-action-collection" style="float: right">
+                        <a id="btn-create-new-collection" class="default-btn min-width-button theme-color">Tạo mới Bộ sưu tập</a>
+                    </label>
+                </div>
+                <div class="col-md-12"  id="modal-body-add-collection">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="modal-create-new-collection" class="modal">
+        <!-- Modal content -->
+        <div class="row modal-content modal-share-content">
+            <div class="col-md-12 modal-header">
+                <span id="close-modal-create-new-collection" class="close">&times;</span>
+            </div>
+            <div class="col-md-12 modal-body comments-form">
+                <form id="comment-form" action="#">
+                    <label for="name">Tên bộ sưu tập</label>
+                    <input type="text" name="collectionName" id="name">
+                    <br>
+                    <label for="email">Ảnh đại diện</label>
+                    <input type="file" name="fileUpload" id="upload-image" value="Nhấp vào đây tải hình" class="upload-collection-image">
+                    <input type="hidden" name="coverImage" id="fileUploadedLink">
+                    <br />
+                    @*<div>Tiến độ: <span id="progress"></span></div>*@
+                    <br />
+                    <img src="#" id="fileUploadedPreview" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" />
+                    <br />
+                    <br />
+                    <input type="submit" value="Tạo">
+                </form>
             </div>
         </div>
 
@@ -286,6 +320,7 @@
             window.location.href = "/login";
         }
     </script>
+    <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
     <script src="~/js/recipeDetail.js"></script>
     <script type="text/javascript" src="/recipepress/js/plugins.min.js"></script>
     <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
@@ -367,7 +402,7 @@
                     await callListCategoryItem();
                     await RedirectAPI();
 
-                    
+
                     $('.slider-detail2').slick({
                         autoplay: true,
                         infinite: true,
@@ -567,9 +602,19 @@
                         el.style.cssText = 'height:' + el.scrollHeight + 'px';
                     }, 0);
                 }
+        $("#btn-create-new-collection").on("click", function (e) {
+            $("#modal-create-new-collection").css("display", "block");
+        });
 
+        $("#close-modal-create-new-collection").on("click", function (e) {
+            $("#modal-create-new-collection").css("display", "none");
 
-
+        });
+        window.onclick = function (event) {
+            if (event.target.id == "modal-create-new-collection") {
+                $("#modal-create-new-collection").css("display", "none");
+            }
+        };
     </script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo&callback=initMap">

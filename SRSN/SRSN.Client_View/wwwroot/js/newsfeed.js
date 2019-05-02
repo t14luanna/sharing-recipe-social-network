@@ -481,8 +481,8 @@ const callOpenCommentPostApi = async (recipeId, recipeOwner) => {
     var userData = await res.json();
     indexUser = userData;
     var elementComment = openCommentPost(userData, recipeId, recipeOwner);
-    $(`.container-${recipeId}`).append(elementComment)
-    $(`textarea[name=comment-${recipeId}]`).ckeditor()
+    $(`.container-${recipeId}`).append(elementComment);
+    $(`textarea[name=comment-${recipeId}]`).ckeditor();
 
     $(`.delete-comment-${userData.id}`).css("display", "block");
 };
@@ -721,8 +721,8 @@ const createSingleReplyComment = (comment, recipeOwner) => {
 function openReplyView(commentId, commentRecipeId, commentOwner, commentUsername, recipeOwner) {
     $(".comment-post-li").remove();
     var elementComment = openReplyComment(commentId, commentRecipeId, recipeOwner, commentOwner, commentUsername);
-    $(`.container-${commentRecipeId}`).append(elementComment)
-    $(`textarea[name=comment-${commentRecipeId}`).ckeditor()
+    $(`.container-${commentRecipeId}`).append(elementComment);
+    $(`textarea[name=comment-${commentRecipeId}`).ckeditor();
     $(`#delete-comment-${commentOwner}`).css("display", "block");            
 
 };
@@ -759,45 +759,49 @@ var callTopSuggestUserApi = async () => {
     var dataCheck = (await resCheck.json());
     var count = 0
     $("#top-user-list").html("")
-    for (var item of data) {
-        var rankUser;
-        var classRank;
-        count++;
-        if (count > 6) {
-            break;
-        }
-        if (item.point >= 0 && item.point <= 99) {
-            rankUser = "Newbee";
-            classRank = "user-lvl newbee";
-        } else if (item.point >= 100 && item.point <= 499) {
-            rankUser = "Tastee";
-            classRank = "user-lvl tastee";
-        } else if (item.point >= 500 && item.point <= 999) {
-            rankUser = "Cookee";
-            classRank = "user-lvl cookee";
-        } else if (item.point >= 1000 && item.point <= 4999) {
-            rankUser = "Chefee";
-            classRank = "user-lvl chefee";
-        } else if (item.point >= 5000) {
-            rankUser = "Mastee";
-            classRank = "user-lvl mastee";
-        }
-        var description = item.description == null ? "" : item.description;
-        item.description = description;
-        let isFollowed = checkFollowUser(item.id, dataCheck);
-        let element = isFollowed ? followed_UserElement(item, rankUser, classRank) : follow_UserElement(item, rankUser, classRank);
-        $("#top-user-list").append(element);
+    if (data.length != 0) {
+        for (var item of data) {
+            var rankUser;
+            var classRank;
+            count++;
+            if (count > 6) {
+                break;
+            }
+            if (item.point >= 0 && item.point <= 99) {
+                rankUser = "Newbee";
+                classRank = "user-lvl newbee";
+            } else if (item.point >= 100 && item.point <= 499) {
+                rankUser = "Tastee";
+                classRank = "user-lvl tastee";
+            } else if (item.point >= 500 && item.point <= 999) {
+                rankUser = "Cookee";
+                classRank = "user-lvl cookee";
+            } else if (item.point >= 1000 && item.point <= 4999) {
+                rankUser = "Chefee";
+                classRank = "user-lvl chefee";
+            } else if (item.point >= 5000) {
+                rankUser = "Mastee";
+                classRank = "user-lvl mastee";
+            }
+            var description = item.description == null ? "" : item.description;
+            item.description = description;
+            let isFollowed = checkFollowUser(item.id, dataCheck);
+            let element = isFollowed ? followed_UserElement(item, rankUser, classRank) : follow_UserElement(item, rankUser, classRank);
+            $("#top-user-list").append(element);
 
-        var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read?userId=${item.id}`);
-        var recipeData = await recipeRes.json();
-        $(".countRecipe-" + item.id).text(recipeData.length);
-        var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${item.id}`);
-        var userData = await userRes.json();
-        $(".countFollowing-" + item.id).text(userData.length);
-        if (item.username == userName) {
-            $(`.btnFollow-${item.id}`).remove();
-        }
-    };
+            var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read?userId=${item.id}`);
+            var recipeData = await recipeRes.json();
+            $(".countRecipe-" + item.id).text(recipeData.length);
+            var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${item.id}`);
+            var userData = await userRes.json();
+            $(".countFollowing-" + item.id).text(userData.length);
+            if (item.username == userName) {
+                $(`.btnFollow-${item.id}`).remove();
+            }
+        };
+    } else {
+        $('#top-suggest-friends').hide()
+    }
 }
 const followed_UserElement = (user, rankUser, classRank) =>
     `<div class="member-item-wrapper">

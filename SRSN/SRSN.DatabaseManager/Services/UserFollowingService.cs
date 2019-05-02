@@ -141,7 +141,7 @@ namespace SRSN.DatabaseManager.Services
         {
             var listAccount = new List<AccountViewModel>();
 
-            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE Active='True' AND FollowingUserId=" + followingUserId).ToListAsync();
+            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE  Active= 1 AND UserId=" + followingUserId).ToListAsync();
 
             foreach (var item in listItems)
             {

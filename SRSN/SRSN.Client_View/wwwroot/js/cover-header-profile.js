@@ -1,5 +1,6 @@
 ﻿const apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
 const client = filestack.init(apikey);
+var countFollowing = 0;
 function uploadFile(file) {
     return new Promise((resolve, reject) => {
         client.upload(file)
@@ -149,14 +150,68 @@ async function followUserFuntion(userId) {
         .then(res => res.json())
         .then(response => {
             if (response.success) {
-                $(".follow-area").html(btnFollowed(userId));
+                $(`.follow-area-${userId}`).html(btnFollowed(userId));
+                countFollowing++;
+                $(`.countFollowing-${userId}`).text(countFollowing);
+                $("#count-friends").text(Number.parseInt($("#count-friends").text()) + 1);
                 //thông báo follow user
                 callNotification(userId);
 
             }
         });
 };
-
+const callNotification = async (userId) => {
+    var userNameLocalStorage = localStorage.getItem("username");
+    var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
+    var userData = await userRes.json();
+    var myDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
+    var uid = myDataRef.push({
+        "uid": "",
+        "username": userNameLocalStorage,
+        "content": "đang theo dõi bạn",
+        "date": new Date().toLocaleString(),
+        "link": "/account/information/" + userData.username,
+        "isRead": "False"
+    });
+    //update uid into firebase
+    SRSN.FIREBASE_DATABASE.ref("/" + userData.username + "/" + uid.key).update({
+        uid: uid.key
+    });
+};
+const btnFollow = (userId) => `<div class="follow-btn-custom"  onclick="followUserFuntion(${userId})">
+                            <input type="hidden" value="${userId}" id="following-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default">
+                                        <a title="Quan tâm" href="javascript:void(0)">
+                                            <span class="fa fa-user-plus"></span>
+                                            <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                            <span>Theo dõi</span>
+                                        </a>
+                                        <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${userId}"></span>
+                                        </span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>`;
+const btnFollowed = (userId) => `
+<div class="follow-btn-custom"  onclick="unfollowUserFuntion(${userId})">
+                            <input type="hidden" value="${userId}" id="unfollowing-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default" data-bind="visible: status()==1">
+                                    <a title="Hủy quan tâm" href="javascript:void(0)" data-bind="click:remove">
+                                        <span class="fa fa-check"></span>
+                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                        <span>Đang theo dõi</span>
+                                    </a>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${userId}"></span>
+                                </span>
+                                </div>
+                              </div>
+                            </div>`;
 async function unfollowUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
     var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userNameLocalStorage + "&userFollowingId=" + userId)
@@ -164,7 +219,10 @@ async function unfollowUserFuntion(userId) {
         .then(response => {
             if (response.success) {
                 //location.reload();
-                $(".follow-area").html(btnFollow(userId));
+                $(`.follow-area-${userId}`).html(btnFollow(userId));
+                countFollowing--;
+                $(`.countFollowing-${userId}`).text(countFollowing);
+                $("#count-friends").text(Number.parseInt($("#count-friends").text()) - 1);
             }
         });
 };
@@ -175,7 +233,7 @@ const loadAvatarContainer = async (username) => {
     var userNameLocalStorage = localStorage.getItem("username");
     var res;
     var data;
-    if (username == userNameLocalStorage) {
+    if (username.toLowerCase() == userNameLocalStorage.toLowerCase()) {
         var authorization = localStorage.getItem("authorization");
         var token = (JSON.parse(authorization))["token"];
         res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
@@ -206,9 +264,9 @@ const loadAvatarContainer = async (username) => {
 
     var isFollowed = checkFollow(data.id, dataCheck);
     data.description = data.description == null ? "" : data.description;
-
+    countFollowing = userData.length;
     var element = isFollowed ? createAvatarContainerUnfollow(data, userData.length) : createAvatarContainer(data, userData.length);
-   
+    $('#count-friends').html(userData.length);
     $("#avatar-container").append(element);
     if (username == userNameLocalStorage) {
         $(".edit").show();
@@ -251,18 +309,8 @@ const loadAvatarContainer = async (username) => {
         $("#btnReportUser").remove();
 
     }
-    //count friends
-    var authorization = localStorage.getItem("authorization");
-    var token = (JSON.parse(authorization))["token"];
-    var followingUserRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/get-count-following-user`, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    });
-    var followingUserData = await followingUserRes.json();
-    $('#count-friends').html(followingUserData.countFollowingUser);
+
+    
     //count my recipe
     var countRecipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/get-count-my-recipe?username=${username}`);
     var countRecipes = await countRecipeRes.json();

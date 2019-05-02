@@ -182,8 +182,10 @@ const callOpenCommentPostApi = async (postRecipeId, recipeOwner) => {
         }
     });
     var data = await res.json();
+    indexUser = data;
     var elementComment = openCommentPost(data, postRecipeId, recipeOwner);
-    $(`.container-${postRecipeId}`).append(elementComment)
+    $(`.container-${postRecipeId}`).append(elementComment);
+    $(`textarea[name=comment-${recipeId}]`).ckeditor();
 };
 
 const createCountLine = (count, recipeId) => `<p class="update-like-${recipeId}">${count.likeCount} lượt thích, ${count.shareCount} lượt chia sẻ</p>`;
@@ -233,7 +235,7 @@ const createSingleReplyComment = (comment, recipeOwner) => {
                         
                 <div class="acomment--content">${comment.commentContent}
                 </div>
-                    <a href="#/" id="comment-link-${comment.id}" onclick="openReplyView(${comment.id}, ${comment.recipeId}, '${comment.fullName}', '${recipeOwner}')" class="reply-button reply-newsfeed-comment">Trả lời</a>                        
+                    <a href="#/" id="comment-link-${comment.id}" onclick="openReplyView(${comment.id}, ${comment.recipeId}, '${comment.fullName}', '${comment.username}', '${recipeOwner}')" class="reply-button reply-newsfeed-comment">Trả lời</a>                        
             </div>
         </div>
     </li>`;
@@ -252,12 +254,26 @@ const openCommentPost = (user, postRecipeId, recipeOwner, commentOwner) => `<li 
                     </div>
                 </li>
             </ul></div></li>`;
-function openReplyView(commentId, postRecipeId, commentOwner, recipeOwner) {
+function openReplyView(commentId, commentRecipeId, commentOwner, commentUsername, recipeOwner) {
     $(".comment-post-li").remove();
-    var elementComment = openCommentPost(commentId, postRecipeId, recipeOwner, commentOwner);
-    $(`.container-${postRecipeId}`).append(elementComment)
-};
+    var elementComment = openReplyComment(commentId, commentRecipeId, recipeOwner, commentOwner, commentUsername);
+    $(`.container-${commentRecipeId}`).append(elementComment);
+    $(`textarea[name=comment-${commentRecipeId}`).ckeditor();
 
+};
+const openReplyComment = (commentId, recipeId, recipeOwner, commentOwner, commentUsername) => `<li class="comment-newsfeed-li comment-post-li"><div class="recipe-comments comment-post-container"><ul class="reply-baongoc">
+                <li>
+                    <div class="acomment--avatar">
+                        <a href="#"><img class="user-reply-comment user-comment" src="${indexUser.avatarImageUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"></a>
+                    </div>
+                    <div class="comment comment-newsfeeds">
+                        <div class="comment-form">
+                            <textarea class="reply-comment" name="comment-${recipeId}" id="message" cols="3" rows="3">${commentOwner ? `<p><a href="/account/timeline/${commentUsername}" data-user-id="{id}" class="href-mention-fullname">${commentOwner}</a><p> ` : ``}</textarea>
+                             <a onclick="callCreateCommentApi(${recipeId},'${recipeOwner}','${commentOwner}', '${commentId}' )" class="reply-button">Đăng</a>
+                        </div>
+                    </div>
+                </li>
+            </ul></div></li>`;
 const callCreateCommentApi = async (postRecipeId, recipeOwner, commentOwner) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
