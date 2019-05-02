@@ -393,7 +393,7 @@
                                 myDataRef = firebase.database().ref(followingMe);
                                 uid = myDataRef.push({
                                     "uid": "",
-                                    "username": userInfo.lastName + " " + userInfo.firstName,
+                                    "username": userData.lastName + " " + userData.firstName,
                                     "content": "đã chia sẻ công thức mới",
                                     "date": new Date().toLocaleString(),
                                     "link": "/recipe/" + recipeId,

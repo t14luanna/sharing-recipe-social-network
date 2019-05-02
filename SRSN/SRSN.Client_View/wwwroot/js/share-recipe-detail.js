@@ -103,7 +103,7 @@ const callSharedReipeDetail = async (recipeId) => {
         callCountActionApi(sharedRes[0].id);
     }
 
-    
+
 
 };
 const callCountActionApi = async (recipeId) => {
@@ -144,7 +144,7 @@ async function toggleLikeButton(x, recipeId, recipeOwner) {
             if (usernameLocal == recipeOwner) {
                 //do nothing
             } else {
-                
+
                 var myDataRef = firebase.database().ref(recipeOwner);//chủ của recipe
                 var uid = myDataRef.push({
                     "uid": "",
@@ -269,7 +269,7 @@ const openReplyComment = (commentId, recipeId, recipeOwner, commentOwner, commen
                     <div class="comment comment-newsfeeds">
                         <div class="comment-form">
                             <textarea class="reply-comment" name="comment-${recipeId}" id="message" cols="3" rows="3">${commentOwner ? `<p><a href="/account/timeline/${commentUsername}" data-user-id="{id}" class="href-mention-fullname">${commentOwner}</a><p> ` : ``}</textarea>
-                             <a onclick="callCreateCommentApi(${recipeId},'${recipeOwner}','${commentOwner}', '${commentId}' )" class="reply-button">Đăng</a>
+                             <a onclick="callCreateCommentApi(${recipeId},'${recipeOwner}','${commentUsername}', '${commentId}' )" class="reply-button">Đăng</a>
                         </div>
                     </div>
                 </li>
@@ -277,7 +277,46 @@ const openReplyComment = (commentId, recipeId, recipeOwner, commentOwner, commen
 const callCreateCommentApi = async (postRecipeId, recipeOwner, commentOwner) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
+    var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    });
+    var userInfo = await userRes.json();
     var comment = $(`textarea[name="comment-${postRecipeId}"]`).val();
+    var commentTmp = comment.split(`timeline/`);
+    var username;
+    for (var i = 0; i < commentTmp.length; i++) {
+        if (i >= 1) {
+            var cmt = commentTmp[i].split(`"`);
+            username = cmt[0];
+            var myDataRef = SRSN.FIREBASE_DATABASE.ref(username);//người sở hữu công thức
+            var uid = myDataRef.push({
+                "uid": "",
+                "username": userInfo.lastName + " " + userInfo.firstName,
+                "content": " đã nhắc đến bạn trong một bình luận",
+                "date": new Date().toLocaleString(),
+                "link": "/sharerecipe/" + recipeId,
+                "isRead": "False"
+            });
+            //update uid into firebase 
+            SRSN.FIREBASE_DATABASE.ref("/" + username + "/" + uid.key).update({
+                uid: uid.key
+            });
+            //update count notifi
+            var countNoti = 0;
+            var countDataRef = SRSN.FIREBASE_DATABASE.ref(username);
+
+            countDataRef.once('value', function (snapshot) {
+                countNoti = snapshot.val().numberOfLatestNotis;
+                countNoti++;
+                SRSN.FIREBASE_DATABASE.ref(username).update({ "numberOfLatestNotis": countNoti });
+            });
+        }
+
+    }
     if (comment != "") {
         var data = {
             recipeId: postRecipeId,
@@ -294,14 +333,14 @@ const callCreateCommentApi = async (postRecipeId, recipeOwner, commentOwner) => 
         if (res.status == 200) {
             await callOpenCommentPostApi(postRecipeId, recipeOwner);
             var usernameLocal = window.localStorage.getItem("username");//người đang comment
-            if (commentOwner == "") {
+            if (commentOwner == "" && recipeOwner != usernameLocal) {
                 //comment notification
                 //Đánh giá (comment) công thức firebase
-                
+
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": usernameLocal,
+                    "username": userInfo.lastName + " " + userInfo.firstName,
                     "content": "đã bình luận công thức của bạn",
                     "date": new Date().toLocaleString(),
                     "link": "/sharerecipe/" + postRecipeId,
@@ -311,44 +350,64 @@ const callCreateCommentApi = async (postRecipeId, recipeOwner, commentOwner) => 
                 SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
                     uid: uid.key
                 });
+                //update count notifi
+                var countNoti = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
+
+                countDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref(recipeOwner).update({ "numberOfLatestNotis": countNoti });
+                });
             } else
-                if (commentOwner != "") {//thông báo trả lời comment
+                if (commentOwner != "" && commentOwner != recipeOwner) {//thông báo trả lời comment
                     //Đánh giá (comment) công thức firebase
-                    if (recipeOwner != usernameLocal) {
 
+                    var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
+                    var uid1 = myDataRef.push({
+                        "uid": "",
+                        "username": userInfo.lastName + " " + userInfo.firstName,
+                        "content": "đã trả lời bình luận về công thức của bạn",
+                        "date": new Date().toLocaleString(),
+                        "link": "/sharerecipe/" + data.recipeId,
+                        "isRead": "False"
+                    });
+                    //update uid into firebase 
+                    SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid1.key).update({
+                        uid: uid1.key
+                    });
+                    //update count notifi
+                    var countNoti = 0;
+                    var countDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
 
-                        var myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);//người sở hữu công thức
-                        var uid1 = myDataRef.push({
-                            "uid": "",
-                            "username": usernameLocal,
-                            "content": "đã trả lời bình luận về công thức của bạn",
-                            "date": new Date().toLocaleString(),
-                            "link": "/sharerecipe/" + postRecipeId,
-                            "isRead": "False"
-                        });
-                        //update uid into firebase 
-                        SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid1.key).update({
-                            uid: uid1.key
-                        });
-                    }
-                    usernameLocal = window.localStorage.getItem("username");//người đang comment
-                    if (usernameLocal != commentOwner) {
+                    countDataRef.once('value', function (snapshot) {
+                        countNoti = snapshot.val().numberOfLatestNotis;
+                        countNoti++;
+                        SRSN.FIREBASE_DATABASE.ref(recipeOwner).update({ "numberOfLatestNotis": countNoti });
+                    });
 
-                        var myDataRef = SRSN.FIREBASE_DATABASE.ref(commentOwner);//người sở hữu comment
+                    var myDataRef = SRSN.FIREBASE_DATABASE.ref(commentOwner);//người sở hữu comment
+                    var uid2 = myDataRef.push({
+                        "uid": "",
+                        "username": userInfo.lastName + " " + userInfo.firstName,
+                        "content": "đã trả lời bình luận của bạn",
+                        "date": new Date().toLocaleString(),
+                        "link": "/sharerecipe/" + data.recipeId,
+                        "isRead": "False"
+                    });
+                    //update uid into firebase 
+                    SRSN.FIREBASE_DATABASE.ref("/" + commentOwner + "/" + uid2.key).update({
+                        uid: uid2.key
+                    });
+                    //update count notifi
+                    var countNoti = 0;
+                    var countDataRef = SRSN.FIREBASE_DATABASE.ref(commentOwner);
 
-                        var uid2 = myDataRef.push({
-                            "uid": "",
-                            "username": usernameLocal,
-                            "content": "đã trả lời bình luận của bạn",
-                            "date": new Date().toLocaleString(),
-                            "link": "/sharerecipe/" + postRecipeId,
-                            "isRead": "False"
-                        });
-                        //update uid into firebase 
-                        SRSN.FIREBASE_DATABASE.ref("/" + commentOwner + "/" + uid2.key).update({
-                            uid: uid2.key
-                        });
-                    }
+                    countDataRef.once('value', function (snapshot) {
+                        countNoti = snapshot.val().numberOfLatestNotis;
+                        countNoti++;
+                        SRSN.FIREBASE_DATABASE.ref(commentOwner).update({ "numberOfLatestNotis": countNoti });
+                    });
                 }
 
         }
