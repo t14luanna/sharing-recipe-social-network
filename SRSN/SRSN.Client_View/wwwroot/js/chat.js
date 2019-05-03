@@ -445,7 +445,7 @@ let createChatUI = (chat, active) => {
     });
 
     return user_chat_item;
->>>>>>> 9a01158e02cf3f8dc8c9f7aa7edb5a72c4ea992a
+//>>>>>>> 9a01158e02cf3f8dc8c9f7aa7edb5a72c4ea992a
 }
 
 //----------------------------------------------------------------------------------

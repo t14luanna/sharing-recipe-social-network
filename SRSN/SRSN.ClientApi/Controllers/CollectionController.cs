@@ -40,7 +40,7 @@ namespace SRSN.ClientApi.Controllers
         {
             var userId = User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier).Value;
             request.UserId = userId;
-            var existed = collectionService.Get(u => u.CollectionRefId == request.CollectionRefId 
+            var existed = collectionService.Get(u => u.Id == request.Id 
             && request.UserId == userId && u.Active == false).FirstOrDefault();
             if (request.CollectionRefId != null)
             {

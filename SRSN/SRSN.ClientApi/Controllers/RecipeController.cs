@@ -620,6 +620,7 @@ namespace SRSN.ClientApi.Controllers
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             request.UserId = int.Parse(userId);
             request.CreateTime = DateTime.Now;
+            request.Active = true;
             await recipeService.UpdateIsShareReaction(request.ReferencedRecipeId.Value, request.UserId.Value);
             await recipeService.CreateAsync(request);
             var user = await this.userManager.FindByIdAsync(userId);

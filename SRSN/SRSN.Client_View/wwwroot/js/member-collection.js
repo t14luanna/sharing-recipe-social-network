@@ -35,10 +35,14 @@ $("#comment-form").submit(function (e) {
                         title: 'Thông báo',
                         text: 'Tạo bộ sưu tập thành công!',
                     });
+                    var elements = $(`.collection-item-container`);
+                    if (elements[0]) {
+                        elements.remove();
+                    }
                     callReadCollectionApi(username);
                 }
             }).catch(error => console.error('Error:', error));
-           
+
         })
         .catch(err => {
             console.log(err)
@@ -101,7 +105,7 @@ const callReadCollectionApi = async (userName, limit = 8, page = 0) => {
             'Authorization': `Bearer ${token}`
         }
     });
-    
+
     if (userName == localStorage.getItem("username")) {
         var actionBtn = $(`.btn-action-collection`);
         if (actionBtn[0]) {
@@ -110,10 +114,7 @@ const callReadCollectionApi = async (userName, limit = 8, page = 0) => {
         var btnCreateCollection = createButtonNewCollection();
         $(".btn-create-collection-container").append(btnCreateCollection);
     }
-    var elements = $(`.collection-item-container`);
-    if (elements[0]) {
-        elements.remove();
-    }
+
     var data = await res.json();
     if (data.length < limit) {
         $(".recipe-more").css("display", "none");

@@ -5,9 +5,9 @@
         .then(res => res.json())
         .then(response => {
             if (response.success) {
-                $(".follow-area-" + userId).html(btnFollowed(userId));
+                $(".follow-area-" + userId).html(btnFollowed1(userId));
                 //thông báo follow user
-                callNotification(userId);
+                callNotification1(userId);
                 $(".btnFollow-" + userId).html(btnFollowed_OnNewsfeed(userId));
 
                 check = true;
@@ -21,7 +21,7 @@
     }
 };
 
-const callNotification = async (userId) => {
+const callNotification1 = async (userId) => {
     var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
     var userData = await userRes.json();
     var authorization = localStorage.getItem("authorization");
@@ -67,7 +67,7 @@ async function unfollowUserFuntion(userId) {
         .then(res => res.json())
         .then(response => {
             if (response.success) {
-                $(".follow-area-" + userId).html(btnFollow(userId));
+                $(".follow-area-" + userId).html(btnFollow1(userId));
                 $(".btnFollow-" + userId).html(btnFollow_OnNewsfeed(userId));
 
                 check = true;
@@ -80,7 +80,7 @@ async function unfollowUserFuntion(userId) {
     }
 };
 
-const btnFollow = (userId) => `<div class="follow-btn-custom"  onclick="followUserFuntion(${userId})">
+const btnFollow1 = (userId) => `<div class="follow-btn-custom"  onclick="followUserFuntion(${userId})">
                             <div class="favourite clearfix">
                                <div id="friend-status-div" class="btn-friend-stat">
                                 <div data-bind="visible:true" style="">
@@ -96,7 +96,7 @@ const btnFollow = (userId) => `<div class="follow-btn-custom"  onclick="followUs
                                 </div>
                               </div>
                             </div>`;
-const btnFollowed = (userId) => `
+const btnFollowed1 = (userId) => `
 <div class="follow-btn-custom"  onclick="unfollowUserFuntion(${userId})">
                             <div class="favourite clearfix">
                                <div id="friend-status-div" class="btn-friend-stat">

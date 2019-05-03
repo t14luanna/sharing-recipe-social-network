@@ -471,32 +471,7 @@
 
                 });
                 // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function (event) {
-                    if (event.target.id == "modal-suggest-ingredients") {
-                        $("#modal-suggest-ingredients").css("display", "none");
-                    }
-                    if (event.target.id == "modal-share-recipe") {
-                        $("#modal-share-recipe").css("display", "none");
-                    }
-                    if (event.target.id == "modal-add-collection") {
-                        $("#modal-add-collection").css("display", "none");
-                    }
-                    if (event.target.className == 'modal-product-item') {
-                        listCheckedIngres = [];
-                        $("input[name=ingredient]:checked").each(function () {
-                            listCheckedIngres.push(this.value);
-                        });
-                        if ($("input[name='currentPosition']:checked").length > 0) {
-                            callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
-                        }
-                        else {
-                            callReadListIngredientNearByStoresApi(indexPosition.lat, indexPosition.lng, listCheckedIngres);
-                        }
-                        //var current = event.target;
-                        //var ingredientName = current.getAttribute('data-product-name');
-                        //callReadNearByStoresApi(pos.lat, pos.lng, ingredientName);
-                    }
-                }
+                
 
                 function filterIngredients() {
                     var input, filter, ul, li, a, i, txtValue;
@@ -647,7 +622,33 @@
                 }, 1000);
                 var verifyUserInterestingCleaner = function () {
                     clearInterval(verifyUserInteresting);
+        }
+        window.onclick = function (event) {
+            if (event.target.id == "modal-suggest-ingredients") {
+                $("#modal-suggest-ingredients").css("display", "none");
+            }
+            if (event.target.id == "modal-share-recipe") {
+                $("#modal-share-recipe").css("display", "none");
+            }
+            if (event.target.id == "modal-add-collection") {
+                $("#modal-add-collection").css("display", "none");
+            }
+            if (event.target.className == 'modal-product-item') {
+                listCheckedIngres = [];
+                $("input[name=ingredient]:checked").each(function () {
+                    listCheckedIngres.push(this.value);
+                });
+                if ($("input[name='currentPosition']:checked").length > 0) {
+                    callReadListIngredientNearByStoresApi(pos.lat, pos.lng, listCheckedIngres);
                 }
+                else {
+                    callReadListIngredientNearByStoresApi(indexPosition.lat, indexPosition.lng, listCheckedIngres);
+                }
+                //var current = event.target;
+                //var ingredientName = current.getAttribute('data-product-name');
+                //callReadNearByStoresApi(pos.lat, pos.lng, ingredientName);
+            }
+        }
     </script>
     <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
     <script src="~/js/recipe.js"></script>

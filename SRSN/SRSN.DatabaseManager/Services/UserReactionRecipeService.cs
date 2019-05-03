@@ -212,7 +212,7 @@ namespace SRSN.DatabaseManager.Services
             foreach (var item in listItems)
             {
                 var recipe = await recipeDbset.FindAsync(item.RecipeId);
-                if (recipe.ReferencedRecipeId == null)
+                if (recipe.ReferencedRecipeId == null && recipe.Active == true)
                 {
                     var recipeVM = new RecipeViewModel();
                     mapper.Map(recipe, recipeVM);
