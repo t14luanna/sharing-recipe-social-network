@@ -1209,3 +1209,8 @@ input[name=ingredient] {
 .list-popular-recipe-widget li{
     padding-top: 10px
 }
+.one-img-step-recipe {
+    background-position: center!important;
+    background-repeat: no-repeat!important;
+    background-size: cover!important;
+}

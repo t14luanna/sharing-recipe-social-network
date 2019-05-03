@@ -133,7 +133,7 @@ namespace SRSN.DatabaseManager.Services
             {
 
                 var recipe = await this.selfDbSet.FindAsync(id);
-                recipe.Active = !recipe.Active;
+                recipe.Active = false;
                 recipe.SaveDraft = false;
                 this.selfDbSet.Update(recipe);
                 await this.unitOfWork.CommitAsync();

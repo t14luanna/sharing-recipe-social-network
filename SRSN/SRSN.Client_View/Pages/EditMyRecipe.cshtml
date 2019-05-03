@@ -244,8 +244,9 @@
     <script type="text/javascript">
 
         async function saveDraft(isSystemSaveDraft) {
+            var savedraft = true;
             if (!isSystemSaveDraft) $("#loading-box").show();
-            var currentDraftedRecipe = getData(@(RouteData.Values["recipe_id"]));
+            var currentDraftedRecipe = getData(@(RouteData.Values["recipe_id"]), savedraft);
             var data = currentDraftedRecipe.data;
             data.recipeVM.SaveDraft = true;
             data.recipeVM.Id = $("#recipeId").val() ? $("#recipeId").val() : 0;
@@ -301,9 +302,10 @@
         };
 
         async function submitRecipe() {
+            var savedraft = false;
             $("#loading-box").show();
             var currentDraftedRecipe = JSON.parse(window.localStorage.getItem("darftedRecipe"));
-            var results = getData(currentDraftedRecipe, false);
+            var results = getData(currentDraftedRecipe, savedraft);
             var data = results.data;
             if (results.validation === false) {
                 window.scrollTo(0, 400);

@@ -78,7 +78,7 @@ const createStepImage = (imageUrl, count) => `<div class=" col-md-${count} img-s
 <img class="" src="${imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
 </div>`
 const createStepOneImage = imageUrl => `<div class="col-md-12">
-<img class="one-img-step-recipe" src="${imageUrl}" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
+<div class="one-img-step-recipe" style="background: url(${imageUrl})" alt="image" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
 </div>`
 const createSingleRelatedRecipe = (recipe) =>
     `<div class="recipe-single" onclick="saveToLocalStorage(${recipe.id},'${recipe.recipeName}', '${recipe.imageCover}',

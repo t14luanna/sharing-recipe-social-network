@@ -126,9 +126,16 @@ namespace SRSN.ClientApi.Controllers
         public async Task<ActionResult> ReadByUserId(string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
-            var userVM = new AccountViewModel();
-            mapper.Map(user, userVM);
-            return Ok(userVM);
+            if(user.Active == true)
+            {
+                var userVM = new AccountViewModel();
+                mapper.Map(user, userVM);
+                return Ok(userVM);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         //[HttpGet("read-username-profile")]
         //[AllowAnonymous]
@@ -244,7 +251,7 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                var isCorrect = userManager.Users.Where(u => u.UserName.Equals(username)).FirstOrDefault();
+                var isCorrect = userManager.Users.Where(u => u.UserName.Equals(username) && u.Active == true).FirstOrDefault();
                 var accountVM = new AccountViewModel();
                 mapper.Map(isCorrect, accountVM);
                 return Ok(accountVM);
