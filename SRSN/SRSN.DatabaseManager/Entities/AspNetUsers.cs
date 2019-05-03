@@ -13,12 +13,19 @@ namespace SRSN.DatabaseManager.Entities
             AspNetUserTokens = new HashSet<AspNetUserTokens>();
             Collection = new HashSet<Collection>();
             Comment = new HashSet<Comment>();
+            CommentLike = new HashSet<CommentLike>();
+            IngredientList = new HashSet<IngredientList>();
+            MessageCreator = new HashSet<Message>();
+            MessageRecipient = new HashSet<Message>();
+            Notification = new HashSet<Notification>();
+            Post = new HashSet<Post>();
             RatingRecipe = new HashSet<RatingRecipe>();
             Recipe = new HashSet<Recipe>();
             UserBlockBlockedUser = new HashSet<UserBlock>();
             UserBlockUser = new HashSet<UserBlock>();
             UserFollowingFollowingUser = new HashSet<UserFollowing>();
             UserFollowingUser = new HashSet<UserFollowing>();
+            UserReactionPost = new HashSet<UserReactionPost>();
             UserReactionRecipe = new HashSet<UserReactionRecipe>();
             UserReportRecipe = new HashSet<UserReportRecipe>();
             UserReportUserReportedUser = new HashSet<UserReportUser>();
@@ -57,12 +64,19 @@ namespace SRSN.DatabaseManager.Entities
         public virtual ICollection<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual ICollection<Collection> Collection { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }
+        public virtual ICollection<CommentLike> CommentLike { get; set; }
+        public virtual ICollection<IngredientList> IngredientList { get; set; }
+        public virtual ICollection<Message> MessageCreator { get; set; }
+        public virtual ICollection<Message> MessageRecipient { get; set; }
+        public virtual ICollection<Notification> Notification { get; set; }
+        public virtual ICollection<Post> Post { get; set; }
         public virtual ICollection<RatingRecipe> RatingRecipe { get; set; }
         public virtual ICollection<Recipe> Recipe { get; set; }
         public virtual ICollection<UserBlock> UserBlockBlockedUser { get; set; }
         public virtual ICollection<UserBlock> UserBlockUser { get; set; }
         public virtual ICollection<UserFollowing> UserFollowingFollowingUser { get; set; }
         public virtual ICollection<UserFollowing> UserFollowingUser { get; set; }
+        public virtual ICollection<UserReactionPost> UserReactionPost { get; set; }
         public virtual ICollection<UserReactionRecipe> UserReactionRecipe { get; set; }
         public virtual ICollection<UserReportRecipe> UserReportRecipe { get; set; }
         public virtual ICollection<UserReportUser> UserReportUserReportedUser { get; set; }

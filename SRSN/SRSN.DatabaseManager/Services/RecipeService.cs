@@ -129,11 +129,20 @@ namespace SRSN.DatabaseManager.Services
 
         public async Task DeActiveRecipe(int id)
         {
-            var recipe = await this.selfDbSet.FindAsync(id);
-            recipe.Active = false;
-            recipe.SaveDraft = false;
-            this.selfDbSet.Update(recipe);
-            await this.unitOfWork.CommitAsync();
+            try
+            {
+
+                var recipe = await this.selfDbSet.FindAsync(id);
+                recipe.Active = !recipe.Active;
+                recipe.SaveDraft = false;
+                this.selfDbSet.Update(recipe);
+                await this.unitOfWork.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId)

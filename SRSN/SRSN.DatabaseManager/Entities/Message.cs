@@ -11,5 +11,8 @@ namespace SRSN.DatabaseManager.Entities
         public bool? IsRead { get; set; }
         public int? RecipientId { get; set; }
         public int? CreatorId { get; set; }
+
+        public virtual AspNetUsers Creator { get; set; }
+        public virtual AspNetUsers Recipient { get; set; }
     }
 }

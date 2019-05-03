@@ -17,7 +17,6 @@ namespace SRSN.DatabaseManager.Services
     public interface IUserReportRecipeService : IBaseService<UserReportRecipe, UserReportRecipeViewModel>
     {
         Task<ICollection<UserReportRecipeViewModel>> GetAllReportedRecipe(UserManager<SRSNUser> userManager);
-        Task<UserReportRecipeViewModel> DeActiveRecipeReport(int id);
     }
 
     public class UserReportRecipeService : 
@@ -54,16 +53,18 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     var userName = userManager.FindByIdAsync(item.UserId.ToString()).Result.UserName;
-                    var recipeName = this.unitOfWork.GetDbContext().Set<Recipe>().AsNoTracking().Where(recipe => recipe.Id == item.RecipeReportedId).Single().RecipeName;
+                    var recipe = this.unitOfWork.GetDbContext().Set<Recipe>().AsNoTracking().Where(r => r.Id == item.RecipeReportedId).Single();
+                    var recipeName = recipe.RecipeName;
+                    
                     var data = new UserReportRecipeViewModel();
                     data.Description = item.Description;
                     data.Id = item.Id;
                     data.UserId = item.UserId;
                     data.Username = userName;
                     data.RecipeReportedId = item.RecipeReportedId;
-                    data.IsActive = item.IsActive;
                     data.CreateTime = item.CreateTime;
                     data.RecipeReported = recipeName;
+                    data.IsActive = recipe.Active;
                     listReported.Add(data);
                 }
                 
@@ -76,16 +77,6 @@ namespace SRSN.DatabaseManager.Services
             }
         }
 
-        public async Task<UserReportRecipeViewModel> DeActiveRecipeReport(int id)
-        {
-            var recipe = await this.selfDbSet.FindAsync(id);
-            recipe.IsActive = !recipe.IsActive;
-            this.selfDbSet.Update(recipe);
-            await this.unitOfWork.CommitAsync();
-            var reportRecipeId = recipe.RecipeReportedId;
-            var recipeEntity = recipeService.DeActiveRecipe(reportRecipeId);
-            return this.EntityToVM(recipe);
-        }
 
     }
 }
