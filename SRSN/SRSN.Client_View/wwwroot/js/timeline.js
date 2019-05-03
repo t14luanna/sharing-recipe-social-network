@@ -433,9 +433,10 @@ const callOpenCommentPostApi = async (recipeId, recipeOwner) => {
     });
     var data = await res.json();
     indexUser = data;
-    var elementComment = openCommentPost(data, recipeId, recipeOwner, );
+    var elementComment = openCommentPost(data, recipeId, recipeOwner);
     $(`.container-${recipeId}`).append(elementComment);
     $(`textarea[name=comment-${recipeId}]`).ckeditor();
+    $(`.delete-comment-${indexUser.id}`).css("display", "block");
 };
 const callCreateCommentApi = async (recipeId, recipeOwner, commentParentOwner, commentParentId) => {
     var authorization = localStorage.getItem("authorization");
@@ -639,7 +640,7 @@ const createSingleReplyComment = (comment, recipeOwner) => {
             console.log(comment.commentContent);
         }
     }
-    var element = `<li class="comment-newsfeed-li">
+    var element = `<li class="comment-newsfeed-li comment-nf-${comment.id}">
         <div class="acomment--item clearfix acomment--item-newsfeed">
             <div class="acomment--avatar">
                 <a href="/account/timeline/${comment.username}">
@@ -648,6 +649,13 @@ const createSingleReplyComment = (comment, recipeOwner) => {
             </div>
                         
             <div class="acomment--info">
+                <div class="dropdown dropdown-custom delete-comment-${comment.userId}"  style="display:none">
+                        <span class="fa fa-ellipsis-v dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"></span>
+                            <ul class="dropdown-menu dropdown-menu-custom drop-down-del-cmt"  role="menu" aria-labelledby="menu1" >
+                                <li class="comment-owner-${comment.userId}" ><a href="javascript:void(0)" onclick="deactivateCommentNewsfeed(${comment.id},${comment.recipeId},0)">Xóa</a></li>
+                                
+                            </ul>
+                    </div>
                 <div class="acomment--header">
                     <p><a href="/account/timeline/${comment.username}">${comment.fullName}</a> trả lời</p>
                 </div>
@@ -665,13 +673,48 @@ const createSingleReplyComment = (comment, recipeOwner) => {
     return element;
 };
 
+async function deactivateCommentNewsfeed(cmtId, recipeId, commentParentId) {
+    swal({
+        title: "Bạn muốn xóa?",
+        text: "Sau khi xóa, bạn sẽ không thấy bình luận này!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                deactiveCommentFuntion(cmtId, recipeId, commentParentId);
+            } else {
+                //do nothing
+            }
+        });
 
+};
+const deactiveCommentFuntion = async (cmtId, recipeId, commentParentId) => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var cmtRes = await fetch(`${BASE_API_URL}/${COMMENT_API_URL}/deactivateComment?Id=${cmtId}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (cmtRes.status == 200) {//successfully
+        swal("Bạn đã xóa thành công Bình Luận này!", {
+            icon: "success",
+        });
+        $(`.comment-nf-${cmtId}`).remove();
+    } else {
+        alert("Không thể xóa bình luận, vui lòng thử lại!!!");
+    }
+};
 function openReplyView(commentId, commentRecipeId, commentOwner, commentUsername, recipeOwner) {
     $(".comment-post-li").remove();
     var elementComment = openReplyComment(commentId, commentRecipeId, recipeOwner, commentOwner, commentUsername);
     $(`.container-${commentRecipeId}`).append(elementComment);
     $(`textarea[name=comment-${commentRecipeId}`).ckeditor();
-    //$(`#delete-comment-${commentOwner}`).css("display", "block");
+    $(`#delete-comment-${commentOwner}`).css("display", "block");
 
 };
 

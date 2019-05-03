@@ -719,7 +719,6 @@ const createSingleReplyComment = (comment, recipeOwner) => {
     if (tagUserContents) {
         for (var item of tagUserContents) {
             comment.commentContent = comment.commentContent.replace(item, `<a class="username-mention" href="/account/timeline/${comment.usernameOwnerComment}">${item}</a>`);
-            console.log(comment.commentContent);
         }
     }
     var element = `<li class="comment-newsfeed-li comment-nf-${comment.id}">
@@ -733,8 +732,8 @@ const createSingleReplyComment = (comment, recipeOwner) => {
             <div class="acomment--info">
 <div class="dropdown dropdown-custom delete-comment-${comment.userId}"  style="display:none">
                         <span class="fa fa-ellipsis-v dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"></span>
-                            <ul class="dropdown-menu dropdown-menu-custom"  role="menu" aria-labelledby="menu1" >
-                                <li class="comment-owner-${comment.userId}" ><a href="#" onclick="deactivateCommentNewsfeed(${comment.id},${comment.recipeId},0)">Xóa</a></li>
+                            <ul class="dropdown-menu dropdown-menu-custom drop-down-del-cmt"  role="menu" aria-labelledby="menu1" >
+                                <li class="comment-owner-${comment.userId}" ><a href="javascript:void(0)" onclick="deactivateCommentNewsfeed(${comment.id},${comment.recipeId},0)">Xóa</a></li>
                                 
                             </ul>
                     </div>

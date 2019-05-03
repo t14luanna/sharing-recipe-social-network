@@ -123,7 +123,7 @@
                 .then(response => {
                     if (response.success) {
                         localStorage.setItem("authorization", JSON.stringify(response.token));
-                        localStorage.setItem("username", $("#usernameVM").val());
+                        localStorage.setItem("username", response.username);
                         localStorage.setItem("userId", response.userId);
                         window.location.href = '/Newsfeed';
                     } else {

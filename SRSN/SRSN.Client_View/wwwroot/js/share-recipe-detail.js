@@ -186,8 +186,46 @@ const callOpenCommentPostApi = async (postRecipeId, recipeOwner) => {
     var elementComment = openCommentPost(data, postRecipeId, recipeOwner);
     $(`.container-${postRecipeId}`).append(elementComment);
     $(`textarea[name=comment-${postRecipeId}]`).ckeditor();
+    $(`.delete-comment-${indexUser.id}`).css("display", "block");
 };
+async function deactivateCommentNewsfeed(cmtId, recipeId, commentParentId) {
+    swal({
+        title: "Bạn muốn xóa?",
+        text: "Sau khi xóa, bạn sẽ không thấy bình luận này!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                deactiveCommentFuntion(cmtId, recipeId, commentParentId);
+            } else {
+                //do nothing
+            }
+        });
 
+};
+const deactiveCommentFuntion = async (cmtId, recipeId, commentParentId) => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var cmtRes = await fetch(`${BASE_API_URL}/${COMMENT_API_URL}/deactivateComment?Id=${cmtId}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (cmtRes.status == 200) {//successfully
+        swal("Bạn đã xóa thành công Bình Luận này!", {
+            icon: "success",
+        });
+        //var dataCount = (await callCountCommentsApi(recipeId, commentParentId));
+        //$(`a[id="comment-link-${commentParentId}"]`).html(`Bình luận (${dataCount})`);
+        $(`.comment-nf-${cmtId}`).remove();
+    } else {
+        alert("Không thể xóa bình luận, vui lòng thử lại!!!");
+    }
+};
 const createCountLine = (count, recipeId) => `<p class="update-like-${recipeId}">${count.likeCount} lượt thích, ${count.shareCount} lượt chia sẻ</p>`;
 const callReadCommentApi = async (recipeId, recipeOwner) => {
 
@@ -216,7 +254,7 @@ const createSingleReplyComment = (comment, recipeOwner) => {
             console.log(comment.commentContent);
         }
     }
-    var element = `<li class="comment-newsfeed-li">
+    var element = `<li class="comment-newsfeed-li comment-nf-${comment.id}">
         <div class="acomment--item clearfix acomment--item-newsfeed">
             <div class="acomment--avatar">
                 <a href="#">
@@ -225,6 +263,13 @@ const createSingleReplyComment = (comment, recipeOwner) => {
             </div>
                         
             <div class="acomment--info">
+<div class="dropdown dropdown-custom delete-comment-${comment.userId}"  style="display:none">
+                        <span class="fa fa-ellipsis-v dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"></span>
+                            <ul class="dropdown-menu dropdown-menu-custom drop-down-del-cmt"  role="menu" aria-labelledby="menu1" >
+                                <li class="comment-owner-${comment.userId}" ><a href="javascript:void(0)" onclick="deactivateCommentNewsfeed(${comment.id},${comment.recipeId},0)">Xóa</a></li>
+                                
+                            </ul>
+                    </div>
                 <div class="acomment--header">
                     <p><a href="#">${comment.fullName}</a> trả lời</p>
                 </div>
@@ -259,7 +304,7 @@ function openReplyView(commentId, commentRecipeId, commentOwner, commentUsername
     var elementComment = openReplyComment(commentId, commentRecipeId, recipeOwner, commentOwner, commentUsername);
     $(`.container-${commentRecipeId}`).append(elementComment);
     $(`textarea[name=comment-${commentRecipeId}`).ckeditor();
-
+    $(`#delete-comment-${commentOwner}`).css("display", "block");
 };
 const openReplyComment = (commentId, recipeId, recipeOwner, commentOwner, commentUsername) => `<li class="comment-newsfeed-li comment-post-li"><div class="recipe-comments comment-post-container"><ul class="reply-baongoc">
                 <li>
@@ -298,7 +343,7 @@ const callCreateCommentApi = async (postRecipeId, recipeOwner, commentOwner) => 
                 "username": userInfo.lastName + " " + userInfo.firstName,
                 "content": " đã nhắc đến bạn trong một bình luận",
                 "date": new Date().toLocaleString(),
-                "link": "/sharerecipe/" + recipeId,
+                "link": "/sharerecipe/" + postRecipeId,
                 "isRead": "False"
             });
             //update uid into firebase 
@@ -425,7 +470,7 @@ const createRecipePostElement = (recipe) =>
                                                         <div class="activity--meta fs--12 popular-post-item popular-item-${recipe.id}">
                                                         </div>
                                                         <div class="activity--header">
-                                                            <p><a href="/account/timeline/${recipe.accountVM.username}">${recipe.accountVM.firstName} ${recipe.accountVM.lastName}</a> đã đăng một công thức</p>
+                                                            <p><a href="/account/timeline/${recipe.accountVM.username}">${recipe.accountVM.lastName} ${recipe.accountVM.firstName}</a> đã đăng một công thức</p>
                                                         </div>
 
                                                         <div class="activity--meta fs--12">

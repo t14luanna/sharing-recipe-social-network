@@ -1203,3 +1203,9 @@ input[name=ingredient] {
 .latest-news-widget, .widget-get-social {
     background: white
 }
+.drop-down-del-cmt{
+    position: relative
+}
+.list-popular-recipe-widget li{
+    padding-top: 10px
+}

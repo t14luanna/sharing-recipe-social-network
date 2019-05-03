@@ -149,7 +149,19 @@
         function validateRegisterForm(form) {
             var password = form['password'].value;
             var email = form['email'].value;
+            var usernameVM = form['usernameVM'].value;
             var confirmPassword = form['confirmPassword'].value;
+            if (usernameVM.includes(" ")) {
+                swal({
+                    title: "",
+                    text: "Tên đăng nhập không được chứa khoảng cách",
+                    type: "error",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Xác nhận",
+                    closeOnConfirm: false
+                });
+                return false;
+            }
             if (email == "") {
                 swal({
                     title: "",
