@@ -33,7 +33,7 @@ let createChatUI = (chat) => {
 
     if (chat.data.lastUserSentMessage) {
         if (chat.data.lastUserSentMessage === user.id) {
-            last_mess_content = 'Bạn : ' + last_mess_content
+            last_mess_content = `Bạn: ${last_mess_content}`
         }
     }
 
@@ -44,7 +44,7 @@ let createChatUI = (chat) => {
         '<div class="content fs--14 ov--h"><div class="name text-darkest">' +
         '<p><a href="#" class="name-user">' + opposite_user.firstName + ' ' + opposite_user.lastName + '</a></p></div></div>' +
         '<div class="content fs--14 ov--h">' +
-        '<p class="chat-message-wrap">' + last_mess_content + '</p>' +
+        `<span class="chat-message-wrap">  ${last_mess_content}  </span>` +
         '</div></div></div>';
 
     $(user_chat_item).on('click', () => {
@@ -101,13 +101,13 @@ let updateChatUI = (chat) => {
 
     if (chat.data.lastUserSentMessage) {
         if (chat.data.lastUserSentMessage === user.id) {
-            last_mess_content = 'Bạn : ' + last_mess_content
+            last_mess_content = `Bạn: ${last_mess_content}`
         }
     }
 
     $('#' + chat.id + ' .date').text(last_mess_time)
 
-    $('#' + chat.id + ' .chat-message-wrap').text(last_mess_content)
+    $('#' + chat.id + ' .chat-message-wrap').html(last_mess_content)
 }
 //----------------------------------------------------------------------------------
 
@@ -235,12 +235,12 @@ let appendMessage = (message, opposite_user) => {
     let date = '';
     let user_message_item = '<div class="incoming_msg"><div class="incoming_msg_img" >' +
         '<img class="receiver-avatar" src="' + opposite_user.avatarImageUrl + '" alt="sunil"></div>' +
-        '<div class="received_msg"><div class="received_withd_msg"><p>' + message.content + '</p>' +
+        `<div class="received_msg"><div class="received_withd_msg"><span>${message.content}</span>` +
         '<span class="time_date">' + date + '</span></div></div></div >';
 
     if (message.userSent === user.id) {
         user_message_item = '<div class="outgoing_msg"><div class="sent_msg">' +
-            '<p>' + message.content + '</p><span class="time_date">' + date + '</span></div></div>';
+            '<span>' + message.content + '</span><span class="time_date">' + date + '</span></div></div>';
     }
 
     message_content.innerHTML += user_message_item;
