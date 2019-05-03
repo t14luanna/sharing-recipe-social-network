@@ -11,5 +11,7 @@ namespace SRSN.DatabaseManager.Entities
         public int? BrandId { get; set; }
         public double? Lat { get; set; }
         public double? Long { get; set; }
+
+        public virtual StoreBrand Brand { get; set; }
     }
 }

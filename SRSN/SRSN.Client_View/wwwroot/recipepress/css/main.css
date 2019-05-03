@@ -743,11 +743,10 @@ span.sign-in-buttons {
             visibility: visible;
             position: absolute;
             min-width: 255px;
-            background: #6ebe3b;
+            background: lightgrey;
             z-index: 999;
             left: 0;
             text-align: left;
-            padding: 20px 35px;
         }
 
             .nav-collapse ul li ul li {
@@ -761,6 +760,7 @@ span.sign-in-buttons {
                     padding-top: 12px;
                     padding-bottom: 12px;
                     display: block;
+                    padding-left:20px;
                     /*   &:hover{
                  color: #ffffff;
 
@@ -768,7 +768,7 @@ span.sign-in-buttons {
                 }
 
                 .nav-collapse ul li ul li:hover > a {
-                    color: #ffffff;
+                    background-color: aliceblue;
                 }
 
                 .nav-collapse ul li ul li:hover ul {

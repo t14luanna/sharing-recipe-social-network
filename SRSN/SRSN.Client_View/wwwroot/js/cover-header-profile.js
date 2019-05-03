@@ -1,5 +1,6 @@
-﻿const apikey = 'Al19W1lGkT7C5myciCHZhz';
+﻿const apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
 const client = filestack.init(apikey);
+var countFollowing = 0;
 function uploadFile(file) {
     return new Promise((resolve, reject) => {
         client.upload(file)
@@ -13,7 +14,15 @@ function uploadFile(file) {
 }
 
 const createAvatarContainerUnfollow = (user, count) =>
-    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
+    `
+<div class="dropdown col-md-offset-12">
+                    <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo người dùng</a></li>
+                    </ul>
+                </div>
+<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
                                 <img src="${user.avatarImageUrl}" alt=""/>
                             </div>
 
@@ -24,7 +33,7 @@ const createAvatarContainerUnfollow = (user, count) =>
                                 <div>
                                     <span class="headline">Newbee</span>
 
-                                    <div class="val">
+                                    <div class="val title-point">
                                         <span class="newbee" id="ranknewbee"></span>
                                         <span class="tastee" id="ranktastee"></span>
                                         <span class="cookee" id="rankcookee"></span>
@@ -69,7 +78,15 @@ const createAvatarContainerUnfollow = (user, count) =>
 //    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
 //                                <img src="${user.avatarImageUrl}" alt=""/>`;
 const createAvatarContainer = (user, count) =>
-    `<div class="cover--avatar online profile-pic" data-overlay="0.3" data-overlay-color="primary">
+    `
+<div class="dropdown col-md-offset-12" id="btnReportUser">
+                    <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo người dùng</a></li>
+                    </ul>
+                </div>
+<div class="cover--avatar online profile-pic" data-overlay="0.3" data-overlay-color="primary">
         <input type="hidden" name="avatarUrl"/>
                                 <img class="" id="imgAvatar" src="${user.avatarImageUrl}" alt="" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/>
 <div class="edit"><a href="javascript:void()" onclick="document.getElementById('avatarPicker').click()"><i class="fa fa-pencil fa-lg"></i><input type="file" id="avatarPicker" onchange="avatarPickerChange(this, user)" style="display:none;" /></a></div>
@@ -82,7 +99,7 @@ const createAvatarContainer = (user, count) =>
                                 <div>
                                     <span class="headline">Newbee</span>
 
-                                    <div class="val">
+                                    <div class="val title-point">
                                         <span class="newbee" id="ranknewbee"></span>
                                         <span class="tastee" id="ranktastee"></span>
                                         <span class="cookee" id="rankcookee"></span>
@@ -133,14 +150,68 @@ async function followUserFuntion(userId) {
         .then(res => res.json())
         .then(response => {
             if (response.success) {
-                $(".follow-area").html(btnFollowed(userId));
+                $(`.follow-area-${userId}`).html(btnFollowed(userId));
+                countFollowing++;
+                $(`.countFollowing-${userId}`).text(countFollowing);
+                $("#count-friends").text(Number.parseInt($("#count-friends").text()) + 1);
                 //thông báo follow user
                 callNotification(userId);
 
             }
         });
 };
-
+const callNotification = async (userId) => {
+    var userNameLocalStorage = localStorage.getItem("username");
+    var userRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read?userId=${userId}`);
+    var userData = await userRes.json();
+    var myDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
+    var uid = myDataRef.push({
+        "uid": "",
+        "username": userNameLocalStorage,
+        "content": "đang theo dõi bạn",
+        "date": new Date().toLocaleString(),
+        "link": "/account/information/" + userData.username,
+        "isRead": "False"
+    });
+    //update uid into firebase
+    SRSN.FIREBASE_DATABASE.ref("/" + userData.username + "/" + uid.key).update({
+        uid: uid.key
+    });
+};
+const btnFollow = (userId) => `<div class="follow-btn-custom"  onclick="followUserFuntion(${userId})">
+                            <input type="hidden" value="${userId}" id="following-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default">
+                                        <a title="Quan tâm" href="javascript:void(0)">
+                                            <span class="fa fa-user-plus"></span>
+                                            <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                            <span>Theo dõi</span>
+                                        </a>
+                                        <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${userId}"></span>
+                                        </span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>`;
+const btnFollowed = (userId) => `
+<div class="follow-btn-custom"  onclick="unfollowUserFuntion(${userId})">
+                            <input type="hidden" value="${userId}" id="unfollowing-user-id">
+                            <div class="favourite clearfix">
+                               <div id="friend-status-div" class="btn-friend-stat">
+                                <div data-bind="visible:true" style="">
+                                    <span style="cursor:default" data-bind="visible: status()==1">
+                                    <a title="Hủy quan tâm" href="javascript:void(0)" data-bind="click:remove">
+                                        <span class="fa fa-check"></span>
+                                        <span data-bind="visible: isposting" style="display: none;" class="fa fa-spin fa-spinner"></span>
+                                        <span>Đang theo dõi</span>
+                                    </a>
+                                    <span class="count" title="Đang được quan tâm"><i style=""></i><b></b><span class="countFollowing-${userId}"></span>
+                                </span>
+                                </div>
+                              </div>
+                            </div>`;
 async function unfollowUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
     var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userNameLocalStorage + "&userFollowingId=" + userId)
@@ -148,7 +219,10 @@ async function unfollowUserFuntion(userId) {
         .then(response => {
             if (response.success) {
                 //location.reload();
-                $(".follow-area").html(btnFollow(userId));
+                $(`.follow-area-${userId}`).html(btnFollow(userId));
+                countFollowing--;
+                $(`.countFollowing-${userId}`).text(countFollowing);
+                $("#count-friends").text(Number.parseInt($("#count-friends").text()) - 1);
             }
         });
 };
@@ -159,7 +233,7 @@ const loadAvatarContainer = async (username) => {
     var userNameLocalStorage = localStorage.getItem("username");
     var res;
     var data;
-    if (username == userNameLocalStorage) {
+    if (username.toLowerCase() == userNameLocalStorage.toLowerCase()) {
         var authorization = localStorage.getItem("authorization");
         var token = (JSON.parse(authorization))["token"];
         res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
@@ -169,12 +243,12 @@ const loadAvatarContainer = async (username) => {
                 'Authorization': `Bearer ${token}`
             },
         });
-
         data = await res.json();
     } else {
         res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?userName=${username}`); /* tim theo user name*/
         data = await res.json();//do 2 cach trả về giá trị khác nhau, data[0] là vị trí đầu tiên trong chuổi json
-
+        $("#save-draft-li").hide();
+        
     }
 
     const checkFollow = (id, listFollowed) => {
@@ -190,13 +264,20 @@ const loadAvatarContainer = async (username) => {
 
     var isFollowed = checkFollow(data.id, dataCheck);
     data.description = data.description == null ? "" : data.description;
-
+    countFollowing = userData.length;
     var element = isFollowed ? createAvatarContainerUnfollow(data, userData.length) : createAvatarContainer(data, userData.length);
-
+    $('#count-friends').html(userData.length);
     $("#avatar-container").append(element);
+    if (username == userNameLocalStorage) {
+        $(".edit").show();
+    } else {
+        $(".edit").hide();
+
+    }
     if (username == userNameLocalStorage) {
         $(".follow-area-" + data.id).hide();
     }
+    $(".title-point").attr("title", "Số điểm của bạn: " + data.point);
     if (data.point >= 0 && data.point <= 99) {
         $("#ranknewbee").attr("class", "newbee active");
     } else if (data.point >= 100 && data.point <= 499) {
@@ -224,6 +305,35 @@ const loadAvatarContainer = async (username) => {
         $("#rankmastee").attr("class", "mastee active");
         $(".headline").text("mastee").css("color", "#ff0834");
     }
+    if (isFollowed == false) {
+        $("#btnReportUser").remove();
+
+    }
+
+    
+    //count my recipe
+    var countRecipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/get-count-my-recipe?username=${username}`);
+    var countRecipes = await countRecipeRes.json();
+    $("#count-recipes").text(countRecipes.count);
+
+    //count draft recipe
+    var userIdRes = await fetch(`${BASE_API_URL}/api/account/read-username?username=${username}`);
+    var userIdData = await userIdRes.json();
+    var userId = userIdData.id;
+     res = await fetch(`${BASE_API_URL}/api/recipe/read-draft-recipe?userId=` + userId);
+    data = await res.json();
+    $("#count-draft").text(data.length);
+
+    //count collections
+    var collectionRes = await fetch(`${BASE_API_URL}/${COLLECTION_API_URL}/count-collections?username=${username}`);
+    var collectionData = await collectionRes.json();
+    $("#count-collections").text(collectionData.count);
+
+    //count favorite recipes
+    var favoriteRes = await fetch(`${BASE_API_URL}/${USER_REACTION_RECIPE_API_URL}/get-count-favorite-recipe?username=${username}`);
+    var favoriteData = await favoriteRes.json();
+    $("#count-favorite").text(favoriteData.count);
+
 };
 
 function avatarPickerChange(elePicker, user) {
@@ -270,14 +380,14 @@ async function btnUpdateAvatar_Click(btnUpdateAvatar) {
         method: 'PUT',
         body: JSON.stringify({
             'avatarImageUrl': $("input[name=avatarUrl]").val(),
-            'firstName': $('#firstName').val(),
-            'lastName': $('#lastName').val(),
-            'gender': $('#gender>option:selected').val(),
-            'birthdate': $('#birthdate').val(),
-            'description': $('#hiddenDescription').val(),
-            'phone': $('#hiddenPhone').val(),
-            'email': $('#hiddenEmail').val(),
-            'address': $('#hiddenAddress').val()
+            'firstName': data.firstName,
+            'lastName': data.lastName,
+            'gender': data.gender,
+            'birthdate': data.birthdate,
+            'description': data.description,
+            'phone': data.phone,
+            'email': data.email,
+            'address': data.address
         }),
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -285,14 +395,14 @@ async function btnUpdateAvatar_Click(btnUpdateAvatar) {
         }
     });
     if (res.status == 200) {
-        Swal.fire({
+        swal({
             type: 'success',
             title: 'Thông báo',
             text: 'Cập nhật thông tin thành công!',
         })
         setTimeout(async function () {
             var username = localStorage.getItem("username");
-            window.location.href = `/account/information/${username}`
+            location.reload();
         }, 1500);
     }
 }

@@ -87,13 +87,13 @@
                                 <nav class="nav-collapse">
                                     <ul class="main-menu left">
                                         <li>
-                                            <a href="/index">Trang chủ</a>
+                                             <a href="/Index" class="href-homepage">Trang chủ</a>
                                         </li>
                                         <li>
                                             <a href="/recipe">Công thức</a>
                                         </li>
                                         <li>
-                                            <a href="/newsfeed">Cộng đồng</a>
+                                            <a href="/Newsfeed" class="nav-display-none">Cộng đồng</a>
                                         </li>
                                         <li><a href="/topUsers">Top Thành viên</a></li>
                                     </ul>
@@ -103,7 +103,7 @@
 
                         <div class="col-md-2">
                             <div class="logo-wrapper">
-                                <a href="/index"><img src="~/recipepress/images/logo.png" alt="logo" /></a>
+                                 <a href="/Index" class="href-homepage"><img src="~/recipepress/images/logo.png" alt="logo" /></a>
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -137,17 +137,17 @@
                                         <a class="information" href="/account/information" id="authorized-group-username">Username</a>
                                     </span>
                                     <span class="sign-in-buttons authorized-group" id="logoutBtn">
-                                        <a class="login" href="">Logout</a>
+                                        <a class="login" href="">Đăng xuất</a>
                                     </span>
                                     <span class="sign-in-buttons unauthorized-group">
-                                        <a class="login" href="/login">Login</a>
-                                        <a class="register" href="/register">Register</a>
+                                        <a class="login" href="/login">Đăng nhập</a>
+                                        <a class="register" href="/register">Đăng ký</a>
                                     </span>
                                 </div>
                                 <nav class="nav-collapse">
                                     <ul class="main-menu right">
                                         <li>
-                                            <a href="blog.html">blog</a>
+                                            <a href="blog.html" class="nav-display-none">blog</a>
                                         </li>
                                         <li><a href="/collection">Bộ sưu tập</a></li>
                                         <li><a href="/contact">Chính sách</a></li>
@@ -168,13 +168,7 @@
 
         <div class="container">
             <div class="row">
-                <div class="dropdown col-md-offset-12">
-                    <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown">
-                    </span>
-                    <ul class="dropdown-menu">
-                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo người dùng</a></li>
-                    </ul>
-                </div>
+                
                 <div class="wrapper">
                     <div class="modal fade" id="myModal" role="dialog">
                         <div class="modal-dialog">
@@ -223,9 +217,10 @@
                                                 <li><a href="/account/timeline/@(RouteData.Values["userName"])">Dòng thời gian</a></li>
                                                 <li class="active"><a href="/account/information" id="link-to-profile">Giới thiệu</a></li>
                                                 <li><a href="/memberfriends" id="link-to-following-user">Đang theo dõi(<span id="count-friends"></span>)</a></li>
-                                                <li><a href="/account/my-recipe/@(RouteData.Values["userName"])">Công thức của tôi</a></li>
-                                                <li><a href="/account/my-favorite-recipe/@(RouteData.Values["userName"])">Công thức yêu thích</a></li>
-                                                <li><a href="/account/collection/@(RouteData.Values["userName"])">Bộ sưu tập của tôi</a></li>
+                                                <li><a href="/account/my-recipe/@(RouteData.Values["userName"])">Công thức của tôi(<span id="count-recipes"></span>)</a></li>
+                                                <li><a href="/account/my-favorite-recipe/@(RouteData.Values["userName"])">Công thức yêu thích(<span id="count-favorite"></span>)</a></li>
+                                                <li><a href="/account/collection/@(RouteData.Values["userName"])">Bộ sưu tập của tôi(<span id="count-collections"></span>)</a></li>
+                                                <li id="save-draft-li"><a href="/account/savedraft/@(RouteData.Values["userName"])">Lưu nháp(<span id="count-draft"></span>)</a></li>
                                             </ul>
                                         </div>
                                         <!-- Content Nav End -->
@@ -445,12 +440,12 @@
     <script src="~/js/notification.js"></script>
     <script src="~/js/user-report.js"></script>
 
-    <script src="//static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
+    <script src="https://static.filestackapi.com/filestack-js/1.x.x/filestack.min.js"></script>
     <script src="~/js/member-profile.js"></script>
     <script src="~/js/cover-header-profile.js"></script>
     <script src="~/js/follow-unfollow-funtion.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+   <script src="~/recipepress/js/sweetalertv1.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzgvkqSdA28vGw5qvqgJdPp-3_8YEBzFo&libraries=places&callback=initMap"
             async defer></script>
     <script src="~/js/moment.min.js"></script>

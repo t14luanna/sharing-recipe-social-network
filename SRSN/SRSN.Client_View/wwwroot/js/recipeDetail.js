@@ -5,6 +5,13 @@ const createSingleBannerRecipeDetail = (recipe) =>
             <h2>${recipe.recipeName}</h2>
         </div>
     </div>
+<div class="dropdown col-md-offset-12" id="btnReportUser">
+                    <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo công thức</a></li>
+                    </ul>
+                </div>
     <div class="slider-recipe-detail2">
         <div class="wrapper-slider-detail">
             <div class="recipe-slider">
@@ -13,11 +20,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
                         <a href="${recipe.imageCover}" class="swipebox" rel="recipe-gallery"><img src="${recipe.imageCover}" alt="slide" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                 </div>
-
-                <span class="custom-arrows wider">
-                    <span class="left-arrow slick-arrow" data-direction="prev" style="display: table-cell;"><i class="fa fa-arrow-left"></i></span>
-                    <span class="right-arrow slick-arrow" data-direction="next" style="display: table-cell;"><i class="fa fa-arrow-right"></i></span>
-                </span>
+              
             </div>
             <ul class="recipe-specs-2">
                 <li><span>Khẩu phần : </span>${recipe.serving}</li>
@@ -30,6 +33,7 @@ const createSingleBannerRecipeDetail = (recipe) =>
 const createContentRecipe = (recipe) =>
     `<span class="rating-figure" id="evRating"><u>Đánh giá: </u><span id="number-of-star-${recipe.id}" style="color:#56E920; font-size:20px"></span>&nbsp&nbsp(${recipe.evRating != 0 ? recipe.evRating : "Chưa có đánh giá nào"} ${recipe.evRating != 0 ? "/ 5" : ""}) 
     <i class="rating-figure" style="float: right;">Lượt xem: ${recipe.viewQuantity != null ? recipe.viewQuantity : "0"}</i>
+    <i class="rating-figure" style="float:right; margin-right:20%">Ngày tạo: ${new Date(recipe.createTime).getDay() + "/" + new Date(recipe.createTime).getMonth() + "/" + new Date(recipe.createTime).getFullYear()}</i>
     </span>
         <div class="separator-post"></div>
         <p>${recipe.contentRecipe}</p>`;
@@ -144,13 +148,13 @@ const createChefByRecipeId = (chef, btnActionFollow) => `<h3 class="lined">Thôn
     <div class="listing">
         <div class="image">
             <div class="image-inner">
-                <a href="/account/information/${chef.username}"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
+                <a href="/account/timeline/${chef.username}"><img src="${chef.avatarImageUrl}" alt="chef" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
             </div>
         </div>
         <div class="detail">
             <div class="row">
                 <div class="col-sm-8">
-                    <h4><a href="/account/information/${chef.username}">${chef.firstName} ${chef.lastName}</a></h4>
+                    <h4><a href="/account/timeline/${chef.username}">${chef.lastName} ${chef.firstName}</a></h4>
 
                 </div>
                 <div class="col-sm-4" >
@@ -164,7 +168,7 @@ const createChefByRecipeId = (chef, btnActionFollow) => `<h3 class="lined">Thôn
             <p>
                ${ chef.description}
             </p>
-            <a href="/account/information/${chef.username}" class="read-more-angle">Xem thêm...</a>
+            <a href="/account/timeline/${chef.username}" class="read-more-angle">Xem thêm...</a>
         </div>
     </div>`;
 const followElement = (userId) => 
@@ -189,7 +193,7 @@ const followElement = (userId) =>
 const unfollowElement = (userId) =>
     ` <!--follow area-->
                                 <div class="follow-area-${userId}">
-                                            <div class="follow-btn-custom" onclick="followUserFuntion(${userId})">
+                                            <div class="follow-btn-custom" onclick="unfollowUserFuntion(${userId})">
                                             <div class="favourite clearfix">
                                                <div id="friend-status-div" class="btn-friend-stat">
                                                 <div data-bind="visible:true" style="">
@@ -268,7 +272,7 @@ const callRecipeDetailApi = async (id) => {
         var numStar = item.evRating % 10;
         $("#number-of-star-" + item.id).text("");
         for (var i = 0; i < parseInt(numStar); i++) {
-            $("#number-of-star-" + item.id).append(`<i class="fa fa-star-half-o" aria-hidden="true"></i>`);
+            $("#number-of-star-" + item.id).append(`<i class="fa fa-star" aria-hidden="true"></i>`);
         }
     }
 
@@ -308,7 +312,7 @@ const callReadRatingCommentApi = async (recipeId) => {
         }
     }
     $("#numOfComment").append(count);
-    $(`.comment-owner-${userId}`).css("display", "block");
+    $(`#delete-comment-${userId}`).css("display", "block");
 };
 const callCountCommentsApi = async (recipeId, recipeParentId) => {
     var countReply = await fetch(`${BASE_API_URL}/api/comment/get-count-reply-comment?recipeId=${recipeId}&recipeParentId=${recipeParentId}`);
@@ -418,9 +422,8 @@ const callChefRecipeApi = async (recipeId) => {
 
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
-    var userFollowingRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/check-following-user`, {
-        method: "POST",
-        body: JSON.stringify({ followingUserId: chef.id }),
+    var userFollowingRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/check-following-user?followingUserId=${chef.id}`, {
+        method: "GET",
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -429,11 +432,9 @@ const callChefRecipeApi = async (recipeId) => {
     var userFollowingData = await userFollowingRes.json();
 
     var isFollow;
-    if (userFollowingData.length > 0) {
-        isFollow = userFollowingData.active;
-    } else {
-        isFollow = false;
-    }
+
+    isFollow = userFollowingData.active;
+    
     var chefUsername = chef.username;
     var btnFollow;
     if (chefUsername == usernameLocal) {
@@ -602,17 +603,58 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
              myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
             uid = myDataRef.push({
                 "uid": "",
-                "username": userData.firstName + " " + userData.lastName,
-                "content": "đã đánh giá công thức của bạn: " + data.contentRating + " - " + data.star + " sao",
+                "username": userData.lastName + " " +  userData.firstName ,
+                "content": "đã đánh giá công thức của bạn: " + data.ratingContent + " - " + data.ratingRecipe + " sao",
                 "date": new Date().toLocaleString(),
                 "link": "/recipe/" + data.recipeId,
                 "isRead": "False"
             });
             //update uid into firebase 
-            SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+            SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
                 uid: uid.key
             });
-            
+            //update count notifi
+            var countNoti = 0;
+            var countDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+
+            countDataRef.once('value', function (snapshot) {
+                countNoti = snapshot.val().numberOfLatestNotis;
+                countNoti++;
+                SRSN.FIREBASE_DATABASE.ref(chefUsername).update({ "numberOfLatestNotis": countNoti });
+                countNoti = 0;
+            });
+
+            //thong bao cho nhung người đang follow tôi để họ biết tôi đã đánh giá công thức này
+            var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${userData.id}`);
+            var userFollowingData = await userRes.json();
+            var chefRes = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?username=${chefUsername}`);
+            var chefData = await chefRes.json();
+            var chefFullname = chefData.lastName + " " + chefData.firstName;
+            for (var user of userFollowingData) {
+                myDataRef = SRSN.FIREBASE_DATABASE.ref(user.username);
+                uid = myDataRef.push({
+                    "uid": "",
+                    "username": userData.lastName + " " + userData.firstName,
+                    "content": "đã đánh giá công thức của <b>" + chefFullname + "</b>",
+                    "date": new Date().toLocaleString(),
+                    "link": "/recipe/" + data.recipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase 
+                SRSN.FIREBASE_DATABASE.ref("/" + user.username + "/" + uid.key).update({
+                    uid: uid.key
+                });
+                
+            }
+            //update count notifi
+                countNoti = 0;
+                //myDataRef = SRSN.FIREBASE_DATABASE.ref(user.username);
+
+                myDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref("/" + user.username).update({ numberOfLatestNotis: countNoti });
+                });
         }
         //thông báo cộng điểm
         myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
@@ -628,10 +670,30 @@ const callCreateRatingRecipe2Api = async (recipeId, star, comment) => {
         SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
             uid: uid.key
         });
+        //update count notifi
+        var countNoti = 0;
+        var countDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+
+        countDataRef.once('value', function (snapshot) {
+            countNoti = snapshot.val().numberOfLatestNotis;
+            countNoti++;
+            SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
+            countNoti = 0;
+        });
+        
+        
+        $(".close-alert").on("click", function () {
+            $(this).parent(".alert").slideUp();
+        });
         
     } else if (res.status == 400) {
         removeAlert();
         $(".form-rating-recipe").append(alertRatedWarning);
+
+
+        $(".close-alert").on("click", function () {
+            $(this).parent(".alert").slideUp();
+        });
         return;
     }
 };
@@ -641,7 +703,7 @@ const createReplyView = (replyUser, cmtId, recipeId) => `<ul class="reply-${repl
                         <a href="#"><img class="user-reply-comment" src="${replyUser.avatarImageUrl}" alt="avatar" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';"/></a>
                     </div>
                     <div class="comment">
-                        <h5><a href="#">${replyUser.firstName} ${replyUser.lastName}</a></h5>
+                        <h5><a href="#">${replyUser.lastName} ${replyUser.firstName}</a></h5>
                         <div class="comment-form">
                             <textarea class="reply-comment" name="reply-${cmtId}" id="message" cols="3" rows="3"></textarea>
                                         <a onclick="callCreateReplyCommentApi(${recipeId}, ${cmtId})" class="reply-button">Đăng</a>
@@ -681,11 +743,11 @@ const createSingleReplyComment = (replyComment, parentId) => `<ul class="replied
                         <a href="#"><img class="user-reply-comment" src="${replyComment.avatarUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" alt="avatar"/></a>
                     </div>
                     <div class="comment">
-                    <div class="dropdown dropdown-custom">
+                    <div class="dropdown dropdown-custom" id="delete-comment-${replyComment.userId}" style="display:none">
                         <span class="fa fa-ellipsis-v dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"></span>
-                            <ul class="dropdown-menu dropdown-menu-custom"  role="menu" aria-labelledby="menu1">
-                                <li class="comment-owner-${replyComment.userId}" style="display: none"><a href="#" onclick="deactivateComment(${replyComment.id},${replyComment.recipeId}, ${parentId})">Xóa</a></li>
-                                <li><a href="#">Báo cáo</a></li>
+                            <ul class="dropdown-menu dropdown-menu-custom"  role="menu" aria-labelledby="menu1" >
+                                <li class="comment-owner-${replyComment.userId}" ><a href="#" onclick="deactivateComment(${replyComment.id},${replyComment.recipeId}, ${parentId})">Xóa</a></li>
+                                
                             </ul>
                     </div>
                     
@@ -709,6 +771,7 @@ const callGetReplyComtApi = async (parentId, recipeId) => {
         var itemReply = createSingleReplyComment(item, parentId);
 
         $(`li[data-user-id=${parentId}]`).append(itemReply);
+        
     }
     //tim user dựa theo userid để biết comment của ai, thì người đó có thể xóa comment
     var authorization = localStorage.getItem("authorization");
@@ -722,7 +785,7 @@ const callGetReplyComtApi = async (parentId, recipeId) => {
     });
     var user = await resUser.json();
     var userId = user.id;
-    $(`.comment-owner-${userId}`).css("display", "block");
+    $(`#delete-comment-${userId}`).css("display", "block");
 };
 
 //This function to handle create reply comment
@@ -779,7 +842,7 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
                     var myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                     var uid = myDataRef.push({
                         "uid": "",
-                        "username": userData.firstName + " " + userData.lastName,
+                        "username": userData.lastName + " " + userData.firstName,
                         "content": "đã trả lời bình luận về bài viết của bạn.",
                         "date": new Date().toLocaleString(),
                         "link": "/recipe/" + data.recipeId,
@@ -789,6 +852,16 @@ const callCreateReplyCommentApi = async (recipeId, commentParentId) => {
                     SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
                         uid: uid.key
                     });
+                    //update count notifi
+                    var countNoti = 0;
+                    var countDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+
+                    countDataRef.once('value', function (snapshot) {
+                        countNoti = snapshot.val().numberOfLatestNotis;
+                        countNoti++;
+                        SRSN.FIREBASE_DATABASE.ref(chefUsername).update({ "numberOfLatestNotis": countNoti });
+                    });
+
                     
                 } catch (e) {
                     console.error("Exception create rely comment: ", e);
@@ -830,16 +903,27 @@ const notifyDependencyCommentedUser = async function (commentParentId) {
                 var myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameParentComment);
                 var uid = myDataRef.push({
                     "uid": "",
-                    "username": userData.firstName + " " + userData.lastName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã trả lời bình luận của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.recipeId,
                     "isRead": "False"
                 });
                 //update uid into firebase 
-                SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
+                SRSN.FIREBASE_DATABASE.ref("/" + usernameParentComment + "/" + uid.key).update({
                     uid: uid.key
                 });
+
+                //update count notifi
+                var countNoti = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(usernameParentComment);
+
+                countDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref(usernameParentComment).update({ "numberOfLatestNotis": countNoti });
+                });
+
             }
       
     } catch (e) {
@@ -853,14 +937,14 @@ const createShareRecipeModal = (recipe, dataUser) => `<div class="activity--list
                         <li>
                             <div class="activity--item">
                                 <div class="activity--avatar">
-                                    <a href="/account/information/${dataUser.username}">
+                                    <a href="/account/timeline/${dataUser.username}">
                                         <img src="${dataUser.avatarImageUrl}"  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
                                     </a>
                                 </div>
 
                                 <div class="activity--info fs--14">
                                     <div class="activity--header">
-                                        <p><a href="/account/information/${dataUser.username}">${dataUser.firstName} ${dataUser.lastName}</a></p>
+                                        <p><a href="/account/timeline/${dataUser.username}">${dataUser.lastName} ${dataUser.firstName}</a></p>
                                     </div>
 
                                     <div class="activity--content">
@@ -955,7 +1039,7 @@ const callCreateShareRecipeModalApi = async (id) => {
                 myDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
                 uid = myDataRef.push({
                     "uid": "",
-                    "username": userData.firstName + " " + userData.lastName,
+                    "username": userData.lastName + " " + userData.firstName,
                     "content": "đã chia sẻ bài viết của bạn.",
                     "date": new Date().toLocaleString(),
                     "link": "/recipe/" + data.referencedRecipeId,
@@ -965,6 +1049,25 @@ const callCreateShareRecipeModalApi = async (id) => {
                 SRSN.FIREBASE_DATABASE.ref("/" + chefUsername + "/" + uid.key).update({
                     uid: uid.key
                 });
+                //update count notifi
+                var countNoti = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(chefUsername);
+
+                countDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref(chefUsername).update({ "numberOfLatestNotis": countNoti });
+                });
+                //update count notifi
+                var countNoti = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+
+                countDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti });
+                });
+
                 //thông báo cộng điểm
                 myDataRef  = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
                 uid = myDataRef.push({
@@ -979,6 +1082,8 @@ const callCreateShareRecipeModalApi = async (id) => {
                 SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
                     uid: uid.key
                 });
+
+                
 
             } catch (e) {
                 console.error("Exception create rely comment: ", e);
@@ -1138,9 +1243,64 @@ const callSuggestRecipeApi = async () => {
             }
         });
         var data = await res.json();
+        if (data.length == 0) {
+            $("#title-maybe-like").hide();
+        }
         for (var item of data) {
             let element = createSingleSuggestRecipeElement(item);
             $("#list-suggest-recipe").append(element);
         }
     }
 };
+var apikeyFilestack = 'A1p11nq0RoGb8BRod5sOgz';
+var clientFilestack = filestack.init(apikeyFilestack);
+var onProgress = (evt) => {
+    document.getElementById('progress').innerHTML = `${evt.totalPercent}%`;
+};
+$('#upload-image').on("change", function (e) {
+    const files = event.target.files;
+    const file = files.item(0);
+    if (files && file) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#fileUploadedPreview').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(file);
+    }
+});
+$("#comment-form").submit(function (e) {
+    e.preventDefault();
+    const token = {};
+    var file = $('#fileUploadedPreview').attr('src');
+    var authorization = localStorage.getItem("authorization");
+    var username = localStorage.getItem("username");
+    var tokenAuthorize = (JSON.parse(authorization))["token"];
+    clientFilestack.upload(file, {}, {}, token)
+        .then(res => {
+            $('#fileUploadedLink').val(res.url);
+            $('#fileUploadedPreview').attr('src', res.url);
+            var formData = $('#comment-form').serializeArray();
+            var data = {};
+            $.map(formData, function (n, i) {
+                data[n['name']] = n['value'];
+            });
+            fetch(`${BASE_API_URL}/api/collection/create`, {
+                method: 'POST', // or 'PUT'
+                body: JSON.stringify(data), // data can be `string` or {object}!
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokenAuthorize}`
+                }
+            }).then(res => {
+                if (res.status == 200) {
+                    $("#modal-create-new-collection").hide();
+                    $("#modal-body-add-collection").html("");
+                    callReadCollectionModalApi();
+                }
+            }).catch(error => console.error('Error:', error));
+
+        })
+        .catch(err => {
+            console.log(err)
+        });
+});

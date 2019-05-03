@@ -1,4 +1,5 @@
-﻿using ServiceStack.Redis;
+﻿using ServiceStack;
+using ServiceStack.Redis;
 using SRSN.UserBehavior.Entities;
 using SRSN.UserBehavior.Entities.Services;
 using System;
@@ -80,17 +81,30 @@ namespace SRSN.UserBehavior.CollaborativeFilteringCore
             double[] scoreRecipe;
             var recipeContain = new List<Recipe>();
             var listRecipes = recipeService.GetListRecipes().Result;
+            redisClient.RemoveRangeFromSortedSet(redisRankRecipe, 0, -1);
             foreach (var recipe in listRecipes)
             {
-                var totalView = recipe.ViewQuantity.Value;
-                var totalShare = recipe.ShareQuantity.Value;
-                var totalLike = recipe.LikeQuantity.Value;
-                var ratingRecipe = recipe.EvRating.Value;
-                var createRecipeTime = recipe.CreateTime.Value;
-                var currentTime = DateTime.Now.ToLocalTime();
-                var timeLeft = currentTime - createRecipeTime;
-                score = (ratingRecipe * 0.4 + totalView * 0.1 + totalLike * 0.3 + totalShare * 0.2) / timeLeft.TotalHours;
-                redisClient.AddItemToSortedSet(redisRankRecipe, recipe.Id.ToString(), score);
+                if(recipe != null)
+                {
+                    
+                    var totalView = recipe.ViewQuantity.Value;
+                    var totalShare = recipe.ShareQuantity.Value;
+                    var totalLike = recipe.LikeQuantity.Value;
+                    var ratingRecipe = recipe.EvRating.Value;
+                    var createRecipeTime = DateTime.Now.ToLocalTime();
+                    var currentTime = DateTime.Now.ToLocalTime();
+                    if (recipe.CreateTime != null)
+                    {
+                        createRecipeTime = recipe.CreateTime.Value;
+                    }
+                    else if (recipe.UpdateTime != null)
+                    {
+                        createRecipeTime = recipe.UpdateTime.Value;
+                    }
+                    var timeLeft = currentTime - createRecipeTime;
+                    score = (ratingRecipe * 0.4 + totalView * 0.1 + totalLike * 0.3 + totalShare * 0.2) / timeLeft.TotalHours;
+                    redisClient.AddItemToSortedSet(redisRankRecipe, recipe.Id.ToString(), score);
+                }
             }
         }
 

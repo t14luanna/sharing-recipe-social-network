@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="recipepress/css/colors/color-1.css" id="changeColorScheme">
 
     <!-- ==== Custom Stylesheet ==== -->
-    <link rel="stylesheet" href="recipepress/css/custom.css">
+    <link rel="stylesheet" href="~/recipepress/css/custom.css">
     <link rel="stylesheet" href="~/recipepress/css/rankuser.css">
 }
 
@@ -57,13 +57,13 @@
                             <!-- Main Sidebar Start -->
                             <div class="main--sidebar col-md-4 pb--60">
                                 <!-- Widget Start -->
-                                <div class="widget main-content-custom">
-                                    <h3>Top thành viên</h3>
+                                <div class="widget main-content-custom"  id="top-suggest-friends">
+                                    <h3>Người cùng sở thích với bạn</h3>
                                     <div class="top-chefee-list" id="top-user-list">
-                                        
+
                                     </div>
                                 </div>
-                                <div class="widget main-content-custom recipe-seen-content">
+                                <div class="widget main-content-custom recipe-seen-content" id="recipe-seen-content">
                                     <h3>Công thức vừa xem</h3>
                                     <ul id="list-recent-recipe"></ul>
                                 </div>
@@ -102,10 +102,15 @@
     <script type="text/javascript" src="/recipepress/js/color-switcher.min.js"></script>
     <script type="text/javascript" src="/recipepress/js/main.js"></script>
     <script type="text/javascript" src="~/js/menu-widgets.js"></script>
-    <script type="text/javascript" src="~/js/follow-unfollow-funtion.js"></script>
-
-
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script type="text/javascript" src="~/js/follow-unfollow-funtion.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/recipepress/js/ckeditor/ckeditor.js"></script>
+    <script src="~/recipepress/js/ckeditor/adapters/jquery.js"></script>
+    <script src="~/recipepress/js/ckeditor/config.js"></script>
+    <script src="~/recipepress/js/ckeditor/styles.js"></script>
+
     <script type="text/javascript">
         const changeHeadername = async () => {
             var someText = "Cộng đồng";
@@ -115,12 +120,12 @@
             await changeHeadername();
             await callNewsfeedPageApi();
             await loadRecipeLocalStorage();
-            await callTopUserApi();
+            await callTopSuggestUserApi();
             $(".close-share-recipe").on("click", function (e) {
                 $(".modal-share-post").css("display", "none");
             });
-            await attachInputSearchCallback();
-            
+            //await attachInputSearchCallback();
+
         })();
 
         var newsFeedGetMorePage = 0;
@@ -130,7 +135,8 @@
         };
         function openShareModal(e) {
             var recipeId = e.getAttribute("data-recipe-id");
-            callShareRecipeModalApi(recipeId);
+            var recipeOwner = e.getAttribute("data-recipeOwner-name");
+            callShareRecipeModalApi(recipeId, recipeOwner);
             $(".modal-share-post").css("display", "block");
         }
 

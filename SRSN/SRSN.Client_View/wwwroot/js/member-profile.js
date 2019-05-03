@@ -75,10 +75,7 @@ const callAccountInforApi = async (username) => {
         res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-username?userName=${username}`); /* tim theo user name*/
         data = await res.json();
     }
-    var friendsRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-following-user?userName=` + username);
-    var friendData = await friendsRes.json();
-    var countFriends = friendData.length;
-    $("#count-friends").text(countFriends);
+    
     //Update profile user
     $("#btnUpdateInfo").on("click", async function (e) {
         $(this).attr("disabled", "disabled");
@@ -102,14 +99,14 @@ const callAccountInforApi = async (username) => {
             }
         });
         if (res.status == 200) {
-            Swal.fire({
+            swal({
                 type: 'success',
                 title: 'Thông báo',
                 text: 'Cập nhật thông tin thành công!',
             })
             setTimeout(async function () {
                 var username = localStorage.getItem("username");
-                window.location.href = `/account/information/${username}`
+                location.reload();
             }, 1500);
         }
     });
@@ -137,14 +134,14 @@ const callAccountInforApi = async (username) => {
         });
         var data = await res.json();
         if (res.status == 200) {
-            Swal.fire({
+            swal({
                 type: 'success',
                 title: 'Thông báo',
                 text: 'Cập nhật thông tin thành công!',
             })
             setTimeout(async function () {
                 var username = localStorage.getItem("username");
-                //window.location.href = `/account/information/${username}`
+                location.reload();
             }, 1500);
         }
     });
@@ -175,14 +172,14 @@ const callAccountInforApi = async (username) => {
             }
         }); 
         if (res.status == 200) {
-            Swal.fire({
+            swal({
                 type: 'success',
                 title: 'Thông báo',
                 text: 'Cập nhật thông tin thành công!',
             })
             setTimeout(async function () {
                 var username = localStorage.getItem("username");
-                //window.location.href = `/account/information/${username}`
+                location.reload();
             }, 1500);
         }
     });

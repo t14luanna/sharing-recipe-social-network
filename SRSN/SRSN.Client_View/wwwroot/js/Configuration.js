@@ -1,4 +1,6 @@
-﻿var BASE_API_URL = "http://localhost:44361";
+﻿window.SRSN = window.SRSN || {};
+
+var BASE_API_URL = "http://localhost:44361";
 var RECIPE_API_URL = "api/recipe";
 var ACCOUNT_API_URL = "api/account";
 var CATEGORY_API_URL = "api/category";
@@ -24,15 +26,15 @@ var RECIPE_LEVEL_ENUM = ["", "Dễ", "Trung bình", "Khó"];
 
 
 var _firebaseConfig = {
-  apiKey: "AIzaSyAD2Vqg-rHzg9WJee0Yh0VGH_i_5BQT61E",
-  authDomain: "srsnproject.firebaseapp.com",
-  databaseURL: "https://srsnproject.firebaseio.com",
-  projectId: "srsnproject",
-  storageBucket: "srsnproject.appspot.com",
-  messagingSenderId: "237911674213"
+    apiKey: "AIzaSyAD2Vqg-rHzg9WJee0Yh0VGH_i_5BQT61E",
+    authDomain: "srsnproject.firebaseapp.com",
+    databaseURL: "https://srsnproject.firebaseio.com",
+    projectId: "srsnproject",
+    storageBucket: "srsnproject.appspot.com",
+    messagingSenderId: "237911674213"
 };
+
 firebase.initializeApp(_firebaseConfig);
 
-window.SRSN = window.SRSN || {};
 SRSN.FIREBASE_DATABASE = SRSN.FIREBASE_DATABASE || {};
 SRSN.FIREBASE_DATABASE = firebase.database();

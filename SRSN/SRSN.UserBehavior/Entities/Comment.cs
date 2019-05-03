@@ -5,11 +5,6 @@ namespace SRSN.UserBehavior.Entities
 {
     public partial class Comment
     {
-        public Comment()
-        {
-            CommentLike = new HashSet<CommentLike>();
-        }
-
         public int Id { get; set; }
         public int? UserId { get; set; }
         public int? PostId { get; set; }
@@ -22,10 +17,8 @@ namespace SRSN.UserBehavior.Entities
         public int? RecipeCommentParentId { get; set; }
         public int? RecipeId { get; set; }
 
-        public virtual Post Post { get; set; }
         public virtual Recipe Recipe { get; set; }
         public virtual UserReactionRecipe RecipeCommentParent { get; set; }
         public virtual AspNetUsers User { get; set; }
-        public virtual ICollection<CommentLike> CommentLike { get; set; }
     }
 }

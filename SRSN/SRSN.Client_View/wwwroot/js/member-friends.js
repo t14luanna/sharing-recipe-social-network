@@ -1,68 +1,74 @@
-﻿const callFollowingUserApi = async (userName) => {
-        $('#pagination-container').pagination({
-        dataSource: `${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userName,
-        locator: '',// array
-        totalNumberLocator: function (response) {
-            return response.length;
-        },
-        //totalNumber: 40,
-        pageSize: 16,
-        ajax: {
-            beforeSend: function () {
-                $('#list-following-user').html('Đang tải dữ liệu ...');
-            }
-        },
-        callback: function (data, pagination) {
-            // template method of yourself
-            var html = template(data, pagination);
-            $('#list-following-user').html(html);
-            $('#list-following-user').css('height', '');
-            $('#count-friends').html(data.length);
-            $('.unfollow-btn').on('click', function (e) {
-                var followingUserId = $(e.target).siblings('input').val();;
-                var userName = localStorage.getItem('username');
-                unfollowUserFunction(userName, followingUserId);
-            });
-        }
-    });
-    var template = function (data, pagination) {
-        var pageSize = pagination.pageSize;
-        var currentPageNumber = pagination.pageNumber - 1;
-        var s = "";
-        console.log(data);
-        console.log(pagination);
-        var count = 0;
-        while (count < pageSize) {
-            var i = currentPageNumber * pageSize + count;
-            if (i >= data.length) {
-                break;
-            }
-            s += createSingleFollowingUserElement(data[i]);
-            count++;
-        }
-        return s;
-    };
+﻿
+const CallGetAllFollowUser = async (userName, limit = 16, page = 0) => {
+    var res = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-following-user?userName=${userName}&limit=${limit}&page=${page}`);
+    var data = await res.json();
+    if (data.length < limit) {
+        $(".recipe-more").css("display", "none");
+    }
+    $('#list-following-user').html("");
+    for (var item of data) {
+        var element = createSingleFollowingUserElement(item);
+        $('#list-following-user').append(element);
+        $('#list-following-user').css('height', '');
+        
+        $('.unfollow-btn').on('click', function (e) {
+            swal({
+                text: "Bạn có chắc chắn muốn bỏ theo dõi?",
+                icon: "warning",
+                buttons: ["Huỷ", "Đồng ý!"],
+                dangerMode: true,
+            })
+                .then( async (willDelete) => {
+                    if (willDelete) {
+                        var followingUserId = $(e.target).siblings('input').val();;
+                        var userName = localStorage.getItem('username');
+                        await unfollowUserFunction(userName, followingUserId);
+                        CallGetAllFollowUser(userName);
+                        $("#count-friends").text(Number.parseInt($("#count-friends").text()) - 1);
+                    } else {
+                    }
+                });
+        });
+
+    }
+    
+    
+    //location.reload();
 };
 
 const unfollowUserFunction = async (userName, followingUserId) => {
     var res = await fetch(`${BASE_API_URL}/api/userfollowing/unfollow-user?userName=` + userName + "&userFollowingId=" + followingUserId);
     var data = await res.json();
+    if (data.success) {
+        $(`#user-${followingUserId}`).remove();
+        var authorization = localStorage.getItem("authorization");
+        var token = (JSON.parse(authorization))["token"];
+        var followingUserRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/get-count-following-user`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        var followingUserData = await followingUserRes.json();
+        $('#count-friends').html(followingUserData.countFollowingUser);
+    }
     //location.reload();
 };
 
 const createSingleFollowingUserElement = (followingUser) =>
-    `<div class="col-md-3 col-xs-6 col-xxs-12">
+    `<div class="col-md-3 col-xs-6 col-xxs-12" id="user-${followingUser.id}">
                                                     <!-- Member Item Start -->
                                                     <div class="member--item online">
                                                         <div class="img img-circle">
-                                                            <a href="/account/information/${followingUser.username}" class="btn-link">
+                                                            <a href="/account/timeline/${followingUser.username}" class="btn-link">
                                                                 <img src="${followingUser.avatarImageUrl}" alt="">
                                                             </a>
                                                         </div>
 
                                                         <div class="name">
                                                             <h3 class="h6 fs--12">
-                                                                <a href="/account/information/${followingUser.username}" class="btn-link">${followingUser.firstName} ${followingUser.lastName} </a>
+                                                                <a href="/account/timeline/${followingUser.username}" class="btn-link">${followingUser.lastName} ${followingUser.firstName} </a>
                                                             </h3>
                                                         </div>
                                                         <div class="actions">
@@ -73,7 +79,7 @@ const createSingleFollowingUserElement = (followingUser) =>
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="#" title="Bỏ theo dõi" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
+                                                                    <a href="javascript:void(0)" title="Bỏ theo dõi" class="btn-link unfollow-btn" data-toggle="tooltip" data-placement="bottom">
                                                                         <input type="hidden" value="${followingUser.id}">
                                                                         <i class="fa fa-user-times"></i>
                                                                     </a>

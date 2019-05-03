@@ -51,6 +51,7 @@
     <Compile Include="Entities\StepsOfRecipe.cs" />
     <Compile Include="Entities\Store.cs" />
     <Compile Include="Entities\StoreBrand.cs" />
+    <Compile Include="Entities\StoreBrandIngredient.cs" />
     <Compile Include="Entities\UserBlock.cs" />
     <Compile Include="Entities\UserFollowing.cs" />
     <Compile Include="Entities\UserReactionPost.cs" />
@@ -68,6 +69,7 @@
   <ItemGroup>
     <PackageReference Include="GeoCoordinate.NetCore" Version="1.0.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.2" />

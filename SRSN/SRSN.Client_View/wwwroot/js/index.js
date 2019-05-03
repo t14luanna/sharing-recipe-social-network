@@ -16,7 +16,7 @@ const createSingleRecipeElement = (singeRecipe) =>
                 </h3>
                 <div class="short-separator"></div>
                 <ul class="news-post-meta post-meta">
-                   <li class="author"><a href="/account/information/${singeRecipe.username}">${singeRecipe.fullName}</a></li>
+                   <li class="author"><a href="/account/timeline/${singeRecipe.username}">${singeRecipe.fullName}</a></li>
                    <li class="date">${ new Date(singeRecipe.createTime).getDay() + "/" + new Date(singeRecipe.createTime).getMonth() + "/" + new Date(singeRecipe.createTime).getFullYear()}</li >
                    
                 </ul>
@@ -29,7 +29,7 @@ const createSingleRecipeElement = (singeRecipe) =>
                     </li>
                     
                     <li class="rating-figure rating-icons">
-                        <i class="fa fa-bar-chart stats-ico" aria-hidden="true">${singeRecipe.viewQuantity} xem</i>&nbsp
+                        <i class="fa fa-bar-chart stats-ico" aria-hidden="true"> ${singeRecipe.viewQuantity} xem</i>&nbsp
                         <span id="number-of-star-${singeRecipe.id}" style="color:#56E920"></span>
                         <span class="rating-figure">(${singeRecipe.evRating} / 5)</span>
                     </li>
@@ -165,6 +165,9 @@ const callSuggestRecipeApi = async () => {
         });
 
         var data = await res.json();
+        if (data.length == 0) {
+            $("#title-maybe-like").hide();
+        }
         for (var item of data) {
             let element = createSingleSuggestRecipeElement(item);
             $("#list-suggest-recipe").append(element);
@@ -201,7 +204,7 @@ const callPopularRecipeBannerApi = async () => {
             var numStar = item.evRating % 10;
             if (parseInt(numStar) > 0) {
                 for (var j = 0; j < parseInt(numStar); j++) {
-                    ratingStarElement += `<i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
+                    ratingStarElement += `<i class="fa fa-star" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
                 }
             }
             switch (count) {
@@ -239,7 +242,7 @@ const callPopularRecipeApi = async () => {
             var numStar = item.evRating % 10;
             $("#list-single-recipe").append(element);
             for (var i = 0; i < numStar; i++) {
-                $("#number-of-star-" + item.id).append(`<i class="fa fa-star-half-o" aria-hidden="true"></i>`);
+                $("#number-of-star-" + item.id).append(`<i class="fa fa-star" aria-hidden="true"></i>`);
             }
         }
         if (count == 9) {

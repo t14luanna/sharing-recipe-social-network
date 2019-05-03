@@ -128,6 +128,7 @@
     </div>
 </div>
 <script src="~/js/menu-widgets.js"></script>
+<script src="~/recipepress/js/sweetalertv1.js"></script>
 @section Scripts
     {
 
@@ -147,7 +148,29 @@
         })();
         function validateRegisterForm(form) {
             var password = form['password'].value;
+            var email = form['email'].value;
             var confirmPassword = form['confirmPassword'].value;
+            if (email == "") {
+                swal({
+                    title: "",
+                    text: "Email không được để trống",
+                    type: "error",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Xác nhận",
+                    closeOnConfirm: false
+                });
+            }
+            if (password == "") {
+                swal({
+                    title: "",
+                    text: "Password không được để trống",
+                    type: "error",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Xác nhận",
+                    closeOnConfirm: false
+                });
+                return false;
+            }
             if (!(/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/.test(password))) {
                 $('.error-area').html(`
                                                 <p>Ít nhất 1 chữ cái viết hoa</p>
@@ -158,7 +181,14 @@
                 return false;
             }
             if (password !== confirmPassword) {
-                alert("Mật khẩu và xác nhận mật khẩu không trùng khớp");
+                swal({
+                    title: "",
+                    text: "Mật khẩu và xác nhận mật khẩu không trùng khớp",
+                    type: "error",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Xác nhận",
+                    closeOnConfirm: false
+                });
                 return false;
             }
             return true;
@@ -189,12 +219,13 @@
                             window.location.href = '/';
 
                             //thông báo cộng điểm
+                            SRSN.FIREBASE_DATABASE.ref("/" + response.username).set({ "numberOfLatestNotis": "1" });//number of notification to show on web
                             var myDataRef = SRSN.FIREBASE_DATABASE.ref(response.username);
                             var uid = myDataRef.push({
                                 "uid": "",
                                 "username": "",
                                 "content": "Chúc mừng bạn là thành viên mới và được cộng thêm <b>10 điểm</b>",
-                                "date": new Date().toLocaleString(),
+                                "date": new Date().toLocaleString(),    
                                 "link": "/account/information/" + response.username,
                                 "isRead": "False"
                             });
@@ -202,6 +233,8 @@
                             SRSN.FIREBASE_DATABASE.ref("/" + response.username + "/" + uid.key).update({
                                 uid: uid.key
                             });
+                            
+                            
                         } else {
                             $('.error-area').html(response.message);
                         }

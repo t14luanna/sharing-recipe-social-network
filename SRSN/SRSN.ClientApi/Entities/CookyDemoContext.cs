@@ -27,12 +27,8 @@ namespace SRSN.ClientApi.Entities
         public virtual DbSet<Collection> Collection { get; set; }
         public virtual DbSet<CollectionPost> CollectionPost { get; set; }
         public virtual DbSet<Comment> Comment { get; set; }
-        public virtual DbSet<CommentLike> CommentLike { get; set; }
-        public virtual DbSet<IngredientList> IngredientList { get; set; }
         public virtual DbSet<Ingredients> Ingredients { get; set; }
         public virtual DbSet<Message> Message { get; set; }
-        public virtual DbSet<Notification> Notification { get; set; }
-        public virtual DbSet<Post> Post { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<RatingRecipe> RatingRecipe { get; set; }
         public virtual DbSet<Recipe> Recipe { get; set; }
@@ -41,9 +37,9 @@ namespace SRSN.ClientApi.Entities
         public virtual DbSet<StepsOfRecipe> StepsOfRecipe { get; set; }
         public virtual DbSet<Store> Store { get; set; }
         public virtual DbSet<StoreBrand> StoreBrand { get; set; }
+        public virtual DbSet<StoreBrandIngredient> StoreBrandIngredient { get; set; }
         public virtual DbSet<UserBlock> UserBlock { get; set; }
         public virtual DbSet<UserFollowing> UserFollowing { get; set; }
-        public virtual DbSet<UserReactionPost> UserReactionPost { get; set; }
         public virtual DbSet<UserReactionRecipe> UserReactionRecipe { get; set; }
         public virtual DbSet<UserReportRecipe> UserReportRecipe { get; set; }
         public virtual DbSet<UserReportUser> UserReportUser { get; set; }
@@ -52,6 +48,8 @@ namespace SRSN.ClientApi.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CookyDemo;User Id=sa;Password=12345678;Trusted_Connection=False;");
             }
         }
 
@@ -134,6 +132,10 @@ namespace SRSN.ClientApi.Entities
                     .IsUnique()
                     .HasFilter("([NormalizedUserName] IS NOT NULL)");
 
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Email).HasMaxLength(256);
 
                 entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
@@ -204,11 +206,6 @@ namespace SRSN.ClientApi.Entities
 
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.Comment)
-                    .HasForeignKey(d => d.PostId)
-                    .HasConstraintName("FK_Comment_SharedPost");
-
                 entity.HasOne(d => d.RecipeCommentParent)
                     .WithMany(p => p.Comment)
                     .HasForeignKey(d => d.RecipeCommentParentId)
@@ -225,93 +222,18 @@ namespace SRSN.ClientApi.Entities
                     .HasConstraintName("FK_Comment_AspNetUsers");
             });
 
-            modelBuilder.Entity<CommentLike>(entity =>
-            {
-                entity.ToTable("Comment_Like");
-
-                entity.HasOne(d => d.Comment)
-                    .WithMany(p => p.CommentLike)
-                    .HasForeignKey(d => d.CommentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Comment_Like_Comment");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.CommentLike)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Comment_Like_AspNetUsers");
-            });
-
-            modelBuilder.Entity<IngredientList>(entity =>
-            {
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.IngredientList)
-                    .HasForeignKey(d => d.RecipeId)
-                    .HasConstraintName("FK_ShoppingList_RecipePost");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.IngredientList)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_IngredientList_AspNetUsers");
-            });
-
             modelBuilder.Entity<Ingredients>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.SuggestQuantitive).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Message>(entity =>
             {
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Creator)
-                    .WithMany(p => p.MessageCreator)
-                    .HasForeignKey(d => d.CreatorId)
-                    .HasConstraintName("FK_Message_AspNetUsers");
-
-                entity.HasOne(d => d.Recipient)
-                    .WithMany(p => p.MessageRecipient)
-                    .HasForeignKey(d => d.RecipientId)
-                    .HasConstraintName("FK_Message_AspNetUsers1");
-            });
-
-            modelBuilder.Entity<Notification>(entity =>
-            {
-                entity.Property(e => e.CreateTime).HasColumnType("datetime");
-
-                entity.Property(e => e.IsRead).HasColumnName("isRead");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Notification)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Notification_AspNetUsers");
-            });
-
-            modelBuilder.Entity<Post>(entity =>
-            {
-                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.CreateTime)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.UpdateTime).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.Post)
-                    .HasForeignKey(d => d.RecipeId)
-                    .HasConstraintName("FK_SharedPost_RecipePost");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Post)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Post_AspNetUsers");
             });
 
             modelBuilder.Entity<Products>(entity =>
             {
-                entity.Property(e => e.Name).HasMaxLength(50);
-
                 entity.Property(e => e.Price).HasMaxLength(50);
 
                 entity.HasOne(d => d.Brand)
@@ -344,6 +266,8 @@ namespace SRSN.ClientApi.Entities
                 entity.Property(e => e.CreateTime)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.SaveDraft).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UpdateTime).HasColumnType("datetime");
 
@@ -380,11 +304,6 @@ namespace SRSN.ClientApi.Entities
 
                 entity.Property(e => e.Quantitative).HasMaxLength(100);
 
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.RecipeIngredient)
-                    .HasForeignKey(d => d.IngredientId)
-                    .HasConstraintName("FK_Recipe_Ingredient_Ingredients");
-
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeIngredient)
                     .HasForeignKey(d => d.RecipeId)
@@ -418,6 +337,25 @@ namespace SRSN.ClientApi.Entities
                 entity.Property(e => e.Phone).HasMaxLength(50);
 
                 entity.Property(e => e.Website).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<StoreBrandIngredient>(entity =>
+            {
+                entity.HasKey(e => new { e.StoreBrandId, e.IngredientId });
+
+                entity.ToTable("StoreBrand_Ingredient");
+
+                entity.HasOne(d => d.Ingredient)
+                    .WithMany(p => p.StoreBrandIngredient)
+                    .HasForeignKey(d => d.IngredientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_StoreBrand_Ingredient_Ingredients");
+
+                entity.HasOne(d => d.StoreBrand)
+                    .WithMany(p => p.StoreBrandIngredient)
+                    .HasForeignKey(d => d.StoreBrandId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_StoreBrand_Ingredient_StoreBrand");
             });
 
             modelBuilder.Entity<UserBlock>(entity =>
@@ -465,25 +403,6 @@ namespace SRSN.ClientApi.Entities
                     .HasConstraintName("FK_User_Following_AspNetUsers");
             });
 
-            modelBuilder.Entity<UserReactionPost>(entity =>
-            {
-                entity.ToTable("User_Reaction_Post");
-
-                entity.HasIndex(e => new { e.PostId, e.UserId })
-                    .HasName("UniqueKey_Like_Post")
-                    .IsUnique();
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.UserReactionPost)
-                    .HasForeignKey(d => d.PostId)
-                    .HasConstraintName("FK_Like_Post_Post");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserReactionPost)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Like_Post_AspNetUsers");
-            });
-
             modelBuilder.Entity<UserReactionRecipe>(entity =>
             {
                 entity.ToTable("User_Reaction_Recipe");
@@ -518,6 +437,12 @@ namespace SRSN.ClientApi.Entities
                 entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("isActive");
+
+                entity.HasOne(d => d.RecipeReported)
+                    .WithMany(p => p.UserReportRecipe)
+                    .HasForeignKey(d => d.RecipeReportedId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Report_Recipe_Recipe");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserReportRecipe)

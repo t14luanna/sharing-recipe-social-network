@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SRSN.DatabaseManager.Identities;
 using SRSN.DatabaseManager.Services;
@@ -22,7 +23,23 @@ namespace SRSN.ClientApi.Controllers
             this.userFollowingService = userFollowingService ;
             this.userManager = userManager ;
         }
-        [HttpPost("check-following-user")]
+        [HttpGet("get-count-following-user")]
+        public async Task<ActionResult> CountFollowingUser()
+        {
+            try
+            {
+                ClaimsPrincipal claims = this.User;
+                var id = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                int userId = int.Parse(id);
+                int count = userFollowingService.Get(p => p.UserId == userId && p.Active == true).ToList().Count;
+                return Ok(new { countFollowingUser = count});
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("check-following-user")]
         public async Task<ActionResult> CheckFollowingUser(int followingUserId)
         {
             try
@@ -38,19 +55,38 @@ namespace SRSN.ClientApi.Controllers
             }
         }
         [HttpGet("read-following-user")]
-        public async Task<ActionResult> ReadFollowingUser(string userName)
+        public async Task<ActionResult> ReadFollowingUser(string userName, int limit = 16, int page = 0)
         {
             try
             {
                 var user = await userManager.FindByNameAsync(userName);
                 int userid = user.Id;
-                return Ok(await userFollowingService.getAllFollowingUser(userManager, userid));
+                return Ok(await userFollowingService.getAllFollowUser(userManager, userid, limit, page));
             }
             catch (Exception ex)
             {
                 return BadRequest();
             }
         }
+
+        [HttpGet("read-following-user-autocomplete")]
+        public async Task<ActionResult> ReadFollowingUserForAutocomplete(string currentUsername, string term, int limit = 16, int page = 0)
+        {
+            try
+            {
+                var user = await userManager.FindByNameAsync(currentUsername);
+                int userId = user.Id;
+               var listUserFollowing = await userFollowingService.GetAllFollowUser(userManager, userId, term, limit, page);
+                
+
+                return Ok(listUserFollowing);   
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
 
         [HttpGet("read-user-following-me")]
         public async Task<ActionResult> ReadUserFollowingMe(string userName)

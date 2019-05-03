@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace SRSN.UserBehavior.Entities.Services
         }
         public async Task<List<Recipe>> GetListRecipes()
         {
-            var set = this.dbSet.AsNoTracking();
+            var set = this.dbSet.AsNoTracking().Where(r => r.Active == true);
             var numberOfRow = await set.CountAsync();
             if (numberOfRow > 0)
             {

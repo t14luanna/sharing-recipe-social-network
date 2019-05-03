@@ -24,77 +24,82 @@
 <div class="recipes-home-body inner-page">
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-lg-9">
-                <div class="recipe-set ">
-                    <div class="activity--list">
-                        <ul class="activity--items nav"></ul>
-                    </div>
-                        
-                </div>
-            </div>
-            <div class="col-md-4 col-lg-3">
-                <aside>
-                    <div class="side-bar">
-                        <!--recipes search widget-->
-                        <div class="widget recipe-search">
+            <div class="wrapper">
+                <section class="page--wrapper pb--20">
+                    <div class="container">
+                        <div class="row">
+                            <!-- Main Content Start -->
+                            <div class="main--content col-md-8 pb--60">
+                                <div class="main--content-inner drop--shadow main-content-custom">
 
-                            <div class="category-list">
-                                <!--<div class="list-inner">-->
-                                <ul id="list-category-item"></ul>
-                                <!--</div>-->
+                                    <div class="activity--list">
+                                        <ul class="activity--items nav"></ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="main--sidebar col-md-4 pb--60">
+
+                                <!--recipes search widget-->
+                                <div class="recipe-search">
+
+                                    <div class="category-list">
+                                        <!--<div class="list-inner">-->
+                                        <ul id="list-category-item"></ul>
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                                <!---recipes search widget ends-->
+                                <!--popular recipes widget-->
+                                <div class="widget latest-news-widget">
+                                    <h2>Công thức thịnh hành</h2>
+                                    <ul id="list-popular-recipe-widget"></ul>
+                                </div>
+
+                                <!--latest news widget-->
+                                <div class="widget latest-news-widget">
+                                    <h2>Công thức vừa xem</h2>
+                                    <ul id="list-recent-recipe"></ul>
+                                </div>
+                                <!--latest news widget ends-->
+                                <!--get social-->
+                                <div class="widget widget-get-social">
+                                    <h2>Liên kết cộng đồng</h2>
+                                    <ul>
+                                        <li class="facebook">
+                                            <a href="#">
+                                                <i class="fa fa-facebook"></i>
+                                                <span class="count">23.5K</span>
+                                                <span class="count-type">Likes</span>
+                                            </a>
+                                        </li>
+                                        <li class="twitter">
+                                            <a href="#">
+                                                <i class="fa fa-twitter"></i>
+                                                <span class="count">23.5K</span>
+                                                <span class="count-type">Likes</span>
+                                            </a>
+                                        </li>
+                                        <li class="google-plus">
+                                            <a href="#">
+                                                <i class="fa fa-google-plus"></i>
+                                                <span class="count">23.5K</span>
+                                                <span class="count-type">Likes</span>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        <!---recipes search widget ends-->
-                        <!--popular recipes widget-->
-                        <div class="widget latest-news-widget">
-                            <h2>Công thức thịnh hành</h2>
-                            <ul id="list-popular-recipe-widget"></ul>
-                        </div>
-                        
-                        <!--latest news widget-->
-                        <div class="widget latest-news-widget">
-                            <h2>Công thức vừa xem</h2>
-                            <ul id="list-recent-recipe"></ul>
-                        </div>
-                        <!--latest news widget ends-->
-                        <!--get social-->
-                        <div class="widget widget-get-social">
-                            <h2>Liên kết cộng đồng</h2>
-                            <ul>
-                                <li class="facebook">
-                                    <a href="#">
-                                        <i class="fa fa-facebook"></i>
-                                        <span class="count">23.5K</span>
-                                        <span class="count-type">Likes</span>
-                                    </a>
-                                </li>
-                                <li class="twitter">
-                                    <a href="#">
-                                        <i class="fa fa-twitter"></i>
-                                        <span class="count">23.5K</span>
-                                        <span class="count-type">Likes</span>
-                                    </a>
-                                </li>
-                                <li class="google-plus">
-                                    <a href="#">
-                                        <i class="fa fa-google-plus"></i>
-                                        <span class="count">23.5K</span>
-                                        <span class="count-type">Likes</span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </div>
-
-                        <!--get social ends-->
                     </div>
-                </aside>
+                </section>
+                <!-- Page Wrapper End -->
 
             </div>
         </div>
-
     </div>
-   
+</div>
 @section Scripts {
     <script>
         var authorization = JSON.parse(localStorage.getItem('authorization'));
@@ -112,6 +117,10 @@
     <script src="~/js/share-recipe-detail.js"></script>
 
 
+    <script src="~/recipepress/js/ckeditor/ckeditor.js"></script>
+    <script src="~/recipepress/js/ckeditor/adapters/jquery.js"></script>
+    <script src="~/recipepress/js/ckeditor/config.js"></script>
+    <script src="~/recipepress/js/ckeditor/styles.js"></script>
     <script type="text/javascript">
         const changeHeadername = async () => {
             var someText = "Bài viết được chia sẻ";
@@ -125,7 +134,7 @@
             await loadRecipeLocalStorage();
             await RedirectAPI();
         })();
-        
+
     </script>
- 
+
 }

@@ -1,4 +1,4 @@
-﻿@page "/account/my-recipe/{username}/{recipe_id}"
+﻿@page "/account/my-recipe/{username}/{recipe_id}/{typeOfAction}"
 @model SRSN.Client_View.Pages.EditMyRecipeModel
 @{
 
@@ -31,16 +31,16 @@
             font-size: 16px;
         }
 
-        input[type=text] {
-            /*background-color: #f1f1f1;*/
-            width: 100%;
-        }
+            input[type=text] {
+                /*background-color: #f1f1f1;*/
+                width: 100%;
+            }
 
-        input[type=submit] {
-            background-color: DodgerBlue;
-            color: #fff;
-            cursor: pointer;
-        }
+            input[type=submit] {
+                background-color: DodgerBlue;
+                color: #fff;
+                cursor: pointer;
+            }
 
         .autocomplete-items {
             position: absolute;
@@ -54,24 +54,25 @@
             right: 0;
         }
 
-        .autocomplete-items div {
-            padding: 10px;
-            cursor: pointer;
-            background-color: #fff;
-            border-bottom: 1px solid #d4d4d4;
-        }
+            .autocomplete-items div {
+                padding: 10px;
+                cursor: pointer;
+                background-color: #fff;
+                border-bottom: 1px solid #d4d4d4;
+            }
 
-            /*when hovering an item:*/
-        .autocomplete-items div:hover {
-            background-color: #e9e9e9;
-        }
+                /*when hovering an item:*/
+                .autocomplete-items div:hover {
+                    background-color: #e9e9e9;
+                }
 
         /*when navigating through the items using the arrow keys:*/
         .autocomplete-active {
             background-color: DodgerBlue !important;
             color: #ffffff;
         }
-        .dropzone .dz-preview .dz-image{
+
+        .dropzone .dz-preview .dz-image {
             height: 238px;
             width: 238px
         }
@@ -92,6 +93,7 @@
                         <div class="tabs-container">
                             <div class="tab-content" id="congthuc" style="display: block;">
                                 <div class="submit-recipe-form">
+                                    <input type="hidden" name="recipeId" id="recipeId" value="0" />
                                     <label for="upload-image">Ảnh đại diện cho món ăn*</label>
                                     <span class="error" name="avatarUpload">*Hình đại diện không được để trống</span>
                                     <div class="form-group col-sm-12">
@@ -99,7 +101,7 @@
                                     </div>
                                     <input type="file" name="avatarUpload" id="upload-image" required />
                                     <span class="error" name="title">*Tiêu đề không được để trống</span>
-                                    <input type="text" name="title" id="title" placeholder="Nhập tên công thứ*" required />
+                                    <input type="text" name="title" id="title" placeholder="Nhập tên công thức*" required />
                                     <br />
                                     <span class="error" name="content">*Nội dung không được để trống</span>
                                     <input id="recipe-active" type="hidden">
@@ -221,7 +223,13 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
+    <script src="~/recipepress/js/sweetalertv1.js"></script>
     <script type="text/javascript" src="~/recipepress/js/main.js"></script>
     <script type="text/javascript" src="~/recipepress/js/custom.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -233,6 +241,121 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
     <script src="~/js/notification.js"></script>
     <script src="~/js/Configuration.js"></script>
+    <script type="text/javascript">
+
+        async function saveDraft(isSystemSaveDraft) {
+            if (!isSystemSaveDraft) $("#loading-box").show();
+            var currentDraftedRecipe = getData(@(RouteData.Values["recipe_id"]));
+            var data = currentDraftedRecipe.data;
+            data.recipeVM.SaveDraft = true;
+            data.recipeVM.Id = $("#recipeId").val() ? $("#recipeId").val() : 0;
+
+            var authorization = localStorage.getItem("authorization");
+            var token = (JSON.parse(authorization))["token"];
+            fetch(`${BASE_API_URL}/api/recipe/save-draft?recipeId=${data.recipeVM.Id}`, {
+                method: "PUT",
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(async (res) => {
+                $("#loading-box").hide();
+                if (res.status === 200) {
+                    if (!isSystemSaveDraft) {
+                        swal({
+                            title: "",
+                            text: "Bạn đã lưu nháp công thức thành công",
+                            type: "success",
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Xác nhận",
+                            closeOnConfirm: false
+                        });
+                        setTimeout(async function () {
+                            var resData = (await res.json());
+                            recipeId = resData.recipe[0].id;
+                            //window.location.href = `/recipe/${recipeId}`
+                            history.back();
+                            window.localStorage.removeItem("darftedRecipe");
+                        }, 1500);
+                    }
+                    else {
+                        var resData = (await res.json());
+                        for (var item of resData.recipe) {
+                            $("#recipeId").val(item.id);
+                            var ingredientIds = $("input[name='ingredientId']");
+                            var stepIds = $("input[name='stepsId']");
+                            $(ingredientIds).each(i => {
+                                $(ingredientIds[i]).val(item.listIngredient[i].id)
+                            });
+                            $(stepIds).each(i => {
+                                $(stepIds[i]).val(item.listSORVM[i].id)
+                            })
+                        }
+                    }
+
+                }
+            }).catch(function (e) {
+                $("#loading-box").hide();
+            })
+        };
+
+        async function submitRecipe() {
+            $("#loading-box").show();
+            var currentDraftedRecipe = JSON.parse(window.localStorage.getItem("darftedRecipe"));
+            var results = getData(currentDraftedRecipe, false);
+            var data = results.data;
+            if (results.validation === false) {
+                window.scrollTo(0, 400);
+                $("#congthucBtn").click();
+                swal({
+                    type: 'error',
+                    title: 'Thông báo',
+                    text: 'Các nội dung không được để trống!',
+                });
+                $("#loading-box").hide();
+                return;
+            } else {
+                var data = results.data;
+                data.recipeVM.SaveDraft = false;
+                data.recipeVM.Id = $("#recipeId").val() ? $("#recipeId").val() : 0;
+                //data = await uploadImageSubmit(data);
+                var recipeId;
+                var authorization = localStorage.getItem("authorization");
+                var token = (JSON.parse(authorization))["token"];
+                await fetch(`${BASE_API_URL}/api/recipe/submit-recipe?recipeId=${data.recipeVM.Id}`, {
+                    method: "PUT",
+                    //body: JSON.stringify({ request: data }),
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }).then(async (res) => {
+                    $("#loading-box").hide();
+                    if (res.status === 200) {
+                        swal({
+                            title: "",
+                            text: "Bạn đã chia sẻ công thức mới thành công",
+                            type: "success",
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Xác nhận",
+                            closeOnConfirm: false
+                        });
+                        setTimeout(async function () {
+                            var data = (await res.json());
+                            recipeId = data.recipeId;
+                            window.location.href = `/recipe/${recipeId}`
+                            window.localStorage.removeItem("darftedRecipe");
+                        }, 1500);
+                    }
+                })
+                    .catch(function (e) {
+                        $("#loading-box").hide();
+                    });
+            }
+        }
+    </script>
     <script src="~/js/menu-widgets.js"></script>
     <script src="~/js/edit-my-recipe.js"></script>
 
@@ -247,10 +370,10 @@
             await callLatestRecipeWidgetApi();
             await callListCategoryItem();
             await callPopularRecipeWidgetApi();
-            await loadCategory();
+            await loadCategory(@(RouteData.Values["recipe_id"]));
             await RedirectAPI();
             await recipeDetailsByRecipeId(@(RouteData.Values["recipe_id"]));
-            $('#submitBtn').on("click", async function (event) {
+            @*$('#submitBtn').on("click", async function (event) {
                 $("#loading-box").show();
                 var username = localStorage.getItem("username");
                 var currentUrl = window.location.href;
@@ -283,6 +406,55 @@
                             }, 1500);
                         }
                     })
+            });*@
+            $('#submitBtn').on("click", async function (event) {
+                var isDraft = '@(RouteData.Values["typeOfAction"].ToString() == "draft")' == 'True';
+                if (!isDraft) {
+                    swal("Bạn chắc chắn muốn công khai công thức?", {
+                        buttons: {
+                            cancel: "Quay về",
+                            submit: {
+                                text: "Cập nhật",
+                                value: "submit",
+                            },
+                        },
+                    })
+                        .then((value) => {
+                            switch (value) {
+                                case "submit":
+                                    submitRecipe();
+                                    break;
+                                case "cancel":
+                                    break;
+                            }
+                        });
+                } else {
+                    swal("Bạn chắc chắn muốn công khai công thức?", {
+                        buttons: {
+                            cancel: "Quay về",
+                            draft: {
+                                text: "Lưu nháp",
+                                value: "draft",
+                            },
+                            submit: {
+                                text: "Công khai",
+                                value: "submit",
+                            },
+                        },
+                    })
+                        .then((value) => {
+                            switch (value) {
+                                case "submit":
+                                    submitRecipe();
+                                    break;
+                                case "draft":
+                                    saveDraft(false);
+                                    break;
+                                case "cancel":
+                                    break;
+                            }
+                        });
+                }
             });
         })();
         async function SuggestIngredient(e) {
@@ -364,5 +536,22 @@
                 closeAllLists(e.target);
             });
         }
+        var isDraft = '@(RouteData.Values["typeOfAction"].ToString() == "draft")' == 'True';
+        if (isDraft) {
+            (function () {
+                var countToServerSaveDraft = 0;
+                var saveDraftThread = setInterval(function () {
+                    if (countToServerSaveDraft == 5) {
+                        // do nothing
+                        countToServerSaveDraft = 0;
+                        saveDraft(true);
+                    }
+                    else {
+                        ++countToServerSaveDraft;
+                    }
+                }, 2000);
+            })();
+        }
+
     </script>
 }

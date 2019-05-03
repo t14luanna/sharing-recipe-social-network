@@ -63,7 +63,21 @@ const createSingleCategoryItemRecipePage = (item) =>
                                                 </div>
                                             </li>
                                            `;
-
+const callAllLatestRecipes = async (limit = 18, page = 0) => {
+    var res = await fetch(`${BASE_API_URL}/api/recipe/read-latest-page?limit=${limit}&page=${page}`);
+    var data = await res.json();
+    for (var item of data) {
+        var numStar = item.evRating % 10;
+        var ratingStarElement = "";
+        if (numStar > 0) {
+            for (var j = 0; j < parseInt(numStar); j++) {
+                ratingStarElement += `<i class="fa fa-star" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
+            }
+        }
+        $('#list-latest-recipe-page').append(createSingleLatestRecipeElementPage(item, ratingStarElement));
+        ratingStarElement = "";
+    }
+};
 const callListCategoryItemRecipePage = async () => {
     var res = await fetch(`${BASE_API_URL}/api/category/read-categoryitem?categoryMainId=1`);
     var data = await res.json();

@@ -275,7 +275,7 @@
 
 .custom-listing {
     /*width: 262.725px !important;*/
-    height: 350.725px !important;
+    height: 371.725px !important
     /*margin-left: 20px;*/
 }
 
@@ -840,12 +840,13 @@ input[name=ingredient] {
 }
 .scroll-notification {
     display: none;
-    height: 400px;
+    max-height: 400px!important;
     overflow: auto;
     padding-top: 20px;
     padding-bottom: 20px;
     margin-bottom: 0px;
     margin-top: 0px;
+    height: initial!important;
 }
 /*top user style newsfeed*/
 .top-chefee .member-item-wrapper {
@@ -1011,6 +1012,21 @@ input[name=ingredient] {
         text-decoration: none;
         color: #333;
     }
+.latest-recipe-more-inner {
+    border: .5px solid #ddd;
+    background: #fff;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 12px;
+    position: relative;
+    padding: 15px;
+    border: solid forestgreen;
+}
+    .latest-recipe-more-inner a {
+        display: block;
+        text-decoration: none;
+        color: #333;
+    }
 .main--content-inner{
     background-color: white
 }
@@ -1041,8 +1057,8 @@ input[name=ingredient] {
     margin-right: auto;
     display: block;
 }
-.recipe-seen-content{
-    margin-top: 20px!important
+#top-suggest-friends {
+    margin-bottom: 20px !important
 }
 #list-recent-recipe li{
     padding: 15px
@@ -1143,4 +1159,47 @@ input[name=ingredient] {
 }
 #list-of-ingredients li{
     height: 40px
+}
+#list-notification {
+    width: 400px;
+    top: 50px;
+}
+#btn-create-new-collection {
+    cursor: pointer;
+}
+.username-mention {
+    font-weight: 600!important;
+    color: rgb(27, 149, 224)!important
+}
+.nav-display-none{
+    display: none!important
+}
+.cke_top{
+    display: none!important
+}
+.cke_reset{
+    height:100px!important
+}
+.cke_chrome {
+    border: none !important;
+    border-bottom: 1px solid #d1d1d1!important;
+}
+.href-mention-fullname {
+    font-weight: 600 !important;
+    color: rgb(27, 149, 224) !important;
+}
+.acomment--content > p > a, .acomment--content > a {
+    font-weight: 600 !important;
+    color: rgb(27, 149, 224) !important;
+}
+.cke_autocomplete_panel{
+    width: 500px!important
+}
+.follow-btn-custom {
+    width: fit-content;
+    display: block;
+    margin: auto;
+}
+.latest-news-widget, .widget-get-social {
+    background: white
 }

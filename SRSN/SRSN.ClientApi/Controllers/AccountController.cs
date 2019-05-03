@@ -12,8 +12,10 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SRSN.DatabaseManager;
 using SRSN.DatabaseManager.Identities;
+using SRSN.DatabaseManager.Redis;
 using SRSN.DatabaseManager.Services;
 using SRSN.DatabaseManager.ViewModels;
+using StackExchange.Redis;
 
 namespace SRSN.ClientApi.Controllers
 {
@@ -21,13 +23,17 @@ namespace SRSN.ClientApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-
+        private string rankFriendsPrefix = "RCS_Friends_";
         private SRSNUserManager userManager;
+        private IDatabase redisDatabase;
         private IMapper mapper;
-        public AccountController(SRSNUserManager userManager, IMapper mapper)
+        private readonly IUserFollowingService ufService;
+        public AccountController(SRSNUserManager userManager, IUserFollowingService ufService, IMapper mapper)
         {
             this.userManager = userManager;
             this.mapper = mapper;
+            this.redisDatabase = RedisUtil.Connection.GetDatabase();
+            this.ufService = ufService;
         }
 
         [HttpPost("register")]
@@ -44,6 +50,7 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(data, user);
             user.SecurityStamp = Guid.NewGuid().ToString();
             user.UserName = data.UsernameVM;
+            user.Active = true;
 
             if (data.Password != data.ConfirmPassword)
             {
@@ -140,6 +147,36 @@ namespace SRSN.ClientApi.Controllers
         {
             var list = new List<AccountViewModel>();
             foreach (var u in userManager.Users.ToList().OrderByDescending(u => u.Point).Take(13))
+            {
+                var user = u;
+                var userVM = new AccountViewModel();
+                mapper.Map(user, userVM);
+                list.Add(userVM);
+            }
+            return list;
+        }
+
+        [HttpGet("get-top-suggest-friends")]
+        [Authorize]
+        public async Task<IEnumerable<AccountViewModel>> GetTopSuggestFriends()
+        {
+            var list = new List<AccountViewModel>();
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userIdInt =int.Parse(userId);
+            var key = $"{rankFriendsPrefix}{userId}";
+
+            // take limit from redis
+            var datas = await redisDatabase.SortedSetRangeByScoreWithScoresAsync(key);
+            var dataIds = datas.Select(x =>
+            {
+                int friendId = 0;
+                int.TryParse(x.Element, out friendId);
+                return friendId;
+            }).ToList();
+            var listFollowedUser = ufService.GetAllFollowUser(userIdInt, 1000, 0).Select(x=>x.Id);
+            var listUnfollowedUserIds = dataIds.Where(x => !listFollowedUser.Contains(x));
+            foreach (var u in userManager.Users.Where(x=>listUnfollowedUserIds.Contains(x.Id)).ToList().Take(5))
             {
                 var user = u;
                 var userVM = new AccountViewModel();

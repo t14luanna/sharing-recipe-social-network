@@ -19,7 +19,7 @@
 
                         <!--recipe of the day-->
                         <div class="recipe-of-day" id="collection-of-day">
-                            
+
                         </div>
                         <!--recipe of the day ends-->
 
@@ -105,6 +105,12 @@
 
 
 @section Scripts {
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
     <script src="~/js/collection.js"></script>
     <script type="text/javascript" src="~/recipepress/js/pagination.js"></script>
     <script type="text/javascript" src="~/js/recipe.js"></script>

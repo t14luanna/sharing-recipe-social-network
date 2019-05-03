@@ -11,129 +11,20 @@
         </div>
         <ul class="nav navbar-top-links navbar-right">
             <li>
-                <span class="m-r-sm text-muted welcome-message">Welcome to Admin Page</span>
-            </li>
-            <li class="dropdown">
-                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                    <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
-                </a>
-                <ul class="dropdown-menu dropdown-messages">
-                    <li>
-                        <div class="dropdown-messages-box">
-                            <a class="dropdown-item float-left" href="profile.html">
-                                <img alt="image" class="rounded-circle" src="img/a7.jpg">
-                            </a>
-                            <div class="media-body">
-                                <small class="float-right">46h ago</small>
-                                <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                                <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <div class="dropdown-messages-box">
-                            <a class="dropdown-item float-left" href="profile.html">
-                                <img alt="image" class="rounded-circle" src="img/a4.jpg">
-                            </a>
-                            <div class="media-body ">
-                                <small class="float-right text-navy">5h ago</small>
-                                <strong>Chris Johnatan Overtunk</strong> started following <strong>Monica Smith</strong>. <br>
-                                <small class="text-muted">Yesterday 1:21 pm - 11.06.2014</small>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <div class="dropdown-messages-box">
-                            <a class="dropdown-item float-left" href="profile.html">
-                                <img alt="image" class="rounded-circle" src="img/profile.jpg">
-                            </a>
-                            <div class="media-body ">
-                                <small class="float-right">23h ago</small>
-                                <strong>Monica Smith</strong> love <strong>Kim Smith</strong>. <br>
-                                <small class="text-muted">2 days ago at 2:30 am - 11.06.2014</small>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <div class="text-center link-block">
-                            <a href="mailbox.html" class="dropdown-item">
-                                <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                    <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
-                </a>
-                <ul class="dropdown-menu dropdown-alerts">
-                    <li>
-                        <a href="mailbox.html" class="dropdown-item">
-                            <div>
-                                <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                                <span class="float-right text-muted small">4 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <a href="profile.html" class="dropdown-item">
-                            <div>
-                                <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                <span class="float-right text-muted small">12 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <a href="grid_options.html" class="dropdown-item">
-                            <div>
-                                <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                <span class="float-right text-muted small">4 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <div class="text-center link-block">
-                            <a href="notifications.html" class="dropdown-item">
-                                <strong>See All Alerts</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </li>
-
-
-            <li>
-                <a href="login.html">
-                    <i class="fa fa-sign-out"></i> Log out
-                </a>
+                <span class="sign-in-buttons authorized-group" id="logoutBtn">
+                    <a class="login">Đăng xuất</a>
+                </span>
             </li>
         </ul>
 
     </nav>
-</div>
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-10">
-        <h2>Danh sách báo cáo</h2>
-
-    </div>
-    <div class="col-lg-2">
-
-    </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-title">
-                    <h2>Bảng báo cáo vi phạm của người dùng</h2>
+                    <h5>Báo cáo công thức</h5>
                     <div class="ibox-tools">
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
@@ -155,51 +46,158 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="row">
 
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                <input placeholder="Nhập tên" type="text" class="form-control form-control-sm"> <span class="input-group-append">
-                                    <button type="button" class="btn btn-sm btn-primary">
-                                        Tìm!
-                                    </button>
-                                </span>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="table-responsive" style="font-size:20px">
-                        <table class="table table-striped" style="font-size:20px">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example">
                             <thead>
                                 <tr>
-                                    <th><em class="fa fa-user"></em> Người báo cáo </th>
-                                    <th><em class="fa fa-user"></em> Công thức </th>
+                                    <th class="username"><em class="fa fa-user"></em> Người báo cáo </th>
+                                    <th><em class="fa fa-user"></em> Đối tượng </th>
                                     <th><em class="fa fa-envelope"></em> Nội dung</th>
                                     <th><em class="fa fa-quote-left"></em> Trạng thái</th>
                                     <th><em class="fa fa-calendar"></em> Ngày</th>
                                     <th><em class="fa fa-cog"></em> Thực hiện</th>
                                 </tr>
                             </thead>
-                            <tbody id="list-report"></tbody>
+                            <tbody></tbody>
                             <tfoot>
                                 <tr>
-                                    <td></td>
+                                    <th><em class="fa fa-user"></em> Người báo cáo </th>
+                                    <th><em class="fa fa-user"></em> Đối tượng </th>
+                                    <th><em class="fa fa-envelope"></em> Nội dung</th>
+                                    <th><em class="fa fa-quote-left"></em> Trạng thái</th>
+                                    <th><em class="fa fa-calendar"></em> Ngày</th>
+                                    <th><em class="fa fa-cog"></em> Thực hiện</th>
                                 </tr>
+
                             </tfoot>
                         </table>
-                        <div id="pagination-container" class="page-nav"></div>
                     </div>
 
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 @section Scripts{
-    <script src="~/recipepress/js/manage-recipe-report.js"></script>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
+    <script src="js/plugins/dataTables/datatables.min.js"></script>
+    <script src="js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+
+    <script src="js/inspinia.js"></script>
+    <script src="js/plugins/pace/pace.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="~/js/Configuration.js"></script>
+
+
+    <!-- Page-Level Scripts -->
     <script>
-        getAllRecipeReport();
+        (async () => {
+            var res = await fetch(`${BASE_API_URL}/api/userreportrecipe/get-all-reported-recipe`);
+            var data = await res.json();
+            $('.dataTables-example').DataTable({
+                data: data,
+                "columns": [
+                    { "data": "username" },
+                    { "data": "recipeReported" },
+                    { "data": "description" },
+                    {
+                        "data": "isActive",
+                        "mRender": function (active, type, obj) {
+                            var id = obj.id;
+                            var conntent = active ? `<span class="active-${id}"><i class="fa fa-check text-navy"></i> Đang hoạt động</span>` : `<span class="active-${id}"><em class="fa fa-lock text-navy"></em> Bị chặn</span>`;
+                            return conntent;
+                        }
+                    },
+                    {
+                        "data": "createTime",
+                        "mRender": function (time) {
+                            var date = new Date(time);
+                            var hr = date.getHours();
+                            var min = date.getMinutes();
+                            return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + hr + ':' + min;
+                        }
+                    },
+                    {
+                        "data": "isActive",
+                        "mRender": function (active, type, obj) {
+                            var id = obj.id
+                            var action = active ? `<span class="icon-action-${id}"><a onclick="blockRecipeFunction(${id})"><em class="fa fa-lock" title="Chặn bài viết"></em><a></span>` : `<span class="icon-action icon-action-${id} center"><a onclick="unblockRecipeFunction(${id})"><em class="fa fa-unlock" title="Bỏ chặn bài viết"></em></a></span>`;
+                            return action;
+                        }
+                    }
+                ],
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'ExampleFile' },
+                    { extend: 'pdf', title: 'ExampleFile' },
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ],
+            });
+        })();
+        function blockRecipeFunction(recipeReportedId) {
+            swal({
+                title: "Bạn muốn chặn?",
+                text: "Sau khi chặn, bài viết này sẽ không được hiển thị trên trang web nữa!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDeactivate) => {
+                    if (willDeactivate) {
+                        blockRecipe(recipeReportedId);
+                    } else {
+                        //do nothing
+                    }
+                });
+        }
+        function unblockRecipeFunction(recipeReportedId) {
+            blockRecipe(recipeReportedId);
+        }
+        const blockRecipe = async (id) => {
+            var res = await fetch(`${BASE_API_URL}/api/userreportrecipe/deactive-report-recipe?id=${id}`);
+            var data = await res.json();
+            console.log('data: ' + JSON.stringify(data));
+            var iconAction = data.isActive ? `<a onclick="blockRecipeFunction(${id})"><em class="fa fa-lock" title="Chặn bài viết này"></em><a>` : `<a onclick="unblockRecipeFunction(${id})"><em class="fa fa-unlock" title="Bỏ chăn bài viết này"></em></a>`;
+            var active = data.isActive ? `<i class="fa fa-check text-navy"></i> Đang hoạt động` : `<em class="fa fa-lock text-navy"></em> Bị chặn`;
+            if (data.isActive) {
+                //bỏ chặn người dùng
+                $(`.active-${id}`).html(active);
+                $(`.icon-action-${id}`).html(iconAction);
+            } else if (!data.isActive) {
+                console.log('active: ' + active);
+                $(`.icon-action-${id}`).html(iconAction);
+                $(`.active-${id}`).html(active);
+                console.log();
+                swal("Bạn đã chặn thành công bài viết này!", {
+                    icon: "success",
+                });
+            } else {
+                swal("Bạn không thể chặn bài viết này!", {
+                   icon: "error",
+                });
+            }
+        };
     </script>
 }

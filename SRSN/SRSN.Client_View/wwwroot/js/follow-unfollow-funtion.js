@@ -11,6 +11,7 @@
                 $(".btnFollow-" + userId).html(btnFollowed_OnNewsfeed(userId));
 
                 check = true;
+                callTopSuggestUserApi();
             }
         });
     if (check) {
@@ -34,19 +35,30 @@ const callNotification = async (userId) => {
     });
 
     var userInfo = await res.json();
+    //update count notifi
+    var countNoti = 0;
+    var countDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
+
+    countDataRef.once('value', function (snapshot) {
+        countNoti = snapshot.val().numberOfLatestNotis || 0;
+        countNoti++;
+        SRSN.FIREBASE_DATABASE.ref(userData.username).update({ "numberOfLatestNotis": countNoti });
+    });
+
     var myDataRef = SRSN.FIREBASE_DATABASE.ref(userData.username);
     var uid = myDataRef.push({
         "uid": "",
-        "username": userInfo.firstName + " " + userInfo.lastName,
+        "username": userInfo.lastName + " " + userInfo.firstName,
         "content": "đang theo dõi bạn",
         "date": new Date().toLocaleString(),
-        "link": "/account/information/" + userData.username,
+        "link": "/account/information/" + userInfo.username,
         "isRead": "False"
     });
     //update uid into firebase
     SRSN.FIREBASE_DATABASE.ref("/" + userData.username + "/" + uid.key).update({
         uid: uid.key
     });
+    
 };
 async function unfollowUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
@@ -55,7 +67,6 @@ async function unfollowUserFuntion(userId) {
         .then(res => res.json())
         .then(response => {
             if (response.success) {
-                //location.reload();
                 $(".follow-area-" + userId).html(btnFollow(userId));
                 $(".btnFollow-" + userId).html(btnFollow_OnNewsfeed(userId));
 
@@ -102,11 +113,11 @@ const btnFollowed = (userId) => `
                               </div>
                             </div>`;
 const btnFollowed_OnNewsfeed = (userId) =>
-    `                                                            <button title="Hủy theo dõi" class="btn-follow ng-isolate-scope btn-followed" onclick="unfollowUserFuntion(${userId})">
-                                                                <span>Đang theo dõi</span>
-                                                            </button>`;
+    `<button title="Hủy theo dõi" class="btn-follow ng-isolate-scope btn-followed" onclick="unfollowUserFuntion(${userId})">
+             <span>Đang theo dõi</span>
+     </button>`;
 const btnFollow_OnNewsfeed = (userId) =>
     `<button title="Theo dõi" class="btn-follow ng-isolate-scope btn-followed" ng-class="itemClass()" onclick="followUserFuntion(${userId})">
-                                                                <span>Theo dõi</span>
-                                                            </button>`;
+             <span>Theo dõi</span>
+     </button>`;
 

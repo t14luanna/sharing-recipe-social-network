@@ -65,7 +65,7 @@ var template = function (data, pagination) {
         var ratingStarElement = "";
         if (numStar > 0) {
             for (var j = 0; j < parseInt(numStar); j++) {
-                ratingStarElement += `<i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
+                ratingStarElement += `<i class="fa fa-star" aria-hidden="true" style="font-size: 20px;color: green;"></i>`;
             }
         }
         s += getRecipeByCategory(data[i], ratingStarElement);

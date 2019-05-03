@@ -20,12 +20,12 @@
         });
 
         var data = await res.json();
-    }
+    } 
     if (authorization && username) {
         $(".authorized-group").css("display", "inline-table");//index, recipe page
         $(".noti-message-icon").css("display", "inline-table");//index, recipe page
         $("#noti-message-icon").css("display", "inline-table");//member profile page
-        $("#authorized-group-username").text(data.firstName + " " + data.lastName);
+        $("#authorized-group-username").text(data.lastName + " " + data.firstName);
         $("#authorized-group-username").attr("href", "/account/timeline/" + username);
         $(".unauthorized-group").css("display", "none");
         $("#noti-color").css("color", "red");
@@ -39,6 +39,16 @@
         window.location.href = '/';
     });
 })();
+
+$(document).ready((e) => {
+    var username = window.localStorage.getItem("username");
+    var authorization = window.localStorage.getItem("authorization");
+    if (authorization && username) {
+        $(".href-homepage").attr("href", "/Newsfeed")
+    } else {
+        $(".href-homepage").attr("href", "/Index")
+    }
+})
 const notifiElement = () =>
     ` <li>
                                                     <a href="#" onclick="changeStatusNoti()"><i class="fa fa-bell"></i></a>

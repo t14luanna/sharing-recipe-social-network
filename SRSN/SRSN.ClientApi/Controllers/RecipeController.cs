@@ -42,7 +42,6 @@ namespace SRSN.ClientApi.Controllers
             this.redisDatabase = RedisUtil.Connection.GetDatabase();
             this.mapper = mapper;
         }
-
         [HttpPost("create")]
         [Authorize]
         public async Task<ActionResult> Create([FromBody]RequestCreateRecipeWithConstraintViewMode request)
@@ -82,12 +81,35 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("get-count-my-recipe")]
+        public async Task<ActionResult> CountMyRecipes(string username)
+        {
+            var user = await this.userManager.FindByNameAsync(username);
+            var userId = user.Id;
+            int count = recipeService.Get(p => p.UserId == int.Parse(userId.ToString()) && p.Active == true && p.ReferencedRecipeId == null).ToList().Count;
+            return Ok(new
+            {
+                count = count
+            });
+        }
         [HttpGet("read-orderby-time")]
-        public async Task<ActionResult> ReadOrderByTime(int userId)
+        public async Task<ActionResult> ReadOrderByTime(int userId, int limit = 9, int page = 0)
         {
             try
             {
-                return Ok(await recipeService.GetAllRecipeByUserIdOrderbyTime(userId));
+                return Ok(await recipeService.GetAllRecipeByUserIdOrderbyTime(userId, limit, page));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("read-draft-recipe")]
+        public async Task<ActionResult> ReadDraftRecipe(int userId)
+        {
+            try
+            {
+                return Ok(await recipeService.GetAllDraftRecipeByUserIdOrderbyTime(userId));
             }
             catch (Exception ex)
             {
@@ -165,24 +187,26 @@ namespace SRSN.ClientApi.Controllers
                     int.TryParse(x.Element, out recipeId);
                     return recipeId;
                 });
-                var rand = new Random();
-
-                var SelectedPost = dataIds.Skip(rand.Next(0, dataIds.Count())).Take(6);
+                Random rand = new Random();
+                var count = 0;
+                var SelectedPost = dataIds.OrderBy(item => rand.Next()).ToList();
                 var listRecipe = new List<RecipeViewModel>();
                 foreach (var recipeId in SelectedPost)
                 {
                     var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true && x.ReferencedRecipeId == null);
                     if (recipe != null)
                     {
+                        count++;
                         var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
                         recipe.AccountVM = new AccountViewModel();
                         mapper.Map(recipeUserID, recipe.AccountVM);
                         listRecipe.Add(recipe);
+                        if(count == 6)
+                        {
+                            break;
+                        }
                     }
-                    if (listRecipe.Count() == 3)
-                    {
-                        return Ok(listRecipe);
-                    }
+                    
                 }
                 return Ok(listRecipe);
             }
@@ -220,7 +244,7 @@ namespace SRSN.ClientApi.Controllers
                     var recipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId && x.Active == true);
                     if (recipe != null)
                     {
-                        if (listUserFollowingId.Contains(recipe.UserId.Value))
+                        if (listUserFollowingId.Contains(recipe.UserId.Value) || recipe.UserId.Value == userId)
                         {
                             var recipeUserID = await userManager.FindByIdAsync(recipe.UserId.ToString());
                             recipe.AccountVM = new AccountViewModel();
@@ -302,11 +326,11 @@ namespace SRSN.ClientApi.Controllers
             }
         }
         [HttpGet("read-latest-page")]
-        public async Task<ActionResult> Read1000Latest()
+        public async Task<ActionResult> ReadAllLatest(int limit = 10, int page = 0)
         {
             try
             {
-                return Ok(await recipeService.Get1000LatestRecipes(this.userManager));
+                return Ok(await recipeService.GetAllLatestRecipes(this.userManager, limit, page));
             }
             catch (Exception ex)
             {
@@ -331,6 +355,18 @@ namespace SRSN.ClientApi.Controllers
             try
             {
                 return Ok(await recipeService.GetRecipeWithID(this.userManager, recipeId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("read-edit-recipeid")]
+        public async Task<ActionResult> ReadRecipeWithIdToEdit(int recipeId)
+        {
+            try
+            {
+                return Ok(await recipeService.GetDraftRecipeWithID(this.userManager, recipeId));
             }
             catch (Exception ex)
             {
@@ -363,14 +399,105 @@ namespace SRSN.ClientApi.Controllers
                 message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
             });
         }
+
+        [HttpPut("Publish")]
+        [Authorize]
+        public async Task<ActionResult> Publish([FromBody]RequestCreateRecipeWithConstraintViewMode request, [FromQuery]int recipeId)
+        {
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = await this.userManager.FindByIdAsync(userId);
+            request.RecipeVM.UserId = int.Parse(userId);
+
+            // check recipe does exist
+            var currentRecipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
+            if (currentRecipe != null)
+            {
+                // update drafted recipe
+                // beautify data 
+                if (request.RecipeVM.SaveDraft == null || request.RecipeVM.SaveDraft == true) request.RecipeVM.SaveDraft = false;
+                // update
+                request.RecipeVM.Active = true;
+                await recipeService.UpdateRecipe(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.CreateNewRecipe);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = $"Ban da publish thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    success = false,
+                    message = $"Khong the tim thay recipe phu hop de publish"
+                });
+            }
+        }
+
+
+        [HttpPut("save-draft")]
+        [Authorize]
+        public async Task<ActionResult> SaveDraft([FromBody]RequestCreateRecipeWithConstraintViewMode request, [FromQuery]int recipeId)
+        {
+            ClaimsPrincipal claims = this.User;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = await this.userManager.FindByIdAsync(userId);
+            request.RecipeVM.UserId = int.Parse(userId);
+
+            // check recipe does exist
+            var currentRecipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
+            if (currentRecipe != null)
+            {
+                if (currentRecipe.SaveDraft == null || currentRecipe.SaveDraft == false)
+                {
+                    return Ok(new
+                    {
+                        success = false,
+                        message = $"Ban da khong the save draft, recipe da publish"
+                    });
+                }
+
+                // update drafted recipe
+                // beautify data 
+                if (request.RecipeVM.SaveDraft == null || request.RecipeVM.SaveDraft == false) request.RecipeVM.SaveDraft = true;
+                request.RecipeVM.CreateTime = currentRecipe.CreateTime;
+                request.RecipeVM.Active = false;
+                // update
+                await recipeService.UpdateRecipeSaveDraft(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                var recipe = await recipeService.GetRecipeById(recipeId);
+                return Ok(new
+                {
+                    recipe,
+                    success = true,
+                    message = $"Ban da update thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
+                });
+            }
+            else
+            {
+                // draft new recipe
+                if (request.RecipeVM.SaveDraft == null || request.RecipeVM.SaveDraft == false) request.RecipeVM.SaveDraft = true;
+                var createdRecipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                var recipe = await recipeService.GetRecipeById(createdRecipeId);
+                return Ok(new
+                {
+                    recipe,
+                    success = true,
+                    message = $"Ban da draft thanh cong Recipe co ten la: {request.RecipeVM.RecipeName}"
+                });
+            }
+        }
+
         /// <summary>
         /// Api useless and duplicate with Create
         /// Should merge
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("submit-recipe")]
-        public async Task<ActionResult> SubmitRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request)
+        [HttpPut("submit-recipe")]
+        public async Task<ActionResult> SubmitRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request, [FromQuery]int recipeId)
         {
             try
             {
@@ -378,7 +505,18 @@ namespace SRSN.ClientApi.Controllers
                 var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = await this.userManager.FindByIdAsync(userId);
                 request.RecipeVM.UserId = int.Parse(userId);
-                var recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                var currentRecipe = await recipeService.FirstOrDefaultAsync(x => x.Id == recipeId);
+                if (recipeId == 0)
+                {
+                    recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                }
+                else
+                {
+                    request.RecipeVM.Active = true;
+                    request.RecipeVM.CreateTime = currentRecipe.CreateTime;
+                    request.RecipeVM.SaveDraft = false;
+                    await recipeService.UpdateRecipeSaveDraft(recipeId, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
+                }
                 var increasePointResult = SRSNuserManager.IncreasePoint(user, (int)IncreasePointRuleEnum.CreateNewRecipe);
                 return Ok(new
                 {
@@ -412,7 +550,21 @@ namespace SRSN.ClientApi.Controllers
         {
             try
             {
-                return Ok(await recipeService.GetRecipeName(recipeName));
+                return Ok(await recipeService.GetRecipeName(userManager, recipeName));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("read-recipe-by-name")]
+        public async Task<ActionResult> ReadRecipeByName([FromQuery]string recipeName,[FromQuery] int limit = 20, [FromQuery] int page = 0)
+        {
+            try
+            {
+                var result = await recipeService.GetRecipeName(userManager, recipeName, page, limit);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -477,53 +629,6 @@ namespace SRSN.ClientApi.Controllers
                 message = $"Ban da tao thanh cong Recipe co ten la: {request.Id}"
             });
         }
-
-        [HttpPost("draft-recipe")]
-        public async Task<ActionResult> DraftRecipe([FromBody]RequestCreateRecipeWithConstraintViewMode request)
-        {
-            try
-            {
-                ClaimsPrincipal claims = this.User;
-                var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var user = await this.userManager.FindByIdAsync(userId);
-                request.RecipeVM.UserId = int.Parse(userId);
-
-                // if request call with Id != 0
-                // so the recipe may be exist
-                if (request.RecipeVM.Id != 0)
-                {
-                    // Find recipe if it does exist
-                    var recipeToSaveDraft = await recipeService.FirstOrDefaultAsync(x => x.Id == request.RecipeVM.Id);
-                    if(recipeToSaveDraft != null)
-                    {
-                        // Update and Save Draft
-                        await recipeService.UpdateRecipe(request.RecipeVM.Id, request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
-                        // then return
-                        return Ok(new
-                        {
-                            recipeId = request.RecipeVM.Id,
-                            message = $"Ban da luu ban sao Recipe thanh cong ",
-                        });
-                    }
-                }
-                // anyways create
-                var recipeId = await recipeService.CreateRecipeWithStepsAndResultAsync(request.RecipeVM, request.ListSORVM, request.ListIngredient, request.ListCategory);
-
-                return Ok(new
-                {
-                    recipeId,
-                    message = $"Ban da tao ban sao Recipe thanh cong",
-                });
-            }
-            catch (Exception ex)
-            {
-                return Ok(new
-                {
-                    message = $"Ban tao recipe that bai",
-                    error = ex.ToString()
-                });
-            }
-        }
+        #endregion
     }
-    #endregion
 }

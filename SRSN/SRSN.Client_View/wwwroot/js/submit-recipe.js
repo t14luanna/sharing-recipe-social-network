@@ -1,4 +1,4 @@
-﻿const apikey = 'Al19W1lGkT7C5myciCHZhz';
+﻿const apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
 var countsteps = 1;
 var listStepImages = {};
 var listLocalStepImages = {};
@@ -12,7 +12,7 @@ $('.add-recipe-steps').on("click", function (event) {
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields">' +
         ' <span class="handler-list"><i class="fa fa-arrows"></i></span>' +
-        `<textarea class="short-text" name="stepsDes" id="stepsDes${countsteps}" cols="30" rows="10">    </textarea>` +
+        `<textarea class="short-text" name="stepsDes" id="stepsDes${countsteps}" cols="30" rows="10">    </textarea><input type="hidden" name="stepsId" value="0" />` +
         ' <span class="del-list"><i class="fa fa-trash"></i></span>' +
         '</div>' +
         `<div class="add-fields" style="margin-top: 20px"><textarea class="short-text" name="stepsTips" id="stepsTips${countsteps}" cols="30" rows="10" placeholder="Mẹo nhỏ cho bước này (có thể bỏ qua)" ></textarea></div>` +
@@ -34,8 +34,8 @@ $('.add-ingredient').on("click", function (event) {
     var newMajesticItem = '<li style="display: none">' +
         '<div class="add-fields"><span class="ingredient-handler-list handler-list">' +
         '<i class="fa fa-arrows"></i></span >' +
-        `<div class="autocomplete"><input class="ingredient-detail" type="text" name="ingredients" data-suggest-quantitivie="ingredientsWeight${countIngredient}" id="ingredients${countIngredient}" placeholder="Muối, Đường, thịt gà ..." onclick="SuggestIngredient(this);"/></div>` +
-        `<input class="ingredient-weight" type="text" name="ingredientsWeight" id="ingredientsWeight${countIngredient}" placeholder="1g, 1kg, 1 thìa ..."/>` +
+        `<div class="autocomplete"><input class="ingredient-detail" autocomplete="off" type="text" name="ingredients" data-suggest-quantitivie="ingredientsWeight${countIngredient}" id="ingredients${countIngredient}" placeholder="Muối, Đường, thịt gà ..." onclick="SuggestIngredient(this);"/></div>` +
+        `<input class="ingredient-weight" type="text" name="ingredientsWeight" id="ingredientsWeight${countIngredient}" placeholder="1g, 1kg, 1 thìa ..."/><input type="hidden" name="ingredientId" value="0" />` +
         '<span class="del-list"><i class="fa fa-trash"></i></span></div >' +
         '</li>';
     $('.list-sortable.ingredients-list').append(newMajesticItem);
@@ -110,14 +110,17 @@ function getData(currentRecipe,saveDraft) {
     var cooktime = $("input[name='cooktime']").val();
     var level = $("select[name='level']").val();
     var videoCode = $("input[name='videoCode']").val();
+    var recipeId = $("#recipeId").val();
 
     var ingredientsWeight = $("input[name='ingredientsWeight']");
+    var ingredientId = $("input[name='ingredientId']");
     var ingredientsName = $("input[name='ingredients']");
     var ingredients = [];
     $(ingredientsName).each(i => {
         validation = validationField('ingredients', $(ingredientsName[i]).val().trim(), saveDraft) && validation;
         validation = validationField('ingredients', $(ingredientsWeight[i]).val().trim(), saveDraft) && validation;
         ingredients.push({
+            Id: $(ingredientId[i]).val(),
             IngredientName: $(ingredientsName[i]).val().trim(),
             Quantitative: $(ingredientsWeight[i]).val()
         });
@@ -125,6 +128,7 @@ function getData(currentRecipe,saveDraft) {
 
     var stepDescription = $("textarea[name='stepsDes']");
     var stepTipsDescription = $("textarea[name='stepsTips']");
+    var stepId = $("input[name='stepsId']");
     var steps = [];
     $(stepDescription).each((index, value) => {
 
@@ -158,6 +162,7 @@ function getData(currentRecipe,saveDraft) {
 
         //let files = stepsImages[i].files;
         steps.push({
+            Id: $(stepId)[index].value,
             Description: value.value,
             Tips: $(stepTipsDescription)[index].value,
             ImageUrl: imageUrl,
@@ -181,7 +186,8 @@ function getData(currentRecipe,saveDraft) {
             Serving: serving,
             Cooktime: cooktime,
             LevelRecipe: level,
-            VideoLink: videoCode
+            VideoLink: videoCode,
+            Id: recipeId
         },
         listCategory: categoriesItem,
         listSORVM: steps,
@@ -477,6 +483,7 @@ function GetImageDraftedRecipe(currentStep, dropZoneId) {
         }
         
     }
+
     const draftedRecipe = GetDraftedRecipe();
     if (draftedRecipe) {
         RecoveryRecipe(draftedRecipe.data);
@@ -486,16 +493,17 @@ function GetImageDraftedRecipe(currentStep, dropZoneId) {
     // call to render
     var countToServerSaveDraft = 0;
     var saveDraftThread = setInterval(function () {
-        var currentDraftedRecipe = GetDraftedRecipe();
-        const currentRecipe = getData(currentDraftedRecipe, true);
         if (countToServerSaveDraft == 5) {
             // do nothing
             countToServerSaveDraft = 0;
+            saveDraft(true);
         }
         else {
             ++countToServerSaveDraft;
         }
         // local save draft
+        var currentDraftedRecipe = GetDraftedRecipe();
+        const currentRecipe = getData(currentDraftedRecipe, true);
         DraftRecie(currentRecipe);
     }, 2000);
 })();

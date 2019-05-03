@@ -36,19 +36,23 @@ namespace SRSN.DatabaseManager.Services
         , List<RecipeCategoryViewModel> listCategory);
         Task DeActiveRecipe(int id);
         Task UpdateRecipe(int recipeId, RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
+        Task UpdateRecipeSaveDraft(int recipeId, RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory);
         Task<ICollection<RecipeViewModel>> GetAllRecipeByUserId(int userId);
-        Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId);
+        Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId, int limit, int page);
+        Task<ICollection<RecipeViewModel>> GetAllDraftRecipeByUserIdOrderbyTime(int userId);
         Task<ICollection<RecipeViewModel>> GetRecipeById(int recipeId);
         Task<ICollection<RecipeViewModel>> GetPopularRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> GetLatestRecipes(UserManager<SRSNUser> userManager);
-        Task<ICollection<RecipeViewModel>> Get1000LatestRecipes(UserManager<SRSNUser> userManager);
+        Task<ICollection<RecipeViewModel>> GetAllLatestRecipes(UserManager<SRSNUser> userManager, int limit, int page);
         Task<ICollection<RecipeViewModel>> GetRandomRecipes(UserManager<SRSNUser> userManager);
         Task<ICollection<RecipeViewModel>> GetRecipeWithID(UserManager<SRSNUser> userManager, int recipeId);
+        Task<ICollection<RecipeViewModel>> GetDraftRecipeWithID(UserManager<SRSNUser> userManager, int recipeId);
         Task<ICollection<RecipeViewModel>> GetRelatedRecipe(int userId);
         ICollection<RecipeViewModel> GetPopularRecipes();
         ICollection<RecipeViewModel> GetLastestRecipes();
         Task<ICollection<RecipeViewModel>> GetRecipeNameLike(string recipeName);
-        Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName);
+        Task<ICollection<RecipeViewModel>> GetRecipeName(UserManager<SRSNUser> userManager, string recipeName);
+        Task<ICollection<RecipeViewModel>> GetRecipeName(UserManager<SRSNUser> userManager, string recipeName, int currentPage, int limit);
         Task<ICollection<RecipeViewModel>> GetRecipeBaseOnCategory(UserManager<SRSNUser> userManager, string categoryName);
         Task UpdateIsShareReaction(int recipeId, int userId);
         Task<RecipeViewModel> getBestRecipeOfUser(int userId);
@@ -104,7 +108,7 @@ namespace SRSN.DatabaseManager.Services
                         await recipeIngredientDBSet.AddAsync(ingredientEntity);
                         await this.unitOfWork.CommitAsync();
                     }
-                    
+
                     foreach (var category in listCategory)
                     {
                         var categoryEntity = this.VMToEntity<RecipeCategory, RecipeCategoryViewModel>(category);
@@ -127,6 +131,7 @@ namespace SRSN.DatabaseManager.Services
         {
             var recipe = await this.selfDbSet.FindAsync(id);
             recipe.Active = false;
+            recipe.SaveDraft = false;
             this.selfDbSet.Update(recipe);
             await this.unitOfWork.CommitAsync();
         }
@@ -139,7 +144,7 @@ namespace SRSN.DatabaseManager.Services
                 var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
                 var ingredientRepo = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
                 var categoryRepo = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
-                var recipes = await this.Get(p => p.UserId == userId && p.Active == true).ToListAsync();
+                var recipes = await this.Get(p => p.UserId == userId && p.Active == true && p.ReferencedRecipeId == null).ToListAsync();
                 foreach (var recipe in recipes)
                 {
                     var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
@@ -227,7 +232,7 @@ namespace SRSN.DatabaseManager.Services
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
                     var username = currentUser.UserName;
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
@@ -265,7 +270,7 @@ namespace SRSN.DatabaseManager.Services
                     if (item.UserId != null)
                     {
                         var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                        var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                        var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                         // apply automapper 
                         var recipeViewModel = this.EntityToVM(item);
@@ -283,7 +288,7 @@ namespace SRSN.DatabaseManager.Services
                 return null;
             }
         }
-        public async Task<ICollection<RecipeViewModel>> Get1000LatestRecipes(UserManager<SRSNUser> userManager)
+        public async Task<ICollection<RecipeViewModel>> GetAllLatestRecipes(UserManager<SRSNUser> userManager, int limit, int page)
         {
             try
             {
@@ -295,12 +300,13 @@ namespace SRSN.DatabaseManager.Services
                 // 
                 // 1. dung this.Get() nghia la dang dung cua service hien hanh` va listItems se chua toan bo la ViewModel xuong duoi ban 1 lan nua lai mapping cho 1 viewmodel khac là sai
                 // 2. nen dung dbSet ( nghia la repository de ma query )
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 1000 * FROM RECIPE WHERE Active='1'AND ReferencedRecipeId IS NULL ORDER BY CreateTime DESC").ToList();
+                //var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT TOP 1000 * FROM RECIPE WHERE Active='1'AND ReferencedRecipeId IS NULL ORDER BY CreateTime DESC").ToList();
+                var listItems = this.selfDbSet.AsNoTracking().Where(r => r.Active == true && r.ReferencedRecipeId == null).OrderByDescending(p => p.CreateTime).ToList();
                 foreach (var item in listItems)
                 {
                     // hien tai o day user manager bi null roi khong dung duoc nen ta phai truyen tu ngoai vao
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
@@ -309,7 +315,19 @@ namespace SRSN.DatabaseManager.Services
                     list.Add(recipeViewModel);
 
                 }
+                list = list.Skip(page * limit).Take(limit).ToList();
                 return list;
+                //var list = new List<RecipeViewModel>();
+                //var listItems = this.Get().AsNoTracking().Where(r => r.Active == true && r.UserId == userId).OrderByDescending(x => x.CreateTime).ToList();
+                //foreach (var item in listItems)
+                //{
+                //    var recipeUserID = await userManager.FindByIdAsync(userId.ToString());
+                //    item.AccountVM = new AccountViewModel();
+                //    mapper.Map(recipeUserID, item.AccountVM);
+                //    list.Add(item);
+                //}
+                //list = list.Skip(page * limit).Take(limit).ToList();
+                //return list;
 
 
             }
@@ -363,17 +381,17 @@ namespace SRSN.DatabaseManager.Services
                         bool isFound = false;
                         for (var j = 0; j < listCategory.Count; j++)
                         {
-                            if(recipeCategoryList[i].Id == listCategory[j].Id)
+                            if (recipeCategoryList[i].Id == listCategory[j].Id)
                             {
                                 isFound = true;
                             }
                         }
-                        if(!isFound)
+                        if (!isFound)
                         {
                             Debug.WriteLine("Removed record | " + recipeCategoryList[i].RecipeId + " | " + recipeCategoryList[i].CategoryItemId);
                             RecipeCategory rc = new RecipeCategory();
                             recipeCategoryDBSet.Remove(
-                                this.VMToEntity<RecipeCategory, 
+                                this.VMToEntity<RecipeCategory,
                                 RecipeCategoryViewModel>(recipeCategoryList[i])
                             );
                             await this.unitOfWork.CommitAsync();
@@ -409,7 +427,7 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                     // apply automapper 
                     var recipeViewModel = this.EntityToVM(item);
@@ -435,7 +453,7 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
 
                     var accountVM = new AccountViewModel();
                     mapper.Map(currentUser, accountVM);
@@ -558,19 +576,52 @@ namespace SRSN.DatabaseManager.Services
                 return null;
             }
         }
-
-        public async Task<ICollection<RecipeViewModel>> GetRecipeName(string recipeName)
+        public async Task<ICollection<RecipeViewModel>> GetRecipeName(UserManager<SRSNUser> userManager, string recipeName, int currentPage, int limit)
         {
             try
             {
                 var list = new List<RecipeViewModel>();
 
-                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE N'%" + recipeName + "%' order by Id DESC").ToList();
+                var listItems = await this.selfDbSet
+                    .AsNoTracking()
+                    .Where(x => 
+                            (!x.RecipeName.IsNullOrEmpty() && !recipeName.IsNullOrEmpty() && x.RecipeName.Contains(recipeName, StringComparison.CurrentCultureIgnoreCase))
+                            && x.Active.Value)
+                    .OrderByDescending(x => x.CreateTime.GetValueOrDefault())
+                    .Skip(currentPage*limit) 
+                    .Take(limit)
+                    .ToListAsync();
                 foreach (var item in listItems)
                 {
                     //apply automapper
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
                     var recipeViewModel = this.EntityToVM(item);
+                    recipeViewModel.FullName = fullName;
+                    list.Add(recipeViewModel);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
+        public async Task<ICollection<RecipeViewModel>> GetRecipeName(UserManager<SRSNUser> userManager, string recipeName)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM Recipe WHERE RecipeName LIKE N'%" + recipeName + "%' AND Active='1' order by Id DESC ").ToList();
+                foreach (var item in listItems)
+                {
+                    //apply automapper
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
+                    var recipeViewModel = this.EntityToVM(item);
+                    recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
 
                 }
@@ -595,7 +646,7 @@ namespace SRSN.DatabaseManager.Services
                 foreach (var item in listItems)
                 {
                     var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
-                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
                     var recipeViewModel = this.EntityToVM(item);
                     recipeViewModel.FullName = fullName;
                     list.Add(recipeViewModel);
@@ -699,7 +750,9 @@ namespace SRSN.DatabaseManager.Services
         public async Task<ICollection<RecipeViewModel>> GetTimeLineRecipes(UserManager<SRSNUser> userManager, int userId, int limit, int page)
         {
             var list = new List<RecipeViewModel>();
-            var listItems = this.Get().AsNoTracking().Where(r => r.Active == true && r.UserId == userId).OrderByDescending(x => x.CreateTime).ToList();
+            var listItems = this.Get().AsNoTracking().Where(r => r.Active == true && r.UserId == userId).ToList();
+            listItems = listItems.OrderByDescending(x => x.CreateTime).ToList();
+            listItems = listItems.Skip(page * limit).Take(limit).ToList();
             foreach (var item in listItems)
             {
                 var recipeUserID = await userManager.FindByIdAsync(userId.ToString());
@@ -707,7 +760,6 @@ namespace SRSN.DatabaseManager.Services
                 mapper.Map(recipeUserID, item.AccountVM);
                 list.Add(item);
             }
-            list = list.Skip(page * limit).Take(limit).ToList();
             return list;
         }
 
@@ -719,14 +771,15 @@ namespace SRSN.DatabaseManager.Services
             return recipeVM;
         }
 
-        public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId)
+        public async Task<ICollection<RecipeViewModel>> GetAllRecipeByUserIdOrderbyTime(int userId, int limit, int page)
         {
             try
             {
                 var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
                 var ingredientRepo = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
                 var categoryRepo = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
-                var recipes = await this.Get(p => p.UserId == userId && p.Active == true).OrderByDescending(p => p.CreateTime).ToListAsync();
+                var recipes = await this.Get(p => p.UserId == userId && p.Active == true && p.ReferencedRecipeId == null).OrderByDescending(p => p.CreateTime).ToListAsync();
+                recipes = recipes.Skip(page * limit).Take(limit).ToList();
                 foreach (var recipe in recipes)
                 {
                     var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
@@ -753,6 +806,182 @@ namespace SRSN.DatabaseManager.Services
                 throw ex;
             }
         }
+
+        public async Task UpdateRecipeSaveDraft(int recipeId, RecipeViewModel recipeVM, List<StepsOfRecipeViewModel> listSORVM, List<RecipeIngredientViewModel> listIngredient, List<RecipeCategoryViewModel> listCategory)
+        {
+            var stepRecipeDBSet = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
+            var recipeIngredientDBSet = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
+            var recipeCategoryDBSet = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
+
+            var listIngreId = listIngredient.Select(x => x.Id);
+            var listSORId = listSORVM.Select(x => x.Id);
+            var listCateId = listCategory.Select(x => x.Id);
+
+            using (var transaction = await this.unitOfWork.GetDbTransactionAsync())
+            {
+                try
+                {
+                    var recipeEntity = this.VMToEntity(recipeVM);
+                    // recipeEntity.Id = recipeId;
+                    recipeEntity.Id = recipeId;
+                    recipeEntity.UpdateTime = DateTime.Now;
+                    this.selfDbSet.Update(recipeEntity);
+                    await this.unitOfWork.CommitAsync();
+
+                    // delete all wasted Step Of Recipes
+                    var listOfWastedSOR = stepRecipeDBSet
+                        .AsNoTracking()
+                        .Where(x => x.RecipeId == recipeId
+                                    && !listSORId.Contains(x.Id));
+                    stepRecipeDBSet.RemoveRange(listOfWastedSOR);
+                    await this.unitOfWork.CommitAsync();
+
+                    // update step of recipe
+                    foreach (var sorVM in listSORVM)
+                    {
+                        var sorEntity = this.VMToEntity<StepsOfRecipe, StepsOfRecipeViewModel>(sorVM);
+                        sorEntity.RecipeId = recipeEntity.Id;
+                        stepRecipeDBSet.Update(sorEntity);
+                        await this.unitOfWork.CommitAsync();
+                    }
+
+                    // delete all wasted Ingredient
+                    var listOfWastedIngredient = recipeIngredientDBSet
+                        .AsNoTracking()
+                        .Where(x => x.RecipeId == recipeId
+                                    && !listIngreId.Contains(x.Id));
+                    recipeIngredientDBSet.RemoveRange(listOfWastedIngredient);
+                    await this.unitOfWork.CommitAsync();
+
+                    // update ingredients
+                    foreach (var ingredient in listIngredient)
+                    {
+                        var ingredientEntity = this.VMToEntity<RecipeIngredient, RecipeIngredientViewModel>(ingredient);
+                        ingredientEntity.RecipeId = recipeEntity.Id;
+                        recipeIngredientDBSet.Update(ingredientEntity);
+                        await this.unitOfWork.CommitAsync();
+                    }
+
+
+                    // delete all wasted category 
+                    var listOfWastedCategory = recipeCategoryDBSet
+                        .AsNoTracking()
+                        .Where(x => x.RecipeId == recipeId
+                                    && !listCateId.Contains(x.Id));
+                    recipeCategoryDBSet.RemoveRange(listOfWastedCategory);
+                    await this.unitOfWork.CommitAsync();
+
+                    // update category
+                    var recipeCategoryList = this.recipeCategoryService.GetListRecipeCategory(recipeId).Result.ToList();
+                    for (var i = 0; i < recipeCategoryList.Count; i++)
+                    {
+                        bool isFound = false;
+                        for (var j = 0; j < listCategory.Count; j++)
+                        {
+                            if (recipeCategoryList[i].Id == listCategory[j].Id)
+                            {
+                                isFound = true;
+                            }
+                        }
+                        if (!isFound)
+                        {
+                            Debug.WriteLine("Removed record | " + recipeCategoryList[i].RecipeId + " | " + recipeCategoryList[i].CategoryItemId);
+                            RecipeCategory rc = new RecipeCategory();
+                            recipeCategoryDBSet.Remove(
+                                this.VMToEntity<RecipeCategory,
+                                RecipeCategoryViewModel>(recipeCategoryList[i])
+                            );
+                            await this.unitOfWork.CommitAsync();
+                        }
+                    }
+                    foreach (var recipeCategory in listCategory)
+                    {
+                        recipeCategory.RecipeId = recipeEntity.Id;
+                        if (recipeCategory.Id == 0)
+                        {
+                            Debug.WriteLine("New record | " + recipeCategory.RecipeId + " | " + recipeCategory.CategoryItemId);
+                            var rc = this.VMToEntity<RecipeCategory, RecipeCategoryViewModel>(recipeCategory);
+                            await recipeCategoryDBSet.AddAsync(rc);
+                            this.unitOfWork.Commit();
+                        }
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        public async Task<ICollection<RecipeViewModel>> GetAllDraftRecipeByUserIdOrderbyTime(int userId)
+        {
+            try
+            {
+                var stepOfRecipeRepo = this.unitOfWork.GetDbContext().Set<StepsOfRecipe>();
+                var ingredientRepo = this.unitOfWork.GetDbContext().Set<RecipeIngredient>();
+                var categoryRepo = this.unitOfWork.GetDbContext().Set<RecipeCategory>();
+                var recipes = await this.Get(p => p.UserId == userId && p.Active == false && p.SaveDraft == true).OrderByDescending(p => p.CreateTime).ToListAsync();
+                foreach (var recipe in recipes)
+                {
+                    var stepOfRecipes = stepOfRecipeRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
+                    var ingredient = ingredientRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
+                    var category = categoryRepo.AsNoTracking().Where(p => p.RecipeId == recipe.Id);
+                    if (stepOfRecipeRepo.Count() > 0)
+                    {
+                        recipe.ListSORVM = await stepOfRecipes.ProjectTo<StepsOfRecipeViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                    }
+                    if (ingredientRepo.Count() > 0)
+                    {
+                        recipe.listIngredient = await ingredient.ProjectTo<RecipeIngredientViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                    }
+                    if (categoryRepo.Count() > 0)
+                    {
+                        recipe.listCategory = await category.ProjectTo<RecipeCategoryViewModel>(this.mapper.ConfigurationProvider).ToListAsync();
+                    }
+                }
+                return recipes;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<ICollection<RecipeViewModel>> GetDraftRecipeWithID(UserManager<SRSNUser> userManager, int recipeId)
+        {
+            try
+            {
+                var list = new List<RecipeViewModel>();
+
+                var listItems = this.selfDbSet.AsNoTracking().FromSql("select * from Recipe where Id=" + recipeId + "").ToList();
+                foreach (var item in listItems)
+                {
+                    var currentUser = userManager.FindByIdAsync(item.UserId.ToString()).Result;
+                    var fullName = $"{currentUser.LastName} {currentUser.FirstName}";
+
+                    var accountVM = new AccountViewModel();
+                    mapper.Map(currentUser, accountVM);
+
+                    // apply automapper 
+                    var recipeViewModel = this.EntityToVM(item);
+
+                    recipeViewModel.FullName = fullName;
+                    recipeViewModel.AccountVM = accountVM;
+                    list.Add(recipeViewModel);
+
+
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 }
 

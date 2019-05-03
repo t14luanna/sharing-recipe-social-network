@@ -18,36 +18,36 @@ const createRecipeByUserId = (recipe) =>
                                                             </div>
                                                             <div>
                                                                 <i class="fa fa-trash icon-delete" onclick="deleteRecipeInMyRecipe(${recipe.id})" style="margin-left: 85%;" ></i>
-                                                                <a href="/account/my-recipe/${username}/${recipe.id}"<i class="fa fa-pencil-square-o icon-edit"></i></a>
+                                                                <a href="/account/my-recipe/${username}/${recipe.id}/edit"<i class="fa fa-pencil-square-o icon-edit"></i></a>
                                                             </div>
                                                         </div>
 </div>
 </div>`;
 
-const callRecipeByUserId = async (username) => {
+const callRecipeByUserId = async (username, limit = 9, page = 0) => {
     var authorization = localStorage.getItem("authorization");
     var token = (JSON.parse(authorization))["token"];
     var userRes = await fetch(`${BASE_API_URL}/api/account/read-username?username=${username}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` 
+            'Authorization': `Bearer ${token}`
         },
     });
     var userData = await userRes.json();
     var userId = userData.id;
-    var res = await fetch(`${BASE_API_URL}/api/recipe/read-orderby-time?userId=` + userId);
-    var data = await res.json();
-    var count = 0;
-    for (var item of data) {
-        count++;
-        if (item.referencedRecipeId == null) {
-            var element = createRecipeByUserId(item);
-            $("#my-recipe-box").append(element);
-            $("#my-recipe-box").css('height', 'auto');
-        }
+    var recipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-orderby-time?userId=${userId}&limit=${limit}&page=${page}`);
+    var recipeData = await recipeRes.json();
+    if (recipeData.length < limit) {
+        $(".recipe-more").css("display", "none");
+    }
+    for (var item of recipeData) {
+        var element = createRecipeByUserId(item);
+        $('#my-recipe-box').append(element);
+        $("#my-recipe-box").css('height', 'auto');
     }
 };
+
 async function deleteRecipeInMyRecipe(recipeId) {
     swal({
         title: "Bạn muốn xóa?",
@@ -71,14 +71,19 @@ const deactivateRecipe = async (recipeId) => {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token} `
         },
     });
     if (recipeRes.status == 200) {
-        swal("Bạn đã xóa thành công Bình Luận này!", {
+        swal("Bạn đã xóa thành công Công Thức này!", {
             icon: "success",
         });
         $(`#${recipeId}`).remove();
+        //count my recipe
+       
+        var countRecipeRes = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/get-count-my-recipe?username=${username}`);
+        var countRecipes = await countRecipeRes.json();
+        $("#count-recipes").text(countRecipes.count);
     } else {
         alert("Bạn không thể xóa thành công Công Thức này, vui lòng thử lại!!!");
     }

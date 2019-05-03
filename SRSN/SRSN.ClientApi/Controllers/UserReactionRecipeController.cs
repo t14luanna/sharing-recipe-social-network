@@ -67,7 +67,7 @@ namespace SRSN.ClientApi.Controllers
                 userReactions.ForEach(x => 
                 {
                     var currentUser = userManager.FindByIdAsync(x.UserId.ToString()).Result;
-                    x.FullName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    x.FullName = $"{currentUser.LastName} {currentUser.FirstName}";
                     x.AvatarUrl = currentUser.AvatarImageUrl;
                 });
                 return Ok(new
@@ -204,7 +204,7 @@ namespace SRSN.ClientApi.Controllers
         }
 
         [HttpGet("get-favorite-recipes")]
-        public async Task<ActionResult> GetFavoriteRecipe([FromQuery]string username)
+        public async Task<ActionResult> GetFavoriteRecipe([FromQuery]string username, int limit, int page)
         {
             try
             {
@@ -214,13 +214,28 @@ namespace SRSN.ClientApi.Controllers
                 //int.TryParse(userIdStr, out userId);
                 var user = await userManager.FindByNameAsync(username);
                 int userId = user.Id;
-                return Ok(await selfService.GetAllFavoriteRecipeByUserId(userId));
+                return Ok(await selfService.GetAllFavoriteRecipeByUserId(userId, limit, page));
             }
             catch (Exception ex)
             {
                 return BadRequest();
             }
         }
+        [HttpGet("get-count-favorite-recipe")]
+        public async Task<ActionResult> CountFavoriteRecipe(string username)
+        {
+            try
+            {   var user = await userManager.FindByNameAsync(username);
+                int userId = user.Id;
+                int count = selfService.Get(p => p.UserId == userId && p.IsLike == true).ToList().Count;
+                return Ok(new { count = count});
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("get-userid-by-commentparentId")]
         public async Task<ActionResult> GetUserIdFromCommentParentId(int commentParentId)
         {

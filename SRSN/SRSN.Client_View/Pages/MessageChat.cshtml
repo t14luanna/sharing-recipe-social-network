@@ -68,6 +68,12 @@
 </div>
 
 @section Scripts {
+    <script>
+        var authorization = JSON.parse(localStorage.getItem('authorization'));
+        if (authorization == null) {
+            window.location.href = "/login";
+        }
+    </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="recipepress/js/main.js"></script>
     <script type="text/javascript" src="~/js/chat.js"></script>
