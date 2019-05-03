@@ -385,5 +385,20 @@ namespace SRSN.ClientApi.Controllers
             mapper.Map(user, userVM);
             return Ok(userVM);
         }
+
+        [HttpPost("read-user-list")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ReadListByUserId([FromBody]List<String> userId)
+        {
+            var list = new List<AccountViewModel>();
+            foreach (string id in userId)
+            {
+                var user = await userManager.FindByIdAsync(id);
+                var userVM = new AccountViewModel();
+                mapper.Map(user, userVM);
+                list.Add(userVM);
+            }
+            return Ok(list);
+        }
     }
 }

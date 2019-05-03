@@ -1,31 +1,10 @@
-﻿
-
-//Sign-in with Anonymous account
-firebase.auth().signInAnonymously();
-firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-        // User is signed in.
-        let isAnonymous = user.isAnonymous;
-        //user_id = user.uid;
-    } else {
-        // User is signed out.
-    }
-});
-
+﻿//----------------------------------Initialization----------------------------------
 let db = firebase.firestore();
 var user
 let chats = []
 let userPopular = []
-let current_chat_id
-
-const message_list = $('.topic--replies.chat-list > .nav')[0];
-const search_list = $('.topic--replies.search-list > .nav')[0];
-const search_bar = $('.search-bar')[0];
-const message_content = $('.msg-list')[0];
-const message_user_title = $('.name-header-mesgs')[0];
-const send_btn = $('.msg_send_btn')[0];
-const message_input = $('.write_msg')[0];
-const message_typing = $('.msg-typing')[0];
+let users = []
+let current_messages = []
 
 //----------------------------------------------------------------------------------
 
@@ -55,7 +34,6 @@ let getPopular = () => {
 //Get User by LocalStorage
 let getUserInfo = () => {
     return new Promise((resolve, reject) => {
-        let userNameLocalStorage = localStorage.getItem("username");
         let authorization = localStorage.getItem("authorization");
         let token = (JSON.parse(authorization))["token"];
         callAPI(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
@@ -81,51 +59,82 @@ let findUser = (username) => {
             })
     })
 }
+
+let getUserList = (list) => {
+    console.log(list)
+    return new Promise((resolve, reject) => {
+        callAPI(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-user-list`, {
+            method: 'POST',
+            body: JSON.stringify(list),
+            headers: {
+                'content-type': 'application/json',
+            }
+        })
+        .then((data) => {
+            return resolve(data)
+        })
+    })
+}
 //----------------------------------------------------------------------------------
 
 //------------------------------------CALL FIREBASE API-----------------------------
 let listener = (id) => {
-    db.collection("chats").where('users_id', 'array-contains', id).onSnapshot({ includeMetadataChanges: true },
+    db.collection("chats").where('usersId', 'array-contains', id).onSnapshot({ includeMetadataChanges: true },
         (snapshot) => {
             snapshot.docChanges().forEach(function (change) {
                 let data = change.doc.data();
 
                 if (change.type === "modified" && !change.doc.metadata.hasPendingWrites) {
-                    let chat = findChatById(change.doc.id)
-                    if (chat) {
-                        let oppositeUser = chat.data.users[chat.oppositeUser]
-                        getUserMessage(change.doc.id).then(messages => {
-                            if (chat.messages.length < messages.length) {
-                                if (current_chat_id === change.doc.id) {
-                                    for (i = chat.messages.length; i < messages.length; i++) {
+                    getUserMessage(change.doc.id).then(async messages => {
+                        let chat = findChatById(change.doc.id)
+                        if (chat) {
+                            let oppositeUser = findUserById(getOppositeUser(chat.data.usersId, user.id)[0])
+                            if (chat.updatedAt !== data.updatedAt) {
+                                updateChatUI({
+                                    id: change.doc.id,
+                                    data: data
+                                })
+                                chat.data.updatedAt = data.updatedAt
+                                chat.data.users = data.users
+                            }
+                        
+                            if (current_chat_id === change.doc.id && current_messages.length < messages.length) {
+                                if ($('#' + chat.id).length) {
+                                    for (i = current_messages.length; i < messages.length; i++) {
                                         appendMessage(messages[i], oppositeUser)
                                     }
-                                }
-                                $('#' + change.doc.id + ' .date').text(convertTimestampToDate(messages[messages.length - 1].createdAt.seconds))
-
-                                let last_message
-                                if (messages[messages.length - 1].userSent === user.id) {
-                                    last_message = 'Bạn : ' + messages[messages.length - 1].content
+                                    current_messages = messages                                    
                                 } else {
-                                    last_message = messages[messages.length - 1].content
-                                    $('#' + change.doc.id).addClass('not-seen')
+                                    if (messages.length > 0) {
+                                        $(chat_list).prepend(createChatUI(chat, false))
+                                    }
                                 }
+                            }
 
-                                $('#' + change.doc.id + ' .chat-message-wrap').text(last_message)
-                                chat.messages = messages
+                            //if (data.users[chat.oppositeUser].isTyping !== oppositeUser.isTyping) {
+                            //    chat.data = data;
+                            //    console.log(data.users[chat.oppositeUser].isTyping)
+                            //    if (data.users[chat.oppositeUser].isTyping) {
+                            //        $(message_typing).css('display', 'block');
+                            //    } else {
+                            //        $(message_typing).css('display', 'none');
+                            //    }
+                            //}
+                        } else {
+                                let chat = {
+                                    id: change.doc.id,
+                                    data: change.doc.data()
+                                }
+                                chat.data.oppositeUser = await getOppositeUser(chat.data.usersId, user.id)
+                                chats.push(chat)
+                                getUserList(chat.data.oppositeUser).then(res => {
+                                    users = users.concat(res)
+                                    if (messages.length > 0) {
+                                        $(chat_list).prepend(createChatUI(chat, false))
+                                    }
+                                })
                             }
                         })
-
-                        if (data.users[chat.oppositeUser].isTyping !== oppositeUser.isTyping) {
-                            chat.data = data;
-                            console.log(data.users[chat.oppositeUser].isTyping)
-                            if (data.users[chat.oppositeUser].isTyping) {
-                                $(message_typing).css('display', 'block');
-                            } else {
-                                $(message_typing).css('display', 'none');
-                            }
-                        }
-                    }
                 }
 
                 var source = change.doc.metadata.hasPendingWrites ? "local cache" : "server";
@@ -138,8 +147,8 @@ let listener = (id) => {
 let getUserMessage = (id) => {
     return new Promise((resolve, reject) => {
         let messages = [];
-        db.collection("chats").doc(id).collection('messages').orderBy('createdAt').get().then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
+        db.collection("chats").doc(id).collection('messages').orderBy('createdAt').get().then(async (querySnapshot) => {
+            await querySnapshot.forEach(function (doc) {
                 messages.push(doc.data());
             });
             return resolve(messages);
@@ -150,40 +159,45 @@ let getUserMessage = (id) => {
 }
 
 let getUserChatList = (id) => {
-    db.collection("chats").where('users_id', 'array-contains', id).get().then(async (querySnapshot) => {
-        let count = 0
-        await querySnapshot.forEach((doc) => {
-            let chat = {
-                id: doc.id,
-                data: doc.data()
-            };
-            getUserMessage(chat.id).then(messages => {
-                chat.messages = messages
-                getOppositeUserPos(chat.data.users, id).then(pos => {
-                    count++
-                    chat.oppositeUser = pos
-                    chats.push(chat)
-                    if (chat.messages.length >= 0) {
-                        let active = (count === querySnapshot.size ? true : false)
-                        $(message_list).prepend(createChatUI(chat, active))
-                        if (active) {
-                            current_chat_id = chat.id
-                            showMessageContent(chat.id)
-                        }
+    return new Promise((resolve, reject) => {
+        db.collection("chats").where('usersId', 'array-contains', id).orderBy('updatedAt','desc').get().then(async (querySnapshot) => {
+            await querySnapshot.forEach(async (doc) => {
+                let chat = {
+                    id: doc.id,
+                    data: doc.data()
+                }
+
+                let list = getOppositeUser(chat.data.usersId, id)
+                chat.data.oppositeUser = list
+                chats.push(chat)
+
+                await $(list).each((i, user_id) => {
+                    let res = users.find(item => { return item === id })
+                    if (res === undefined) {
+                        users.push(user_id)
                     }
                 })
-            })
+            });
+            return resolve(users)
         });
-    });
+    })
 }
 
-let sendMessage = (messageText) => {
+let sendMessage = async (messageText) => {
     // Add a new message entry to the Firebase database.
     let chat = findChatById(current_chat_id)
     let users = chat.data.users
-    users[chat.oppositeUser].isSeen = false
+
+    await $(chat.data.oppositeUser).each((i, item) => {
+        findUserElement(users, item).isSeen = false
+    })
+
+    findUserElement(users, user.id).isSeen = true
+
     db.collection('chats').doc(current_chat_id).update({
         users: users,
+        lastMessage: messageText,
+        lastUserSentMessage: user.id,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     })
 
@@ -191,51 +205,61 @@ let sendMessage = (messageText) => {
         {
             userSent: user.id,
             content: messageText,
-            isOppositeSeen: false,
+            isSeen: [],
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(function (docRef) {
         })
         .catch(function (error) {
         })
-}
+}   
 
 let checkExistChat = (user_id) => {
     return new Promise(async (resolve, reject) => {
-        await $(chats).each(async (i, chat) => {
-            if (chat.data.users[chat.oppositeUser].user_id === user_id) {
-                resolve(chat.id)
-            }
+        db.collection("chats").where('usersId', 'array-contains', user.id).get().then(async (querySnapshot) => {
+            await querySnapshot.forEach(async (doc) => {
+                let list = getOppositeUser(doc.data().usersId, user.id)
+
+                let chat = {
+                    id: doc.id,
+                    data: doc.data(),
+                    messages: [],
+                }
+
+                chat.data.oppositeUser = list
+
+                if (list.indexOf(user_id) > -1) {
+                    return resolve(chat);
+                }
+            })
+            return resolve(null)
         });
-        return resolve(null);
     });
 }
 
-let createChat = (oppositeUser) => {
-    checkExistChat(oppositeUser.id).then(res => {
+let createChat = (oppositeUserId) => {
+    checkExistChat(oppositeUserId).then(res => {
         if (res === null) {
             // Add a new message entry to the Firebase database.
             db.collection('chats').add(
                 {
+                    usersId: [
+                        user.id,
+                        oppositeUserId
+                    ],
                     users: [
                         {
-                            user_id: user.id,
-                            user_image: user.avatarImageUrl,
-                            user_name: user.lastName + ' ' + user.firstName,
+                            id: user.id,
                             isTyping: false,
                             isSeen: true
                         },
                         {
-                            user_id: oppositeUser.id,
-                            user_image: oppositeUser.avatarImageUrl,
-                            user_name: oppositeUser.lastName + ' ' + oppositeUser.firstName,
+                            id: oppositeUserId,
                             isTyping: false,
                             isSeen: true
                         }
                     ],
-                    users_id: [
-                        user.id,
-                        oppositeUser.id
-                    ],
+                    lastMessage: '',
+                    lastUserSentMessage: null,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }).then(function (docRef) {
@@ -248,44 +272,28 @@ let createChat = (oppositeUser) => {
                             $('#' + current_chat_id).removeClass('active');
                         }
 
-                        getOppositeUserPos(chat.data.users, user.id).then(pos => {
-                            chat.oppositeUser = pos
-                            chat.messages = []
-                            chats.unshift(chat)
-                            let active = true
-                            $(message_list).prepend(createChatUI(chat, active))
-                            if (active) {
-                                current_chat_id = chat.id
-                                showMessageContent(chat.id)
-                            }
-                        })
+                        let list = getOppositeUser(chat.data.usersId, user.id)
+                        chat.data.oppositeUser = list
+                        chat.messages = []
+                        chats.unshift(chat)
+                        $(chat_list).prepend(createChatUI(chat))
+                        activeAction(chat.id)
                     })
                 })
                 .catch(function (error) {
                 });
         } else {
-            $('#' + current_chat_id).removeClass('active');
-            $('#' + res).addClass('active');
-            let title = $('#' + res + ' .name-user').text()
-            $(message_user_title).text(title)
-            $(message_typing).text(title + ' is typing....')
-            showMessageContent(res);
+            if (findChatById(res.id) === undefined) {
+                chats.push(res)
+            }
+            if ($('#' + res.id).length) {
+                activeAction(res.id)
+            } else {
+                $(chat_list).prepend(createChatUI(res, true))
+                activeAction(res.id)
+            }
         }
     })
-}
-
-let seenAction = (chat) => {
-    let users = chat.data.users
-    let current_user_pos = chat.oppositeUser === 0 ? 1 : 0
-    console.log(users[current_user_pos].isSeen)
-    if (!users[current_user_pos].isSeen) {
-        $('#' + chat.id).removeClass('not-seen')
-        users[current_user_pos].isSeen = true
-        db.collection('chats').doc(chat.id).update({
-            users: users,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        })
-    }
 }
 //----------------------------------------------------------------------------------
 
@@ -294,18 +302,15 @@ let findChatById = (id) => {
     return chats.find((chat) => { return chat.id === id })
 }
 
-let getCurrentChatId = () => {
-
+let findUserById = (id) => {
+    let res = users.find(item => { return item.id === id }) || userPopular.find(item => { return item.id === id })
+    return res
 }
 
-let getOppositeUserPos = (users, id) => {
-    return new Promise((resolve, reject) => {
-        $(users).each((i, user) => {
-            if (user.user_id !== id) {
-                return resolve(i)
-            }
-        });
-    })
+let getOppositeUser = (users, id) => {
+    let arr = users.slice(0);
+    arr.splice(users.indexOf(id), 1)
+    return arr
 }
 
 $(search_bar).focusin(() => {
@@ -440,82 +445,27 @@ let createChatUI = (chat, active) => {
     });
 
     return user_chat_item;
+>>>>>>> 9a01158e02cf3f8dc8c9f7aa7edb5a72c4ea992a
 }
 
-let showMessageContent = (id) => {
-    let chat = findChatById(id)
-    let messages = chat.messages;
-    let opposite_user = chat.data.users[chat.oppositeUser];
-
-    $(message_content).empty()
-    $(message_user_title).text(opposite_user.user_name)
-    $(message_typing).text(opposite_user.user_name + ' is typing')
-
-
-    $(messages).each((i, mess) => {
-        appendMessage(mess, opposite_user);
-    });   
-};
-
-let appendMessage = (message, opposite_user) => {
-    let date = '';
-    let user_message_item = '<div class="incoming_msg"><div class="incoming_msg_img" >' +
-        '<img class="receiver-avatar" src="' + opposite_user.user_image + '" alt="sunil"></div>' +
-        '<div class="received_msg"><div class="received_withd_msg"><p>' + message.content + '</p>' +
-        '<span class="time_date">' + date + '</span></div></div></div >';
-
-    if (message.userSent === user.id) {
-        user_message_item = '<div class="outgoing_msg"><div class="sent_msg">' +
-            '<p>' + message.content + '</p><span class="time_date">' + date + '</span></div></div>';
-    }
-
-    message_content.innerHTML += user_message_item;
-    $(message_content).scrollTop($(message_content).height() + 10000)
-
-};
 //----------------------------------------------------------------------------------
 
-//Convert Timestamp to Date
-convertTimestampToDate = (unixtimestamp) => {
-
-    if (!unixtimestamp) return '';
-
-    // Months array
-    var months_arr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    // Convert timestamp to milliseconds
-    var date = new Date(unixtimestamp * 1000);
-
-    // Year
-    var year = date.getFullYear();
-
-    // Month
-    var month = months_arr[date.getMonth()];
-
-    // Day
-    var day = date.getDate();
-
-    // Hours
-    var hours = date.getHours();
-
-    // Minutes
-    var minutes = "0" + date.getMinutes();
-
-    // Seconds
-    var seconds = "0" + date.getSeconds();
-
-    // Display date time in MM-dd-yyyy h:m:s format
-    var results = month + '-' + day + '-' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-
-    return results;
+findUserElement = (list, id) => {
+    return list.find(item => { return item.id === id })
 }
 
 $(document).ready((e) => {
     getUserInfo().then(data => {
         user = data
-        listener(user.id)
-        getUserChatList(user.id)
         console.log('User :', user)
+        getUserChatList(user.id).then((data) => {
+            listener(user.id)
+            getUserList(data).then((list) => {
+                users = list
+                console.log('User List :', list)
+                createChatListUI(chats)
+            })
+        })
         getPopular().then(data => {
             userPopular = data
             createSearchListUI(search_list, data, user.id)

@@ -66,8 +66,18 @@
 }
 
 .main--content-inner .msg_history{
-    height: 90%;
+    height: 82%;
     margin-bottom: 0;
+    overflow-y: visible;
+}
+
+.main--content-inner .msg_history .msg-list{
+    padding-bottom: 50px;
+}
+
+.main--content-inner .msg_history .msg_typing{
+    position: fixed;
+    padding-bottom: 10px;
 }
 
 .not-seen .name-user, .not-seen .chat-message-wrap {
