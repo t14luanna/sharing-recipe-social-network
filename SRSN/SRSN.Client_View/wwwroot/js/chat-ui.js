@@ -106,7 +106,7 @@ let updateChatUI = (chat) => {
     }
 
     $('#' + chat.id + ' .date').text(last_mess_time)
-    
+
     $('#' + chat.id + ' .chat-message-wrap').text(last_mess_content)
 }
 //----------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ $(send_btn).on('click', () => {
 $(message_input).on('input', async (e) => {
     let text = $(message_input).val();
     let chat = findChatById(current_chat_id)
-    let current_user = findUserElement(chat.data.users, user.id)    
+    let current_user = findUserElement(chat.data.users, user.id)
 
     //if (text[text.length - 1] === "@") {
 

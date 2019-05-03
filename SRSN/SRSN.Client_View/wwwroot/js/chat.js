@@ -70,9 +70,9 @@ let getUserList = (list) => {
                 'content-type': 'application/json',
             }
         })
-        .then((data) => {
-            return resolve(data)
-        })
+            .then((data) => {
+                return resolve(data)
+            })
     })
 }
 //----------------------------------------------------------------------------------
@@ -97,13 +97,13 @@ let listener = (id) => {
                                 chat.data.updatedAt = data.updatedAt
                                 chat.data.users = data.users
                             }
-                        
+
                             if (current_chat_id === change.doc.id && current_messages.length < messages.length) {
                                 if ($('#' + chat.id).length) {
                                     for (i = current_messages.length; i < messages.length; i++) {
                                         appendMessage(messages[i], oppositeUser)
                                     }
-                                    current_messages = messages                                    
+                                    current_messages = messages
                                 } else {
                                     if (messages.length > 0) {
                                         $(chat_list).prepend(createChatUI(chat, false))
@@ -121,20 +121,20 @@ let listener = (id) => {
                             //    }
                             //}
                         } else {
-                                let chat = {
-                                    id: change.doc.id,
-                                    data: change.doc.data()
-                                }
-                                chat.data.oppositeUser = await getOppositeUser(chat.data.usersId, user.id)
-                                chats.push(chat)
-                                getUserList(chat.data.oppositeUser).then(res => {
-                                    users = users.concat(res)
-                                    if (messages.length > 0) {
-                                        $(chat_list).prepend(createChatUI(chat, false))
-                                    }
-                                })
+                            let chat = {
+                                id: change.doc.id,
+                                data: change.doc.data()
                             }
-                        })
+                            chat.data.oppositeUser = await getOppositeUser(chat.data.usersId, user.id)
+                            chats.push(chat)
+                            getUserList(chat.data.oppositeUser).then(res => {
+                                users = users.concat(res)
+                                if (messages.length > 0) {
+                                    $(chat_list).prepend(createChatUI(chat, false))
+                                }
+                            })
+                        }
+                    })
                 }
 
                 var source = change.doc.metadata.hasPendingWrites ? "local cache" : "server";
@@ -160,7 +160,7 @@ let getUserMessage = (id) => {
 
 let getUserChatList = (id) => {
     return new Promise((resolve, reject) => {
-        db.collection("chats").where('usersId', 'array-contains', id).orderBy('updatedAt','desc').get().then(async (querySnapshot) => {
+        db.collection("chats").where('usersId', 'array-contains', id).orderBy('updatedAt', 'desc').get().then(async (querySnapshot) => {
             await querySnapshot.forEach(async (doc) => {
                 let chat = {
                     id: doc.id,
@@ -211,7 +211,7 @@ let sendMessage = async (messageText) => {
         })
         .catch(function (error) {
         })
-}   
+}
 
 let checkExistChat = (user_id) => {
     return new Promise(async (resolve, reject) => {
@@ -312,142 +312,6 @@ let getOppositeUser = (users, id) => {
     arr.splice(users.indexOf(id), 1)
     return arr
 }
-
-$(search_bar).focusin(() => {
-    $(search_list).css('display', 'block');
-    $(message_list).css('display', 'none');
-});
-
-$(search_bar).focusout(() => {
-    $(search_list).css('display', 'none');
-    $(message_list).css('display', 'block');
-    $(search_bar).val('');
-});
-
-$(search_bar).keydown(() => {
-    let search_val = $(search_bar).val();
-    if (search_val.length > 1) {
-        findUser(search_val).then(res => {
-            createSearchListUI(search_list, res)
-        }).catch(e => {
-
-        })
-    } else {
-        createSearchListUI(search_list, userPopular)
-    }
-});
-
-$(send_btn).on('click', () => {
-    sendMessage($(message_input).val());
-    $(message_input).val('');
-});
-
-$(message_input).keydown(async () => {
-    let text = $(message_input).val();
-    let chat = findChatById(current_chat_id)
-    let current_user_pos = chat.oppositeUser === 0 ? 1 : 0
-    let current_user = chat.data.users[current_user_pos]
-    if (!current_user.isTyping && text.length > 3) {
-        chat.data.users[current_user_pos].isTyping = true;
-        db.collection('chats').doc(current_chat_id).update({
-            users: chat.data.users
-        })
-    } else if (current_user.isTyping && text.length <= 3) {
-        chat.data.users[current_user_pos].isTyping = false;        
-        db.collection('chats').doc(current_chat_id).update({
-            users: chat.data.users
-        })
-    }
-
-    seenAction(chat)
-})
-//----------------------------------------------------------------------------------
-
-//-----------------------------------------CHAT UI----------------------------------
-let pushChatToTop = (id) => {
-    
-}
-
-let createSearchListUI = (block, user_list) => {
-    $(block).empty()
-    $(user_list).each(async (i, user_search) => {
-        if (user.id === user_search.id) return;
-        await $(block).prepend(createSearchUI(user_search))
-    })
-}
-
-let createSearchUI = (user) => {
-    let user_chat_item = document.createElement('li')
-    $(user_chat_item).attr('id', user.id)
-
-    user_chat_item.innerHTML += '<div class="topic--reply"><div class="clearfix">' +
-        '</div><div class="body clearfix"><div class="author mr--20 float--left text-center">' +
-        '<div class="avatar" data-overlay="0.3" data-overlay-color="primary">' +
-        '<a><img src="' + user.avatarImageUrl + '" alt=""></a></div></div>' +
-        '<div class="content fs--14 ov--h"><div class="name text-darkest">' +
-        '<p><a href="#" class="name-user">' + user.lastName + ' ' + user.firstName + '</a></p></div></div></div></div>';
-
-    $(user_chat_item).on('mousedown', () => {
-        createChat(user);
-    });
-
-    return user_chat_item;
-}
-
-let createChatUI = (chat, active) => {
-    let user_chat_item = document.createElement('li')
-    $(user_chat_item).attr('id', chat.id)
-
-    let opposite_pos = chat.oppositeUser
-    let opposite_user = chat.data.users[opposite_pos]
-    let current_user_pos = chat.oppositeUser === 0 ? 1 : 0
-    let current_user = chat.data.users[current_user_pos]
-
-    if (active) {
-        $(user_chat_item).addClass('active')
-    }
-
-    if (!current_user.isSeen) {
-        $(user_chat_item).addClass('not-seen')
-    }
-
-    let messages = chat.messages
-    let last_mess_content
-    let last_mess_time
-
-    if (messages.length > 0) {
-        if (messages[messages.length - 1].userSent === user.id) {
-            last_mess_content = 'Bạn : ' + messages[messages.length - 1].content
-        } else {
-            last_mess_content = messages[messages.length - 1].content
-        }
-        last_mess_time = convertTimestampToDate(messages[messages.length - 1].createdAt.seconds);
-    }
-
-    user_chat_item.innerHTML += '<div class="topic--reply"><div class="clearfix"><p class="date float--right">'
-        + (last_mess_time ? last_mess_time : "") + '</p></div><div class="body clearfix"><div class="author mr--20 float--left text-center">' +
-        '<div class="avatar" data-overlay="0.3" data-overlay-color="primary">' +
-        '<a><img src="' + opposite_user.user_image + '" alt=""></a></div></div>' +
-        '<div class="content fs--14 ov--h"><div class="name text-darkest">' +
-        '<p><a href="#" class="name-user">' + opposite_user.user_name + '</a></p></div></div>' +
-        '<div class="content fs--14 ov--h">' +
-        '<p class="chat-message-wrap">' + (last_mess_content ? last_mess_content : "") + '</p>' +
-        '</div></div></div>';
-
-    $(user_chat_item).on('click', () => {
-        $('#' + current_chat_id).removeClass('active');
-        $(user_chat_item).addClass('active');
-        current_chat_id = chat.id
-        seenAction(chat)
-        $(message_user_title).text(chat.data.users[chat.oppositeUser].user_name)
-        $(message_typing).text(chat.data.users[chat.oppositeUser].user_name + ' is typing....')
-        showMessageContent(chat.id);
-    });
-
-    return user_chat_item;
-//>>>>>>> 9a01158e02cf3f8dc8c9f7aa7edb5a72c4ea992a
-}
-
 //----------------------------------------------------------------------------------
 
 findUserElement = (list, id) => {
@@ -471,5 +335,6 @@ $(document).ready((e) => {
             createSearchListUI(search_list, data, user.id)
             console.log('Popular: ', data)
         });
+        $(message_input).ckeditor();
     });
 })
