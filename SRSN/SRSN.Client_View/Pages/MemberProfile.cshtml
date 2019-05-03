@@ -407,6 +407,7 @@
     </div>
     <script>
         var authorization = JSON.parse(localStorage.getItem('authorization'));
+        
         if (authorization == null) {
             window.location.href = "/login";
         }
@@ -453,6 +454,7 @@
     <script type="text/javascript">
     // fetch and render element to html
         (async () => {
+            
             await callAccountInforApi('@(RouteData.Values["userName"])');
             await loadAvatarContainer('@(RouteData.Values["userName"])');
         })();

@@ -59,17 +59,7 @@ namespace SRSN.ClientApi.Controllers
             }
         }
 
-        [HttpGet("deactive-report-recipe")]
-        public async Task<ActionResult> DeActiveRecipeReport(int id)
-        {
-            try
-            {
-                return Ok(await userReportRecipeService.DeActiveRecipeReport(id));
-            } catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
+       
 
     }
 }

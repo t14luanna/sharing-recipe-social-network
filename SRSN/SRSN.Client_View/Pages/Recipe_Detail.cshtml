@@ -25,7 +25,8 @@
         <div class="row">
             <div class="col-md-8 col-lg-9">
                 <div class="recipe-set ">
-                    <div class="wrapper-detail-contents detail-2">
+                    <div class="wrapper-detail-contents detail-2" id="error" style="display: none"><h2 style="color: red">Công thức đã bị khóa!!</h2></div>
+                    <div class="wrapper-detail-contents detail-2" id="content" style="display: block">
                         <div class="single-recipe-detail" id="banner-recipe">
                         </div>
                         <div class="recipe-detail-body">
@@ -393,14 +394,24 @@
                 (async () => {
                     // Init elements
                     await changeHeadername();
-                    await callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
-                    await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));
-                    await callChefRecipeApi(@(RouteData.Values["recipe_id"]));
                     await callSuggestRecipeApi();
                     await callPopularRecipeWidgetApi();
                     await callLatestRecipeWidgetApi();
                     await callListCategoryItem();
                     await RedirectAPI();
+                    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${@(RouteData.Values["recipe_id"])}`);
+                    var data = (await res.json());
+                    if (data.length == 0) {
+                        $("#error").css("display", "block");
+                        $("#content").css("display", "none");
+                        return;
+                    }
+                    await callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
+
+                    
+                    await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));
+                    await callChefRecipeApi(@(RouteData.Values["recipe_id"]));
+                    
 
 
                     $('.slider-detail2').slick({

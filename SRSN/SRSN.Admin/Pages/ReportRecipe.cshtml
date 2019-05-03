@@ -52,7 +52,8 @@
                             <thead>
                                 <tr>
                                     <th class="username"><em class="fa fa-user"></em> Người báo cáo </th>
-                                    <th><em class="fa fa-user"></em> Đối tượng </th>
+                                    <th><em class="fa fa-user"></em> Mã công thức </th>
+                                    <th><em class="fa fa-user"></em> Tên công thức </th>
                                     <th><em class="fa fa-envelope"></em> Nội dung</th>
                                     <th><em class="fa fa-quote-left"></em> Trạng thái</th>
                                     <th><em class="fa fa-calendar"></em> Ngày</th>
@@ -63,7 +64,8 @@
                             <tfoot>
                                 <tr>
                                     <th><em class="fa fa-user"></em> Người báo cáo </th>
-                                    <th><em class="fa fa-user"></em> Đối tượng </th>
+                                    <th><em class="fa fa-user"></em> Mã công thức </th>
+                                    <th><em class="fa fa-user"></em> Tên công thức </th>
                                     <th><em class="fa fa-envelope"></em> Nội dung</th>
                                     <th><em class="fa fa-quote-left"></em> Trạng thái</th>
                                     <th><em class="fa fa-calendar"></em> Ngày</th>
@@ -107,12 +109,13 @@
                 data: data,
                 "columns": [
                     { "data": "username" },
+                    { "data": "recipeReportedId" },
                     { "data": "recipeReported" },
                     { "data": "description" },
                     {
                         "data": "isActive",
                         "mRender": function (active, type, obj) {
-                            var id = obj.id;
+                            var id = obj.recipeReportedId;
                             var conntent = active ? `<span class="active-${id}"><i class="fa fa-check text-navy"></i> Đang hoạt động</span>` : `<span class="active-${id}"><em class="fa fa-lock text-navy"></em> Bị chặn</span>`;
                             return conntent;
                         }
@@ -129,7 +132,7 @@
                     {
                         "data": "isActive",
                         "mRender": function (active, type, obj) {
-                            var id = obj.id
+                            var id = obj.recipeReportedId;
                             var action = active ? `<span class="icon-action-${id}"><a onclick="blockRecipeFunction(${id})"><em class="fa fa-lock" title="Chặn bài viết"></em><a></span>` : `<span class="icon-action icon-action-${id} center"><a onclick="unblockRecipeFunction(${id})"><em class="fa fa-unlock" title="Bỏ chặn bài viết"></em></a></span>`;
                             return action;
                         }
@@ -176,13 +179,18 @@
             blockRecipe(recipeReportedId);
         }
         const blockRecipe = async (id) => {
-            var res = await fetch(`${BASE_API_URL}/api/userreportrecipe/deactive-report-recipe?id=${id}`);
+            var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/deactivate-recipe?reportedRecipe=${id}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             var data = await res.json();
-            console.log('data: ' + JSON.stringify(data));
+            
             var iconAction = data.isActive ? `<a onclick="blockRecipeFunction(${id})"><em class="fa fa-lock" title="Chặn bài viết này"></em><a>` : `<a onclick="unblockRecipeFunction(${id})"><em class="fa fa-unlock" title="Bỏ chăn bài viết này"></em></a>`;
             var active = data.isActive ? `<i class="fa fa-check text-navy"></i> Đang hoạt động` : `<em class="fa fa-lock text-navy"></em> Bị chặn`;
             if (data.isActive) {
-                //bỏ chặn người dùng
+                //bỏ chặn công thức
                 $(`.active-${id}`).html(active);
                 $(`.icon-action-${id}`).html(iconAction);
             } else if (!data.isActive) {

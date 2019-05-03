@@ -629,6 +629,28 @@ namespace SRSN.ClientApi.Controllers
                 message = $"Ban da tao thanh cong Recipe co ten la: {request.Id}"
             });
         }
+        [HttpPost("deactivate-recipe")]
+        public async Task<ActionResult> DeactivateUser(int reportedRecipe)
+        {
+            try
+            {
+                var currentRecipe = this.recipeService.Get(r => r.Id == reportedRecipe).FirstOrDefault();
+                currentRecipe.Active = currentRecipe.Active ? false : true;
+                await recipeService.UpdateAsync(currentRecipe);
+
+                return Ok(new
+                {
+                    isActive = currentRecipe.Active,
+                    message = "Cập nhật thành công!"
+                });
+
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+        }
         #endregion
     }
 }

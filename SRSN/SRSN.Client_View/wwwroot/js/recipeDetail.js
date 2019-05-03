@@ -259,25 +259,31 @@ const createCateItemTags = (tag) =>
 
 const callRecipeDetailApi = async (id) => {
     
-    callIngrdientsOfRecipeApi(id);
+    
     var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${id}`);
     var data = (await res.json());
     var userid;
-    for (var item of data) {
-        userid = item.userId;
-        let element = createSingleBannerRecipeDetail(item);
-        var content = createContentRecipe(item);
-        $("#banner-recipe").append(element);
-        $("#content-recipe").append(content);
-        var numStar = item.evRating % 10;
-        $("#number-of-star-" + item.id).text("");
-        for (var i = 0; i < parseInt(numStar); i++) {
-            $("#number-of-star-" + item.id).append(`<i class="fa fa-star" aria-hidden="true"></i>`);
-        }
+    if (data.length == 0) {
+        return;
     }
+        for (var item of data) {
+            userid = item.userId;
+            let element = createSingleBannerRecipeDetail(item);
+            var content = createContentRecipe(item);
+            $("#banner-recipe").append(element);
+            $("#content-recipe").append(content);
+            var numStar = item.evRating % 10;
+            $("#number-of-star-" + item.id).text("");
+            for (var i = 0; i < parseInt(numStar); i++) {
+                $("#number-of-star-" + item.id).append(`<i class="fa fa-star" aria-hidden="true"></i>`);
+            }
+        }
 
-    callRelatedRecipeApi(userid);
-    callReadRatingCommentApi(id);
+        callIngrdientsOfRecipeApi(id);
+        callRelatedRecipeApi(userid);
+        callReadRatingCommentApi(id);
+    
+
 };
 const callReadRatingCommentApi = async (recipeId) => {
     //tim user để biết comment của ai, thì người đó có thể xóa comment
