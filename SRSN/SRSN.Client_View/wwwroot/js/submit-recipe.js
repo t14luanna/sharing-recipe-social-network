@@ -1,4 +1,4 @@
-﻿const apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
+﻿const apikey = 'Al45YPe3PTkSEr6vjtzg6z';
 var countsteps = 1;
 var listStepImages = {};
 var listLocalStepImages = {};

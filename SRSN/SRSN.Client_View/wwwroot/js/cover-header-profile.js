@@ -1,4 +1,4 @@
-﻿const apikey = 'AHs8S0A0zQ0SNWqyiHT2qz';
+﻿const apikey = 'Al45YPe3PTkSEr6vjtzg6z';
 const client = filestack.init(apikey);
 var countFollowing = 0;
 function uploadFile(file) {

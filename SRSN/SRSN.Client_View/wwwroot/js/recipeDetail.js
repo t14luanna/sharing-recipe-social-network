@@ -1258,7 +1258,7 @@ const callSuggestRecipeApi = async () => {
         }
     }
 };
-var apikeyFilestack = 'A1p11nq0RoGb8BRod5sOgz';
+var apikeyFilestack = 'Al45YPe3PTkSEr6vjtzg6z';
 var clientFilestack = filestack.init(apikeyFilestack);
 var onProgress = (evt) => {
     document.getElementById('progress').innerHTML = `${evt.totalPercent}%`;
