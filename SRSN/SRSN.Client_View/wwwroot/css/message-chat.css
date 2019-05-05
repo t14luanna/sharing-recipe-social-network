@@ -7,9 +7,8 @@
     height: 64px;
 }
 
-.header .logo-wrapper img {
-    height: 50px;
-    width: auto;
+.href-homepage img{
+    width: 70px !important;
 }
 
 .forum-home-body{
