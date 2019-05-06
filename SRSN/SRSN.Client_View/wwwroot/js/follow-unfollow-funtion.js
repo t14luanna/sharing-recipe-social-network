@@ -9,16 +9,18 @@
                 //thông báo follow user
                 callNotification1(userId);
                 $(".btnFollow-" + userId).html(btnFollowed_OnNewsfeed(userId));
-
+                $(".countFollowing-" + userId).text(Number.parseInt($(".countFollowing-" + userId).text()) + 1);
                 check = true;
-                callTopSuggestUserApi();
+                if (window.location.href.includes('/Newsfeed')) {
+                    callTopSuggestUserApi();
+                }
             }
         });
-    if (check) {
-        var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${userId}`);
-        var userData = await userRes.json();
-        $(".countFollowing-" + userId).text(userData.length);
-    }
+    //if (check) {
+    //    var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${userId}`);
+    //    var userData = await userRes.json();
+    //    $(".countFollowing-" + userId).text(userData.length);
+    //}
 };
 
 const callNotification1 = async (userId) => {
@@ -69,15 +71,15 @@ async function unfollowUserFuntion(userId) {
             if (response.success) {
                 $(".follow-area-" + userId).html(btnFollow1(userId));
                 $(".btnFollow-" + userId).html(btnFollow_OnNewsfeed(userId));
-
+                $(".countFollowing-" + userId).text(Number.parseInt($(".countFollowing-" + userId).text()) - 1);
                 check = true;
             }
         });
-    if (check) {
-        var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${userId}`);
-        var userData = await userRes.json();
-        $(".countFollowing-" + userId).text(userData.length);
-    }
+    //if (check) {
+    //    var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${userId}`);
+    //    var userData = await userRes.json();
+    //    $(".countFollowing-" + userId).text(userData.length);
+    //}
 };
 
 const btnFollow1 = (userId) => `<div class="follow-btn-custom"  onclick="followUserFuntion(${userId})">

@@ -66,6 +66,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div id="count-like-recipe-main" class="col-sm-5 col-sm-offset-7" style="text-align: right">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -279,7 +283,7 @@
                         <a id="btn-create-new-collection" class="default-btn min-width-button theme-color">Tạo mới Bộ sưu tập</a>
                     </label>
                 </div>
-                <div class="col-md-12"  id="modal-body-add-collection">
+                <div class="col-md-12" id="modal-body-add-collection">
 
                 </div>
             </div>
@@ -301,7 +305,7 @@
                     <input type="file" name="fileUpload" id="upload-image" value="Nhấp vào đây tải hình" class="upload-collection-image">
                     <input type="hidden" name="coverImage" id="fileUploadedLink">
                     <br />
-                    @*<div>Tiến độ: <span id="progress"></span></div>*@
+                    <div>Tiến độ: <span id="progress"></span></div>
                     <br />
                     <img src="#" id="fileUploadedPreview" onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';" />
                     <br />
@@ -408,10 +412,10 @@
                     }
                     await callRecipeDetailApi(@(RouteData.Values["recipe_id"]));
 
-                    
+
                     await callStepOfRecipeApi(@(RouteData.Values["recipe_id"]));
                     await callChefRecipeApi(@(RouteData.Values["recipe_id"]));
-                    
+                    await callCountApi(@(RouteData.Values["recipe_id"]));
 
 
                     $('.slider-detail2').slick({
@@ -446,8 +450,7 @@
                     }
                     $("#modal-suggest-ingredients").css("display", "block")
 
-                });
-
+        });
                 $("#close-modal-suggest").on("click", function (e) {
                     $("#modal-suggest-ingredients").css("display", "none");
 
@@ -471,7 +474,7 @@
 
                 });
                 // When the user clicks anywhere outside of the modal, close it
-                
+
 
                 function filterIngredients() {
                     var input, filter, ul, li, a, i, txtValue;
@@ -522,6 +525,7 @@
                         });
                         var data = await res.json();
                         if (data.isLike) {
+                            await callCountApi(recipeId);
                             x.classList.add("fa-heart");
                             //them data vao firebase
                             //thông báo
@@ -567,6 +571,7 @@
                         }
                         else {
                             x.classList.remove("fa-heart");
+                            await callCountApi(recipeId);
                         }
                     } catch (e) {
                         alert("Like không thành công")

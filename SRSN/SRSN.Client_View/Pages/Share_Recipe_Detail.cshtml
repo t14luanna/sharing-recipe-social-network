@@ -100,6 +100,17 @@
         </div>
     </div>
 </div>
+<div class="modal-share-post modal">
+    <!-- Modal content -->
+    <div class="row modal-content modal-share-content">
+        <div class="col-md-12 modal-header">
+            <span class="close-share-recipe close">&times;</span>
+        </div>
+        <div class="col-md-12 modal-body modal-body-share-post">
+        </div>
+    </div>
+
+</div>
 @section Scripts {
     <script>
         var authorization = JSON.parse(localStorage.getItem('authorization'));
@@ -133,7 +144,15 @@
             await callPopularRecipeWidgetApi();
             await loadRecipeLocalStorage();
             await RedirectAPI();
+            $(".close-share-recipe").on("click", function (e) {
+                $(".modal-share-post").css("display", "none");
+            });
         })();
+        window.onclick = function (event) {
+            if (event.target.id == "modal-share-post") {
+                $(".modal-share-post").css("display", "none");
+            }
+        }
 
     </script>
 

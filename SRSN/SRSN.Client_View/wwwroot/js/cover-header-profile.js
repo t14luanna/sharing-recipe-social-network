@@ -78,7 +78,13 @@ const createAvatarContainerUnfollow = (user, count) =>
 //    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
 //                                <img src="${user.avatarImageUrl}" alt=""/>`;
 const createAvatarContainer = (user, count) =>
-    `
+    `<div class="dropdown col-md-offset-12">
+                    <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo người dùng</a></li>
+                    </ul>
+                </div>
 <div class="dropdown col-md-offset-12" id="btnReportUser">
                     <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
                     </span>
@@ -259,7 +265,7 @@ const loadAvatarContainer = async (username) => {
     var resCheck = await fetch(`${BASE_API_URL}/api/userfollowing/read-following-user?userName=` + userNameLocalStorage);
     var dataCheck = (await resCheck.json());
     //get count user following
-    var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-me-by-id?followingUserId=${data.id}`);
+    var userRes = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/read-user-following-by-me?followingUserId=${data.id}`);
     var userData = await userRes.json();
 
     var isFollowed = checkFollow(data.id, dataCheck);

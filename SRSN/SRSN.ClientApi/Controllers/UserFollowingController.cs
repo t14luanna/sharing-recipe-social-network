@@ -114,7 +114,18 @@ namespace SRSN.ClientApi.Controllers
                 return BadRequest();
             }
         }
-
+        [HttpGet("read-user-following-by-me")]
+        public async Task<ActionResult> ReadUserFollowingByMe(int followingUserId)
+        {
+            try
+            {
+                return Ok(await userFollowingService.getAllUserIFollow(userManager, followingUserId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
         [HttpGet("unfollow-user")]
         public async Task<ActionResult> UnfollowUser(String userName, int userFollowingId)
         {

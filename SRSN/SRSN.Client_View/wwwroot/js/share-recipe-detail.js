@@ -122,6 +122,161 @@ function openShareModal(e) {
     callShareRecipeModalApi(recipeId);
     $(".modal-share-post").css("display", "block");
 }
+const callShareRecipeModalApi = async (id, recipeOwner) => {
+    var res = await fetch(`${BASE_API_URL}/${RECIPE_API_URL}/read-recipeid?recipeId=${id}`);
+    var data = (await res.json());
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    var elements = $(`.share-post-item`);
+
+    if (elements[0]) {
+
+        elements.remove();
+
+    }
+    var dataUser = await resUser.json();
+    for (var item of data) {
+        var content = createShareRecipeModal(item, dataUser, recipeOwner);
+        $(".modal-body-share-post").append(content);
+    }
+};
+const callCreateShareRecipeModalApi = async (id, recipeOwner) => {
+    var authorization = localStorage.getItem("authorization");
+    var token = (JSON.parse(authorization))["token"];
+    var comment = $(`.textarea-caption`).val();
+    var data = {
+        referencedRecipeId: id,
+        sharedStatus: comment,
+    };
+    var res = await fetch(`${BASE_API_URL}/api/recipe/create-share-recipe`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (res.status == 200) {
+        $(".modal-share-post").css("display", "none");
+        swal("", "Bạn đã chia sẻ công thức thành công", "success");
+        //thông báo chia sẻ công thức (sharing notification)
+        callCountApi(id);
+        var usernameLocal = window.localStorage.getItem("username");//người đang share
+        res = await fetch(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-userinfo`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        var userInfo = await res.json();
+        var myDataRef;
+        var uid;
+        if (recipeOwner == usernameLocal) {
+            //do nothing
+        } else {
+            try {
+                console.log("Starting firebase")
+                myDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
+                uid = myDataRef.push({
+                    "uid": "",
+                    "username": userInfo.lastName + " " + userInfo.firstName,
+                    "content": "đã chia sẻ bài viết của bạn.",
+                    "date": new Date().toLocaleString(),
+                    "link": "/sharerecipe/" + data.referencedRecipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase 
+                SRSN.FIREBASE_DATABASE.ref("/" + recipeOwner + "/" + uid.key).update({
+                    uid: uid.key
+                });
+                //update count notifi
+                var countNoti = 0;
+                var countDataRef = SRSN.FIREBASE_DATABASE.ref(recipeOwner);
+
+                countDataRef.once('value', function (snapshot) {
+                    countNoti = snapshot.val().numberOfLatestNotis;
+                    countNoti++;
+                    SRSN.FIREBASE_DATABASE.ref(recipeOwner).update({ "numberOfLatestNotis": countNoti });
+                });
+                //thông báo cộng điểm
+                myDataRef = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+                uid = myDataRef.push({
+                    "uid": "",
+                    "username": "Bạn",
+                    "content": "đã chia sẻ bài viết và được cộng thêm <b>5 điểm</b>",
+                    "date": new Date().toLocaleString(),
+                    "link": "/sharerecipe/" + data.referencedRecipeId,
+                    "isRead": "False"
+                });
+                //update uid into firebase 
+                SRSN.FIREBASE_DATABASE.ref("/" + usernameLocal + "/" + uid.key).update({
+                    uid: uid.key
+                });
+                ///update count notifi
+                var countNoti2 = 0;
+                var countDataRef2 = SRSN.FIREBASE_DATABASE.ref(usernameLocal);
+
+                countDataRef2.once('value', function (snapshot) {
+                    countNoti2 = snapshot.val().numberOfLatestNotis;
+                    countNoti2++;
+                    SRSN.FIREBASE_DATABASE.ref(usernameLocal).update({ "numberOfLatestNotis": countNoti2 });
+                });
+            } catch (e) {
+                console.error("Exception create rely comment: ", e);
+            }
+        }
+    }
+};
+const createShareRecipeModal = (recipe, dataUser, recipeOwner) => `<li><div class="activity--list share-post-item">
+                    <ul class="activity--items nav">
+                        <li>
+                            <div class="activity--item">
+                                <div class="activity--avatar">
+                                    <a href="/account/timeline/${dataUser.username}">
+                                        <img src="${dataUser.avatarImageUrl}" alt=""  onerror="if (this.src != '/recipepress/images/no-image-icon-15.png') this.src = '/recipepress/images/no-image-icon-15.png';">
+                                    </a>
+                                </div>
+
+                                <div class="activity--info fs--14">
+                                    <div class="activity--header">
+                                        <p><a href="/account/timeline/${dataUser.username}">${dataUser.lastName} ${dataUser.firstName}</a></p>
+                                    </div>
+
+                                    <div class="activity--content">
+                                        <textarea placeholder="Chia sẻ của bạn" class="textarea-caption"></textarea>
+                                        <div class="link--embed">
+                                            <a class="link--url" href="/recipe/2" data-trigger="video_popup"></a>
+
+                                            <div class="">
+                                                <div class="img-post-newsfeed" style="background-image: url('${recipe.imageCover}'), url('/recipepress/images/no-image-icon-15.png')" alt="">
+                                                </div>
+
+                                                <div class="link--info fs--12">
+                                                    <div class="link--title">
+                                                        <p>${recipe.recipeName}</p>
+                                                    </div>
+
+                                                    <div class="link--desc">
+                                                        <p>${recipe.contentRecipe}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <a id="btn-share-recipe" onclick="callCreateShareRecipeModalApi(${recipe.id}, '${recipeOwner}')" class="default-btn mid-button theme-color pull-right">Chia sẻ bài viết</a>
+                </div></li>`;
 
 async function toggleLikeButton(x, recipeId, recipeOwner) {
     try {
@@ -516,3 +671,14 @@ const createRecipePostElement = (recipe) =>
                                                 </div>
 
                                             </li>`;
+const callCountApi = async (recipeId) => {
+    var countReply = await fetch(`${BASE_API_URL}/api/userreactionrecipe/get-like-share-count?recipeId=${recipeId}`);
+    var dataCount = (await countReply.json());
+
+    var elements = $(`.update-like-${recipeId}`);
+    if (elements[0]) {
+        elements.remove();
+    }
+    var element = createCountLine(dataCount, recipeId);
+    $(`.like-count-${recipeId}`).append(element);
+};

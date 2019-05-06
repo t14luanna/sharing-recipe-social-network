@@ -331,11 +331,11 @@ const callReadProductByIngredientNameApi = async () => {
         //var data = (await res.json());
         var itemIngre = $(`.item-checked-ingre`);
         if (itemIngre[0]) {
-
             itemIngre.remove();
-
         }
+
         for (var item of listIngredient) {
+            // render ingredient to UI
             var element = createProductItemElement(item);
             $(".modal-list-product-item").append(element);
         }
@@ -522,7 +522,6 @@ const callReadListIngredientNearByStoresApi = async (userLat, userLong, ingredie
                 markers.push(marker);
             }
         } else {
-
             $(".checked-ingre-box").append("<h6 class='warning-no-stores'>Không có cửa hàng gần bạn bán những sản phẩm này</h6>")
         }
     }
@@ -1024,6 +1023,7 @@ const callCreateShareRecipeModalApi = async (id) => {
     });
     if (res.status == 200) {
         $("#modal-share-recipe").css("display", "none");
+        await callCountApi(id);
         swal("", "Bạn đã chia sẻ công thức thành công", "success")
         //thông báo chia sẻ công thức (sharing notification)
         var resUser = await fetch(`${BASE_API_URL}/api/account/read-userinfo`, {
@@ -1261,6 +1261,7 @@ const callSuggestRecipeApi = async () => {
 var apikeyFilestack = 'Al45YPe3PTkSEr6vjtzg6z';
 var clientFilestack = filestack.init(apikeyFilestack);
 var onProgress = (evt) => {
+    console.log(evt)
     document.getElementById('progress').innerHTML = `${evt.totalPercent}%`;
 };
 $('#upload-image').on("change", function (e) {
@@ -1281,7 +1282,7 @@ $("#comment-form").submit(function (e) {
     var authorization = localStorage.getItem("authorization");
     var username = localStorage.getItem("username");
     var tokenAuthorize = (JSON.parse(authorization))["token"];
-    clientFilestack.upload(file, {}, {}, token)
+    clientFilestack.upload(file, { onProgress }, {}, token)
         .then(res => {
             $('#fileUploadedLink').val(res.url);
             $('#fileUploadedPreview').attr('src', res.url);
@@ -1310,3 +1311,15 @@ $("#comment-form").submit(function (e) {
             console.log(err)
         });
 });
+const callCountApi = async (recipeId) => {
+    var countReply = await fetch(`${BASE_API_URL}/api/userreactionrecipe/get-like-share-count?recipeId=${recipeId}`);
+    var dataCount = (await countReply.json());
+
+    var elements = $(`#count-like-share`);
+    if (elements[0]) {
+        elements.remove();
+    }
+    var element = createCountLine(dataCount, recipeId);
+    $(`#count-like-recipe-main`).append(element);
+};
+const createCountLine = (count) => `<p id="count-like-share">${count.likeCount} lượt thích, ${count.shareCount} lượt chia sẻ</p>`;

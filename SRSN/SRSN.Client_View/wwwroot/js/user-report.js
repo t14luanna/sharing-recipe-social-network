@@ -2,7 +2,7 @@
         e.preventDefault();
         var description = $('#reportDescription').val();
         if (!description) {
-            alert('Xin vui lòng nhập vào lý do bạn muốn tố cáo công thức này');
+            swal("", "Xin vui lòng nhập vào lý do bạn muốn tố cáo công thức này", "error")
             return false;
         }
         var currentUrl = window.location.href;
@@ -26,7 +26,8 @@
             .then(res => res.json())
             .then(response => {
                 if (response.success) {
-                    alert("Chúng tôi sẽ xử lý yêu cầu của bạn");
+                    $('#myModal').modal('hide');
+                    swal("", "Chúng tôi sẽ xử lý yêu cầu của bạn", "success")
                     //location.reload();
                 }
             })
@@ -39,7 +40,7 @@ $("#report-user-form").on("submit", function (e) {
     e.preventDefault();
     var description = $('#reportUserDescription').val();
     if (!description) {
-        alert('Xin vui lòng nhập vào lý do bạn muốn tố cáo người dùng này');
+        swal("", "Xin vui lòng nhập vào lý do bạn muốn tố cáo công thức này", "error");
         return;
     }
     var currentUrl = window.location.href;
@@ -65,8 +66,8 @@ $("#report-user-form").on("submit", function (e) {
                 .then(res => res.json())
                 .then(response => {
                     if (response.success) {
-                        alert("Chúng tôi sẽ xử lý yêu cầu của bạn");
-                        //location.reload();
+                        $('#myModal').modal('hide');
+                        swal("", "Chúng tôi sẽ xử lý yêu cầu của bạn", "success")
                     }
                 })
                 .catch(error => {

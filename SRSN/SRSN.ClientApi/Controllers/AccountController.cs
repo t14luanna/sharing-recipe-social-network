@@ -41,11 +41,16 @@ namespace SRSN.ClientApi.Controllers
         {
             // check existed user
             var existedUsername = await userManager.FindByNameAsync(data.UsernameVM);
-            if (existedUsername != null)
+            var existedEmail = await userManager.FindByEmailAsync(data.Email);
+            if (existedUsername != null )
             {
                 return Ok(new { message = "Tên đăng nhập đã tồn tại, vui lòng nhập tên khác!" });
             }
 
+            if(existedEmail != null)
+            {
+                return Ok(new { message = "Địa chỉ email đã tồn tại, vui lòng nhập email khác!" });
+            }
             var user = new SRSNUser();
             mapper.Map(data, user);
             user.SecurityStamp = Guid.NewGuid().ToString();

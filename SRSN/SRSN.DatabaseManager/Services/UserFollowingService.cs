@@ -25,6 +25,7 @@ namespace SRSN.DatabaseManager.Services
         Task<UserFollowingViewModel> checkFollowingUser(int userId, int followingUserId);
         Task<ICollection<UserFollowing>> unfollowFollowingUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
         Task<ICollection<AccountViewModel>> getAllUserFollowingMe(UserManager<SRSNUser> userManager, int followingUserId);//get all user who is following me
+        Task<ICollection<AccountViewModel>> getAllUserIFollow(UserManager<SRSNUser> userManager, int followingUserId);//get all user who is following me
         Task<ICollection<UserFollowing>> followUser(UserManager<SRSNUser> userManager, int userId, int followingUserId);
     }
     public class UserFollowingService : BaseService<UserFollowing, AccountViewModel>, IUserFollowingService
@@ -141,6 +142,23 @@ namespace SRSN.DatabaseManager.Services
         {
             var listAccount = new List<AccountViewModel>();
 
+            var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE  Active= 1 AND FollowingUserId=" + followingUserId).ToListAsync();
+
+            foreach (var item in listItems)
+            {
+                var user = await userManager.FindByIdAsync(item.UserId.ToString());
+                var userVM = new AccountViewModel();
+                mapper.Map(user, userVM);
+
+                listAccount.Add(userVM);
+            }
+
+            return listAccount;
+        }
+        public async Task<ICollection<AccountViewModel>> getAllUserIFollow(UserManager<SRSNUser> userManager, int followingUserId)
+        {
+            var listAccount = new List<AccountViewModel>();
+
             var listItems = await this.selfDbSet.AsNoTracking().FromSql("SELECT * FROM User_Following WHERE  Active= 1 AND UserId=" + followingUserId).ToListAsync();
 
             foreach (var item in listItems)
@@ -154,7 +172,6 @@ namespace SRSN.DatabaseManager.Services
 
             return listAccount;
         }
-
         public async Task<ICollection<int>> GetAllFollowingUser(int userid)
         {
             var listItems = this.selfDbSet.AsNoTracking().Where(x => x.UserId == userid && x.Active == true);
