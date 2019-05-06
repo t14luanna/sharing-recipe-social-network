@@ -145,7 +145,17 @@
                                                           color: white; font-size: 12px" id="number-of-notification"></span>
                                                     <ul id="list-notification" class="scroll-notification"></ul>
                                                 </li>
-                                                <li><a href="/MessageChat"><i class="fa fa-envelope"></i></a></li>
+                                                <li>
+                                                    <a href="/MessageChat"><i class="fa fa-envelope"></i></a>
+                                                    <span style="
+                                                          position: absolute;
+                                                          top: 5px;
+                                                          right: -4px;
+                                                          padding: 0px 5px;
+                                                          border-radius: 50%;
+                                                          background-color: red;
+                                                          color: white; font-size: 12px" id="number-of-message-notification"></span>
+                                                </li>
                                             </ul>
                                         </nav>
                                     </div>
@@ -299,6 +309,7 @@
     <script type="text/javascript" src="~/js/Configuration.js"></script>
     <script src="~/recipepress/js/audio.min.js"></script>
     <script src="~/js/notification.js"></script>
+    <script src="~/js/chat-notification.js"></script>
 
     @RenderSection("Scripts", required: false)
     <script src="/js/site.js"></script>

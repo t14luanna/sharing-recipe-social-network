@@ -61,7 +61,6 @@ let findUser = (username) => {
 }
 
 let getUserList = (list) => {
-    console.log(list)
     return new Promise((resolve, reject) => {
         callAPI(`${BASE_API_URL}/${ACCOUNT_API_URL}/read-user-list`, {
             method: 'POST',

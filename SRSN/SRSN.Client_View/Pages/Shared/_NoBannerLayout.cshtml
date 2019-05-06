@@ -42,11 +42,78 @@
 
 </head>
 <body>
-    <div class="header">
-        <div class="logo-wrapper">
-             <a href="/Index" class="href-homepage"><img src="/recipepress/images/logo.png" alt="logo"></a>
+    <!--header-->
+    <header>
+        <div class="header header-var1 fade-load-down">
+            <div class="responsive-menu"></div>
+            <div class="nav-var1">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5">
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="logo-wrapper">
+                                <a href="/Index" class="href-homepage"><img src="/recipepress/images/logo.png" alt="logo" /></a>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="right-nav">
+                                <div class="wrapper-links">
+                                    <ul class="header-social-icons">
+                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+
+                                    </ul>
+                                    <div class="noti-message-icon" style="display:none;">
+                                        <div class="soundDiv" hidden>
+                                            <audio id="myAudio">
+                                                <source src="~/recipepress/audio/notitficationSound.mp3" type="audio/mpeg">
+                                                Your browser does not support the audio element.
+                                            </audio>
+                                        </div>
+                                        <nav class="nav-collapse header-social-icons">
+                                            <ul>
+                                                <li>
+
+                                                    <a href="#" onclick="changeStatusNoti()"><i class="fa fa-bell"></i></a>
+                                                    <span style="
+                                                          position: absolute;
+                                                          top: 5px;
+                                                          right: -4px;
+                                                          padding: 0px 5px;
+                                                          border-radius: 50%;
+                                                          background-color: red;
+                                                          color: white; font-size: 12px" id="number-of-notification"></span>
+                                                    <ul id="list-notification" class="scroll-notification"></ul>
+                                                </li>
+                                                <li><a href="/MessageChat"><i class="fa fa-envelope"></i></a></li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+
+                                    <span class="sign-in-buttons authorized-group" style="display: none;">
+
+                                        <a class="information" href="/account/information" id="authorized-group-username">Username</a>
+                                    </span>
+                                    <span class="sign-in-buttons authorized-group" id="logoutBtn">
+                                        <a class="login">Đăng xuất</a>
+                                    </span>
+                                    <span class="sign-in-buttons unauthorized-group">
+                                        <a class="login" href="/login">Đăng nhập</a>
+                                        <a class="register" href="/register">Đăng ký</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
+    </header>
+    <!--header ends-->
     @RenderBody()
 
     <script src="/recipepress/js/jquery-1.11.3.min.js"></script>
@@ -59,13 +126,50 @@
     <script src="/recipepress/js/jquery.form.js"></script>
     <script src="/recipepress/js/jquery.validate.min.js"></script>
     <script src="/recipepress/js/jquery.swipebox.js"></script>
-    <script src="~/js/moment.min.js"></script>
+    <script src="/recipepress/js/jquery.triggeredAutocomplete.js"></script>
+    <script src="/js/moment.min.js"></script>
     <script src="/js/daterangepicker.min.js"></script>
     <script src="/recipepress/js/custom.js"></script>
+    <script src="/js/SearchPageResult.js"></script>
+    @*<script src="/js/firebase.js"></script>*@
 
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
     <script type="text/javascript" src="~/js/Configuration.js"></script>
+    <script src="~/recipepress/js/audio.min.js"></script>
+    <script src="~/js/notification.js"></script>
+
     @RenderSection("Scripts", required: false)
+    <script src="/js/site.js"></script>
+    <script>
+        audiojs.events.ready(function () {
+            var as = audiojs.createAll();
+        });
+    </script>
+    <script>
+
+        $("#searchBtn").on("click", function (e) {
+            e.preventDefault();
+            var searchValue = $('#custom-input-search').val();
+            fetch(`${BASE_API_URL}/api/recipe/read-recipename?recipeName=${searchValue}`,
+                {
+                    method: 'GET',
+                    //headers: {
+                    //      'Content-Type': 'application/json'
+                    //  }
+                })
+                .then(res => res.json())
+                .then(response => {
+                    var searchValue = $('#custom-input-search').val();
+                    var searchValueParam = encodeURIComponent(searchValue);
+                    window.location.href = (`/RecipeSearch/${searchValueParam}`);
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+    </script>
 
 </body>
 <!-- Mirrored from templates.majesticthemes.com/recipepress/recipe-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 16 Jan 2019 05:10:38 GMT -->
