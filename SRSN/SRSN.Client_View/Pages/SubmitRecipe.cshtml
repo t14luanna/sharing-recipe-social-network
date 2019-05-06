@@ -484,7 +484,7 @@
                         b.innerHTML += `<input type='hidden' name="${arr[i].suggestQuantitive}" id='${arr[i].id}' value='${arr[i].ingredientName}'>`;
                         b.addEventListener("click", function (e) {
                             inp.value = this.getElementsByTagName("input")[0].value;
-                            $(`input[id='${item}']`).val(e.currentTarget.childNodes[2].name);
+                            $(`input[id='${item}']`).val(e.currentTarget.querySelector("input").name);
                             closeAllLists();
                         });
                         a.appendChild(b);

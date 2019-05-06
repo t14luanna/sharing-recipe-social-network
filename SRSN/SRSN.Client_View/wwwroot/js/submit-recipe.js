@@ -505,7 +505,7 @@ function GetImageDraftedRecipe(currentStep, dropZoneId) {
         var currentDraftedRecipe = GetDraftedRecipe();
         const currentRecipe = getData(currentDraftedRecipe, true);
         DraftRecie(currentRecipe);
-    }, 2000);
+    }, 5000);
 })();
 
 function LoadCheckedCategory() {

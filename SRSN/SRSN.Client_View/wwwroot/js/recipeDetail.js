@@ -255,7 +255,7 @@ const callIngrdientsOfRecipeApi = async (id) => {
     }
 };
 const createCateItemTags = (tag) =>
-    `<li class="text"><a href="#">${tag.categoryItemName == "null" ? "không có" : tag.categoryItemName}</a></li>`;
+    `<li class="text"><a href="/RecipeByCategory?categoryName=${tag.categoryItemName}">${tag.categoryItemName == "null" ? "không có" : tag.categoryItemName}</a></li>`;
 
 const callRecipeDetailApi = async (id) => {
     
@@ -445,6 +445,7 @@ const callChefRecipeApi = async (recipeId) => {
     var btnFollow;
     if (chefUsername == usernameLocal) {
         btnFollow = "";
+        $('#btnReportUser').hide();
     } else {
         btnFollow = isFollow ? unfollowElement(chef.id) : followElement(chef.id);
     }

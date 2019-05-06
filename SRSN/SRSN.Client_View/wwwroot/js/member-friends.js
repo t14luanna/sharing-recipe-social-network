@@ -20,11 +20,12 @@ const CallGetAllFollowUser = async (userName, limit = 16, page = 0) => {
             })
                 .then( async (willDelete) => {
                     if (willDelete) {
+                        var countFriend = Number.parseInt($("#count-friends").text()) - 1;
                         var followingUserId = $(e.target).siblings('input').val();;
                         var userName = localStorage.getItem('username');
                         await unfollowUserFunction(userName, followingUserId);
                         CallGetAllFollowUser(userName);
-                        $("#count-friends").text(Number.parseInt($("#count-friends").text()) - 1);
+                        $("#count-friends").text(countFriend);
                     } else {
                     }
                 });

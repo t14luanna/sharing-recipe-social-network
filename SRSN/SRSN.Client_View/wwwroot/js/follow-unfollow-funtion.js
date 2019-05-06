@@ -1,5 +1,6 @@
 ﻿async function followUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
+    var countfol = Number.parseInt($(".countFollowing-" + userId).text());
     var check = false;
     var res = await fetch(BASE_API_URL + "/" + USER_FOLLOWING_API_URL + "/follow-user?userName=" + userNameLocalStorage + "&userFollowingId=" + userId)
         .then(res => res.json())
@@ -9,7 +10,7 @@
                 //thông báo follow user
                 callNotification1(userId);
                 $(".btnFollow-" + userId).html(btnFollowed_OnNewsfeed(userId));
-                $(".countFollowing-" + userId).text(Number.parseInt($(".countFollowing-" + userId).text()) + 1);
+                $(".countFollowing-" + userId).text(countfol + 1);
                 check = true;
                 if (window.location.href.includes('/Newsfeed')) {
                     callTopSuggestUserApi();
@@ -65,13 +66,14 @@ const callNotification1 = async (userId) => {
 async function unfollowUserFuntion(userId) {
     var userNameLocalStorage = localStorage.getItem("username");
     var check = false;
+    var countfol = Number.parseInt($(".countFollowing-" + userId).text());
     var res = await fetch(`${BASE_API_URL}/${USER_FOLLOWING_API_URL}/unfollow-user?userName=` + userNameLocalStorage + "&userFollowingId=" + userId)
         .then(res => res.json())
         .then(response => {
             if (response.success) {
                 $(".follow-area-" + userId).html(btnFollow1(userId));
                 $(".btnFollow-" + userId).html(btnFollow_OnNewsfeed(userId));
-                $(".countFollowing-" + userId).text(Number.parseInt($(".countFollowing-" + userId).text()) - 1);
+                $(".countFollowing-" + userId).text(countfol - 1);
                 check = true;
             }
         });

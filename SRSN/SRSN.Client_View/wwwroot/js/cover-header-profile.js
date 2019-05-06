@@ -15,7 +15,7 @@ function uploadFile(file) {
 
 const createAvatarContainerUnfollow = (user, count) =>
     `
-<div class="dropdown col-md-offset-12">
+<div class="dropdown col-md-offset-12 dropdown-report-user">
                     <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
                     </span>
                     <ul class="dropdown-menu">
@@ -78,14 +78,14 @@ const createAvatarContainerUnfollow = (user, count) =>
 //    `<div class="cover--avatar online" data-overlay="0.3" data-overlay-color="primary">
 //                                <img src="${user.avatarImageUrl}" alt=""/>`;
 const createAvatarContainer = (user, count) =>
-    `<div class="dropdown col-md-offset-12">
+    `<div class="dropdown col-md-offset-12 dropdown-report-user">
                     <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
                     </span>
                     <ul class="dropdown-menu">
                         <li><a class="" data-toggle="modal" data-target="#myModal" href="">Báo cáo người dùng</a></li>
                     </ul>
                 </div>
-<div class="dropdown col-md-offset-12" id="btnReportUser">
+<div class="dropdown col-md-offset-12 dropdown-report-user" id="btnReportUser">
                     <span class="fa fa-ellipsis-v dropdown-toggle dropdown-report-user" type="button" data-toggle="dropdown" style="color:black;">
                     </span>
                     <ul class="dropdown-menu">
@@ -234,6 +234,7 @@ async function unfollowUserFuntion(userId) {
 };
 
 const loadAvatarContainer = async (username) => {
+   
     $("#link-to-profile").attr("href", "/account/information/" + username);
     $("#link-to-following-user").attr("href", "/account/memberfriends/" + username);
     var userNameLocalStorage = localStorage.getItem("username");
@@ -276,10 +277,14 @@ const loadAvatarContainer = async (username) => {
     $("#avatar-container").append(element);
     if (username == userNameLocalStorage) {
         $(".edit").show();
+        $('.dropdown-report-user').hide();
     } else {
         $(".edit").hide();
-
+        if (window.location.href.includes("account/information/")) {
+            $('.dropdown-report-user').show()
+        }
     }
+    
     if (username == userNameLocalStorage) {
         $(".follow-area-" + data.id).hide();
     }
