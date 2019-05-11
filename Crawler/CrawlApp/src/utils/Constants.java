@@ -14,7 +14,7 @@ public class Constants {
 //    public static 
     public static int       MAX_SIZE            =   10;
     public static String    TABLE_STORE         =   "Store";
-    public static String    TABLE_PRODUCT       =   "Products";
+    public static String    TABLE_PRODUCT       =   "StoreBrand_Ingredient";
     public static String    TABLE_INGREDIENTS   =   "Ingredients";
     public static String    TABLE_CATEGORY_MAIN =   "CategoryMain";
     public static String    TABLE_CATEGORY_ITEM =   "CategoryItem";

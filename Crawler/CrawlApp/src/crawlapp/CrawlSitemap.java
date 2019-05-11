@@ -9,6 +9,8 @@ import crawler.ButtonClick;
 import crawler.Element;
 import crawler.Root;
 import dao.IDAO;
+import dao.IngredientDAO;
+import dto.IngredientDTO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,10 +39,19 @@ public class CrawlSitemap {
     private Root root;
     private JSONArray results;
     private IDAO dao;
+    private List<IngredientDTO> listIngredients;
 
     public CrawlSitemap(IDAO dao) {
         this.driver = new ChromeDriver();
         this.dao = dao;
+        IngredientDAO ingreDAO = new IngredientDAO();
+        try {
+            this.listIngredients = ingreDAO.getAll();
+        } catch (SQLException ex) {
+            Logger.getLogger(CrawlSitemap.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CrawlSitemap.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void start(Root dto) {
@@ -137,6 +148,41 @@ public class CrawlSitemap {
             } else if (element.getType().equals("default")) {
                 String data = element.getValueSelector();
                 result.put(element.getTitle(), data);
+            } else if (element.getType().equals("search")) {
+
+                int storeBrandId = Integer.parseInt(element.getElements().get(2).getValueSelector());
+
+                for (IngredientDTO ingredient : listIngredients) {
+                    WebElement search = driver.findElement(By.xpath(element.getSelector()));
+                    search.clear();
+                    search.sendKeys(ingredient.getName());
+
+                    Element button = element.getElements().get(0);
+                    try {
+                        WebElement moreBtn = this.driver.findElement(By.xpath(button.getSelector()));
+                        moreBtn.click();
+                        while (!waitForJStoLoad());
+                    } catch (Exception ex) {
+                    }
+
+                    Element itemElement = element.getElements().get(1);
+                    List<WebElement> item = driver.findElements(By.xpath(itemElement.getSelector()));
+
+                    if (item.size() > 0) {
+                        result.put("IngredientId", ingredient.getId());
+                        result.put("StoreBrandId", storeBrandId);
+                        this.results.add(result.clone());
+                        result.clear();
+                    }
+                    
+                    if(results.size() > Constants.MAX_SIZE){
+                        save();
+                    }
+                }
+
+                save();
+
+                return;
             } else {
                 List<WebElement> listResult = driver.findElements(By.xpath(element.getSelector()));
                 listResult.forEach((WebElement e) -> {
@@ -191,7 +237,7 @@ public class CrawlSitemap {
         if (nextURL != null) {
             this.setMainURL(nextURL);
             crawlElements(elements);
-        }   
+        }
     }
 
     public void crawl() {

@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import org.json.simple.JSONObject;
 import utils.Constants;
 import utils.DBUtils;
@@ -58,6 +60,30 @@ public class IngredientDAO  implements IDAO<IngredientDTO>{
             }
             
             return true;
+        } finally{
+            statement.close();
+            connection.close();
+        }
+    }
+    
+    public List<IngredientDTO> getAll() throws SQLException, ClassNotFoundException{
+        List<IngredientDTO> list = new ArrayList<>();
+        
+        Connection connection = DBUtils.getConnection();
+        String sql = "SELECT *  FROM " + table;
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        try{
+
+
+            ResultSet res = statement.executeQuery();
+            while(res.next()){
+                int id = res.getInt("Id");
+                String name = res.getString("IngredientName");
+                list.add(new IngredientDTO(id, name));
+            }
+            
+            return list;
         } finally{
             statement.close();
             connection.close();

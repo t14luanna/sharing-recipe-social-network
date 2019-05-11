@@ -23,21 +23,16 @@ public class ProductDAO implements IDAO<ProductDTO>{
     private String table = Constants.TABLE_PRODUCT;
 
     public void create(ProductDTO dto) throws SQLException, ClassNotFoundException{        
-        if(check(dto.getName())){
-            return;
-        }
         Connection connection = DBUtils.getConnection();
-        String sql = "Insert into " + table + " (Name, Price, ImageUrl,BrandId) "
-                + " values (?, ?, ?, ?) ";
+        String sql = "Insert into " + table + " (StoreBrandId, IngredientId) "
+                + " values (?, ?) ";
 
         PreparedStatement statement = connection.prepareStatement(sql);
         try{
 
 
-            statement.setString(1, dto.getName());
-            statement.setString(2, dto.getPrice());
-            statement.setString(3, dto.getImage());
-            statement.setInt(4, dto.getBrandId());
+            statement.setInt(1, dto.getBrandId());
+            statement.setInt(2, dto.getIngredientId());
 
             int rowCount = statement.executeUpdate();
         } finally{
@@ -46,32 +41,15 @@ public class ProductDAO implements IDAO<ProductDTO>{
         }
     }
     
-    public boolean check(String name) throws SQLException, ClassNotFoundException{
-        Connection connection = DBUtils.getConnection();
-        String sql = "SELECT *  FROM " + table + " WHERE Name = ?";
-
-        PreparedStatement statement = connection.prepareStatement(sql);
-        try{
-
-
-            statement.setString(1, name);
-
-            ResultSet res = statement.executeQuery();
-            if(!res.next()){
-                return false;
-            }
-            
-            return true;
-        } finally{
-            statement.close();
-            connection.close();
-        }
-    }
-
     @Override
     public void create(JSONObject data) throws SQLException, ClassNotFoundException {
         ProductDTO dto = new ProductDTO();
         dto = (ProductDTO) dto.parseFromJSON(data);
         create(dto);
+    }
+
+    @Override
+    public boolean check(String name) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

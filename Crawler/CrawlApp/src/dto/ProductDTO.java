@@ -12,34 +12,23 @@ import org.json.simple.JSONObject;
  * @author LUANNA
  */
 public class ProductDTO extends IDTO{
-    private String price;
-    private String image;
+    private int ingredientId;
     private int brandId;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(String name, String price, String image, int brandId) {
-        this.name = name;
-        this.price = price;
-        this.image = image;
+    public ProductDTO(int ingredientId, int brandId) {
+        this.ingredientId = ingredientId;
         this.brandId = brandId;
     }
 
-    public String getPrice() {
-        return price;
+    public int getIngredientId() {
+        return ingredientId;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
+    public void setIngredientId(int ingredientId) {
+        this.ingredientId = ingredientId;
     }
 
     public int getBrandId() {
@@ -52,16 +41,10 @@ public class ProductDTO extends IDTO{
 
     @Override
     public IDTO parseFromJSON(JSONObject data) {
-        String name = (String) data.get("Name");
-        String price = (String) data.get("Price");
-        String image = (String) data.get("Image");
-        int brandId = Integer.parseInt((String) data.get("BrandId"));
+        int brandId = (int) data.get("StoreBrandId");
+        int ingredientId = (int) data.get("IngredientId");
         
-        if(name != null && price != null && image != null){
-            return new ProductDTO(name, price, image, brandId);
-        }
-        
-        return null;
+        return new ProductDTO(ingredientId, brandId);
     }
     
 }

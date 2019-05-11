@@ -12,12 +12,27 @@ import org.json.simple.JSONObject;
  * @author LUANNA
  */
 public class IngredientDTO extends IDTO {
+    
+    private int id;
 
     public IngredientDTO() {
     }
 
     public IngredientDTO(String name) {                
         this.name = name;
+    }
+
+    public IngredientDTO(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
